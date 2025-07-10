@@ -1,0 +1,48 @@
+{
+    "project_name": "MobileManipulatorDemo",
+    "version": "1.0.0",
+    "project_id": "{6D3DFA48-B1E6-435C-A585-706F891578C2}",
+    "origin": "https://github.com/RobotecAI/MobileManipulatorDemo",
+    "license": "Apache-2.0",
+    "display_name": "MobileManipulatorDemo",
+    "summary": "Simulation environment for the Mobile Manipulator Demo Demo.",
+    "canonical_tags": [
+        "Project"
+    ],
+    "user_tags": [
+        "MobileManipulatorDemo"
+    ],
+    "icon_path": "preview.png",
+    "engine": "o3de",
+    "external_subdirectories": [
+        "Gem"
+    ],
+    "restricted": "MobileManipulatorDemo",
+    "gem_names": [
+        "MobileManipulatorDemo",
+        "Atom",
+        "AudioSystem",
+        "CameraFramework",
+        "DebugDraw",
+        "DiffuseProbeGrid",
+        "EMotionFX",
+        "EditorPythonBindings",
+        "GameState",
+        "ImGui",
+        "LandscapeCanvas",
+        "LyShine",
+        "MiniAudio",
+        "PhysX",
+        "PrefabBuilder",
+        "PrimitiveAssets",
+        "ROS2",
+        "RemoteTools",
+        "SaveData",
+        "ScriptCanvasPhysics",
+        "ScriptEvents",
+        "StartingPointInput",
+        "TextureAtlas",
+        "WhiteBox"
+    ],
+    "engine_version": "2.4.0"
+}
