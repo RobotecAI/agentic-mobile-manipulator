@@ -1,0 +1,5 @@
+repositories:
+  ./engine/o3de:
+    type: git
+    url: https://github.com/o3de/o3de.git
+    version: 46c647db74ede9c95897f40468f3c2cac59f3532
