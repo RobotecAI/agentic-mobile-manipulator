@@ -1,0 +1,27 @@
+{
+    "O3DE":
+    {
+        "SpectatorCamera":
+        {
+            "MoveCursorToTheCenter": false
+        },
+        "InputSystem":
+        {
+            "Mouse":
+            {
+                "CaptureMouseCursor": false
+            }
+        },
+        "ROS2":
+        {
+            "SteadyClock":
+            {
+                "ResetTimestampOnLevelReload": false
+            },
+            "Camera":
+            {
+                "AllowPipelineModification": false
+            }
+        }
+    }
+}
