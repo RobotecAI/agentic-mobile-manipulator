@@ -7,3 +7,4 @@ CMakeUserPresets.json
 .idea/
 .vscode/
 .vs/
+cmake-build*/
