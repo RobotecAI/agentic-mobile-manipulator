@@ -39,7 +39,13 @@
         "ScriptEvents",
         "StartingPointInput",
         "TextureAtlas",
-        "WhiteBox"
+        "WhiteBox",
+        "WheelAnimTool",
+        "ROS2Controllers",
+        "ROS2RobotImporter",
+        "ROS2Sensors",
+        "ROS2RobotImporter",
+        "RobotecSpectatorCamera"
     ],
     "engine_version": "2.4.0"
 }
