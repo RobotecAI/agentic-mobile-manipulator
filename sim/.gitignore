@@ -3,6 +3,7 @@
 [Uu]ser/
 [Uu]ser_test*/
 _savebackup/
+**/__pycache__
 CMakeUserPresets.json
 .idea/
 .vscode/

@@ -1,0 +1,95 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{CB069C5F-278D-51AF-93D3-CE2BC6132EE0}",
+            "name": "model_normalized_0",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "model_normalized_0_obj",
+                    "model_normalized_0_obj.defaultobject",
+                    "model_normalized_0_obj.defaultobject.UV0",
+                    "model_normalized_0_obj.defaultobject.material_0",
+                    "model_normalized_0_obj.defaultobject.transform"
+                ]
+            },
+            "export method": 1,
+            "TriangleMeshAssetParams": {
+                "WeldVertices": true
+            },
+            "ConvexAssetParams": {
+                "PlaneTolerance": 0.0003000000142492354
+            },
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "material_0",
+                        "MaterialAsset": {
+                            "assetId": {
+                                "guid": "{6D9F8E0A-466E-5774-8974-FC7F0872FD00}",
+                                "subId": 1
+                            },
+                            "assetHint": "physx/rubber.physicsmaterial"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "model_normalized_0",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "model_normalized_0_obj",
+                    "model_normalized_0_obj.defaultobject",
+                    "model_normalized_0_obj.defaultobject.UV0",
+                    "model_normalized_0_obj.defaultobject.material_0",
+                    "model_normalized_0_obj.defaultobject.transform"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{6835673D-5FD1-5871-80FC-4177A4D69F61}"
+        },
+        {
+            "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "default_model_normalized_0_CE5D85F0_DBC8_5FD1_8258_C0E107B4E102_",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "model_normalized_0_obj.defaultobject"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "ProceduralMeshGroupRule"
+                    },
+                    {
+                        "$type": "UnmodifiableRule"
+                    },
+                    {
+                        "$type": "CoordinateSystemRule",
+                        "useAdvancedData": true
+                    },
+                    {
+                        "$type": "{6E796AC8-1484-4909-860A-6D3F22A7346F} LodRule"
+                    }
+                ]
+            },
+            "id": "{CE5D85F0-DBC8-5FD1-8258-C0E107B4E102}"
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Assets/EdibleItems/tomato_0/visual/model_normalized_0_obj.procprefab",
+            "id": "{DFAD09FE-0B62-59DB-BB89-4B1EA065D876}"
+        }
+    ]
+}
