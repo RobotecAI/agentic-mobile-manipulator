@@ -69,5 +69,28 @@ ${O3DE_ROOT}/scripts/o3de.sh export-project \
 ```
 
 
+# ROS2 workspace
+
+Clone needed packages:
+```shell
+vcs import --input ${DEMO_ROOT}/ros2_ws.repos
+```
+
+```shell
+cd ${DEMO_ROOT}/ros2_ws
+rosdep update
+rosdep install --ignore-src --from-paths src -y
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+```
+
+Source the installation to `.bashrc` or `.zshrc` file:
+```shell
+source ${DEMO_ROOT}/ros2_ws/install/setup.bash
+```
+
+## Running sample script
+```shell
+ros2 launch robotec_kairos_ur10 robotec_launch.py 
+```
 
 

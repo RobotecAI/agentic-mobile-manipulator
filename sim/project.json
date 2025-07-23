@@ -45,7 +45,8 @@
         "ROS2RobotImporter",
         "ROS2Sensors",
         "ROS2RobotImporter",
-        "RobotecSpectatorCamera"
+        "RobotecSpectatorCamera",
+        "URRobots"
     ],
     "engine_version": "2.4.0"
 }

@@ -1,0 +1,32 @@
+{
+    "values": [
+        {
+            "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "kairos_mecanum_wheel_2",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "Scene",
+                    "Scene.Camera",
+                    "Scene.Lamp",
+                    "Scene.mecawheelB__llantas__1_",
+                    "Scene.mecawheelB__llantas__1_.Material_002",
+                    "Scene.mecawheelB__llantas__1_.transform",
+                    "Scene.mecawheelB__rollers_",
+                    "Scene.mecawheelB__rollers_.Material_001",
+                    "Scene.mecawheelB__rollers_.transform"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "UVsRule"
+                    }
+                ]
+            },
+            "id": "{B8B03A66-3E7A-4A13-8FF2-09214E50C6C6}"
+        }
+    ]
+}

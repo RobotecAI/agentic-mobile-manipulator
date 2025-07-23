@@ -1,0 +1,9 @@
+# Default initial positions for rbkairos's ros2_control fake system
+
+initial_positions:
+  egoarm_elbow_joint: 0
+  egoarm_shoulder_lift_joint: 0
+  egoarm_shoulder_pan_joint: 0
+  egoarm_wrist_1_joint: 0
+  egoarm_wrist_2_joint: 0
+  egoarm_wrist_3_joint: 0

@@ -1,0 +1,36 @@
+{
+    "values": [
+        {
+            "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "upperarm",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "Scene",
+                    "Scene.node-shape0-name",
+                    "Scene.node-shape0-name.SWMaterial-0_001",
+                    "Scene.node-shape0-name.transform",
+                    "Scene.node-shape1-name",
+                    "Scene.node-shape1-name.SWMaterial-1_001",
+                    "Scene.node-shape1-name.transform",
+                    "Scene.node-shape2-name",
+                    "Scene.node-shape2-name.SWMaterial-2_001",
+                    "Scene.node-shape2-name.transform",
+                    "Scene.node-shape3-name",
+                    "Scene.node-shape3-name.SWMaterial-3_001",
+                    "Scene.node-shape3-name.transform"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "UVsRule"
+                    }
+                ]
+            },
+            "id": "{3E2948E3-3F0D-4B70-8ABF-7B337150A298}"
+        }
+    ]
+}

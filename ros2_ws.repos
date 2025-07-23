@@ -1,0 +1,53 @@
+repositories:
+  ros2_ws/packages/Universal_Robots_ROS2_Description:
+    type: git
+    url: https://github.com/UniversalRobots/Universal_Robots_ROS2_Description.git
+    version: 9490a115b941b1e8e978ee65d4881dbdca7bd2ea
+  ros2_ws/packages/control_msgs:
+    type: git
+    url: https://github.com/ros-controls/control_msgs.git
+    version: da34baa99f66772e73b75d75e19a62cfc3516f75
+  ros2_ws/packages/control_toolbox:
+    type: git
+    url: https://github.com/ros-controls/control_toolbox.git
+    version: 6d0482f6b7ce3e1f44e89e5b44f6f92ced60bae5
+  ros2_ws/packages/kinematics_interface:
+    type: git
+    url: https://github.com/ros-controls/kinematics_interface.git
+    version: cd1e80e1012c8de53407086afd800d9cfe276dbd
+  ros2_ws/packages/moveit2:
+    type: git
+    url: https://github.com/moveit/moveit2.git
+    version: 950322e0018b86a64258ebc1241b5d0509331ef7
+  ros2_ws/packages/moveit_msgs:
+    type: git
+    url: https://github.com/moveit/moveit_msgs.git
+    version: a76e0d67f356735b0a59313eca2c9a3fe2e17da7
+  ros2_ws/packages/realtime_tools:
+    type: git
+    url: https://github.com/ros-controls/realtime_tools.git
+    version: 842a3c9b69e157ef27b05b755526b953b18c06bd
+  ros2_ws/packages/robotnik_common:
+    type: git
+    url: https://github.com/RobotnikAutomation/robotnik_common.git
+    version: 69ba228d3b7fe711c0b18ca415ef6e88e5ddc217
+  ros2_ws/packages/robotnik_description:
+    type: git
+    url: https://github.com/RobotnikAutomation/robotnik_description.git
+    version: cb04bab2607f6d803f36dafdf83aa62231506605
+  ros2_ws/packages/robotnik_sensors:
+    type: git
+    url: https://github.com/RobotnikAutomation/robotnik_sensors.git
+    version: e639e55ae2554dd5ec7f082c12cc5ab5add7b6d7
+  ros2_ws/packages/ros2_control:
+    type: git
+    url: https://github.com/ros-controls/ros2_control.git
+    version: b315f2b7dcadf2d76a58deb67436213acc8214b6
+  ros2_ws/packages/ros2_controllers:
+    type: git
+    url: https://github.com/ros-controls/ros2_controllers
+    version: 88ce478aba10ecca75f61b1bc3a79d3a7e34187f
+  ros2_ws/packages/srdfdom:
+    type: git
+    url: https://github.com/moveit/srdfdom.git
+    version: 94b4a92760d0ff58d8931f686f2aebe71e88fb84

@@ -1,0 +1,55 @@
+{
+    "values": [
+        {
+            "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "s300",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "Scene",
+                    "Scene.Camera",
+                    "Scene.Light",
+                    "Scene.node",
+                    "Scene.node.Material_001",
+                    "Scene.node.UV0",
+                    "Scene.node.transform"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "UVsRule"
+                    }
+                ]
+            },
+            "id": "{D8C0D4A7-D355-4B5A-8AF2-9E901F6D3C95}"
+        },
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{72A54D51-01A8-4385-94B4-3F6F709950CD}",
+            "name": "s300",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "Scene",
+                    "Scene.Camera",
+                    "Scene.Light",
+                    "Scene.node",
+                    "Scene.node.Material_001",
+                    "Scene.node.UV0",
+                    "Scene.node.transform"
+                ]
+            },
+            "export method": 1,
+            "DecomposeMeshes": true,
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "Material_001"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "values": [
+        {
+            "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "wrist1",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "Scene",
+                    "Scene.node-shape0-name",
+                    "Scene.node-shape0-name.SWMaterial-0_001",
+                    "Scene.node-shape0-name.transform",
+                    "Scene.node-shape1-name",
+                    "Scene.node-shape1-name.SWMaterial-0_001",
+                    "Scene.node-shape1-name.SWMaterial-1_001",
+                    "Scene.node-shape1-name.transform",
+                    "Scene.node-shape2-name",
+                    "Scene.node-shape2-name.SWMaterial-2_001",
+                    "Scene.node-shape2-name.transform"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "UVsRule"
+                    }
+                ]
+            },
+            "id": "{A141F8A5-AC61-4F69-A54C-DC56667651B2}"
+        }
+    ]
+}

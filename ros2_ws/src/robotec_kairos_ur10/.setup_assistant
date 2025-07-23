@@ -1,0 +1,26 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: robotnik_description
+    relative_path: robots/rbkairos/rbkairos_plus.urdf.xacro
+    xacro_args: " namespace:=ego prefix:=ego ur_type:=ur10 gazebo_classic:=false  gazebo_ignition:=false"
+  srdf:
+    relative_path: config/rbkairos.srdf
+  package_settings:
+    author_name: Michal Pelka
+    author_email: michal.pelka@robotec.ai
+    generated_timestamp: 1753106264
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
