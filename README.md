@@ -11,6 +11,7 @@ export O3DE_ROOT=${DEMO_ROOT}/engine/o3de
 
 ## Clone repositories
 ```shell
+cd ${DEMO_ROOT}
 vcs import --input ${DEMO_ROOT}/engine.repos
 vcs import --input ${DEMO_ROOT}/gems.repos
 ```
