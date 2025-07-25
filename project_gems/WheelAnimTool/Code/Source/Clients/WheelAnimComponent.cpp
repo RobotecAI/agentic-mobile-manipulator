@@ -170,20 +170,13 @@ namespace WheelAnimTool
             m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
         }
 
-        // Initialize
-        AZ::TickBus::QueueFunction(
-            [this]()
-            {
-                if (InitJacobian())
-                {
-                    AZ::TickBus::Handler::BusConnect();
-                }
-            });
+        AZ::TickBus::Handler::BusConnect();
     }
 
     void WheelAnimComponent::Deactivate()
     {
         AZ::TickBus::Handler::BusDisconnect();
+        m_jacobian = Eigen::MatrixXd();
     }
 
     //! \brief Create a row of the Jacobian matrix for a mecanum wheel.
@@ -252,6 +245,7 @@ namespace WheelAnimTool
         Eigen::Vector3d meanWheelPosition = Eigen::Vector3d::Zero();
         Eigen::Matrix<double, Eigen::Dynamic, 3> wheelPositions(numWheels, 3);
 
+        AZ_Assert(GetEntity()->GetTransform(), "No transform interface");
         const AZ::Transform worldTransform = GetEntity()->GetTransform()->GetWorldTM();
         const AZ::Transform worldTransformInv = worldTransform.GetInverse();
         for (int i = 0; i < numWheels; ++i)
@@ -311,6 +305,16 @@ namespace WheelAnimTool
 
     void WheelAnimComponent::OnTick(float deltaTime, AZ::ScriptTimePoint time)
     {
+        if (m_jacobian.size() == 0)
+        {
+            if (!InitJacobian())
+            {
+                // if we failed to compute Jacobian matrix, we disconnected
+                AZ::TickBus::Handler::BusDisconnect();
+                return;
+            }
+
+        }
         AzPhysics::RigidBody* rigidBody = nullptr;
         Physics::RigidBodyRequestBus::EventResult(rigidBody, GetEntityId(), &Physics::RigidBodyRequests::GetRigidBody);
         AZ_Error("WheelAnimComponent", rigidBody, "Rigid body not found for entity %s", GetEntityId().ToString().c_str());
