@@ -74,6 +74,7 @@ ${O3DE_ROOT}/scripts/o3de.sh export-project \
 
 Clone needed packages:
 ```shell
+cd ${DEMO_ROOT}
 vcs import --input ${DEMO_ROOT}/ros2_ws.repos
 ```
 
@@ -94,4 +95,14 @@ source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ros2 launch robotec_kairos_ur10 robotec_launch.py 
 ```
 
+## Slam exercise
+
+```shell
+ros2 launch robotec_kairos_ur10 robotec_slam_toolbox.launch.py 
+```
+
+## Nav2
+```shell
+ros2 launch robotec_kairos_ur10 robotec_nav2.launch.py 
+```
 

@@ -1,0 +1,11 @@
+twist_server_node:
+  ros__parameters:
+    linear_scale:
+      x: 1.0
+      y: 1.0
+    max_positive_linear_velocity:
+      x: 1.0
+      y: 1.0
+    max_negative_linear_velocity:
+      x: -1.0
+      y: -1.0

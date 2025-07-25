@@ -100,6 +100,86 @@
                 }
             }
         },
+        "Entity_[34824931353950]": {
+            "Id": "Entity_[34824931353950]",
+            "Name": "FakeLidar",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 188574670543826516
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13563656033304574374
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 3236438916320018778
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 18364058402178120865
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 6563860986273841365
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 6655695218270367867
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 4206789569524800224
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 808123709499850213
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 16791291741841509537
+                },
+                "ROS2Lidar2DSensorComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 9395753912640817169,
+                    "m_template": {
+                        "$type": "ROS2Lidar2DSensorComponent",
+                        "SensorConfiguration": {
+                            "Publishers": {
+                                "sensor_msgs::msg::LaserScan": {
+                                    "Type": "sensor_msgs::msg::LaserScan",
+                                    "Topic": "fake_lidar",
+                                    "QoS": {
+                                        "Reliability": 1
+                                    }
+                                }
+                            }
+                        },
+                        "lidarCore": {
+                            "lidarConfiguration": {
+                                "lidarImplementation": "Scene Queries",
+                                "IgnoredLayerIndices": [
+                                    1
+                                ]
+                            }
+                        }
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4259361094012563836,
+                    "Parent Entity": "Entity_[44886742572752]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.3975299298763275
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[44779368390352]": {
             "Id": "Entity_[44779368390352]",
             "Name": "egoarm_shoulder_link",
@@ -1496,7 +1576,50 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1715097148708366170
+                    "Id": 1715097148708366170,
+                    "DisabledComponents": {
+                        "EditorMeshColliderComponent": {
+                            "$type": "EditorMeshColliderComponent",
+                            "Id": 17216243236477116194,
+                            "ColliderConfiguration": {
+                                "Rotation": [
+                                    -0.7071067690849304,
+                                    0.0,
+                                    0.0,
+                                    0.7071067690849304
+                                ],
+                                "MaterialSlots": {
+                                    "Slots": [
+                                        {
+                                            "Name": "Material_001"
+                                        }
+                                    ]
+                                }
+                            },
+                            "ShapeConfiguration": {
+                                "PhysicsAsset": {
+                                    "Asset": {
+                                        "assetId": {
+                                            "guid": "{280FE484-3962-5C13-80CB-A36E14D5E572}",
+                                            "subId": 3225760924
+                                        },
+                                        "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/s300.dae.pxmesh"
+                                    },
+                                    "Configuration": {
+                                        "PhysicsAsset": {
+                                            "assetId": {
+                                                "guid": "{280FE484-3962-5C13-80CB-A36E14D5E572}",
+                                                "subId": 3225760924
+                                            },
+                                            "loadBehavior": "QueueLoad",
+                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/s300.dae.pxmesh"
+                                        },
+                                        "UseMaterialsFromAsset": false
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -1517,47 +1640,6 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 7576058874646647744
-                },
-                "EditorMeshColliderComponent": {
-                    "$type": "EditorMeshColliderComponent",
-                    "Id": 17216243236477116194,
-                    "ColliderConfiguration": {
-                        "Rotation": [
-                            -0.7071067690849304,
-                            0.0,
-                            0.0,
-                            0.7071067690849304
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Material_001"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{280FE484-3962-5C13-80CB-A36E14D5E572}",
-                                    "subId": 3225760924
-                                },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/s300.dae.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{280FE484-3962-5C13-80CB-A36E14D5E572}",
-                                        "subId": 3225760924
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/s300.dae.pxmesh"
-                                },
-                                "UseMaterialsFromAsset": false
-                            }
-                        }
-                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2251,7 +2333,8 @@
                         "Entity_[44908217409232]",
                         "Entity_[45007001657040]",
                         "Entity_[44916807343824]",
-                        "Entity_[44998411722448]"
+                        "Entity_[44998411722448]",
+                        "Entity_[34824931353950]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -2266,6 +2349,9 @@
                     "$type": "EditorMeshColliderComponent",
                     "Id": 1148188171262987601,
                     "ColliderConfiguration": {
+                        "CollisionLayer": {
+                            "Index": 1
+                        },
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -2745,6 +2831,38 @@
                         "Joint Name": "egorear_laser_joint"
                     }
                 },
+                "ROS2Lidar2DSensorComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 16647018630608460279,
+                    "m_template": {
+                        "$type": "ROS2Lidar2DSensorComponent",
+                        "SensorConfiguration": {
+                            "Publishers": {
+                                "sensor_msgs::msg::LaserScan": {
+                                    "Type": "sensor_msgs::msg::LaserScan",
+                                    "Topic": "scan_rear_left",
+                                    "QoS": {
+                                        "Reliability": 1
+                                    }
+                                }
+                            }
+                        },
+                        "lidarCore": {
+                            "lidarConfiguration": {
+                                "lidarModelName": "Slamtec RPLIDAR S1",
+                                "lidarImplementation": "Scene Queries",
+                                "LidarParameters": {
+                                    "Name": "Slamtec RPLIDAR S1",
+                                    "Points per layer": 921,
+                                    "Min horizontal angle": -90.0,
+                                    "Max horizontal angle": 90.0,
+                                    "Min range": 0.5,
+                                    "Max range": 40.0
+                                }
+                            }
+                        }
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 13029299352023316621,
@@ -2961,7 +3079,50 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 4983865155703997835
+                    "Id": 4983865155703997835,
+                    "DisabledComponents": {
+                        "EditorMeshColliderComponent": {
+                            "$type": "EditorMeshColliderComponent",
+                            "Id": 2295793932425936467,
+                            "ColliderConfiguration": {
+                                "Rotation": [
+                                    -0.7071067690849304,
+                                    0.0,
+                                    0.0,
+                                    0.7071067690849304
+                                ],
+                                "MaterialSlots": {
+                                    "Slots": [
+                                        {
+                                            "Name": "Material_001"
+                                        }
+                                    ]
+                                }
+                            },
+                            "ShapeConfiguration": {
+                                "PhysicsAsset": {
+                                    "Asset": {
+                                        "assetId": {
+                                            "guid": "{280FE484-3962-5C13-80CB-A36E14D5E572}",
+                                            "subId": 3225760924
+                                        },
+                                        "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/s300.dae.pxmesh"
+                                    },
+                                    "Configuration": {
+                                        "PhysicsAsset": {
+                                            "assetId": {
+                                                "guid": "{280FE484-3962-5C13-80CB-A36E14D5E572}",
+                                                "subId": 3225760924
+                                            },
+                                            "loadBehavior": "QueueLoad",
+                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/s300.dae.pxmesh"
+                                        },
+                                        "UseMaterialsFromAsset": false
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -2982,47 +3143,6 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 1807018662601527062
-                },
-                "EditorMeshColliderComponent": {
-                    "$type": "EditorMeshColliderComponent",
-                    "Id": 2295793932425936467,
-                    "ColliderConfiguration": {
-                        "Rotation": [
-                            -0.7071067690849304,
-                            0.0,
-                            0.0,
-                            0.7071067690849304
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Material_001"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{280FE484-3962-5C13-80CB-A36E14D5E572}",
-                                    "subId": 3225760924
-                                },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/s300.dae.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{280FE484-3962-5C13-80CB-A36E14D5E572}",
-                                        "subId": 3225760924
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/s300.dae.pxmesh"
-                                },
-                                "UseMaterialsFromAsset": false
-                            }
-                        }
-                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -3621,6 +3741,38 @@
                     "ROS2FrameConfiguration": {
                         "Frame Name": "egofront_laser_link",
                         "Joint Name": "egofront_laser_joint"
+                    }
+                },
+                "ROS2Lidar2DSensorComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 5650155384345794891,
+                    "m_template": {
+                        "$type": "ROS2Lidar2DSensorComponent",
+                        "SensorConfiguration": {
+                            "Publishers": {
+                                "sensor_msgs::msg::LaserScan": {
+                                    "Type": "sensor_msgs::msg::LaserScan",
+                                    "Topic": "/scan_front_right",
+                                    "QoS": {
+                                        "Reliability": 1
+                                    }
+                                }
+                            }
+                        },
+                        "lidarCore": {
+                            "lidarConfiguration": {
+                                "lidarModelName": "Slamtec RPLIDAR S1",
+                                "lidarImplementation": "Scene Queries",
+                                "LidarParameters": {
+                                    "Name": "Slamtec RPLIDAR S1",
+                                    "Points per layer": 921,
+                                    "Min horizontal angle": -90.0,
+                                    "Max horizontal angle": 90.0,
+                                    "Min range": 0.10000000149011612,
+                                    "Max range": 40.0
+                                }
+                            }
+                        }
                     }
                 },
                 "TransformComponent": {

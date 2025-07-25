@@ -20,8 +20,7 @@
                 "Id": 14126657869720434043,
                 "Child Entity Order": [
                     "Entity_[411497476927]",
-                    "Entity_[1176639161715]",
-                    "Instance_[44770778455760]/ContainerEntity"
+                    "Entity_[1176639161715]"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -489,23 +488,6 @@
                     }
                 }
             }
-        }
-    },
-    "Instances": {
-        "Instance_[44770778455760]": {
-            "Source": "Assets/prefabs/rbkairos_plus.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.1473677158355713
-                }
-            ]
         }
     }
 }

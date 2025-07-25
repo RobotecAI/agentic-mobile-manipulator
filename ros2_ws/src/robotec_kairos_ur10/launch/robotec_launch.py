@@ -8,6 +8,8 @@ from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 from moveit_configs_utils import MoveItConfigsBuilder
 from moveit_configs_utils.launches import generate_move_group_launch
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions import IncludeLaunchDescription
 from pprint import pprint
 
 
@@ -45,6 +47,16 @@ def generate_launch_description():
             output="screen",
             parameters=[moveit_config.to_dict() | use_sim_time],
         )
+    
+    nav2_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare("robotec_kairos_ur10"),
+                "launch",
+                "robotec_nav2.launch.py"
+            ])
+        )
+    )
 
     rviz_config = PathJoinSubstitution([
         FindPackageShare("robotec_kairos_ur10"),
@@ -52,10 +64,6 @@ def generate_launch_description():
         "robotec_launch.rviz"
     ])
 
-    pprint (moveit_config)
-
-
-    pprint (moveit_config.joint_limits)
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -70,7 +78,34 @@ def generate_launch_description():
             moveit_config.joint_limits,
         ],
     )
-
+    marker_server = Node(
+        package='interactive_marker_twist_server',
+        executable='marker_server',
+        name='marker_teleop',
+        output='screen',
+        parameters=[{'link_name': 'egobase_link',
+                        'use_sim_time': True,
+                        'use_stamped_msgs': False,
+                        'linear_scale':
+                        {
+                        'x' : 1.0,
+                            'y': 1.0
+                        },
+                        'max_positive_linear_velocity':
+                        {
+                            'x' : 1.0,
+                            'y': 1.0
+                        },
+                        'max_negative_linear_velocity':
+                        {
+                            'x': -1.0,
+                            'y': -1.0 
+                        }
+                        }],
+        # remappings=[
+        #     ('/cmd_vel', '/cmd_vel')
+        # ]
+    )
 
     rgbd_pc = ComposableNodeContainer(
             name='container0',
@@ -95,12 +130,14 @@ def generate_launch_description():
             output='screen',
             parameters=[{'use_sim_time': True, 'approximate_sync': True}]
     
-        )
+    )
 
     nodes_to_start = [
         run_move_group_node,
+        nav2_launch,
         rviz_node,
-        rgbd_pc
+        rgbd_pc,
+        marker_server
     ]
 
     return LaunchDescription(nodes_to_start)
