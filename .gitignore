@@ -5,3 +5,5 @@ ros2_ws/build
 ros2_ws/src/packages
 ros2_ws/log
 ros2_ws/__pycache__
+
+monitoring/monitoring_results*
