@@ -123,9 +123,19 @@ local_costmap:
         z_voxels: 16
         max_obstacle_height: 2.0
         mark_threshold: 0
-        observation_sources: scan
-        scan:
-          topic: /fake_lidar
+        observation_sources: scan_front_right scan_rear_left
+        scan_front_right:
+          topic: /scan_front_right
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 2.5
+          obstacle_min_range: 0.0
+        scan_rear_left:
+          topic: /scan_rear_left
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -153,9 +163,19 @@ global_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: scan
-        scan:
-          topic: /fake_lidar
+        observation_sources: scan_front_right scan_rear_left
+        scan_front_right:
+          topic: /scan_front_right
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 2.5
+          obstacle_min_range: 0.0
+        scan_rear_left:
+          topic: /scan_rear_left
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -282,10 +302,15 @@ collision_monitor:
       min_points: 6
       visualize: False
       enabled: True
-    observation_sources: ["scan"]
-    scan:
+    observation_sources: ["scan_front_right", "scan_rear_left"]
+    scan_front_right:
       type: "scan"
-      topic: "fake_lidar"
+      topic: "scan_front_right"
+      min_height: 0.15
+      max_height: 2.0
+    scan_rear_left:
+      type: "scan"
+      topic: "scan_rear_left"
       min_height: 0.15
       max_height: 2.0
       enabled: True
