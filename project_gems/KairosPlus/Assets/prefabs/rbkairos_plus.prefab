@@ -370,9 +370,45 @@
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 5021513442224457558
                 },
+                "EditorShapeColliderComponent": {
+                    "$type": "EditorShapeColliderComponent",
+                    "Id": 5474283125039048336,
+                    "ColliderConfiguration": {
+                        "Trigger": true,
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfigs": [
+                        {
+                            "$type": "SphereShapeConfiguration",
+                            "Radius": 0.05000000074505806
+                        }
+                    ]
+                },
+                "EditorSphereShapeComponent": {
+                    "$type": "EditorSphereShapeComponent",
+                    "Id": 534486384901671249,
+                    "SphereShape": {
+                        "Configuration": {
+                            "Radius": 0.05000000074505806
+                        }
+                    }
+                },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 11431407573156866381
+                },
+                "GripperActionServerComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 386742632122709261,
+                    "m_template": {
+                        "$type": "GripperActionServerComponent"
+                    }
                 },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
@@ -392,6 +428,15 @@
                             89.9999771118164,
                             0.0
                         ]
+                    }
+                },
+                "VacuumGripperComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 17782114646553667170,
+                    "m_template": {
+                        "$type": "VacuumGripperComponent",
+                        "EffectorCollider": "Entity_[44783663357648]",
+                        "EffectorArticulation": "Entity_[44783663357648]"
                     }
                 }
             }

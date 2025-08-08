@@ -278,6 +278,13 @@
                         ]
                     }
                 },
+                "EditorTagComponent": {
+                    "$type": "EditorTagComponent",
+                    "Id": 7450669037786711832,
+                    "Tags": [
+                        "Grippable"
+                    ]
+                },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 12802023452715689730
