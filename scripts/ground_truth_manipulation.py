@@ -131,7 +131,25 @@ def navigate_to_pose(
 def main(args=None):
     rclpy.init()
 
-    moveit_config = MoveItConfigsBuilder("rbkairos", package_name="robotec_kairos_ur10").moveit_cpp(file_path=get_package_share_directory("robotec_kairos_ur10") + "/config/moveit_cpp.yaml").to_moveit_configs().to_dict()
+    moveit_config = (MoveItConfigsBuilder("rbkairos", package_name="robotec_kairos_ur10")
+        .moveit_cpp(file_path=get_package_share_directory("robotec_kairos_ur10") + "/config/moveit_cpp.yaml")
+        .robot_description(
+            mappings={
+                "namespace": f"ego",
+                "prefix": f"ego",
+                "ur_type": "ur10",
+                "gazebo_classic": "false",
+                "gazebo_ignition": "false",
+            }
+        )
+        .robot_description_semantic(
+            mappings={
+                "namespace": f"ego",
+                "prefix": f"ego",
+            }
+        )
+        .to_moveit_configs().to_dict()
+    )
     moveit_config.update({"use_sim_time": True})
     file = create_params_file_from_dict(moveit_config, "/**")
 
