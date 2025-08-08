@@ -171,7 +171,7 @@
         },
         "Entity_[46547825714465]": {
             "Id": "Entity_[46547825714465]",
-            "Name": "collider",
+            "Name": "corn",
             "Components": {
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",

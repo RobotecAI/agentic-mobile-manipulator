@@ -52,7 +52,7 @@
     "Entities": {
         "Entity_[9165443789406]": {
             "Id": "Entity_[9165443789406]",
-            "Name": "Block",
+            "Name": "yellow_cube",
             "Components": {
                 "EditorColliderComponent": {
                     "$type": "EditorColliderComponent",

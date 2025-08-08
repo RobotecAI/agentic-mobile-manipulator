@@ -22,7 +22,6 @@
                     "Entity_[3876413040103]",
                     "Entity_[440535597152]",
                     "Entity_[513550041184]",
-                    "Instance_[12517228203983]/ContainerEntity",
                     "Instance_[460594999437]/ContainerEntity",
                     "Instance_[2986035769485]/ContainerEntity",
                     "Instance_[3252323741837]/ContainerEntity",
@@ -31,7 +30,6 @@
                     "Instance_[5017555300493]/ContainerEntity",
                     "Instance_[5154994253965]/ContainerEntity",
                     "Instance_[5309613076621]/ContainerEntity",
-                    "",
                     "Instance_[625792562836]/ContainerEntity",
                     "Entity_[39341990123314]"
                 ]
@@ -4290,7 +4288,12 @@
             "Components": {
                 "EditorCameraComponent": {
                     "$type": "{CA11DA46-29FF-4083-B5F6-E02C3A8C3A3D} EditorCameraComponent",
-                    "Id": 17794084959949726180
+                    "Id": 17794084959949726180,
+                    "Controller": {
+                        "Configuration": {
+                            "Field of View": 40.0
+                        }
+                    }
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -4312,12 +4315,6 @@
                     "$type": "EditorLockComponent",
                     "Id": 10292532180520111080
                 },
-                "EditorLookAtComponent": {
-                    "$type": "EditorLookAtComponent",
-                    "Id": 4050310940192040969,
-                    "Target": "Instance_[12517228203983]/Entity_[10700457037775]",
-                    "ForwardAxis": 2
-                },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 3088166325948465061
@@ -4330,13 +4327,13 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 5663839320230774171
                 },
-                "FlyCameraInputComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 7813379949912029962,
-                    "m_template": {
-                        "$type": "FlyCameraInputComponent",
-                        "Move Speed": 1.0,
-                        "Mouse Sensitivity": 0.004999999888241291
+                "SpectatorCameraEditorComponent": {
+                    "$type": "SpectatorCameraEditorComponent",
+                    "Id": 17000696388042000244,
+                    "Configuration": {
+                        "LookAtTarget": "Instance_[625792562836]/Entity_[44886742572752]",
+                        "FollowTargetRotation": false,
+                        "MouseSensitivity": 4.0
                     }
                 },
                 "TransformComponent": {
@@ -4345,14 +4342,9 @@
                     "Parent Entity": "Entity_[440535597152]",
                     "Transform Data": {
                         "Translate": [
-                            15.927047729492188,
-                            -2.663750171661377,
-                            6.063713550567627
-                        ],
-                        "Rotate": [
-                            -4.855871200561523,
-                            7.733588695526123,
-                            122.26488494873047
+                            16.141292572021484,
+                            -3.8118138313293457,
+                            7.369152069091797
                         ]
                     }
                 }
@@ -4360,31 +4352,6 @@
         }
     },
     "Instances": {
-        "Instance_[12517228203983]": {
-            "Source": "PandaRobot/PandaRobot.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.5927098989486694
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 2.658244371414185
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.7025851011276245
-                }
-            ]
-        },
         "Instance_[2986035769485]": {
             "Source": "Prefabs/blue_cube.prefab",
             "Patches": [
