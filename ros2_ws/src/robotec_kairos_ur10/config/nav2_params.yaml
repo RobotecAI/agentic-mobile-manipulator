@@ -2,8 +2,8 @@ bt_navigator:
   ros__parameters:
     use_sim_time: true
     global_frame: map
-    robot_base_frame: egobase_link
-    odom_topic: /odom
+    robot_base_frame: <robot_namespace>egobase_link
+    odom_topic: <robot_namespace>odom_gt
     bt_loop_duration: 10
     default_server_timeout: 20
     wait_for_service_timeout: 1000
@@ -103,7 +103,7 @@ local_costmap:
       update_frequency: 5.0
       publish_frequency: 2.0
       global_frame: odom
-      robot_base_frame: egobase_link
+      robot_base_frame: <robot_namespace>egobase_link
       rolling_window: true
       width: 3
       height: 3
@@ -125,7 +125,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: scan_front_right scan_rear_left
         scan_front_right:
-          topic: /scan_front_right
+          topic: <robot_namespace>scan_front_right
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -135,7 +135,7 @@ local_costmap:
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0
         scan_rear_left:
-          topic: /scan_rear_left
+          topic: <robot_namespace>scan_rear_left
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -155,7 +155,7 @@ global_costmap:
       update_frequency: 1.0
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: egobase_link
+      robot_base_frame: <robot_namespace>egobase_link
       footprint: "[ [0.39, 0.335], [0.39, -0.335], [-0.39, -0.335], [-0.39, 0.335] ]"
       resolution: 0.05
       track_unknown_space: true
@@ -165,7 +165,7 @@ global_costmap:
         enabled: True
         observation_sources: scan_front_right scan_rear_left
         scan_front_right:
-          topic: /scan_front_right
+          topic: <robot_namespace>scan_front_right
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -175,7 +175,7 @@ global_costmap:
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0
         scan_rear_left:
-          topic: /scan_rear_left
+          topic: <robot_namespace>scan_rear_left
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -245,9 +245,9 @@ behavior_server:
       plugin: "nav2_behaviors::Wait"
     assisted_teleop:
       plugin: "nav2_behaviors::AssistedTeleop"
-    local_frame: odom
+    local_frame: <robot_namespace>odom
     global_frame: map
-    robot_base_frame: egobase_link
+    robot_base_frame: <robot_namespace>egobase_link
     transform_tolerance: 0.1
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
@@ -274,18 +274,18 @@ velocity_smoother:
     min_velocity: [-1.0, -1.0, -2.0]
     max_accel: [2.5, 2.5, 3.2]
     max_decel: [-2.5, -2.5, -3.2]
-    odom_topic: "odom"
+    odom_topic: <robot_namespace>odom_gt
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
 
 collision_monitor:
   ros__parameters:
-    base_frame_id: "egobase_footprint"
+    base_frame_id: "<robot_namespace>egobase_footprint"
     odom_frame_id: "odom"
-    cmd_vel_in_topic: "cmd_vel_smoothed"
-    cmd_vel_out_topic: "cmd_vel"
-    state_topic: "collision_monitor_state"
+    cmd_vel_in_topic: "<robot_namespace>cmd_vel_smoothed"
+    cmd_vel_out_topic: "<robot_namespace>cmd_vel"
+    state_topic: "<robot_namespace>collision_monitor_state"
     transform_tolerance: 0.2
     source_timeout: 1.0
     base_shift_correction: True
@@ -305,12 +305,12 @@ collision_monitor:
     observation_sources: ["scan_front_right", "scan_rear_left"]
     scan_front_right:
       type: "scan"
-      topic: "scan_front_right"
+      topic: "<robot_namespace>scan_front_right"
       min_height: 0.15
       max_height: 2.0
     scan_rear_left:
       type: "scan"
-      topic: "scan_rear_left"
+      topic: "<robot_namespace>scan_rear_left"
       min_height: 0.15
       max_height: 2.0
       enabled: True
@@ -324,7 +324,7 @@ docking_server:
     undock_linear_tolerance: 0.05
     undock_angular_tolerance: 0.1
     max_retries: 3
-    base_frame: "egobase_link"
+    base_frame: "<robot_namespace>egobase_link"
     fixed_frame: "odom"
     dock_backwards: false
     dock_prestaging_tolerance: 0.5

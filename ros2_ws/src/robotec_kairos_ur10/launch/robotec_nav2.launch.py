@@ -8,6 +8,9 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration, IfElseSubstitution, EqualsSubstitution
+from nav2_common.launch import ReplaceString, RewrittenYaml
+from launch_ros.descriptions import ParameterFile
 
 def generate_launch_description():
     nav2_params = PathJoinSubstitution([
@@ -15,6 +18,19 @@ def generate_launch_description():
         "config",
         "nav2_params.yaml"
     ])
+
+    robot_namespace = LaunchConfiguration('robot_namespace', default='')
+
+    configured_params = ReplaceString(
+        source_file=nav2_params,
+        replacements={
+            "<robot_namespace>": IfElseSubstitution(
+                condition=EqualsSubstitution(robot_namespace, ''),
+                if_value='',
+                else_value=(robot_namespace, '/')
+            )
+        }
+    ),
 
     map_file = PathJoinSubstitution([
         FindPackageShare("robotec_kairos_ur10"),
@@ -55,12 +71,11 @@ def generate_launch_description():
         map_lifecycle,
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([str(pathlib.Path(
-                get_package_share_directory('nav2_bringup')).joinpath('launch', 'bringup_launch.py'))]),
+                get_package_share_directory('robotec_kairos_ur10')).joinpath('launch', 'robotec_navigation.launch.py'))]),
             launch_arguments = {
-                'params_file': nav2_params,
+                'params_file': configured_params,
                 'use_sim_time': 'True',
-                'slam': 'False',
-                'use_localization': 'False',
+                'robot_namespace': robot_namespace,
             }.items()
         )
     ])

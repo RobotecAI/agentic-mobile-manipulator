@@ -10,6 +10,7 @@ from moveit_configs_utils import MoveItConfigsBuilder
 from moveit_configs_utils.launches import generate_move_group_launch
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import IncludeLaunchDescription
+from launch.substitutions import LaunchConfiguration
 from pprint import pprint
 
 
@@ -17,6 +18,8 @@ from pprint import pprint
 def generate_launch_description():
 
     use_sim_time = { "use_sim_time": True}
+
+    robot_namespace = LaunchConfiguration('robot_namespace', default='')
 
 
     # robotnik_xacro_path = os.path.join(
@@ -55,7 +58,10 @@ def generate_launch_description():
                 "launch",
                 "robotec_nav2.launch.py"
             ])
-        )
+        ),
+        launch_arguments = {
+            'robot_namespace': robot_namespace,
+        }.items()
     )
 
     rviz_config = PathJoinSubstitution([
@@ -117,10 +123,10 @@ def generate_launch_description():
                     package='depth_image_proc',
                     plugin='depth_image_proc::PointCloudXyzrgbNode',
                     name='point_cloud_xyzrgb_node',
-                    remappings=[('rgb/camera_info', '/rgbd_camera/camera_info'),
-                                ('rgb/image_rect_color', '/rgbd_camera/camera_image_color'),
-                                ('depth_registered/image_rect','/rgbd_camera/camera_image_depth'),
-                                ('/points','/rgbd_camera/pointcloud')],
+                    remappings=[('rgb/camera_info', (robot_namespace, '/rgbd_camera/camera_info')),
+                                ('rgb/image_rect_color', (robot_namespace, '/rgbd_camera/camera_image_color')),
+                                ('depth_registered/image_rect', (robot_namespace, '/rgbd_camera/camera_image_depth')),
+                                ('/points', (robot_namespace, '/rgbd_camera/pointcloud'))],
                     parameters=[
                         {'use_sim_time': True},
                         {'approximate_sync': True}
