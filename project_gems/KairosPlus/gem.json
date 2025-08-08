@@ -1,0 +1,28 @@
+{
+    "gem_name": "KairosPlus",
+    "version": "1.0.0",
+    "display_name": "KairosPlus",
+    "license": "Apache-2.0",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "Robotec.AI",
+    "origin_url": "",
+    "type": "Asset",
+    "summary": "A Kairos Plus robot gem created from URDF from Robotnik",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "KairosPlus"
+    ],
+    "platforms": [
+        ""
+    ],
+    "icon_path": "preview.png",
+    "requirements": "ROS2",
+    "documentation_url": "",
+    "dependencies": ["ROS2", "WheelAnimTool"],
+    "repo_uri": "",
+    "compatible_engines": [],
+    "engine_api_dependencies": [],
+    "restricted": "KairosPlus"
+}

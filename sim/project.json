@@ -48,7 +48,8 @@
         "ROS2RobotImporter",
         "ROS2SampleRobots",
         "RobotecSpectatorCamera",
-        "URRobots"
+        "URRobots",
+        "KairosPlus"
     ],
     "engine_version": "2.4.0"
 }

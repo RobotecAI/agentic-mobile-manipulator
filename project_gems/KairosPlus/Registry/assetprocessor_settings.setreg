@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder KairosPlus/Assets": {
+                    "watch": "@GEMROOT:KairosPlus@/",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder KairosPlus/Registry": {
+                    "watch": "@GEMROOT:KairosPlus@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}

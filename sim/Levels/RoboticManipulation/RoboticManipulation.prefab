@@ -31,7 +31,8 @@
                     "Instance_[5017555300493]/ContainerEntity",
                     "Instance_[5154994253965]/ContainerEntity",
                     "Instance_[5309613076621]/ContainerEntity",
-                    "Instance_[804495402334]/ContainerEntity",
+                    "",
+                    "Instance_[625792562836]/ContainerEntity",
                     "Entity_[39341990123314]"
                 ]
             },
@@ -4649,37 +4650,13 @@
                 }
             ]
         },
-        "Instance_[804495402334]": {
-            "Source": "Assets/prefabs/rbkairos_plus.prefab",
+        "Instance_[625792562836]": {
+            "Source": "prefabs/rbkairos_plus.prefab",
             "Patches": [
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.28977012634277344
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 4.5390543937683105
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[34824931353950]/Components/EditorCommentComponent",
-                    "value": {
-                        "$type": "EditorCommentComponent",
-                        "Id": 7857699554748725691,
-                        "Configuration": "Fake lIdar for slam \n"
-                    }
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[34824931353950]/Components/ROS2Lidar2DSensorComponent/m_template/SensorConfiguration/Publishers/sensor_msgs::msg::LaserScan/Topic",
-                    "value": "fake_lidar"
                 }
             ]
         }
