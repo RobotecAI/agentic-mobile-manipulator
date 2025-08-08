@@ -49,7 +49,8 @@
         "ROS2SampleRobots",
         "RobotecSpectatorCamera",
         "URRobots",
-        "KairosPlus"
+        "KairosPlus",
+        "LevelGem"
     ],
     "engine_version": "2.4.0"
 }

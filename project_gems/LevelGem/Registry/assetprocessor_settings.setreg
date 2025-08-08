@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder LevelGem/Assets": {
+                    "watch": "@GEMROOT:LevelGem@/",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder LevelGem/Registry": {
+                    "watch": "@GEMROOT:LevelGem@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}

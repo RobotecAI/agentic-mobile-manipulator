@@ -1,0 +1,28 @@
+{
+    "gem_name": "LevelGem",
+    "version": "1.0.0",
+    "display_name": "LevelGem",
+    "license": "Apache-2.0",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "Robotec.AI",
+    "origin_url": "",
+    "type": "Asset",
+    "summary": "A gem containing the level prefab and assets for the Mobile Manipulator Demo Demo.",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "LevelGem"
+    ],
+    "platforms": [
+        ""
+    ],
+    "icon_path": "preview.png",
+    "requirements": "ROS2",
+    "documentation_url": "",
+    "dependencies": ["ROS2"],
+    "repo_uri": "",
+    "compatible_engines": [],
+    "engine_api_dependencies": [],
+    "restricted": "LevelGem"
+}
