@@ -15,7 +15,10 @@
     "icon_path": "preview.png",
     "engine": "o3de",
     "external_subdirectories": [
-        "Gem"
+        "Gem",
+        "../project_gems/WheelAnimTool",
+        "../project_gems/LevelGem",
+        "../project_gems/KairosPlus"
     ],
     "restricted": "MobileManipulatorDemo",
     "gem_names": [
