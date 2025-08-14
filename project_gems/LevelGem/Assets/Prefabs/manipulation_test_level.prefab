@@ -2214,7 +2214,7 @@
         },
         "Entity_[12921274066567]": {
             "Id": "Entity_[12921274066567]",
-            "Name": "Desk",
+            "Name": "MainDesk",
             "Components": {
                 "AZ::Render::EditorMeshComponent": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -4274,7 +4274,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.8797836303710938
+                    "value": 1.8797836303710935
                 },
                 {
                     "op": "replace",
@@ -4299,7 +4299,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.9977179765701294
+                    "value": 1.9977179765701296
                 },
                 {
                     "op": "replace",
@@ -4369,7 +4369,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.9761037826538086
+                    "value": 1.9761037826538088
                 },
                 {
                     "op": "replace",

@@ -24,6 +24,12 @@ git lfs pull
 python/get_python.sh
 ${O3DE_ROOT}/scripts/o3de.sh register --this-engine
 ```
+We recommend cherry-pick of those bug fixes (for version 2510):
+```shell
+cd ${O3DE_ROOT}
+git cherry-pick 57680ee42f18d5952e4d4fa5ab52750edefb878e #o3de/o3de#19164
+git cherry-pick d27e655b7a66255140cb766854e2bcb9007170d3 #o3de/o3de#18830
+```
 
 ## Setup o3de-extras
 ```shell

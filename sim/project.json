@@ -53,7 +53,8 @@
         "RobotecSpectatorCamera",
         "URRobots",
         "KairosPlus",
-        "LevelGem"
+        "LevelGem",
+        "SimulationInterfaces"
     ],
     "engine_version": "2.4.0"
 }

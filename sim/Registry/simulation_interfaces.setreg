@@ -1,0 +1,6 @@
+{
+    "SimulationInterfaces": {
+        "SimulatorFrame": "odom",
+        "StartInStoppedState": false
+    }
+}
