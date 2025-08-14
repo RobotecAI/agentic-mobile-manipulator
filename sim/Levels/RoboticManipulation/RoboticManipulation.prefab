@@ -20,8 +20,8 @@
                 "Id": 14126657869720434043,
                 "Child Entity Order": [
                     "Entity_[978409679447]",
-                    "Instance_[625792562836]/ContainerEntity",
-                    "Instance_[557230656101]/ContainerEntity"
+                    "Instance_[557230656101]/ContainerEntity",
+                    "Instance_[693783843334]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -106,7 +106,7 @@
                     "$type": "SpectatorCameraEditorComponent",
                     "Id": 17000696388042000244,
                     "Configuration": {
-                        "LookAtTarget": "Instance_[625792562836]/Entity_[44886742572752]",
+                        "LookAtTarget": "",
                         "FollowTargetRotation": false,
                         "MouseSensitivity": 4.0
                     }
@@ -137,8 +137,8 @@
                 }
             ]
         },
-        "Instance_[625792562836]": {
-            "Source": "prefabs/rbkairos_plus.prefab",
+        "Instance_[693783843334]": {
+            "Source": "Assets/rbkairos_plus.prefab",
             "Patches": [
                 {
                     "op": "replace",

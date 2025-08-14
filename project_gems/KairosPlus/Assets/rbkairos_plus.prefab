@@ -146,6 +146,7 @@
                     "m_template": {
                         "$type": "ROS2Lidar2DSensorComponent",
                         "SensorConfiguration": {
+                            "Visualize": false,
                             "Publishers": {
                                 "sensor_msgs::msg::LaserScan": {
                                     "Type": "sensor_msgs::msg::LaserScan",
@@ -445,24 +446,26 @@
             "Id": "Entity_[44787958324944]",
             "Name": "egobase_logo_front_visual",
             "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 623335038376821967,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                    "subId": 280781947
-                                },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis.stl.azmodel"
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15310631791630225959,
+                    "DisabledComponents": {
+                        "AZ::Render::EditorMeshComponent": {
+                            "$type": "AZ::Render::EditorMeshComponent",
+                            "Id": 623335038376821967,
+                            "Controller": {
+                                "Configuration": {
+                                    "ModelAsset": {
+                                        "assetId": {
+                                            "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                            "subId": 280781947
+                                        },
+                                        "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis.stl.azmodel"
+                                    }
+                                }
                             }
                         }
                     }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 15310631791630225959
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -480,90 +483,92 @@
                     "$type": "EditorLockComponent",
                     "Id": 15496283215443370483
                 },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 14218349351147330498,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 8238893909505247489
                 },
                 "EditorPendingCompositionComponent": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 15939473041495773153
+                    "Id": 15939473041495773153,
+                    "PendingComponents": {
+                        "EditorMaterialComponent": {
+                            "$type": "EditorMaterialComponent",
+                            "Id": 14218349351147330498,
+                            "Controller": {
+                                "Configuration": {
+                                    "materials": [
+                                        {
+                                            "Key": {},
+                                            "Value": {
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "lodIndex": 0,
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
@@ -924,10 +929,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{357F8526-8732-5DB4-9DD9-097187961D56}",
+                                    "guid": "{1D2CE94A-0298-5BB8-91A2-DE1B0809A465}",
                                     "subId": 270772955
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/upperarm.dae.azmodel"
+                                "assetHint": "assets/models/upperarm.fbx.azmodel"
                             }
                         }
                     }
@@ -1274,10 +1279,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{46C88D38-7DA9-5A84-A99D-960C83E1D285}",
+                                    "guid": "{BD9233CA-E612-55B6-9BEC-5B9B42B263DF}",
                                     "subId": 283815047
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/wrist2.dae.azmodel"
+                                "assetHint": "assets/models/wrist2.fbx.azmodel"
                             }
                         }
                     }
@@ -1472,10 +1477,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{FB961B9C-B0F8-5985-8032-00B050B82165}",
+                                    "guid": "{CF7D5C1D-B173-59BC-A840-0586B2D0EC8E}",
                                     "subId": 274532406
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/forearm.dae.azmodel"
+                                "assetHint": "assets/models/forearm.fbx.azmodel"
                             }
                         }
                     }
@@ -1804,10 +1809,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{15A94A1B-A5B2-52E2-9722-C60E943DAFD1}",
+                                    "guid": "{98BBE3CB-CA24-53D2-B078-7319289D2512}",
                                     "subId": 283376957
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/wrist1.dae.azmodel"
+                                "assetHint": "assets/models/wrist1.fbx.azmodel"
                             }
                         }
                     }
@@ -2214,6 +2219,18 @@
                     },
                     "Initial positions": [
                         [
+                            "egoarm_base_joint",
+                            {}
+                        ],
+                        [
+                            "egoarm_base_link-base_fixed_joint",
+                            {}
+                        ],
+                        [
+                            "egoarm_base_link-base_link_inertia",
+                            {}
+                        ],
+                        [
                             "egoarm_shoulder_pan_joint",
                             {}
                         ],
@@ -2235,6 +2252,18 @@
                         ],
                         [
                             "egoarm_wrist_3_joint",
+                            {}
+                        ],
+                        [
+                            "egoarm_wrist_3-flange",
+                            {}
+                        ],
+                        [
+                            "egoarm_flange-tool0",
+                            {}
+                        ],
+                        [
+                            "egoarm_wrist_3_link-ft_frame",
                             {}
                         ]
                     ]
@@ -2582,10 +2611,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{33CE2E7E-62DD-5422-B1FE-58BF93AE5872}",
-                                    "subId": 278609181
+                                    "guid": "{F3307706-27A4-507F-BB79-BBE4213CFE35}",
+                                    "subId": 272289304
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/shoulder.dae.azmodel"
+                                "assetHint": "assets/models/default_shoulder_3709f066_e9bd_5375_b8da_3ac7e7e5d89e_.fbx.azmodel"
                             }
                         }
                     }
@@ -2647,10 +2676,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                    "subId": 281544266
+                                    "guid": "{CDC6B820-8A97-56EA-A7D7-DEF83ABBD01D}",
+                                    "subId": 271113555
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2.dae.azmodel"
+                                "assetHint": "assets/models/default_kairos_mecanum_wheel_2_24c6c924_a656_5a60_8099_09eba82603a4_.fbx.azmodel"
                             }
                         }
                     }
@@ -2818,7 +2847,14 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7429715869267383518,
-                    "Parent Entity": "Entity_[45028476493520]"
+                    "Parent Entity": "Entity_[45028476493520]",
+                    "Transform Data": {
+                        "Rotate": [
+                            180.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
                 }
             }
         },
@@ -2882,6 +2918,7 @@
                     "m_template": {
                         "$type": "ROS2Lidar2DSensorComponent",
                         "SensorConfiguration": {
+                            "Visualize": false,
                             "Publishers": {
                                 "sensor_msgs::msg::LaserScan": {
                                     "Type": "sensor_msgs::msg::LaserScan",
@@ -3417,24 +3454,26 @@
             "Id": "Entity_[44933987213008]",
             "Name": "egotop_cover_visual",
             "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 13091340950371739537,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{F038BE14-A3C4-508B-85D8-BA8C57A62C98}",
-                                    "subId": 268785545
-                                },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/rbkairos_top_cover.stl.azmodel"
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15379496229227230509,
+                    "DisabledComponents": {
+                        "AZ::Render::EditorMeshComponent": {
+                            "$type": "AZ::Render::EditorMeshComponent",
+                            "Id": 13091340950371739537,
+                            "Controller": {
+                                "Configuration": {
+                                    "ModelAsset": {
+                                        "assetId": {
+                                            "guid": "{F038BE14-A3C4-508B-85D8-BA8C57A62C98}",
+                                            "subId": 268785545
+                                        },
+                                        "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/rbkairos_top_cover.stl.azmodel"
+                                    }
+                                }
                             }
                         }
                     }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 15379496229227230509
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -3452,90 +3491,92 @@
                     "$type": "EditorLockComponent",
                     "Id": 1005884496594453014
                 },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 13737804246143954589,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{F038BE14-A3C4-508B-85D8-BA8C57A62C98}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/rbkairos_top_cover_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{F038BE14-A3C4-508B-85D8-BA8C57A62C98}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/rbkairos_top_cover_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 2982723023054081110
                 },
                 "EditorPendingCompositionComponent": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 16028870837937056721
+                    "Id": 16028870837937056721,
+                    "PendingComponents": {
+                        "EditorMaterialComponent": {
+                            "$type": "EditorMaterialComponent",
+                            "Id": 13737804246143954589,
+                            "Controller": {
+                                "Configuration": {
+                                    "materials": [
+                                        {
+                                            "Key": {},
+                                            "Value": {
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{F038BE14-A3C4-508B-85D8-BA8C57A62C98}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/rbkairos_top_cover_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "lodIndex": 0,
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{F038BE14-A3C4-508B-85D8-BA8C57A62C98}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/rbkairos_top_cover_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
@@ -3559,10 +3600,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
+                                    "guid": "{D101DEA3-BD2A-5083-AC11-0C853618C1E1}",
                                     "subId": 281106416
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1.dae.azmodel"
+                                "assetHint": "assets/models/kairos_mecanum_wheel_1.fbx.azmodel"
                             }
                         }
                     }
@@ -3581,7 +3622,56 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 9965208288212107283
+                    "Id": 9965208288212107283,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 15261237815936407203
+                        },
+                        {
+                            "ComponentId": 814166343416794638,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 9965208288212107283,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 6546316327889315359,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 6272372582924227434,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 4697090627244942369,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 5662326857142510165,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 15722344449571249735,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 1558930414767053415,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 5525538544578240220,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 15964245438951801807,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 10406641165767282308,
+                            "SortIndex": 11
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
@@ -3727,10 +3817,26 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 6272372582924227434
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 10406641165767282308,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "egoback_right_wheel_link",
+                        "Joint Name": "egoback_right_wheel_joint",
+                        "Force Dynamic": true
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 15261237815936407203,
-                    "Parent Entity": "Entity_[45019886558928]"
+                    "Parent Entity": "Entity_[45019886558928]",
+                    "Transform Data": {
+                        "Rotate": [
+                            180.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
                 }
             }
         },
@@ -3794,6 +3900,7 @@
                     "m_template": {
                         "$type": "ROS2Lidar2DSensorComponent",
                         "SensorConfiguration": {
+                            "Visualize": false,
                             "Publishers": {
                                 "sensor_msgs::msg::LaserScan": {
                                     "Type": "sensor_msgs::msg::LaserScan",
@@ -3981,10 +4088,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{BE0FA54A-605A-532E-B71E-04E4073081AE}",
-                                    "subId": 278628610
+                                    "guid": "{6644C6C6-2463-515C-9D31-9C1D1102EDF6}",
+                                    "subId": 280781947
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/rbkairos_plus_chassis.stl.azmodel"
+                                "assetHint": "assets/models/robotnik_logo_chasis.fbx.azmodel"
                             }
                         }
                     }
@@ -4099,7 +4206,14 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12150414751780514032,
-                    "Parent Entity": "Entity_[44886742572752]"
+                    "Parent Entity": "Entity_[44886742572752]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0019252300262451172,
+                            0.0010107159614562988,
+                            0.0
+                        ]
+                    }
                 }
             }
         },
@@ -4388,10 +4502,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                    "subId": 281544266
+                                    "guid": "{CDC6B820-8A97-56EA-A7D7-DEF83ABBD01D}",
+                                    "subId": 271113555
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2.dae.azmodel"
+                                "assetHint": "assets/models/default_kairos_mecanum_wheel_2_24c6c924_a656_5a60_8099_09eba82603a4_.fbx.azmodel"
                             }
                         }
                     }
@@ -4645,10 +4759,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{871A21DA-0961-5A0D-8B40-28D0C09415E5}",
+                                    "guid": "{6BA0E49F-6702-5425-BC23-7A74EFA3D266}",
                                     "subId": 280297057
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/base.dae.azmodel"
+                                "assetHint": "assets/models/base.fbx.azmodel"
                             }
                         }
                     }
@@ -4812,24 +4926,26 @@
             "Id": "Entity_[44981231853264]",
             "Name": "egobase_logo_left_visual",
             "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 12173618529101642205,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                    "subId": 280781947
-                                },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis.stl.azmodel"
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 8735554840369749468,
+                    "DisabledComponents": {
+                        "AZ::Render::EditorMeshComponent": {
+                            "$type": "AZ::Render::EditorMeshComponent",
+                            "Id": 12173618529101642205,
+                            "Controller": {
+                                "Configuration": {
+                                    "ModelAsset": {
+                                        "assetId": {
+                                            "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                            "subId": 280781947
+                                        },
+                                        "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis.stl.azmodel"
+                                    }
+                                }
                             }
                         }
                     }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 8735554840369749468
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -4847,90 +4963,92 @@
                     "$type": "EditorLockComponent",
                     "Id": 8955093416353787897
                 },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 1511599567347567747,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 18199426838908889983
                 },
                 "EditorPendingCompositionComponent": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 7724970610949456092
+                    "Id": 7724970610949456092,
+                    "PendingComponents": {
+                        "EditorMaterialComponent": {
+                            "$type": "EditorMaterialComponent",
+                            "Id": 1511599567347567747,
+                            "Controller": {
+                                "Configuration": {
+                                    "materials": [
+                                        {
+                                            "Key": {},
+                                            "Value": {
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "lodIndex": 0,
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
@@ -5015,24 +5133,26 @@
             "Id": "Entity_[44989821787856]",
             "Name": "egobase_logo_rear_visual",
             "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 13650894747761683237,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                    "subId": 280781947
-                                },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis.stl.azmodel"
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10525598001461188093,
+                    "DisabledComponents": {
+                        "AZ::Render::EditorMeshComponent": {
+                            "$type": "AZ::Render::EditorMeshComponent",
+                            "Id": 13650894747761683237,
+                            "Controller": {
+                                "Configuration": {
+                                    "ModelAsset": {
+                                        "assetId": {
+                                            "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                            "subId": 280781947
+                                        },
+                                        "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis.stl.azmodel"
+                                    }
+                                }
                             }
                         }
                     }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10525598001461188093
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -5050,90 +5170,92 @@
                     "$type": "EditorLockComponent",
                     "Id": 6281480843017991401
                 },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 7799622613384636815,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 10959023851906783570
                 },
                 "EditorPendingCompositionComponent": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 14926980913947055663
+                    "Id": 14926980913947055663,
+                    "PendingComponents": {
+                        "EditorMaterialComponent": {
+                            "$type": "EditorMaterialComponent",
+                            "Id": 7799622613384636815,
+                            "Controller": {
+                                "Configuration": {
+                                    "materials": [
+                                        {
+                                            "Key": {},
+                                            "Value": {
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "lodIndex": 0,
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
@@ -5230,14 +5352,6 @@
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 14994727187683177654
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 9006201332613537016,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "egofront_left_wheel_link",
-                        "Joint Name": "egofront_left_wheel_joint"
-                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -5336,10 +5450,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
+                                    "guid": "{D101DEA3-BD2A-5083-AC11-0C853618C1E1}",
                                     "subId": 281106416
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1.dae.azmodel"
+                                "assetHint": "assets/models/kairos_mecanum_wheel_1.fbx.azmodel"
                             }
                         }
                     }
@@ -5358,7 +5472,56 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 9333299734391829894
+                    "Id": 9333299734391829894,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 11061904571040189030
+                        },
+                        {
+                            "ComponentId": 10695769143881495922,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 9333299734391829894,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 12476774711291527688,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 410328921236287088,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 16489169431997184767,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 8049227356206878707,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 9904541559801071709,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 10933098566897529813,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 10104754300646284085,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 9250575944228028364,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 4286792551821500572,
+                            "SortIndex": 11
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
@@ -5503,6 +5666,14 @@
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 410328921236287088
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 4286792551821500572,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "egofront_left_wheel_link",
+                        "Joint Name": "egofront_left_wheel_joint"
+                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -5770,24 +5941,26 @@
             "Id": "Entity_[45015591591632]",
             "Name": "egobase_logo_right_visual",
             "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 18422827706001100720,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                    "subId": 280781947
-                                },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis.stl.azmodel"
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17670009901584528114,
+                    "DisabledComponents": {
+                        "AZ::Render::EditorMeshComponent": {
+                            "$type": "AZ::Render::EditorMeshComponent",
+                            "Id": 18422827706001100720,
+                            "Controller": {
+                                "Configuration": {
+                                    "ModelAsset": {
+                                        "assetId": {
+                                            "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                            "subId": 280781947
+                                        },
+                                        "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis.stl.azmodel"
+                                    }
+                                }
                             }
                         }
                     }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 17670009901584528114
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -5805,90 +5978,92 @@
                     "$type": "EditorLockComponent",
                     "Id": 14897949500017911923
                 },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 17643748066496773374,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2084814471
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
-                                                "subId": 2084814471
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 15387158293347653686
                 },
                 "EditorPendingCompositionComponent": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 15888867216952707439
+                    "Id": 15888867216952707439,
+                    "PendingComponents": {
+                        "EditorMaterialComponent": {
+                            "$type": "EditorMaterialComponent",
+                            "Id": 17643748066496773374,
+                            "Controller": {
+                                "Configuration": {
+                                    "materials": [
+                                        {
+                                            "Key": {},
+                                            "Value": {
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Key": {
+                                                "lodIndex": 0,
+                                                "materialSlotStableId": 2084814471
+                                            },
+                                            "Value": {
+                                                "MaterialAsset": {
+                                                    "assetId": {
+                                                        "guid": "{3CD5AFF1-15F8-5A71-A6EC-15C76565C00B}",
+                                                        "subId": 2084814471
+                                                    },
+                                                    "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/robotnik_logo_chasis_defaultmaterial_3809502407269006983.stl.azmaterial"
+                                                },
+                                                "PropertyOverrides": {
+                                                    "baseColor.color": {
+                                                        "$type": "Color",
+                                                        "Value": [
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            0.348510205745697,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
@@ -5982,14 +6157,6 @@
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 15084717481744468490
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 12611237063355211214,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "egoback_right_wheel_link",
-                        "Joint Name": "egoback_right_wheel_joint"
-                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -6380,10 +6547,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{2558795F-5EC0-53FE-BAE6-8EDDA87525E1}",
+                                    "guid": "{67D39DDD-D519-542C-B2BF-0935FFCA2F1A}",
                                     "subId": 284007441
                                 },
-                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/wrist3.dae.azmodel"
+                                "assetHint": "assets/models/wrist3.fbx.azmodel"
                             }
                         }
                     }
