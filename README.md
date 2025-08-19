@@ -3,6 +3,12 @@
 ## Building 
 
 ## Prerequisites
+Clone the repository:
+```shell
+cd /home/${USER}
+git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
+```
+
 Set root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding following line to `.bashrc` or `.zshrc` file:
 ```shell
 export DEMO_ROOT=/home/${USER}/MobileManipulatorDemo/
@@ -55,6 +61,27 @@ ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/project_gems/
 ${O3DE_ROOT}/scripts/o3de.sh register  --project-path ${DEMO_ROOT}/sim
 ```
 
+## ROS2 workspace
+
+Clone needed packages:
+```shell
+cd ${DEMO_ROOT}
+vcs import --input ${DEMO_ROOT}/ros2_ws.repos
+```
+
+```shell
+cd ${DEMO_ROOT}/ros2_ws
+rosdep update
+rosdep install --ignore-src --from-paths src -y
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+```
+
+Source the installation to `.bashrc` or `.zshrc` file:
+```shell
+source ${DEMO_ROOT}/ros2_ws/install/setup.bash
+```
+
+
 ## Build Editor and toolset
 
 ```shell
@@ -75,28 +102,7 @@ ${O3DE_ROOT}/scripts/o3de.sh export-project \
     -cca "-DCMAKE_LINKER_TYPE=DEFAULT -DLY_UNITY_BUILD=ON"
 ```
 
-
-# ROS2 workspace
-
-Clone needed packages:
-```shell
-cd ${DEMO_ROOT}
-vcs import --input ${DEMO_ROOT}/ros2_ws.repos
-```
-
-```shell
-cd ${DEMO_ROOT}/ros2_ws
-rosdep update
-rosdep install --ignore-src --from-paths src -y
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
-```
-
-Source the installation to `.bashrc` or `.zshrc` file:
-```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-```
-
-## Running sample script
+# Running ROS 2 sample scripts
 ```shell
 ros2 launch robotec_kairos_ur10 robotec_launch.py 
 ```

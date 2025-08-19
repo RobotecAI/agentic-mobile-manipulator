@@ -51,3 +51,7 @@ repositories:
     type: git
     url: https://github.com/moveit/srdfdom.git
     version: 94b4a92760d0ff58d8931f686f2aebe71e88fb84
+  ros2_ws/src/packages/simulation_interfaces:
+    type: git
+    url: https://github.com/ros-simulation/simulation_interfaces.git
+    version: c1701ec3e5e56a2db0eac4bc059a9193f23f0f0f
