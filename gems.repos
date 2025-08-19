@@ -18,4 +18,4 @@ repositories:
   ./gems/robotec-o3de-tools:
     type: git
     url: https://github.com/RobotecAI/robotec-o3de-tools.git
-    version: main
+    version: 2505

@@ -16,7 +16,6 @@
     "engine": "o3de",
     "external_subdirectories": [
         "Gem",
-        "../project_gems/WheelAnimTool",
         "../project_gems/LevelGem",
         "../project_gems/KairosPlus"
     ],
