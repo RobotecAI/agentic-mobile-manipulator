@@ -104,7 +104,7 @@ source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ## Build Editor and toolset
 
 ```shell
-${DEMO_ROOT}/sim
+cd ${DEMO_ROOT}/sim
 cmake -B build/linux -G "Ninja Multi-Config" \
     -DLY_DISABLE_TEST_MODULES=ON \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
