@@ -28,6 +28,12 @@ vcs import --input ${DEMO_ROOT}/gems.repos
 
 ## Setup o3de
 
+Install [packages required to build O3DE:](https://www.docs.o3de.org/docs/welcome-guide/requirements/#linux)
+
+```shell
+sudo apt install cmake libstdc++-12-dev clang libglu1-mesa-dev libxcb-randr0-dev libxcb-xinerama0 libxcb-xinput0 libxcb-xinput-dev libxcb-xfixes0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev mesa-common-dev libunwind-dev libzstd-dev tix
+```
+
 ```shell
 cd ${O3DE_ROOT}
 git lfs install
