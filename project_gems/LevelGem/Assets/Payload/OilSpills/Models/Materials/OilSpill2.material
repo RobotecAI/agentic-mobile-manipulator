@@ -1,0 +1,25 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "opacity.alphaAffectsSpecular": 1.0,
+        "opacity.alphaSource": "Split",
+        "opacity.factor": 1.0,
+        "opacity.mode": "Blended",
+        "opacity.textureMap": "Textures/OilAlpha02.png",
+        "roughness.factor": 0.019999999552965164,
+        "specularF0.factor": 0.9100000262260437
+    }
+}

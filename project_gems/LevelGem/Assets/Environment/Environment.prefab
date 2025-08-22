@@ -112,7 +112,7 @@
                     "Controller": {
                         "Configuration": {
                             "Enabled": true,
-                            "Intensity": 0.10000000149011612
+                            "Intensity": 0.20000000298023224
                         }
                     }
                 },
@@ -125,8 +125,8 @@
                     "Id": 6067219290934705439,
                     "Controller": {
                         "Configuration": {
-                            "Strength": 1.6799999475479126,
-                            "SamplingRadius": 0.009999999776482582
+                            "Strength": 0.9399999976158142,
+                            "SamplingRadius": 0.029999999329447746
                         }
                     }
                 },
