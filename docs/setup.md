@@ -14,7 +14,7 @@ The contents of this repository are compatible with the following system:
 
 ```shell
 cd /home/${USER}
-git clone git@github.com:RobotecAI/golden-hiptage.git
+git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
 ```
 
 #### Set root directory of the project
@@ -22,13 +22,16 @@ git clone git@github.com:RobotecAI/golden-hiptage.git
 Set root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding following line to `.bashrc` or `.zshrc` file:
 
 ```shell
-export DEMO_ROOT=/home/${USER}/golden-hiptage/
+export DEMO_ROOT=/home/${USER}/MobileManipulatorDemo/
 export O3DE_ROOT=${DEMO_ROOT}/engine/o3de
 ```
 
 #### Install base dependencies
 
 ```bash
+sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+sudo apt update
 sudo apt install git git-lfs ninja-build libignition-math7-dev libignition-math7
 ```
 
