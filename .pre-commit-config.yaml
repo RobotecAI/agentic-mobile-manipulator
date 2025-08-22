@@ -11,10 +11,8 @@ repos:
       - id: ruff
         args: [--extend-select, "I,RUF022", --fix, --ignore, E731]
         types_or: [python]
-        files: ^agent/
-        files: ^scripts/
+        files: ^(agent/|scripts/)
 
       - id: ruff-format
         types_or: [python]
-        files: ^agent/
-        files: ^scripts/
+        files: ^(agent/|scripts/)
