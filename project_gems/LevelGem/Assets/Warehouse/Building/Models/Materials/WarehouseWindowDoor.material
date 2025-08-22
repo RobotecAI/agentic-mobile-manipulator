@@ -1,0 +1,21 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.textureMap": "Textures/WarehouseWindowDoor_BaseColor.png",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "metallic.textureMap": "Textures/WarehouseWindowDoor_Metalic.png",
+        "normal.textureMap": "Textures/WarehouseWindowDoor_Normal.png",
+        "opacity.factor": 1.0,
+        "roughness.factor": 0.5,
+        "roughness.lowerBound": 0.07000000029802322,
+        "roughness.textureMap": "Textures/WarehouseWindowDoor_Roughness.png",
+        "roughness.upperBound": 0.6200000047683716,
+        "specularF0.textureMap": "Textures/WarehouseWindowDoor_Specular.png"
+    }
+}

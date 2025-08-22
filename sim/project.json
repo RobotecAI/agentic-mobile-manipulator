@@ -52,6 +52,9 @@
         "RobotecSpectatorCamera",
         "URRobots",
         "KairosPlus",
+        "RobotecWarehouseRacksAssets",
+        "RobotecWarehouseBarriersAndCagesAssets",
+        "WarehouseAssets",
         "LevelGem",
         "SimulationInterfaces"
     ],

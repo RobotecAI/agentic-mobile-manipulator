@@ -19,3 +19,7 @@ repositories:
     type: git
     url: https://github.com/RobotecAI/robotec-o3de-tools.git
     version: 2505
+  ./gems/robotec-warehouse-assets:
+    type: git
+    url: https://github.com/RobotecAI/robotec-warehouse-assets.git
+    version: main

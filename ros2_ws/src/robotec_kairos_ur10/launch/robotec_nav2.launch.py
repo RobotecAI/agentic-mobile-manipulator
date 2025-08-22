@@ -35,7 +35,7 @@ def generate_launch_description():
     map_file = PathJoinSubstitution([
         FindPackageShare("robotec_kairos_ur10"),
         "resources",
-        "robotic_manipluation.yaml"
+        "demolevel.yaml"
     ])
 
     map_pub = Node(
