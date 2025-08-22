@@ -3,20 +3,21 @@
     "materialTypeVersion": 5,
     "propertyValues": {
         "baseColor.color": [
-            0.7397667169570923,
-            0.7257896661758423,
-            0.8000000715255737,
+            0.800000011920929,
+            0.800000011920929,
+            0.800000011920929,
             1.0
         ],
-        "baseColor.factor": 0.7400000095367432,
+        "baseColor.textureMap": "Textures/WarehouseTable01Wood_BaseColor.png",
         "emissive.color": [
             0.0,
             0.0,
             0.0,
             1.0
         ],
+        "normal.textureMap": "Textures/WarehouseTable01Wood_Normal.png",
         "opacity.factor": 1.0,
-        "roughness.factor": 0.33000001311302185,
-        "specularF0.factor": 0.20000000298023224
+        "roughness.factor": 0.5,
+        "roughness.textureMap": "Textures/WarehouseTable01Wood_Roughness.png"
     }
 }

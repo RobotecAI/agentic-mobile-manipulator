@@ -189,6 +189,7 @@
                     "Id": 8840187727537637682,
                     "Child Entity Order": [
                         "Entity_[4944174434353]",
+                        "Entity_[2364365366857]",
                         "Entity_[16316582154262]",
                         "Entity_[16303697252374]",
                         "Entity_[16312287186966]"
@@ -363,6 +364,80 @@
                 }
             }
         },
+        "Entity_[2364365366857]": {
+            "Id": "Entity_[2364365366857]",
+            "Name": "LampIllumination",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 285976185742807857,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 6,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 1.7000000476837158,
+                            "EnableShutters": true,
+                            "InnerShutterAngleDegrees": 79.26000213623047,
+                            "OuterShutterAngleDegrees": 90.0,
+                            "Enable Shadow": true,
+                            "Shadowmap Max Size": "Size2048",
+                            "Shadow Filter Method": 1,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 7544788359915221167
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13605520823206813458
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6226993671544817399
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 7207251956466381424
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 6438569623544208129
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2825931528539512825
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 6899272479152839542
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 16473839459621173445
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 5916103518926321777,
+                    "Parent Entity": "Entity_[16307992219670]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.000194549560546875,
+                            0.0,
+                            0.37538862228393555
+                        ],
+                        "Rotate": [
+                            180.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[4944174434353]": {
             "Id": "Entity_[4944174434353]",
             "Name": "ShadowLight",
@@ -376,11 +451,12 @@
                             "Intensity": 1100.0,
                             "AttenuationRadius": 104.8808822631836,
                             "EnableShutters": true,
-                            "InnerShutterAngleDegrees": 79.26000213623047,
+                            "InnerShutterAngleDegrees": 73.88999938964844,
                             "OuterShutterAngleDegrees": 90.0,
                             "Enable Shadow": true,
                             "Shadowmap Max Size": "Size2048",
                             "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 24,
                             "Shadow Caching Mode": 1,
                             "Shadow Caching Enabled": true
                         }

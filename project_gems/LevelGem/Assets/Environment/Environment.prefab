@@ -92,7 +92,7 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 5855590796136709437,
                     "Child Entity Order": [
-                        "Entity_[1246067902368]",
+                        "Entity_[1544026613321]",
                         "Entity_[4860037424507]"
                     ]
                 },
@@ -102,71 +102,70 @@
                 }
             }
         },
-        "Entity_[1246067902368]": {
-            "Id": "Entity_[1246067902368]",
-            "Name": "Sun",
+        "Entity_[1544026613321]": {
+            "Id": "Entity_[1544026613321]",
+            "Name": "PostFX",
             "Components": {
-                "Component_[13620450453324765907]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 13620450453324765907
-                },
-                "Component_[2134313378593666258]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 2134313378593666258
-                },
-                "Component_[234010807770404186]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 234010807770404186
-                },
-                "Component_[2970359110423865725]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2970359110423865725
-                },
-                "Component_[3722854130373041803]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 3722854130373041803
-                },
-                "Component_[5992533738676323195]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5992533738676323195,
-                    "DisabledComponents": {
-                        "Component_[7378860763541895402]": {
-                            "$type": "AZ::Render::EditorDirectionalLightComponent",
-                            "Id": 7378860763541895402,
-                            "Controller": {
-                                "Configuration": {
-                                    "Intensity": 2.799999952316284,
-                                    "CameraEntityId": "",
-                                    "ShadowFilterMethod": 1
-                                }
-                            }
+                "AZ::Render::EditorBloomComponent": {
+                    "$type": "AZ::Render::EditorBloomComponent",
+                    "Id": 5805033389830373811,
+                    "Controller": {
+                        "Configuration": {
+                            "Enabled": true,
+                            "Intensity": 0.10000000149011612
                         }
                     }
                 },
-                "Component_[7892834440890947578]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 7892834440890947578,
-                    "Parent Entity": "Entity_[1241772935072]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            0.0,
-                            13.487043380737305
-                        ],
-                        "Rotate": [
-                            -76.13099670410156,
-                            -0.847000002861023,
-                            -15.8100004196167
-                        ]
+                "AZ::Render::EditorPostFxLayerComponent": {
+                    "$type": "AZ::Render::EditorPostFxLayerComponent",
+                    "Id": 14351693081703199174
+                },
+                "AZ::Render::EditorSsaoComponent": {
+                    "$type": "AZ::Render::EditorSsaoComponent",
+                    "Id": 6067219290934705439,
+                    "Controller": {
+                        "Configuration": {
+                            "Strength": 1.6799999475479126,
+                            "SamplingRadius": 0.009999999776482582
+                        }
                     }
                 },
-                "Component_[8599729549570828259]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 8599729549570828259
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17029053775979372036
                 },
-                "Component_[952797371922080273]": {
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13461203375971089252
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 5117005201995487370
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12535017844228482301
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 15366739172915222284
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 3866581028006409976
+                },
+                "EditorPendingCompositionComponent": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 952797371922080273
+                    "Id": 11677324014328749985
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5211330827260740013
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 16282863976705776046,
+                    "Parent Entity": "Entity_[1241772935072]"
                 }
             }
         },
@@ -180,8 +179,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "Intensity": 1000.0,
-                            "AttenuationRadius": 100.0
+                            "Intensity": 4000.0,
+                            "AttenuationRadius": 200.0
                         }
                     }
                 },

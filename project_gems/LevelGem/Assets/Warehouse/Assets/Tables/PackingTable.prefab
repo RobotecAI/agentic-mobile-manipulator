@@ -66,8 +66,7 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 14851833847792831416,
                     "Child Entity Order": [
-                        "Entity_[7591650137222]",
-                        "Entity_[7664664581254]"
+                        "Instance_[2070282103033]/ContainerEntity"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -96,150 +95,58 @@
                     "Parent Entity": "ContainerEntity"
                 }
             }
-        },
-        "Entity_[7591650137222]": {
-            "Id": "Entity_[7591650137222]",
-            "Name": "PackingTable",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 1840286980919778240,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{5C7693B1-B5EB-5688-AE19-9C16789092E5}",
-                                    "subId": 274225739
-                                },
-                                "assetHint": "assets/warehouse/assets/tables/models/tableunderrobot.fbx.azmodel"
-                            }
-                        }
-                    }
+        }
+    },
+    "Instances": {
+        "Instance_[2070282103033]": {
+            "Source": "Assets/Warehouse/Assets/Tables/WarehouseTable01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[7587355169926]"
                 },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10511012299218715452
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -2.5
                 },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2761758860463021523
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.0000019073486328125
                 },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 1002047691118017702
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 2111910746612164134
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 15207766895256074092
-                },
-                "EditorNonUniformScaleComponent": {
-                    "$type": "EditorNonUniformScaleComponent",
-                    "Id": 3772113114541614067,
-                    "NonUniformScale": [
-                        10.0,
-                        1.0,
-                        1.0
-                    ]
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 6380462380219815791
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 12552697600605484128
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 10298684200797497864
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 627611663739308328,
-                    "Parent Entity": "Entity_[7587355169926]"
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 89.99994659423828
                 }
-            }
+            ]
         },
-        "Entity_[7664664581254]": {
-            "Id": "Entity_[7664664581254]",
-            "Name": "Collider",
-            "Components": {
-                "EditorColliderComponent": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 16024919749622112939,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Configuration": [
-                                10.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    }
+        "Instance_[2164771383545]": {
+            "Source": "Assets/Warehouse/Assets/Tables/WarehouseTable01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[7587355169926]"
                 },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 6590099946208731339
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 2.5
                 },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 301889655154914685
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.0000019073486328125
                 },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 13353068144267215093
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 65361325894544829
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 13325585443541680659
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 11246500610539587774
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 11135052538992257447
-                },
-                "EditorStaticRigidBodyComponent": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 4205385483341609720
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 4247108528200352432
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 2022564720243341991,
-                    "Parent Entity": "Entity_[7587355169926]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            0.0,
-                            0.12598514556884766
-                        ]
-                    }
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 89.99994659423828
                 }
-            }
+            ]
         }
     }
 }
