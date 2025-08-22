@@ -163,7 +163,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{1DFBBD38-D7E9-5EC1-AA95-10F7EA682238}"
-                                            }
+                                            },
+                                            "assetHint": "assets/warehouse/assets/tables/models/materials/warehousetable01metal.azmaterial"
                                         }
                                     }
                                 }
@@ -194,19 +195,6 @@
             "Id": "Entity_[2246375762169]",
             "Name": "Collider",
             "Components": {
-                "EditorBoxShapeComponent": {
-                    "$type": "EditorBoxShapeComponent",
-                    "Id": 9832569682456988244,
-                    "BoxShape": {
-                        "Configuration": {
-                            "Dimensions": [
-                                1.0,
-                                5.0,
-                                1.0
-                            ]
-                        }
-                    }
-                },
                 "EditorColliderComponent": {
                     "$type": "EditorColliderComponent",
                     "Id": 5316201289535641549,
@@ -220,7 +208,14 @@
                         }
                     },
                     "ShapeConfiguration": {
-                        "ShapeType": 1
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                1.0,
+                                5.0,
+                                1.0
+                            ]
+                        }
                     }
                 },
                 "EditorDisabledCompositionComponent": {
