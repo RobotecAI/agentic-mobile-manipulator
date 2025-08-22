@@ -24,7 +24,8 @@
                     "Entity_[14270437145783]",
                     "Entity_[19643723718547]",
                     "Instance_[1233183000480]/ContainerEntity",
-                    "Instance_[729293419369]/ContainerEntity"
+                    "Instance_[729293419369]/ContainerEntity",
+                    "Instance_[9564558859548]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -354,6 +355,16 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
                     "value": 7.118839263916016
+                }
+            ]
+        },
+        "Instance_[9564558859548]": {
+            "Source": "Assets/Payload/Payload.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
                 }
             ]
         }
