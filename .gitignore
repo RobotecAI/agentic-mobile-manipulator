@@ -7,3 +7,4 @@ ros2_ws/log
 ros2_ws/__pycache__
 __pycache__/
 monitoring/monitoring_results*
+artifact_database.pkl
