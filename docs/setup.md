@@ -136,6 +136,14 @@ uv sync
 
 ## Developer setup
 
+### Conventional commits
+
+We use conventional commits to ensure that the commit messages are consistent and follow a specific format. Read more about conventional commits [here](https://www.conventionalcommits.org/en/v1.0.0/).
+
+### Pre-commit
+
+We use pre-commit to ensure that the code is formatted and linted before it is committed.
+
 ```bash
 sudo apt install pre-commit
 pre-commit install
