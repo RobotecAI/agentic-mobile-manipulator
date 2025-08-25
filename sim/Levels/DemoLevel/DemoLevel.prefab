@@ -335,6 +335,16 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[26782561266161]/Entities/Entity_[2301544268426]/Name",
+                    "value": "AnomalySlot2"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[26782561266161]/Entities/Entity_[72030338318986]/Name",
+                    "value": "AnomalySlot1"
                 }
             ]
         },
