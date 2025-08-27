@@ -100,6 +100,436 @@
                 }
             }
         },
+        "Entity_[2302701210751]": {
+            "Id": "Entity_[2302701210751]",
+            "Name": "wrist_camera_color_optical_frame",
+            "Components": {
+                "EditorArticulationLinkComponent": {
+                    "$type": "EditorArticulationLinkComponent",
+                    "Id": 14706147504831919939,
+                    "ArticulationConfiguration": {
+                        "entityId": "",
+                        "SolverPositionIterations": 40,
+                        "SolverVelocityIterations": 10,
+                        "Is Limited": false
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 7357731697509770480
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 8302034027778758182
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 10080623858229833433
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 15651476556390141453
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 958844624562853643
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 16986479150502168535
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 12375015899814477827
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 4851703287867521403
+                },
+                "ROS2CameraSensorEditorComponent": {
+                    "$type": "ROS2CameraSensorEditorComponent",
+                    "Id": 9096869452264359802,
+                    "SensorConfig": {
+                        "Frequency (HZ)": 100.0,
+                        "Publishers": {
+                            "Color Camera Info": {
+                                "Type": "sensor_msgs::msg::CameraInfo",
+                                "Topic": "wrist_camera/camera_info",
+                                "QoS": {
+                                    "Reliability": 1,
+                                    "Durability": 1
+                                }
+                            },
+                            "Color Image": {
+                                "Type": "sensor_msgs::msg::Image",
+                                "Topic": "wrist_camera/camera_image_color",
+                                "QoS": {
+                                    "Reliability": 1,
+                                    "Durability": 1
+                                }
+                            },
+                            "Depth Camera Info": {
+                                "Type": "sensor_msgs::msg::CameraInfo",
+                                "Topic": "wrist_camera/depth_camera_info",
+                                "QoS": {
+                                    "Reliability": 1,
+                                    "Durability": 1
+                                }
+                            },
+                            "Depth Image": {
+                                "Type": "sensor_msgs::msg::Image",
+                                "Topic": "wrist_camera/camera_image_depth",
+                                "QoS": {
+                                    "Reliability": 1,
+                                    "Durability": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 13058027742988666738,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "wrist_camera_color_optical_frame"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 14050427395783254644,
+                    "Parent Entity": "Entity_[2341355916415]",
+                    "Transform Data": {
+                        "Rotate": [
+                            -89.99998474121094,
+                            89.99998474121094,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[2324176047231]": {
+            "Id": "Entity_[2324176047231]",
+            "Name": "wrist_camera_link",
+            "Components": {
+                "EditorArticulationLinkComponent": {
+                    "$type": "EditorArticulationLinkComponent",
+                    "Id": 9486244946291454658,
+                    "ArticulationConfiguration": {
+                        "entityId": "",
+                        "Mass": 0.10000000149011612,
+                        "Centre of mass offset": [
+                            0.0024999999441206455,
+                            -0.014999999664723873,
+                            0.0
+                        ],
+                        "SolverPositionIterations": 40,
+                        "SolverVelocityIterations": 10,
+                        "Is Limited": false
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 4528662346940294275,
+                    "DisabledComponents": {
+                        "EditorColliderComponent": {
+                            "$type": "EditorColliderComponent",
+                            "Id": 8117639078800589918,
+                            "ColliderConfiguration": {
+                                "Position": [
+                                    0.0,
+                                    -0.017500000074505806,
+                                    0.0
+                                ],
+                                "MaterialSlots": {
+                                    "Slots": [
+                                        {
+                                            "Name": "Entire object"
+                                        }
+                                    ]
+                                }
+                            },
+                            "ShapeConfiguration": {
+                                "ShapeType": 1,
+                                "Box": {
+                                    "Configuration": [
+                                        0.025049999356269836,
+                                        0.09000000357627869,
+                                        0.02500000037252903
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 10500857405844045676
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 11458844881203267799,
+                    "Child Entity Order": [
+                        "Entity_[2328471014527]"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 2498836532268806659
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2000490553393896505
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 14782339316039051820
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7108383696527513994
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 18394493159236115310
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 5165045815459268165,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "wrist_camera_link"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 2421615776796681270,
+                    "Parent Entity": "Entity_[2337060949119]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.009999990463256836,
+                            0.019999999552965164,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[2328471014527]": {
+            "Id": "Entity_[2328471014527]",
+            "Name": "wrist_camera_link_visual",
+            "Components": {
+                "AZ::Render::EditorMeshComponent": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 5932379763775111465,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{333E1FEB-62A2-553E-A64F-E6FD180DF217}",
+                                    "subId": 279520907
+                                },
+                                "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/intel_d435_color.dae.azmodel"
+                            }
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 14044975448966507376
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 5063658786445019355
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 3609548948884427350
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 10924033190510405013
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 15239968665745616836
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9870450258688796108
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15376776985502101724
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 3672708192048707163
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 6098545356778928190,
+                    "Parent Entity": "Entity_[2324176047231]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.01489999983459711,
+                            -0.017500000074505806,
+                            0.0
+                        ],
+                        "Rotate": [
+                            90.0,
+                            90.0,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[2337060949119]": {
+            "Id": "Entity_[2337060949119]",
+            "Name": "wrist_camera",
+            "Components": {
+                "EditorArticulationLinkComponent": {
+                    "$type": "EditorArticulationLinkComponent",
+                    "Id": 4435440060966236714,
+                    "ArticulationConfiguration": {
+                        "entityId": "",
+                        "SolverPositionIterations": 40,
+                        "SolverVelocityIterations": 10,
+                        "Is Limited": false
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 4879479304459773985
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 921276103651512132
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17800606301324097694,
+                    "Child Entity Order": [
+                        "Entity_[2341355916415]",
+                        "Entity_[2324176047231]"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 9833819547815513625
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 13413334576811915054
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 1749399109103161943
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13778979900428588012
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 12603256961097921207
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 17226285269213943531,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "wrist_camera"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 2545227514984863739,
+                    "Parent Entity": "Entity_[44946872114896]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.04144763946533203,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotate": [
+                            -179.99989318847656,
+                            -1.1345765589832532e-21,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[2341355916415]": {
+            "Id": "Entity_[2341355916415]",
+            "Name": "wrist_camera_color_frame",
+            "Components": {
+                "EditorArticulationLinkComponent": {
+                    "$type": "EditorArticulationLinkComponent",
+                    "Id": 7546943583471301784,
+                    "ArticulationConfiguration": {
+                        "entityId": "",
+                        "SolverPositionIterations": 40,
+                        "SolverVelocityIterations": 10,
+                        "Is Limited": false
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9271771768607557297
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 10745739331202361475
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 2159886369433446055,
+                    "Child Entity Order": [
+                        "Entity_[2302701210751]"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 16105669553762041103
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 17105890214920120924
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 13037304527972748439
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 16291613913889108551
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 6461681525135854640
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 3617927307082359151,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "wrist_camera_color_frame"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 7111349167856823466,
+                    "Parent Entity": "Entity_[2337060949119]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.010000228881835938,
+                            0.03500008583068848,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[34824931353950]": {
             "Id": "Entity_[34824931353950]",
             "Name": "FakeLidar",
@@ -3822,8 +4252,7 @@
                     "Id": 10406641165767282308,
                     "ROS2FrameConfiguration": {
                         "Frame Name": "egoback_right_wheel_link",
-                        "Joint Name": "egoback_right_wheel_joint",
-                        "Force Dynamic": true
+                        "Joint Name": "egoback_right_wheel_joint"
                     }
                 },
                 "TransformComponent": {
@@ -3986,6 +4415,7 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 13469210973179644040,
                     "Child Entity Order": [
+                        "Entity_[2337060949119]",
                         "Entity_[44830907997904]",
                         "Entity_[45024181526224]"
                     ]
@@ -5874,29 +6304,7 @@
                     "$type": "GenericComponentWrapper",
                     "Id": 11088248065599045773,
                     "m_template": {
-                        "$type": "RigidBodyTwistControlComponent",
-                        "Config": {
-                            "PhysicalApi": 2,
-                            "LinerControllers": [
-                                {
-                                    "P": 5000.0,
-                                    "I": 1000.0
-                                },
-                                {
-                                    "P": 5000.0,
-                                    "I": 1000.0
-                                },
-                                {}
-                            ],
-                            "AngularControllers": [
-                                {},
-                                {},
-                                {
-                                    "P": 5000.0,
-                                    "I": 1000.0
-                                }
-                            ]
-                        }
+                        "$type": "RigidBodyTwistControlComponent"
                     }
                 },
                 "TransformComponent": {
