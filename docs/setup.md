@@ -14,7 +14,7 @@ The contents of this repository are compatible with the following system:
 
 ```shell
 cd /home/${USER}
-git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
+git clone git@github.com:RobotecAI/golden-hiptage.git
 ```
 
 #### Set root directory of the project
@@ -22,7 +22,7 @@ git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
 Set root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding following line to `.bashrc` or `.zshrc` file:
 
 ```shell
-export DEMO_ROOT=/home/${USER}/MobileManipulatorDemo/
+export DEMO_ROOT=/home/${USER}/golden-hiptage/
 export O3DE_ROOT=${DEMO_ROOT}/engine/o3de
 ```
 
