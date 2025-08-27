@@ -21,11 +21,8 @@
                 "Child Entity Order": [
                     "Entity_[10559585402039]",
                     "Instance_[8695569595575]/ContainerEntity",
-                    "Entity_[14270437145783]",
-                    "Entity_[19643723718547]",
-                    "Instance_[1233183000480]/ContainerEntity",
-                    "Instance_[729293419369]/ContainerEntity",
-                    "Instance_[9564558859548]/ContainerEntity"
+                    "Instance_[9564558859548]/ContainerEntity",
+                    "Instance_[1907518894460]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -154,197 +151,76 @@
                     }
                 }
             }
-        },
-        "Entity_[14270437145783]": {
-            "Id": "Entity_[14270437145783]",
-            "Name": "Map",
-            "Components": {
-                "EditorAxisAlignedBoxShapeComponent": {
-                    "$type": "EditorAxisAlignedBoxShapeComponent",
-                    "Id": 8809123098479749295,
-                    "AxisAlignedBoxShape": {
-                        "Configuration": {
-                            "Dimensions": [
-                                32.0,
-                                32.0,
-                                2.0
-                            ],
-                            "TranslationOffset": [
-                                15.0,
-                                15.0,
-                                1.100000023841858
-                            ]
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5954220062751336262
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 12589950523136568026
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 6727815753299858667
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 16561550302493125415
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 16564822567362952977
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 7085470920192529454
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 5185673318033173769
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7222447397343244667
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 8876500946460970718,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "map",
-                        "Publish Transform": false
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 10586667459291100305,
-                    "Parent Entity": "Entity_[1146574390643]"
-                }
-            }
-        },
-        "Entity_[19643723718547]": {
-            "Id": "Entity_[19643723718547]",
-            "Name": "UpCamera",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 8961536163839094933
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 9958276452483072360
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12757105311849284208
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 13446590159308483690
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2949194964259660957
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 7805276228355843338
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 16181942304455202461
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 5203653763390711944
-                },
-                "ROS2CameraSensorEditorComponent": {
-                    "$type": "ROS2CameraSensorEditorComponent",
-                    "Id": 6603630445218027223,
-                    "CameraSensorConfig": {
-                        "Width": 1024,
-                        "Height": 1024,
-                        "ClipNear": 15.0
-                    },
-                    "SensorConfig": {
-                        "Frequency (HZ)": 15.0,
-                        "Publishers": {
-                            "Color Camera Info": {
-                                "Type": "sensor_msgs::msg::CameraInfo",
-                                "Topic": "color_camera_info"
-                            },
-                            "Color Image": {
-                                "Type": "sensor_msgs::msg::Image",
-                                "Topic": "camera_image_color"
-                            },
-                            "Depth Camera Info": {
-                                "Type": "sensor_msgs::msg::CameraInfo",
-                                "Topic": "depth_camera_info"
-                            },
-                            "Depth Image": {
-                                "Type": "sensor_msgs::msg::Image",
-                                "Topic": "camera_image_depth"
-                            }
-                        }
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 8125230148907273183
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 6812233331595288427,
-                    "Parent Entity": "Entity_[1146574390643]",
-                    "Transform Data": {
-                        "Translate": [
-                            15.0,
-                            15.0,
-                            20.0
-                        ],
-                        "Rotate": [
-                            180.0,
-                            0.0,
-                            -89.99994659423828
-                        ]
-                    }
-                }
-            }
         }
     },
     "Instances": {
-        "Instance_[1233183000480]": {
-            "Source": "Assets/Environment/Environment.prefab",
+        "Instance_[1907518894460]": {
+            "Source": "Assets/Prefabs/demo_level.prefab",
             "Patches": [
                 {
                     "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                }
-            ]
-        },
-        "Instance_[729293419369]": {
-            "Source": "Assets/Warehouse/Building/Warehouse_30x30.prefab",
-            "Patches": [
+                    "path": "/Instances/Instance_[729293419369]/Entities/Entity_[11461415670918]/Components/EditorEntitySortComponent/Child Entity Order/1",
+                    "value": "Entity_[6241114867616]"
+                },
                 {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Entities/Entity_[11422760965254]/Components/EditorEntitySortComponent/Child Entity Order/1",
+                    "value": "Instance_[26842690808305]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Entities/Entity_[11422760965254]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Instance_[26859870677489]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Entities/Entity_[11422760965254]/Components/EditorEntitySortComponent/Child Entity Order/3",
+                    "value": "Instance_[26881345513969]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Entities/Entity_[11422760965254]/Components/EditorEntitySortComponent/Child Entity Order/4",
+                    "value": "Instance_[26855575710193]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[8072686474374]/Entities/Entity_[7587355169926]/Components/EditorEntitySortComponent/Child Entity Order/1",
+                    "value": "Instance_[2164771383545]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[7578765235334]/Entities/Entity_[7587355169926]/Components/EditorEntitySortComponent/Child Entity Order/1",
+                    "value": "Instance_[2164771383545]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Entities/Entity_[6025840513046]/Components/EditorEntitySortComponent/Child Entity Order/10",
+                    "value": "Instance_[11321535189014]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Entities/Entity_[6236959590449]/Components/EditorEntitySortComponent/Child Entity Order/5",
+                    "value": "Instance_[11308650287126]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[729293419369]/Entities/Entity_[11465710638214]/Components/EditorEntitySortComponent/Child Entity Order/1",
+                    "value": "Instance_[15104545188337]/ContainerEntity"
                 },
                 {
                     "op": "replace",
-                    "path": "/Instances/Instance_[26782561266161]/Entities/Entity_[2301544268426]/Name",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26782561266161]/Entities/Entity_[2301544268426]/Name",
+                    "value": "AnomalySlot1"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26782561266161]/Entities/Entity_[72030338318986]/Name",
                     "value": "AnomalySlot2"
                 },
                 {
                     "op": "replace",
-                    "path": "/Instances/Instance_[26782561266161]/Entities/Entity_[72030338318986]/Name",
-                    "value": "AnomalySlot1"
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
                 }
             ]
         },
