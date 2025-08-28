@@ -14,7 +14,7 @@ def main():
     parser.add_argument("--prompt", type=str, default=None, help="Custom task prompt for the agent")
     parser.add_argument("--model-name", type=str, default="gpt-5", help="Model name to use (default: gpt-5)")
     parser.add_argument("--base-url", type=str, default=None, help="OpenAI-compatible endpoint URL")
-    args = parser.parse_args()
+    args, _ = parser.parse_known_args()
 
     # Load predefined places
     places = PlaceCollection.from_json("rai_app/pose_dataset.json")
