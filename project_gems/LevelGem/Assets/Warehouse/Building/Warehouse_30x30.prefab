@@ -265,26 +265,39 @@
                 },
                 "EditorMaterialComponent": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 11727916399933441615,
+                    "Id": 750823338541147520,
                     "Controller": {
                         "Configuration": {
                             "materials": [
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 424356393
+                                        "materialSlotStableId": 29648280
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{35C42699-CF74-5461-A374-DEA972F9DC26}"
+                                                "guid": "{C22CB373-1FF0-5AA3-9DAE-0BEFF72794A6}"
                                             },
-                                            "assetHint": "assets/warehouse/building/models/materials/warehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/building/models/materials/warehouseroof.azmaterial"
                                         }
                                     }
                                 },
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 891108209
+                                        "materialSlotStableId": 331619876
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{C97C0413-2C8F-5F77-B051-A47BB7A7B540}"
+                                            },
+                                            "assetHint": "assets/warehouse/building/models/materials/warehousemodules_corrugatedsteel.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1222899685
                                     },
                                     "Value": {
                                         "MaterialAsset": {
@@ -297,14 +310,39 @@
                                 },
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 1184014067
+                                        "materialSlotStableId": 1530148354
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{F9BA2E76-2333-5283-8A66-909E74BFE1A1}"
+                                                "guid": "{2110ACB2-DCA5-525A-B473-3DCD0F44B262}"
                                             },
-                                            "assetHint": "assets/warehouse/building/models/materials/warehouseofficewall.azmaterial"
+                                            "assetHint": "assets/warehouse/building/models/materials/warehousefloor.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2077164227
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{33E56181-B52A-57AE-87D2-103C87FD9982}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2342915785
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{32D5341D-72CD-521C-ADF0-AFEF5833299C}"
+                                            },
+                                            "assetHint": "assets/warehouse/building/models/materials/warehousemodules_metal.azmaterial"
                                         }
                                     }
                                 },
@@ -318,32 +356,6 @@
                                                 "guid": "{073EFE23-D204-50EF-96A4-652419E3AF16}"
                                             },
                                             "assetHint": "assets/warehouse/building/models/materials/windowglass.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2955040123
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{2110ACB2-DCA5-525A-B473-3DCD0F44B262}"
-                                            },
-                                            "assetHint": "assets/warehouse/building/models/materials/warehousefloor.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3990559429
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{67341EF3-815A-5E4A-8C5E-F28287E032B1}"
-                                            },
-                                            "assetHint": "assets/warehouse/building/models/materials/warehousewindowdoor.azmaterial"
                                         }
                                     }
                                 }
@@ -366,7 +378,14 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 13659136020581704212,
-                    "Parent Entity": "Entity_[11487185474694]"
+                    "Parent Entity": "Entity_[11487185474694]",
+                    "Transform Data": {
+                        "Translate": [
+                            15.0,
+                            15.0,
+                            0.0
+                        ]
+                    }
                 }
             }
         },

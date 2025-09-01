@@ -66,7 +66,7 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 4125502651823916615,
                     "Child Entity Order": [
-                        "Entity_[14543102787970]",
+                        "Entity_[811620063074]",
                         "Entity_[8559015029233]",
                         "Entity_[2301544268426]",
                         "Entity_[2305839235722]",
@@ -98,72 +98,6 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 3834715467836433889,
                     "Parent Entity": "ContainerEntity"
-                }
-            }
-        },
-        "Entity_[14543102787970]": {
-            "Id": "Entity_[14543102787970]",
-            "Name": "StorageRack01",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 3441451599921490647,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{00FAD901-38BA-5383-9880-8F829727843C}",
-                                    "subId": 279175993
-                                },
-                                "assetHint": "assets/warehouse/assets/racks/models/default_storagerack01_1c6d2a22_eadc_52c7_afe8_9c3585d789df_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 7182775537075305874
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 8561492710356746418
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 8363293604944452135
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 112112445670142375
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 6300860183133218396
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 1415009372647733027
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 13245349394525272654
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 11648799838138368773
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 3696817641139921287,
-                    "Parent Entity": "Entity_[14538807820674]",
-                    "Transform Data": {
-                        "Rotate": [
-                            90.00000762939453,
-                            0.0,
-                            0.0
-                        ],
-                        "UniformScale": 100.0
-                    }
                 }
             }
         },
@@ -444,6 +378,89 @@
                             0.8497210144996643
                         ]
                     }
+                }
+            }
+        },
+        "Entity_[811620063074]": {
+            "Id": "Entity_[811620063074]",
+            "Name": "Visual",
+            "Components": {
+                "AZ::Render::EditorMeshComponent": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 17404736758291499925,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{00FAD901-38BA-5383-9880-8F829727843C}",
+                                    "subId": 270482637
+                                },
+                                "assetHint": "assets/warehouse/assets/racks/models/storagerack01.fbx.azmodel"
+                            },
+                            "LodType": 1,
+                            "QualityDecayRate": 0.699999988079071
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10664047048572288484
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 14239739861316749248
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 14368830813397587481
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 9719904923883044766
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1464599592314590736
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 267284361339832375,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3664025114
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{61714C54-943F-59AA-B5E6-52E53C5E37A0}"
+                                            },
+                                            "assetHint": "assets/warehouse/assets/racks/models/materials/storagerack01.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 5617227940753763032
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13629636710955740798
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15409074520482199317
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 2662994157149192137,
+                    "Parent Entity": "Entity_[14538807820674]"
                 }
             }
         },
