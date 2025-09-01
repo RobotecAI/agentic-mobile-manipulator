@@ -6304,7 +6304,29 @@
                     "$type": "GenericComponentWrapper",
                     "Id": 11088248065599045773,
                     "m_template": {
-                        "$type": "RigidBodyTwistControlComponent"
+                        "$type": "RigidBodyTwistControlComponent",
+                        "Config": {
+                            "PhysicalApi": 2,
+                            "LinerControllers": [
+                                {
+                                    "P": 5000.0,
+                                    "I": 1000.0
+                                },
+                                {
+                                    "P": 5000.0,
+                                    "I": 1000.0
+                                },
+                                {}
+                            ],
+                            "AngularControllers": [
+                                {},
+                                {},
+                                {
+                                    "P": 5000.0,
+                                    "I": 1000.0
+                                }
+                            ]
+                        }
                     }
                 },
                 "TransformComponent": {
