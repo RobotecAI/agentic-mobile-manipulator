@@ -329,7 +329,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{33E56181-B52A-57AE-87D2-103C87FD9982}"
-                                            }
+                                            },
+                                            "assetHint": "assets/warehouse/building/models/materials/warehousewall.azmaterial"
                                         }
                                     }
                                 },
@@ -2611,6 +2612,36 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{8FBC7016-03AE-57CF-9CC7-FA06D703ECE4}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{8FBC7016-03AE-57CF-9CC7-FA06D703ECE4}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{75F963AF-815E-5440-A8DE-253576B16A8B}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{75F963AF-815E-5440-A8DE-253576B16A8B}"
                 }
             ]
         },
@@ -2636,6 +2667,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{D8BE2A53-5599-5E1D-9F12-57C1A8A6FBF3}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{D8BE2A53-5599-5E1D-9F12-57C1A8A6FBF3}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{AA141E68-44A7-5223-9BD3-B148D7035EAE}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{AA141E68-44A7-5223-9BD3-B148D7035EAE}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2661,6 +2732,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{0579E2B1-BAE1-5489-A4E3-9F01063019C4}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{0579E2B1-BAE1-5489-A4E3-9F01063019C4}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{232F15A0-21DD-5B16-9B37-770403AF6106}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{232F15A0-21DD-5B16-9B37-770403AF6106}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2686,6 +2797,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{58F28E1F-88D9-54B7-A540-0A81F7CA1553}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{58F28E1F-88D9-54B7-A540-0A81F7CA1553}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{A3679EFA-782F-54A1-8FBB-1672BC5C7227}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{A3679EFA-782F-54A1-8FBB-1672BC5C7227}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2711,6 +2862,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{A6E8219A-DB44-537F-8960-A2FF2E729DD7}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{A6E8219A-DB44-537F-8960-A2FF2E729DD7}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{2A8AFB0F-BDDA-5343-AEAB-C59C9F73702C}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{2A8AFB0F-BDDA-5343-AEAB-C59C9F73702C}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2736,6 +2927,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{CB00CE3A-0216-5CCC-8C96-7AC9515A3FED}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{CB00CE3A-0216-5CCC-8C96-7AC9515A3FED}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{1171F4D2-0C2D-56E8-86EB-8D5AB36A7819}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{1171F4D2-0C2D-56E8-86EB-8D5AB36A7819}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2761,6 +2992,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{DF89780C-5DA2-5181-9D09-D661A2277DD7}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{DF89780C-5DA2-5181-9D09-D661A2277DD7}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{817EE061-54E9-585D-AE81-E90185CA3610}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{817EE061-54E9-585D-AE81-E90185CA3610}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2786,6 +3057,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{853E0FD4-E8D7-5608-812A-2F3D9E460520}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{853E0FD4-E8D7-5608-812A-2F3D9E460520}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C1BAB7F1-BBE6-58DA-A567-80AC0A47BD95}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C1BAB7F1-BBE6-58DA-A567-80AC0A47BD95}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2811,6 +3122,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{390320FC-4DB7-5D84-8138-EEF53F125B8D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{390320FC-4DB7-5D84-8138-EEF53F125B8D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{AAC551C4-7C2C-55F4-9E74-E017387CB17C}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{AAC551C4-7C2C-55F4-9E74-E017387CB17C}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2836,6 +3187,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{2389B0D5-FBE3-549E-B777-1C84F82C23A7}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{2389B0D5-FBE3-549E-B777-1C84F82C23A7}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{A59F4026-C52C-593D-A48B-AB6C008F7A62}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{A59F4026-C52C-593D-A48B-AB6C008F7A62}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2861,6 +3252,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{BAB25EB1-83D5-5CB1-8CAD-20EE54664EDF}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{BAB25EB1-83D5-5CB1-8CAD-20EE54664EDF}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{25553DB0-AF86-5415-8A97-7220C77859D3}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{25553DB0-AF86-5415-8A97-7220C77859D3}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2886,6 +3317,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F6246AB5-ED05-51DE-A0E7-8A673CF15DBD}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F6246AB5-ED05-51DE-A0E7-8A673CF15DBD}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{89BE0A3B-C354-510F-86CE-6BFED31A54DA}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{89BE0A3B-C354-510F-86CE-6BFED31A54DA}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2911,6 +3382,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{25C2095D-4C33-5AA9-8E4B-A2B74CFF6AD5}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{25C2095D-4C33-5AA9-8E4B-A2B74CFF6AD5}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{9248589D-5021-57A6-959F-352195D6C8A0}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{9248589D-5021-57A6-959F-352195D6C8A0}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2936,6 +3447,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{B27A965B-7536-5624-9DAF-A848D9173B2A}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{B27A965B-7536-5624-9DAF-A848D9173B2A}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{3CBDF148-85F2-5351-BCCF-DE1F6FB38B55}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{3CBDF148-85F2-5351-BCCF-DE1F6FB38B55}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2961,6 +3512,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{AC12B2D3-F024-5AF7-A035-4684F2827904}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{AC12B2D3-F024-5AF7-A035-4684F2827904}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{34D4FABF-84ED-5411-B17D-779D8DD88172}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{34D4FABF-84ED-5411-B17D-779D8DD88172}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -2986,6 +3577,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{DEC5489B-0080-5361-80A7-3A3ECA7B23C4}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F882A9DA-5BE8-5EFF-803A-52345C446660}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{DEC5489B-0080-5361-80A7-3A3ECA7B23C4}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F882A9DA-5BE8-5EFF-803A-52345C446660}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3011,6 +3642,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{982F449D-CDEA-5F64-98FA-77182B687F31}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{982F449D-CDEA-5F64-98FA-77182B687F31}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{BA8C60DB-56FE-5735-ADDE-EAD1D15E04C2}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{BA8C60DB-56FE-5735-ADDE-EAD1D15E04C2}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3041,6 +3712,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{73C58282-DBDC-588E-91A4-326E49DCCF7D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{73C58282-DBDC-588E-91A4-326E49DCCF7D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{8C00A6F6-266A-5790-82FC-515B84CD4D7D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{8C00A6F6-266A-5790-82FC-515B84CD4D7D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3071,6 +3782,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{46585EBE-BB47-52E0-ABF4-4121A0882887}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{46585EBE-BB47-52E0-ABF4-4121A0882887}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{D17DB2E8-FE35-5696-BAED-94A6D43282AB}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{D17DB2E8-FE35-5696-BAED-94A6D43282AB}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3101,6 +3852,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F0FFD2F6-5A3E-5EC5-9152-7F3DD19F426F}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F0FFD2F6-5A3E-5EC5-9152-7F3DD19F426F}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{D578ED1E-C416-567F-A14B-1D44C66F533F}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{D578ED1E-C416-567F-A14B-1D44C66F533F}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3131,6 +3922,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{17645102-A68E-5EA2-9A9E-E98C427ADD32}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{17645102-A68E-5EA2-9A9E-E98C427ADD32}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{8B2BF9C0-362D-5DFF-83CD-59475227A722}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{8B2BF9C0-362D-5DFF-83CD-59475227A722}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3161,6 +3992,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{D2D0E305-F68E-5568-896B-F288F57B989D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{D2D0E305-F68E-5568-896B-F288F57B989D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{109B1A99-74D7-5B4D-85B8-AC8D4327C080}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{109B1A99-74D7-5B4D-85B8-AC8D4327C080}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3191,6 +4062,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C3B3C76F-1FD2-5BE5-93FF-76316F65A77B}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C3B3C76F-1FD2-5BE5-93FF-76316F65A77B}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{B76E96F3-6FAD-57DC-B291-9947EE7416F8}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{B76E96F3-6FAD-57DC-B291-9947EE7416F8}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3221,6 +4132,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F6E71A52-50B7-52F1-A4E6-809D6A2F29A9}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F6E71A52-50B7-52F1-A4E6-809D6A2F29A9}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{80FBA16B-B297-527C-8846-7C43D4FE5B59}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{80FBA16B-B297-527C-8846-7C43D4FE5B59}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3251,6 +4202,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C9940407-BDF7-57C4-B47A-CB1E666FFA13}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C9940407-BDF7-57C4-B47A-CB1E666FFA13}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{71F959FA-699F-5EAD-A732-7D37D9FB578D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{71F959FA-699F-5EAD-A732-7D37D9FB578D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3281,6 +4272,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{664DDC9E-C728-53A1-A47B-2CA596F69BED}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{664DDC9E-C728-53A1-A47B-2CA596F69BED}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C354E194-A4A5-5472-ABCD-7C42CF7FB83E}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C354E194-A4A5-5472-ABCD-7C42CF7FB83E}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3311,6 +4342,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 2.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{02135A20-E51C-567B-B590-46912A933B61}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{02135A20-E51C-567B-B590-46912A933B61}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{162BF5F6-5B02-52FA-88C1-09DB93DBF7D9}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{162BF5F6-5B02-52FA-88C1-09DB93DBF7D9}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3686,6 +4757,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
                     "value": 9.5367431640625e-7
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2070282103033]/Entities/Entity_[3656270156160]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{8819A764-32C0-59E2-90F7-483EF829FF6D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2070282103033]/Entities/Entity_[3656270156160]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2070282103033]/Entities/Entity_[4420774334848]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{8819A764-32C0-59E2-90F7-483EF829FF6D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2070282103033]/Entities/Entity_[4420774334848]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2164771383545]/Entities/Entity_[3656270156160]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{A6E1103D-7C58-52DC-8529-3A2F8E7E5D9D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2164771383545]/Entities/Entity_[3656270156160]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2164771383545]/Entities/Entity_[4420774334848]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{A6E1103D-7C58-52DC-8529-3A2F8E7E5D9D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2164771383545]/Entities/Entity_[4420774334848]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         },
@@ -3711,6 +4822,46 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
                     "value": 9.5367431640625e-7
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2070282103033]/Entities/Entity_[3656270156160]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{BA015132-A4DF-54D1-A450-1E4F1E2B1038}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2070282103033]/Entities/Entity_[3656270156160]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2070282103033]/Entities/Entity_[4420774334848]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{BA015132-A4DF-54D1-A450-1E4F1E2B1038}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2070282103033]/Entities/Entity_[4420774334848]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2164771383545]/Entities/Entity_[3656270156160]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{1A13543A-FF7F-524E-B28D-DBA2EDA5BD9C}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2164771383545]/Entities/Entity_[3656270156160]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2164771383545]/Entities/Entity_[4420774334848]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{1A13543A-FF7F-524E-B28D-DBA2EDA5BD9C}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[2164771383545]/Entities/Entity_[4420774334848]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": ""
                 }
             ]
         }
