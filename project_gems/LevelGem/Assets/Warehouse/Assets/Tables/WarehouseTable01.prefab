@@ -67,7 +67,9 @@
                     "Id": 17342988258490340528,
                     "Child Entity Order": [
                         "Entity_[2083167004921]",
-                        "Entity_[2246375762169]"
+                        "Entity_[2246375762169]",
+                        "Entity_[3656270156160]",
+                        "Entity_[4420774334848]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -264,6 +266,276 @@
                             0.0,
                             0.5
                         ]
+                    }
+                }
+            }
+        },
+        "Entity_[3656270156160]": {
+            "Id": "Entity_[3656270156160]",
+            "Name": "NumberSign",
+            "Components": {
+                "AZ::Render::EditorMeshComponent": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 15726655169201302465,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{767B3209-EDF7-503A-BF3D-6A69DAABC966}",
+                                    "subId": 285003870
+                                },
+                                "assetHint": "materialeditor/viewportmodels/plane_1x1.fbx.azmodel"
+                            }
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 3357352084081881496
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13154269157531392947
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 13636843578728712315
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8163805063344679352,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 8260122009488503217
+                        },
+                        {
+                            "ComponentId": 16587284675356571223,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 8163805063344679352,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 13636843578728712315,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 4614381075677292135,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 17226826434720064797,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 8906040144643065090,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 13154269157531392947,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 3357352084081881496,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 15726655169201302465,
+                            "SortIndex": 9
+                        }
+                    ]
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 17226826434720064797
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7081528210093873507,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1803671422
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
+                                            },
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 16587284675356571223
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 8906040144643065090
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 4614381075677292135
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8260122009488503217,
+                    "Parent Entity": "Entity_[2078872037625]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.5080938339233398,
+                            -0.000011444091796875,
+                            0.8517609238624573
+                        ],
+                        "Rotate": [
+                            89.9996337890625,
+                            -89.99994659423828,
+                            0.0
+                        ],
+                        "UniformScale": 0.20000000298023224
+                    }
+                }
+            }
+        },
+        "Entity_[4420774334848]": {
+            "Id": "Entity_[4420774334848]",
+            "Name": "NumberSign",
+            "Components": {
+                "AZ::Render::EditorMeshComponent": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 15726655169201302465,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{767B3209-EDF7-503A-BF3D-6A69DAABC966}",
+                                    "subId": 285003870
+                                },
+                                "assetHint": "materialeditor/viewportmodels/plane_1x1.fbx.azmodel"
+                            }
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 3357352084081881496
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13154269157531392947
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 13636843578728712315
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8163805063344679352,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 8260122009488503217
+                        },
+                        {
+                            "ComponentId": 16587284675356571223,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 8163805063344679352,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 13636843578728712315,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 4614381075677292135,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 17226826434720064797,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 8906040144643065090,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 13154269157531392947,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 3357352084081881496,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 15726655169201302465,
+                            "SortIndex": 9
+                        }
+                    ]
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 17226826434720064797
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7081528210093873507,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1803671422
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
+                                            },
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 16587284675356571223
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 8906040144643065090
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 4614381075677292135
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8260122009488503217,
+                    "Parent Entity": "Entity_[2078872037625]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.5055694580078125,
+                            -0.0000095367431640625,
+                            0.8517609238624573
+                        ],
+                        "Rotate": [
+                            89.9996109008789,
+                            89.99996948242188,
+                            0.0
+                        ],
+                        "UniformScale": 0.20000000298023224
                     }
                 }
             }
