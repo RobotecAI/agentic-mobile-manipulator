@@ -6284,7 +6284,8 @@
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
-                        "Frame Name": "egobase_footprint"
+                        "Frame Name": "egobase_footprint",
+                        "Force Dynamic": true
                     }
                 },
                 "ROS2RobotControlComponent": {

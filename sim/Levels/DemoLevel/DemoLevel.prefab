@@ -21,7 +21,10 @@
                 "Child Entity Order": [
                     "Entity_[10559585402039]",
                     "Instance_[8695569595575]/ContainerEntity",
-                    "Instance_[9564558859548]/ContainerEntity",
+                    "Instance_[3463736419145]/ContainerEntity",
+                    "Instance_[3472326353737]/ContainerEntity",
+                    "Instance_[3480916288329]/ContainerEntity",
+                    "Instance_[3489506222921]/ContainerEntity",
                     "Instance_[1907518894460]/ContainerEntity"
                 ]
             },
@@ -54,6 +57,16 @@
                 "$type": "LocalViewBookmarkComponent",
                 "Id": 1454470459682272316,
                 "LocalBookmarkFileName": "DemoLevel_1755782863437204793.setreg"
+            },
+            "ROS2FrameEditorComponent": {
+                "$type": "ROS2FrameEditorComponent",
+                "Id": 6758976691534401723,
+                "ROS2FrameConfiguration": {
+                    "Namespace Configuration": {
+                        "Namespace Strategy": 1
+                    },
+                    "Frame Name": "world"
+                }
             }
         }
     },
@@ -93,7 +106,15 @@
                             "Id": 5592472681957896715,
                             "m_template": {
                                 "$type": "FlyCameraInputComponent",
-                                "Mouse Sensitivity": 0.0
+                                "Move Speed": 2.0,
+                                "Mouse Sensitivity": 0.004999999888241291
+                            }
+                        },
+                        "SpectatorCameraEditorComponent": {
+                            "$type": "SpectatorCameraEditorComponent",
+                            "Id": 10408039965298576884,
+                            "Configuration": {
+                                "LookAtTarget": "Instance_[8695569595575]/Entity_[45011296624336]"
                             }
                         }
                     }
@@ -126,27 +147,20 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 9849399656916953217
                 },
-                "SpectatorCameraEditorComponent": {
-                    "$type": "SpectatorCameraEditorComponent",
-                    "Id": 10408039965298576884,
-                    "Configuration": {
-                        "LookAtTarget": "Instance_[8695569595575]/Entity_[45011296624336]"
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7894549730907242897,
                     "Parent Entity": "Entity_[1146574390643]",
                     "Transform Data": {
                         "Translate": [
-                            3.156714916229248,
-                            6.716826915740967,
-                            1.0821349620819092
+                            14.739465713500977,
+                            11.994022369384766,
+                            2.5654351711273193
                         ],
                         "Rotate": [
-                            -5.286864757537842,
-                            15.499049186706543,
-                            -70.89952087402344
+                            22.736614227294922,
+                            9.355957984924316,
+                            -158.7969970703125
                         ]
                     }
                 }
@@ -224,6 +238,106 @@
                 }
             ]
         },
+        "Instance_[3463736419145]": {
+            "Source": "Assets/Payload/Boxes/CardboardBox01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 15.71682357788086
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 9.683485984802246
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 1.000000238418579
+                }
+            ]
+        },
+        "Instance_[3472326353737]": {
+            "Source": "Assets/Payload/Boxes/CardboardBox02.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 16.47857093811035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 9.661750793457031
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 1.0000007152557373
+                }
+            ]
+        },
+        "Instance_[3480916288329]": {
+            "Source": "Assets/Payload/Boxes/CardboardBoxDamaged01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 17.26653289794922
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 9.667448997497559
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 1.0000007152557373
+                }
+            ]
+        },
+        "Instance_[3489506222921]": {
+            "Source": "Assets/Payload/Boxes/CardboardBoxDamaged02.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 17.953441619873047
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 9.627300262451172
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 1.0000007152557373
+                }
+            ]
+        },
         "Instance_[8695569595575]": {
             "Source": "Assets/rbkairos_plus.prefab",
             "Patches": [
@@ -235,22 +349,17 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 3.321913242340088
+                    "value": 14.041935920715332
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.118839263916016
-                }
-            ]
-        },
-        "Instance_[9564558859548]": {
-            "Source": "Assets/Payload/Payload.prefab",
-            "Patches": [
+                    "value": 8.156085014343262
+                },
                 {
                     "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
+                    "path": "/Entities/Entity_[45011296624336]/Components/ROS2FrameEditorComponent/ROS2FrameConfiguration/Force Dynamic",
+                    "value": true
                 }
             ]
         }
