@@ -283,6 +283,78 @@
                     "op": "add",
                     "path": "/Instances/Instance_[8072686474374]/Entities/Entity_[7587355169926]/Components/EditorEntitySortComponent/Child Entity Order/1",
                     "value": "Instance_[2164771383545]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[26731021658609]/Entities/Entity_[2301544268426]/Components/ROS2FrameEditorComponent",
+                    "value": {
+                        "$type": "ROS2FrameEditorComponent",
+                        "Id": 744900747256262101,
+                        "ROS2FrameConfiguration": {
+                            "Namespace Configuration": {
+                                "Namespace Strategy": 0,
+                                "Namespace": ""
+                            },
+                            "Frame Name": "rack_slot1",
+                            "Joint Name": "",
+                            "Publish Transform": true,
+                            "Force Dynamic": false
+                        }
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[26731021658609]/Entities/Entity_[2305839235722]/Components/ROS2FrameEditorComponent",
+                    "value": {
+                        "$type": "ROS2FrameEditorComponent",
+                        "Id": 3107612730461508188,
+                        "ROS2FrameConfiguration": {
+                            "Namespace Configuration": {
+                                "Namespace Strategy": 0,
+                                "Namespace": ""
+                            },
+                            "Frame Name": "rack_slot2",
+                            "Joint Name": "",
+                            "Publish Transform": true,
+                            "Force Dynamic": false
+                        }
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[26731021658609]/Entities/Entity_[72034633286282]/Components/ROS2FrameEditorComponent",
+                    "value": {
+                        "$type": "ROS2FrameEditorComponent",
+                        "Id": 12237364473316130984,
+                        "ROS2FrameConfiguration": {
+                            "Namespace Configuration": {
+                                "Namespace Strategy": 0,
+                                "Namespace": ""
+                            },
+                            "Frame Name": "rack_slot3",
+                            "Joint Name": "",
+                            "Publish Transform": true,
+                            "Force Dynamic": false
+                        }
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[26731021658609]/Entities/Entity_[72030338318986]/Components/ROS2FrameEditorComponent",
+                    "value": {
+                        "$type": "ROS2FrameEditorComponent",
+                        "Id": 11446299666700216286,
+                        "ROS2FrameConfiguration": {
+                            "Namespace Configuration": {
+                                "Namespace Strategy": 0,
+                                "Namespace": ""
+                            },
+                            "Frame Name": "rack_slot4",
+                            "Joint Name": "",
+                            "Publish Transform": true,
+                            "Force Dynamic": false
+                        }
+                    }
                 }
             ]
         }
