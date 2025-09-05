@@ -99,25 +99,7 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 2518429548117367086,
-                    "DisabledComponents": {
-                        "FlyCameraInputComponent": {
-                            "$type": "GenericComponentWrapper",
-                            "Id": 5592472681957896715,
-                            "m_template": {
-                                "$type": "FlyCameraInputComponent",
-                                "Move Speed": 2.0,
-                                "Mouse Sensitivity": 0.004999999888241291
-                            }
-                        },
-                        "SpectatorCameraEditorComponent": {
-                            "$type": "SpectatorCameraEditorComponent",
-                            "Id": 10408039965298576884,
-                            "Configuration": {
-                                "LookAtTarget": "Instance_[8695569595575]/Entity_[45011296624336]"
-                            }
-                        }
-                    }
+                    "Id": 2518429548117367086
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -146,6 +128,23 @@
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 9849399656916953217
+                },
+                "FlyCameraInputComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 5592472681957896715,
+                    "m_template": {
+                        "$type": "FlyCameraInputComponent",
+                        "Move Speed": 2.0,
+                        "Mouse Sensitivity": 0.004999999888241291
+                    }
+                },
+                "SpectatorCameraEditorComponent": {
+                    "$type": "SpectatorCameraEditorComponent",
+                    "Id": 10408039965298576884,
+                    "Configuration": {
+                        "LookAtTarget": "Instance_[8695569595575]/Entity_[45011296624336]",
+                        "FollowTargetRotation": false
+                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -304,7 +303,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 9.667448997497559
+                    "value": 9.66744899749756
                 },
                 {
                     "op": "replace",
