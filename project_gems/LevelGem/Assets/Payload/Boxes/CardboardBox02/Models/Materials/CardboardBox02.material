@@ -15,6 +15,7 @@
             0.0,
             1.0
         ],
+        "normal.factor": 0.36000001430511475,
         "normal.textureMap": "Textures/CardboardBox02_Normal.png",
         "opacity.factor": 1.0,
         "roughness.factor": 0.5,
