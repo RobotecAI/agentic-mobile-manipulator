@@ -66,8 +66,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 4125502651823916615,
                     "Child Entity Order": [
-                        "Entity_[811620063074]",
-                        "Entity_[8559015029233]",
                         "Entity_[2301544268426]",
                         "Entity_[2305839235722]",
                         "Entity_[72034633286282]",
@@ -75,7 +73,8 @@
                         "Entity_[2746745046264]",
                         "Entity_[4262412987623]",
                         "Entity_[4266707954919]",
-                        "Entity_[2995853149432]"
+                        "Entity_[2995853149432]",
+                        "Instance_[2845356619805]/ContainerEntity"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -298,7 +297,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
-                                            }
+                                            },
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
                                         }
                                     }
                                 }
@@ -391,7 +391,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
-                                            }
+                                            },
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
                                         }
                                     }
                                 }
@@ -758,170 +759,18 @@
                     }
                 }
             }
-        },
-        "Entity_[811620063074]": {
-            "Id": "Entity_[811620063074]",
-            "Name": "Visual",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 17404736758291499925,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{00FAD901-38BA-5383-9880-8F829727843C}",
-                                    "subId": 270482637
-                                },
-                                "assetHint": "assets/warehouse/assets/racks/models/storagerack01.fbx.azmodel"
-                            },
-                            "LodType": 1,
-                            "QualityDecayRate": 0.699999988079071
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10664047048572288484
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 14239739861316749248
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 14368830813397587481
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 9719904923883044766
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 1464599592314590736
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 267284361339832375,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3664025114
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{61714C54-943F-59AA-B5E6-52E53C5E37A0}"
-                                            },
-                                            "assetHint": "assets/warehouse/assets/racks/models/materials/storagerack01.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 5617227940753763032
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 13629636710955740798
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15409074520482199317
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 2662994157149192137,
-                    "Parent Entity": "Entity_[14538807820674]"
+        }
+    },
+    "Instances": {
+        "Instance_[2845356619805]": {
+            "Source": "WarehouseRack_Small_x2.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[14538807820674]"
                 }
-            }
-        },
-        "Entity_[8559015029233]": {
-            "Id": "Entity_[8559015029233]",
-            "Name": "Colider",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10923363797883246222
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 9438159213207081680
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 4995033557609213767
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 6509525112429871952
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 12762844065391391951
-                },
-                "EditorMeshColliderComponent": {
-                    "$type": "EditorMeshColliderComponent",
-                    "Id": 15440449269173438646,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "StorageRack01"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{00FAD901-38BA-5383-9880-8F829727843C}",
-                                    "subId": 469410414
-                                },
-                                "assetHint": "assets/warehouse/assets/racks/models/storagerack01.fbx.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{00FAD901-38BA-5383-9880-8F829727843C}",
-                                        "subId": 469410414
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/assets/racks/models/storagerack01.fbx.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 13692767799116568363
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 18331770532708198295
-                },
-                "EditorStaticRigidBodyComponent": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 14810226064873675010
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15710534274941662250
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 2833885592993894627,
-                    "Parent Entity": "Entity_[14538807820674]"
-                }
-            }
+            ]
         }
     }
 }

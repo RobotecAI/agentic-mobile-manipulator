@@ -57,6 +57,9 @@
         "WarehouseAssets",
         "LevelGem",
         "SimulationInterfaces",
+        "RobotecWarehouseLaddersStairsAssets",
+        "RobotecWarehouseMiscAssets",
+        "RobotecWarehouseBuildingAssets",
         "ROS2ScriptIntegration"
     ],
     "engine_version": "2.4.0"

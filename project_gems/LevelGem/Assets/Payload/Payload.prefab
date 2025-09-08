@@ -15,7 +15,9 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 15542976207429542652,
                 "Child Entity Order": [
-                    "Entity_[1776125185634]"
+                    "Entity_[1776125185634]",
+                    "Instance_[20578157834897]/ContainerEntity",
+                    "Instance_[3526109310313]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -114,7 +116,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 15.483053207397461
+                    "value": 15.48305320739746
                 },
                 {
                     "op": "replace",
@@ -140,6 +142,61 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
                     "value": 8.654190063476563
+                }
+            ]
+        },
+        "Instance_[20578157834897]": {
+            "Source": "Ladders/LadderSectioned/LadderSectioned_01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 15.37806224822998
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 15.016818046569824
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.005452632904052734
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
+                    "value": -6.534477710723877
+                }
+            ]
+        },
+        "Instance_[3526109310313]": {
+            "Source": "Ladders/LadderSectioned/LadderSectionedSetUp_01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 17.749073028564453
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 6.97695255279541
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.000003814697265625
                 }
             ]
         },

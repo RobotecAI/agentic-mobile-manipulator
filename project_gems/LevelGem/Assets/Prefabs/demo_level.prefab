@@ -230,59 +230,9 @@
             "Source": "Assets/Warehouse/Building/Warehouse_30x30.prefab",
             "Patches": [
                 {
-                    "op": "add",
-                    "path": "/Entities/Entity_[11465710638214]/Components/EditorEntitySortComponent/Child Entity Order/1",
-                    "value": "Instance_[15104545188337]/ContainerEntity"
-                },
-                {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../ContainerEntity"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[6236959590449]/Components/EditorEntitySortComponent/Child Entity Order/5",
-                    "value": "Instance_[11308650287126]/ContainerEntity"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[6025840513046]/Components/EditorEntitySortComponent/Child Entity Order/10",
-                    "value": "Instance_[11321535189014]/ContainerEntity"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[11422760965254]/Components/EditorEntitySortComponent/Child Entity Order/1",
-                    "value": "Instance_[26842690808305]/ContainerEntity"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[11422760965254]/Components/EditorEntitySortComponent/Child Entity Order/2",
-                    "value": "Instance_[26855575710193]/ContainerEntity"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[11422760965254]/Components/EditorEntitySortComponent/Child Entity Order/3",
-                    "value": "Instance_[26859870677489]/ContainerEntity"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[11422760965254]/Components/EditorEntitySortComponent/Child Entity Order/4",
-                    "value": "Instance_[26881345513969]/ContainerEntity"
-                },
-                {
-                    "op": "add",
-                    "path": "/Instances/Instance_[7578765235334]/Entities/Entity_[7587355169926]/Components/EditorEntitySortComponent/Child Entity Order/1",
-                    "value": "Instance_[2164771383545]/ContainerEntity"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[11461415670918]/Components/EditorEntitySortComponent/Child Entity Order/1",
-                    "value": "Entity_[6241114867616]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Instances/Instance_[8072686474374]/Entities/Entity_[7587355169926]/Components/EditorEntitySortComponent/Child Entity Order/1",
-                    "value": "Instance_[2164771383545]/ContainerEntity"
                 },
                 {
                     "op": "add",
