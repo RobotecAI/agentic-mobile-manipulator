@@ -16,6 +16,8 @@
             1.0
         ],
         "metallic.textureMap": "Textures/CardboardBoxDamaged01_Metallic.png",
+        "normal.factor": 1.100000023841858,
+        "normal.flipY": true,
         "normal.textureMap": "Textures/CardboardBoxDamaged01_Normal.png",
         "opacity.factor": 1.0,
         "roughness.factor": 0.5,
