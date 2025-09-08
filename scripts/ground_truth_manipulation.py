@@ -262,13 +262,6 @@ def main(args=None):
 
         time.sleep(1)
 
-    def spin_right():
-        navigator = BasicNavigator()
-        navigator.spin(-1.57)
-        while not navigator.isTaskComplete():
-            time.sleep(0.1)
-        print("Spinning right successful")
-
     def place_object_on_rack(object_name, slot_number):
         object_frame = f"{object_name}/gripping_point"
 
@@ -283,9 +276,6 @@ def main(args=None):
         move_arm(
             Pose(position=Point(x=0.6, z=0.8)), f"{namespace_value}egoarm_base_link"
         )
-
-        move_back()
-        spin_right()
 
         slot_frame = f"rack_slot{slot_number}"
         navigate_to_pose(x=-2.0, y=0.0, frame=slot_frame)
