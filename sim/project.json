@@ -60,7 +60,8 @@
         "RobotecWarehouseLaddersStairsAssets",
         "RobotecWarehouseMiscAssets",
         "RobotecWarehouseBuildingAssets",
-        "ROS2ScriptIntegration"
+        "ROS2ScriptIntegration",
+        "RobotecSmallContainersAssets"
     ],
     "engine_version": "2.4.0"
 }

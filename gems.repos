@@ -23,3 +23,7 @@ repositories:
     type: git
     url: https://github.com/RobotecAI/robotec-warehouse-assets.git
     version: main
+  ./gems/robotec-generic-assets:
+    type: git
+    url: https://github.com/RobotecAI/robotec-generic-assets.git
+    version: main
