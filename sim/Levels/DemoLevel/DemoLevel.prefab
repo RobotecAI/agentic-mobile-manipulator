@@ -21,10 +21,6 @@
                 "Child Entity Order": [
                     "Entity_[10559585402039]",
                     "Instance_[8695569595575]/ContainerEntity",
-                    "Instance_[3463736419145]/ContainerEntity",
-                    "Instance_[3472326353737]/ContainerEntity",
-                    "Instance_[3480916288329]/ContainerEntity",
-                    "Instance_[3489506222921]/ContainerEntity",
                     "Instance_[1907518894460]/ContainerEntity"
                 ]
             },
@@ -93,7 +89,7 @@
                     "Id": 13180946551915775082,
                     "Controller": {
                         "Configuration": {
-                            "Field of View": 60.0
+                            "Field of View": 40.0
                         }
                     }
                 },
@@ -142,7 +138,7 @@
                     "$type": "SpectatorCameraEditorComponent",
                     "Id": 10408039965298576884,
                     "Configuration": {
-                        "LookAtTarget": "Instance_[8695569595575]/Entity_[45011296624336]",
+                        "LookAtTarget": "Instance_[8695569595575]/Entity_[38067181522351]",
                         "FollowTargetRotation": false
                     }
                 },
@@ -172,118 +168,8 @@
             "Patches": [
                 {
                     "op": "replace",
-                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26782561266161]/Entities/Entity_[2301544268426]/Name",
-                    "value": "AnomalySlot1"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26782561266161]/Entities/Entity_[72030338318986]/Name",
-                    "value": "AnomalySlot2"
-                },
-                {
-                    "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../Entity_[1146574390643]"
-                }
-            ]
-        },
-        "Instance_[3463736419145]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 15.71682357788086
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 9.683485984802246
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 1.000000238418579
-                }
-            ]
-        },
-        "Instance_[3472326353737]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox02.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 16.47857093811035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 9.661750793457031
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 1.0000007152557373
-                }
-            ]
-        },
-        "Instance_[3480916288329]": {
-            "Source": "Assets/Payload/Boxes/CardboardBoxDamaged01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 17.26653289794922
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 9.66744899749756
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 1.0000007152557373
-                }
-            ]
-        },
-        "Instance_[3489506222921]": {
-            "Source": "Assets/Payload/Boxes/CardboardBoxDamaged02.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 17.953441619873047
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 9.627300262451172
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 1.0000007152557373
                 }
             ]
         },
@@ -306,9 +192,91 @@
                     "value": 8.156085014343262
                 },
                 {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[45011296624336]/Components/ROS2FrameEditorComponent/ROS2FrameConfiguration/Force Dynamic",
-                    "value": true
+                    "op": "add",
+                    "path": "/Entities/Entity_[44886742572752]/Components/EditorEntitySortComponent/Child Entity Order/15",
+                    "value": "Entity_[38067181522351]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[38067181522351]",
+                    "value": {
+                        "Id": "Entity_[38067181522351]",
+                        "Name": "CameraTarget",
+                        "Components": {
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 8552549837662729081,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 2500164038245006866,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 4593278015067283975,
+                                "Child Entity Order": []
+                            },
+                            "EditorInspectorComponent": {
+                                "$type": "EditorInspectorComponent",
+                                "Id": 1829152251635491821,
+                                "ComponentOrderEntryArray": []
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 801637206755925359,
+                                "Locked": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 279317615882264329,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 9327899090642407274,
+                                "PendingComponents": []
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 7739128046062070108,
+                                "VisibilityFlag": true
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 17486786842005404295,
+                                "Parent Entity": "Entity_[44886742572752]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.0,
+                                        0.0,
+                                        0.6448119878768921
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
                 }
             ]
         }

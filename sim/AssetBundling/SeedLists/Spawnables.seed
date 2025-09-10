@@ -1,0 +1,63 @@
+{
+    "Type": "JsonSerialization",
+    "Version": 1,
+    "ClassName": "AZStd::vector<SeedInfo, allocator>",
+    "ClassData": [
+        {
+            "assetId": {
+                "guid": "{18191B50-4B5D-5292-A68A-B4A68771DE9A}",
+                "subId": 1793591664
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/payload.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D6E4032B-37FC-5D7E-8C2B-FE99E6302497}",
+                "subId": 3045352054
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/cardboardbox01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{110667B0-63E0-5C3E-BDA5-CDE4B8306441}",
+                "subId": 3973925711
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/cardboardbox02.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B63464DF-F02C-517E-8486-EAC7934D4458}",
+                "subId": 2438417754
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/cardboardboxdamaged01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{5D6B641E-36D5-57BB-8306-A4E9ACA51B6B}",
+                "subId": 3775955355
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/cardboardboxdamaged02.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{E9B22478-81C0-5D33-A23B-303586AAB884}",
+                "subId": 2260885838
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/oilspills/oilspill1.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{02B08258-E616-518D-90A4-68C17BEC62D9}",
+                "subId": 4077734734
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/oilspills/oilspill2.spawnable"
+        }
+    ]
+}

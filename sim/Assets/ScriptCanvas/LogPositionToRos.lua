@@ -21,9 +21,13 @@ end
 function PrintPosition:OnTick(deltaTime, timePoint)
     local position = TransformBus.Event.GetWorldTranslation(self.entityId)
     local rotation = TransformBus.Event.GetWorldRotationQuaternion(self.entityId)
+    
+    local parentId = TransformBus.Event.GetParentId(self.entityId)
+    local parentName = GameEntityContextRequestBus.Broadcast.GetEntityName(parentId)
+    
     local name = GameEntityContextRequestBus.Broadcast.GetEntityName(self.entityId)
-   	local msg = string.format("%s,%s,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
-        name, tostring(self.entityId),
+   	local msg = string.format("%s/%s,%s,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
+        parentName, name, tostring(self.entityId),
         position.x, position.y, position.z, rotation.x, rotation.y, rotation.z, rotation.w)
     PublisherRequestBus.Broadcast.PublishStdMsgString("sim/reported_points",msg)
 

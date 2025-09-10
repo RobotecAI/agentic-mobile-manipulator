@@ -212,16 +212,13 @@
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 18401227018419372378
                 },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 3686948956491219283
+                },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 3239274879862671041
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 1989942518104640125,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "gripping_point"
-                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -275,16 +272,6 @@
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 7695133511116291762
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 1098971389006212990,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 2
-                        },
-                        "Frame Name": ""
-                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -403,32 +390,6 @@
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 17825273165052061783
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 5108159480755150016,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "base_link_gt",
-                        "Force Dynamic": true
-                    }
-                },
-                "ROS2OdometrySensorComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 15422691205130483841,
-                    "m_template": {
-                        "$type": "ROS2OdometrySensorComponent",
-                        "SensorConfiguration": {
-                            "Publishers": {
-                                "nav_msgs::msg::Odometry": {
-                                    "Type": "nav_msgs::msg::Odometry",
-                                    "Topic": "odom_gt"
-                                }
-                            }
-                        }
-                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
