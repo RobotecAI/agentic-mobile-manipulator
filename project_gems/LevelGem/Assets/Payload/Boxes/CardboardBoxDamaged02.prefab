@@ -89,16 +89,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 13914888459062637570
                 },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 11354742054272390455,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 2
-                        },
-                        "Frame Name": ""
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 9963912432428155089,
@@ -282,32 +272,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 11782491281257102280
                 },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 7466638792644263980,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "base_link_gt",
-                        "Force Dynamic": true
-                    }
-                },
-                "ROS2OdometrySensorComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 2064488601764782283,
-                    "m_template": {
-                        "$type": "ROS2OdometrySensorComponent",
-                        "SensorConfiguration": {
-                            "Publishers": {
-                                "nav_msgs::msg::Odometry": {
-                                    "Type": "nav_msgs::msg::Odometry",
-                                    "Topic": "odom_gt"
-                                }
-                            }
-                        }
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 13129657001518863853,
@@ -431,16 +395,13 @@
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 15116816410748203154
                 },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 4363779171493022873
+                },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 4716856955420902924
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 5255392927751763792,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "gripping_point"
-                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",

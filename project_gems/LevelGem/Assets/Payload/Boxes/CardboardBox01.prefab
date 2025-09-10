@@ -15,7 +15,7 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 4771096233113931318,
                 "Child Entity Order": [
-                    "Entity_[50111416180142]"
+                    "Entity_[286221648163781]"
                 ]
             },
             "EditorInspectorComponent": {
@@ -218,36 +218,70 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 17759490265809844317
                 },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 13973439335190490190,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "base_link_gt",
-                        "Force Dynamic": true
-                    }
-                },
-                "ROS2OdometrySensorComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 6942689394006952846,
-                    "m_template": {
-                        "$type": "ROS2OdometrySensorComponent",
-                        "SensorConfiguration": {
-                            "Publishers": {
-                                "nav_msgs::msg::Odometry": {
-                                    "Type": "nav_msgs::msg::Odometry",
-                                    "Topic": "odom_gt"
-                                }
-                            }
-                        }
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 10663457341556219173,
-                    "Parent Entity": "Entity_[50111416180142]"
+                    "Parent Entity": "Entity_[286221648163781]",
+                    "Transform Data": {
+                        "Translate": [
+                            31.43364715576172,
+                            19.366971969604492,
+                            2.000000476837158
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[286221648163781]": {
+            "Id": "Entity_[286221648163781]",
+            "Name": "CardboardBox01",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9371526224053075621
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 4316557593646770833
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 592514643398727236,
+                    "Child Entity Order": [
+                        "Entity_[2274034789355]"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3715995881684810766
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 16729945540819675164
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 6029821194034957312
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 10707128920814855521
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15798786448410400661
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4745347924299191959,
+                    "Parent Entity": "ContainerEntity",
+                    "Transform Data": {
+                        "Translate": [
+                            -31.43364715576172,
+                            -19.366971969604492,
+                            -2.000000476837158
+                        ]
+                    }
                 }
             }
         },
@@ -283,16 +317,13 @@
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 13712973307622146557
                 },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 9389896478001251409
+                },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 1540590448328224031
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 6905971868666887597,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "gripping_point"
-                    }
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -305,62 +336,6 @@
                             0.23756146430969238
                         ]
                     }
-                }
-            }
-        },
-        "Entity_[50111416180142]": {
-            "Id": "Entity_[50111416180142]",
-            "Name": "CardboardBox01",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5164242879095791518
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 9723439625134951358
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12880273871506015903,
-                    "Child Entity Order": [
-                        "Entity_[2274034789355]"
-                    ]
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3952112821451470815
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 8161847797521734446
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2527179218804946553
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 5069926244571747001
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 8111856019559937132
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 6740387446365455331,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 2
-                        },
-                        "Frame Name": ""
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 16503510872496223386,
-                    "Parent Entity": "ContainerEntity"
                 }
             }
         },
