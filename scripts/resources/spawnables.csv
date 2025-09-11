@@ -1,0 +1,8 @@
+object_name,uri
+ego,product_asset:///assets/rbkairos_plus.spawnable
+cardboardbox01,product_asset:///assets/payload/boxes/cardboardbox01.spawnable
+cardboardbox02,product_asset:///assets/payload/boxes/cardboardbox02.spawnable
+cardboardboxdamaged01,product_asset:///assets/payload/boxes/cardboardboxdamaged01.spawnable
+cardboardboxdamaged02,product_asset:///assets/payload/boxes/cardboardboxdamaged02.spawnable
+oilspill1,product_asset:///assets/payload/oilspills/oilspill1.spawnable
+oilspill2,product_asset:///assets/payload/oilspills/oilspill2.spawnable
