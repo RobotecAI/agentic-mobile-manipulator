@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-import csv
 import os
 import time
-from io import StringIO
 from pathlib import Path
 from typing import Type
 
@@ -12,7 +10,6 @@ import numpy as np
 # generic ros libraries
 import rclpy
 from ament_index_python import get_package_share_directory
-from anomalies import Spawn, poses_raw
 from control_msgs.action import GripperCommand
 from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
 from langchain_core.tools import BaseTool
@@ -32,6 +29,7 @@ from pydantic import BaseModel, Field
 from rai.communication.ros2 import ROS2Connector
 from rclpy.action import ActionClient
 from rclpy.node import Node
+from scene_manager import SceneManager
 from simulation_interfaces.srv import GetEntityState
 from tf2_geometry_msgs import TransformStamped, do_transform_pose
 
@@ -431,18 +429,6 @@ def main(args=None):
 
         move_back()
 
-    slot_poses = {}
-    reader = csv.reader(StringIO(poses_raw))
-    for row in reader:
-        if len(row) == 0:
-            continue
-        name = row[0]
-        x, y, z, qx, qy, qz, qw = map(float, row[2:])
-        slot_poses[name] = Pose(
-            position=Point(x=x, y=y, z=z),
-            orientation=Quaternion(x=qx, y=qy, z=qz, w=qw),
-        )
-
     entity_types = [
         "cardboardbox01",
         "cardboardbox02",
@@ -450,7 +436,6 @@ def main(args=None):
         "cardboardboxdamaged02",
     ]
     spawn_entity_types = [entity_types[i % len(entity_types)] for i in range(16)]
-    entity_names = [f"box{i}" for i in range(len(spawn_entity_types))]
     spawn_slot_names = [
         "I01/RackSlot1",
         "I01/RackSlot2",
@@ -487,26 +472,19 @@ def main(args=None):
         "B04/RackSlot5",
         "B04/RackSlot6",
     ]
-    for entity_name, spawn_entity_type, spawn_slot_name in zip(
-        entity_names, spawn_entity_types, spawn_slot_names
-    ):
-        Spawn(
-            node,
-            spawn_entity_type,
-            entity_name,
-            slot_poses[spawn_slot_name].position.x,
-            slot_poses[spawn_slot_name].position.y,
-            slot_poses[spawn_slot_name].position.z,
-            slot_poses[spawn_slot_name].orientation.x,
-            slot_poses[spawn_slot_name].orientation.y,
-            slot_poses[spawn_slot_name].orientation.z,
-            slot_poses[spawn_slot_name].orientation.w,
-        )
+    scene_manager = SceneManager(
+        slots_file="scripts/resources/slots.csv",
+        spawnables_file="scripts/resources/spawnables.csv",
+    )
+
+    simulation_names = scene_manager.populate_scene(
+        spawn_slot_names, spawn_entity_types
+    )
 
     move_arm_to_base_pose()
 
-    for entity_name, target_slot_name in zip(entity_names, target_slot_names):
-        place_object_on_rack(entity_name, slot_poses[target_slot_name])
+    for entity_name, target_slot_name in zip(simulation_names, target_slot_names):
+        place_object_on_rack(entity_name, scene_manager.get_slot_pose(target_slot_name))
 
 
 if __name__ == "__main__":
