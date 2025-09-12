@@ -25,15 +25,9 @@ from tqdm import tqdm
 
 class SceneManager:
     def __init__(self, slots_file: str, spawnables_file: str):
-        self.client = None
-        self.object_names = []
-        self.object_poses = []
-        self.object_orientations = []
-
         self.connector = ROS2Connector(
-            executor_type="multi_threaded", node_name="scene_manager"
+            executor_type="single_threaded", node_name="scene_manager"
         )
-        self.client = self.connector.node.create_client(SpawnEntity, "spawn_entity")
         self.logger = self.connector.node.get_logger()
 
         self.slot_to_pose = {}
@@ -148,6 +142,7 @@ class SceneManager:
             target="/spawn_entity",
             msg_type="simulation_interfaces/srv/SpawnEntity",
             timeout_sec=3.0,
+            reuse_client=True,
         ).payload
         result = cast(SpawnEntity.Response, result)
         return name
@@ -250,6 +245,8 @@ def main():
 
     if args.clear:
         scene_manager.clear_scene()
+
+    scene_manager.connector.shutdown()
 
 
 if __name__ == "__main__":
