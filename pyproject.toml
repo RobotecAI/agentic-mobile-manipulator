@@ -6,5 +6,5 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "pre-commit>=4.3.0",
-    "rai-core>=2.2.1",
+    "rai-core>=2.3.0",
 ]
