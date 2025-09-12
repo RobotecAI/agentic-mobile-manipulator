@@ -3,6 +3,7 @@ import random
 import uuid
 from typing import cast
 
+import numpy as np
 import pandas as pd
 from geometry_msgs.msg import Point, Pose, Quaternion
 from rai.communication.ros2 import (
@@ -24,10 +25,25 @@ from tqdm import tqdm
 
 
 class SceneManager:
-    def __init__(self, slots_file: str, spawnables_file: str):
-        self.connector = ROS2Connector(
-            executor_type="single_threaded", node_name="scene_manager"
-        )
+    def __init__(
+        self,
+        slots_file: str,
+        spawnables_file: str,
+        connector: ROS2Connector | None = None,
+    ):
+        self.client = None
+        self.object_names = []
+        self.object_poses = []
+        self.object_orientations = []
+
+        if connector is None:
+            self.connector = ROS2Connector(
+                executor_type="single_threaded", node_name="scene_manager"
+            )
+        else:
+            self.connector = connector
+
+        self.client = self.connector.node.create_client(SpawnEntity, "spawn_entity")
         self.logger = self.connector.node.get_logger()
 
         self.slot_to_pose = {}
@@ -51,14 +67,15 @@ class SceneManager:
         for name, uri in zip(names, uris):
             self.spawnable_to_uri[name] = uri
 
-    def _get_pose(self, entity_name, frame="odom"):
+    def get_pose(self, entity_name, frame="odom"):
+        """Retrieve the pose of an entity in a specified frame"""
         entity_state = self.connector.call_service(
             ROS2Message(payload={"entity": entity_name}),
             target="/get_entity_state",
             msg_type="simulation_interfaces/srv/GetEntityState",
             timeout_sec=3.0,
         ).payload
-        entity_state = cast(GetEntityState.Response, entity_state).result
+        entity_state = cast(GetEntityState.Response, entity_state).state
         return do_transform_pose(
             entity_state.pose,
             self.connector.get_transform(frame, "odom"),
@@ -72,7 +89,7 @@ class SceneManager:
     def get_gripping_point(self, unique_object_name: str):
         entity_state = GetEntityState.Request()
         entity_state.entity = unique_object_name + "_GrippingPoint"
-        pose = self._get_pose(entity_state.entity)
+        pose = self.get_pose(entity_state.entity)
         return pose
 
     def populate_scene(
@@ -212,6 +229,14 @@ class SceneManager:
             print(f"Move result: {future.result}")
         else:
             self.logger.error(f"Service call failed: {future.exception()}")
+
+    def get_object_height(self, object_name: str):
+        """Calculate the height of an object's gripping point based on its base"""
+        object_pose = self.get_pose(object_name)
+        # gripping_point_pose = self.get_pose(f"{object_name}_GrippingPoint")
+        gripping_point_pose = self.get_gripping_point(object_name)
+
+        return np.abs(gripping_point_pose.position.z - object_pose.position.z)
 
 
 @ROS2Context()
