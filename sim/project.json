@@ -61,7 +61,11 @@
         "RobotecWarehouseMiscAssets",
         "RobotecWarehouseBuildingAssets",
         "ROS2ScriptIntegration",
-        "RobotecSmallContainersAssets"
+        "RobotecSmallContainersAssets",
+        "RobotecGarbagePropsAssets",
+        "RobotecSmallContainersAssets",
+        "RobotecSurveillanceCamerasAssets",
+        "RobotecGenericDecorationsAssets"
     ],
     "engine_version": "2.4.0"
 }

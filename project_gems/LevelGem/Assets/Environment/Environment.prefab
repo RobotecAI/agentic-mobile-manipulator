@@ -179,8 +179,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "Intensity": 4000.0,
-                            "AttenuationRadius": 200.0
+                            "Intensity": 2000.0,
+                            "AttenuationRadius": 141.42135620117188
                         }
                     }
                 },
