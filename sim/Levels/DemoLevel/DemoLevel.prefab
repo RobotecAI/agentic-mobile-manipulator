@@ -3,6 +3,15 @@
         "Id": "Entity_[1146574390643]",
         "Name": "Level",
         "Components": {
+            "AZ::Render::EditorDiffuseGlobalIlluminationComponent": {
+                "$type": "AZ::Render::EditorDiffuseGlobalIlluminationComponent",
+                "Id": 4725647296884590213,
+                "Controller": {
+                    "Configuration": {
+                        "QualityLevel": 2
+                    }
+                }
+            },
             "Component_[10641544592923449938]": {
                 "$type": "EditorInspectorComponent",
                 "Id": 10641544592923449938
@@ -21,7 +30,9 @@
                 "Child Entity Order": [
                     "Entity_[10559585402039]",
                     "Instance_[8695569595575]/ContainerEntity",
-                    "Instance_[1907518894460]/ContainerEntity"
+                    "Instance_[1907518894460]/ContainerEntity",
+                    "Entity_[3129068753015]",
+                    "Instance_[4076827491300]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -160,11 +171,101 @@
                     }
                 }
             }
+        },
+        "Entity_[3129068753015]": {
+            "Id": "Entity_[3129068753015]",
+            "Name": "DiffuseProbeGrid",
+            "Components": {
+                "AZ::Render::EditorDiffuseProbeGridComponent": {
+                    "$type": "AZ::Render::EditorDiffuseProbeGridComponent",
+                    "Id": 5263923658311151338,
+                    "Controller": {
+                        "Configuration": {
+                            "Extents": [
+                                30.0,
+                                30.0,
+                                8.0
+                            ],
+                            "AmbientMultiplier": 0.5,
+                            "NumRaysPerProbe": 3
+                        }
+                    },
+                    "ambientMultiplier": 0.5,
+                    "numRaysPerProbe": 3
+                },
+                "EditorBoxShapeComponent": {
+                    "$type": "EditorBoxShapeComponent",
+                    "Id": 15995837712400991905,
+                    "BoxShape": {
+                        "Configuration": {
+                            "Dimensions": [
+                                30.0,
+                                30.0,
+                                8.0
+                            ]
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 11063712627711946893
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 1660085629287908275
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 1752625034447104237
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 1592304291239695818
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 8190122175936357438
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2810189421873201698
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 11183915603527826070
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 9738421432402213318
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 14270694805785123592,
+                    "Parent Entity": "Entity_[1146574390643]",
+                    "Transform Data": {
+                        "Translate": [
+                            15.0,
+                            15.0,
+                            3.7373993396759033
+                        ]
+                    }
+                }
+            }
         }
     },
     "Instances": {
         "Instance_[1907518894460]": {
             "Source": "Assets/Prefabs/demo_level.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                }
+            ]
+        },
+        "Instance_[4076827491300]": {
+            "Source": "Assets/Payload/Payload.prefab",
             "Patches": [
                 {
                     "op": "replace",
