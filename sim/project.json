@@ -65,7 +65,8 @@
         "RobotecGarbagePropsAssets",
         "RobotecSmallContainersAssets",
         "RobotecSurveillanceCamerasAssets",
-        "RobotecGenericDecorationsAssets"
+        "RobotecGenericDecorationsAssets",
+        "HumanWorker"
     ],
     "engine_version": "2.4.0"
 }
