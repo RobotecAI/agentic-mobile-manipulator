@@ -32,7 +32,8 @@
                     "Instance_[8695569595575]/ContainerEntity",
                     "Instance_[1907518894460]/ContainerEntity",
                     "Entity_[3129068753015]",
-                    "Instance_[4076827491300]/ContainerEntity"
+                    "Instance_[4076827491300]/ContainerEntity",
+                    "Instance_[4296998864504]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -266,6 +267,16 @@
         },
         "Instance_[4076827491300]": {
             "Source": "Assets/Payload/Payload.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                }
+            ]
+        },
+        "Instance_[4296998864504]": {
+            "Source": "Assets/NPCs/NPCs.prefab",
             "Patches": [
                 {
                     "op": "replace",
