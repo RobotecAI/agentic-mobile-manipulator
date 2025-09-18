@@ -185,13 +185,13 @@
                             "Extents": [
                                 30.0,
                                 30.0,
-                                8.0
+                                6.122500419616699
                             ],
-                            "AmbientMultiplier": 0.5,
+                            "AmbientMultiplier": 0.699999988079071,
                             "NumRaysPerProbe": 3
                         }
                     },
-                    "ambientMultiplier": 0.5,
+                    "ambientMultiplier": 0.699999988079071,
                     "numRaysPerProbe": 3
                 },
                 "EditorBoxShapeComponent": {
@@ -202,7 +202,12 @@
                             "Dimensions": [
                                 30.0,
                                 30.0,
-                                8.0
+                                6.122500419616699
+                            ],
+                            "TranslationOffset": [
+                                0.0,
+                                0.0,
+                                -0.9387489557266235
                             ]
                         }
                     }
@@ -262,6 +267,86 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[11344738195502]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.023285657167434692
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[11349033162798]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.023285657167434692
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[11353328130094]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.7686374187469482
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[11357623097390]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.023285657167434692
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[11361918064686]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.7686374187469482
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[11366213031982]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.7686374187469482
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[11370507999278]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.7686374187469482
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[11374802966574]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.023285657167434692
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[2301544268426]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.02328583598136902
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[2305839235722]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.02328583598136902
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[6877972207662]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.7686375379562378
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[6882267174958]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.7686375379562378
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[8235181873198]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.02328583598136902
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[8239476840494]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.02328583598136902
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[8243771807790]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.7686375379562378
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[729293419369]/Instances/Instance_[26731021658609]/Entities/Entity_[8248066775086]/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.7686375379562378
                 }
             ]
         },
