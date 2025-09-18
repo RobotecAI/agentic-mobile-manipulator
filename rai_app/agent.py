@@ -35,6 +35,10 @@ class SiLParams(BaseModel):
     vlm_vendor: Literal["openai", "ollama"]
     vlm_base_url: Optional[str]
 
+    executor_model: str
+    executor_vendor: Literal["openai", "ollama"]
+    executor_base_url: Optional[str]
+
     robot_namespace: str
     recurssion_limit: int
 
@@ -133,7 +137,20 @@ You manage specialists to whom you will delegate tasks:
 Use detection agent only when specificly asked about object state, for example if it is damaged. 
 Don't place two object in the same spot.
 """
-    executor_llm = ChatOllama(model="qwen3:8b", reasoning=False)
+    executor_llm = (
+        ChatOpenAI(
+            model=run_params.executor_model,
+            base_url=run_params.executor_base_url,
+            streaming=True,
+        )
+        if run_params.agent_vendor == "openai"
+        else ChatOllama(
+            model=run_params.executor_model,
+            base_url=run_params.executor_base_url,
+            reasoning=False,
+        )
+    )
+
     executors = [
         Executor(
             name="movement",
