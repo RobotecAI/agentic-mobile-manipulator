@@ -1339,6 +1339,29 @@
                     "$type": "EditorLockComponent",
                     "Id": 16275256692304135811
                 },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 10149706168762490557,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 307401905
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B79806CD-B57B-5F0B-ABAE-443E2233EC8F}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairosarm.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 3334493965415321966
@@ -1479,6 +1502,10 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 15239968665745616836
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 6760160208214471115
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1683,11 +1710,79 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 7355829346880859601
+                    "Id": 7355829346880859601,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 316686037463614244
+                        },
+                        {
+                            "ComponentId": 13373082295472673405,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 7355829346880859601,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 111941960574701528,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 5250345724046653853,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 7309720635319257744,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 7542009809550580319,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 7376718788415481643,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 5874306235878158125,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 10355345480760501669,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 8069735846515377643,
+                            "SortIndex": 10
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 7309720635319257744
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 8069735846515377643,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 307401905
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B79806CD-B57B-5F0B-ABAE-443E2233EC8F}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairosarm.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1881,11 +1976,79 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 10098582999256040060
+                    "Id": 10098582999256040060,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 11350500517624423194
+                        },
+                        {
+                            "ComponentId": 7876780511358341992,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 10098582999256040060,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 6884048396299140900,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 8254369433239152707,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 1572918619085419843,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 5234425121938731710,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 3238151382599331635,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 11198614869820954808,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 11450576793221666922,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 11060564455261845549,
+                            "SortIndex": 10
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 1572918619085419843
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 11060564455261845549,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 307401905
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B79806CD-B57B-5F0B-ABAE-443E2233EC8F}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairosarm.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2213,11 +2376,79 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 11559183320706291414
+                    "Id": 11559183320706291414,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 17108526552254291122
+                        },
+                        {
+                            "ComponentId": 319023008134849692,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 11559183320706291414,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 1769693924290147719,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 4767440310472427823,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 9005821459472145050,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 18064135559982054540,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 8258227605416032336,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 2216190519867984961,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 9153022010202165583,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 15911919613780537423,
+                            "SortIndex": 10
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 9005821459472145050
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 15911919613780537423,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 307401905
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B79806CD-B57B-5F0B-ABAE-443E2233EC8F}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairosarm.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2440,6 +2671,10 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 13047233951521662707
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 11562633152307619333
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -3015,11 +3250,79 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 9819338325580468149
+                    "Id": 9819338325580468149,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 11995944952715155672
+                        },
+                        {
+                            "ComponentId": 18202005556466957319,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 9819338325580468149,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 3039424407075483279,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 14816001418318148173,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 11716683825509940059,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 15386342721072680525,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 14348543074293995745,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 7860053939619428689,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 744610269206631007,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 1786426132917552706,
+                            "SortIndex": 10
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 11716683825509940059
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 1786426132917552706,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 307401905
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B79806CD-B57B-5F0B-ABAE-443E2233EC8F}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairosarm.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -3088,129 +3391,19 @@
                 },
                 "EditorMaterialComponent": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 5943208582238008915,
+                    "Id": 5442806079024272836,
                     "Controller": {
                         "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 61267163
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                                "subId": 61267163
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2_material_001_3790485149052230875.dae.azmaterial"
+                            "materials": {
+                                "{}": {
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{9D03D76B-919B-5E48-AE36-77A63119A1C6}"
                                         },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2711651494
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                                "subId": 2711651494
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2_material_002_3269803874111751334.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 61267163
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                                "subId": 61267163
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2_material_001_3790485149052230875.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2711651494
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                                "subId": 2711651494
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2_material_002_3269803874111751334.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
+                                        "assetHint": "assets/models/materials/kairoswheels.azmaterial"
                                     }
                                 }
-                            ]
+                            }
                         }
                     }
                 },
@@ -4061,125 +4254,20 @@
                 },
                 "EditorMaterialComponent": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 15964245438951801807,
+                    "Id": 16923017875608566191,
                     "Controller": {
                         "Configuration": {
                             "materials": [
                                 {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
                                     "Key": {
-                                        "materialSlotStableId": 61267163
+                                        "materialSlotStableId": 1651367451
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
-                                                "subId": 61267163
+                                                "guid": "{9D03D76B-919B-5E48-AE36-77A63119A1C6}"
                                             },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1_material_001_3790485149052230875.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2711651494
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
-                                                "subId": 2711651494
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1_material_002_3269803874111751334.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 61267163
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
-                                                "subId": 61267163
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1_material_001_3790485149052230875.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2711651494
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
-                                                "subId": 2711651494
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1_material_002_3269803874111751334.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
+                                            "assetHint": "assets/models/materials/kairoswheels.azmaterial"
                                         }
                                     }
                                 }
@@ -4488,7 +4576,10 @@
                 },
                 "EditorEntitySortComponent": {
                     "$type": "EditorEntitySortComponent",
-                    "Id": 3315933838009592185
+                    "Id": 3315933838009592185,
+                    "Child Entity Order": [
+                        "Entity_[4587771343569]"
+                    ]
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
@@ -4500,72 +4591,46 @@
                 },
                 "EditorMaterialComponent": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 12289775499239593677,
+                    "Id": 11752691958637036133,
                     "Controller": {
                         "Configuration": {
                             "materials": [
                                 {
-                                    "Key": {},
+                                    "Key": {
+                                        "materialSlotStableId": 1651367451
+                                    },
                                     "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.0,
-                                                    0.0,
-                                                    0.0,
-                                                    1.0
-                                                ]
-                                            }
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9D03D76B-919B-5E48-AE36-77A63119A1C6}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairoswheels.azmaterial"
                                         }
                                     }
                                 },
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 2084814471
+                                        "materialSlotStableId": 2566378737
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{43778718-F1CA-57D7-948C-A6D18292B90C}"
+                                                "guid": "{E8560032-4C0C-5F6A-920F-7F433949A248}"
                                             },
-                                            "assetHint": "gazebo/black.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.0,
-                                                    0.0,
-                                                    0.0,
-                                                    1.0
-                                                ]
-                                            }
+                                            "assetHint": "assets/models/materials/kairosbody.azmaterial"
                                         }
                                     }
                                 },
                                 {
                                     "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2084814471
+                                        "materialSlotStableId": 4139200279
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{43778718-F1CA-57D7-948C-A6D18292B90C}"
+                                                "guid": "{CFD7B646-D32B-5A27-A8EA-ED232E08D663}"
                                             },
-                                            "assetHint": "gazebo/black.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.0,
-                                                    0.0,
-                                                    0.0,
-                                                    1.0
-                                                ]
-                                            }
+                                            "assetHint": "assets/models/materials/kairosaddons.azmaterial"
                                         }
                                     }
                                 }
@@ -4588,14 +4653,7 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12150414751780514032,
-                    "Parent Entity": "Entity_[44886742572752]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0019252300262451172,
-                            0.0010107159614562988,
-                            0.0
-                        ]
-                    }
+                    "Parent Entity": "Entity_[44886742572752]"
                 }
             }
         },
@@ -4914,125 +4972,20 @@
                 },
                 "EditorMaterialComponent": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 1721295072655579500,
+                    "Id": 16103198729701008553,
                     "Controller": {
                         "Configuration": {
                             "materials": [
                                 {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
                                     "Key": {
-                                        "materialSlotStableId": 61267163
+                                        "materialSlotStableId": 1651367451
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                                "subId": 61267163
+                                                "guid": "{9D03D76B-919B-5E48-AE36-77A63119A1C6}"
                                             },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2_material_001_3790485149052230875.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2711651494
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                                "subId": 2711651494
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2_material_002_3269803874111751334.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 61267163
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                                "subId": 61267163
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2_material_001_3790485149052230875.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2711651494
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{C7264F79-FE41-53A8-B082-6ADA0834E9B8}",
-                                                "subId": 2711651494
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_2_material_002_3269803874111751334.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
+                                            "assetHint": "assets/models/materials/kairoswheels.azmaterial"
                                         }
                                     }
                                 }
@@ -5168,6 +5121,42 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 14650130195107146231
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 5802362371062880627,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 307401905
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B79806CD-B57B-5F0B-ABAE-443E2233EC8F}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairosarm.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 4139200279
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{CFD7B646-D32B-5A27-A8EA-ED232E08D663}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairosaddons.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -5911,125 +5900,20 @@
                 },
                 "EditorMaterialComponent": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 9250575944228028364,
+                    "Id": 1818486371095793356,
                     "Controller": {
                         "Configuration": {
                             "materials": [
                                 {
-                                    "Key": {},
-                                    "Value": {
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
                                     "Key": {
-                                        "materialSlotStableId": 61267163
+                                        "materialSlotStableId": 1651367451
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
-                                                "subId": 61267163
+                                                "guid": "{9D03D76B-919B-5E48-AE36-77A63119A1C6}"
                                             },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1_material_001_3790485149052230875.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 2711651494
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
-                                                "subId": 2711651494
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1_material_002_3269803874111751334.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 61267163
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
-                                                "subId": 61267163
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1_material_001_3790485149052230875.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "lodIndex": 0,
-                                        "materialSlotStableId": 2711651494
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{412D8395-0D40-500F-B495-F5CE474DB6AB}",
-                                                "subId": 2711651494
-                                            },
-                                            "assetHint": "assets/urdfimporter/1113625274_rbkairos_plus{0d54af51-b973-5d08-9ab9-de3659a5b4d1}/kairos_mecanum_wheel_1_material_002_3269803874111751334.dae.azmaterial"
-                                        },
-                                        "PropertyOverrides": {
-                                            "baseColor.color": {
-                                                "$type": "Color",
-                                                "Value": [
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    0.348510205745697,
-                                                    1.0
-                                                ]
-                                            }
+                                            "assetHint": "assets/models/materials/kairoswheels.azmaterial"
                                         }
                                     }
                                 }
@@ -6952,11 +6836,79 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 5668302217362081144
+                    "Id": 5668302217362081144,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 964552726832807533
+                        },
+                        {
+                            "ComponentId": 12181492652013600367,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 5668302217362081144,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 13672246133342556737,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 4337597174510905956,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 14379345942903205973,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 10537911343073018162,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 9403775197654957497,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 8491663514359189907,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 8252573777491852581,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 9030504541627169347,
+                            "SortIndex": 10
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 14379345942903205973
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 9030504541627169347,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 307401905
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B79806CD-B57B-5F0B-ABAE-443E2233EC8F}"
+                                            },
+                                            "assetHint": "assets/models/materials/kairosarm.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -7123,6 +7075,482 @@
                     "Parent Entity": "Entity_[44976936885968]"
                 }
             }
+        },
+        "Entity_[4587771343569]": {
+            "Id": "Entity_[4587771343569]",
+            "Name": "Lights",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 3503201643690597152
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 9055407984365334153
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12848351227402648182,
+                    "Child Entity Order": [
+                        "Entity_[4592066310865]",
+                        "Entity_[4596361278161]",
+                        "Entity_[4609246180049]",
+                        "Entity_[4622131081937]",
+                        "Entity_[4635015983825]"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17993782473454659118
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 11341664222116547505
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9196096996588575488
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3458503369715287544
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5576065007132213259
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 18377428540236063125,
+                    "Parent Entity": "Entity_[44951167082192]"
+                }
+            }
+        },
+        "Entity_[4592066310865]": {
+            "Id": "Entity_[4592066310865]",
+            "Name": "LEDStrip",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 3048371750076440380,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 4,
+                            "Intensity": 2.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 0.4000000059604645,
+                            "LightEmitsBothDirections": true
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17592441353610831205
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 3261886962063035882
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 11753318239171853930
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5267403945147286876
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 4100116007209377177
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 4464431643104899423
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15240507803443647622
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14973308933437431909
+                },
+                "LmbrCentral::EditorQuadShapeComponent": {
+                    "$type": "LmbrCentral::EditorQuadShapeComponent",
+                    "Id": 17511142053988826948,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "QuadShape": {
+                        "Configuration": {
+                            "Width": 0.009999999776482582,
+                            "Height": 0.44999998807907104
+                        }
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8101868725730693340,
+                    "Parent Entity": "Entity_[4587771343569]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.36498069763183594,
+                            0.0,
+                            0.49615761637687683
+                        ],
+                        "Rotate": [
+                            0.0,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[4596361278161]": {
+            "Id": "Entity_[4596361278161]",
+            "Name": "LEDStrip",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 3048371750076440380,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 4,
+                            "Intensity": 2.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 0.4000000059604645,
+                            "LightEmitsBothDirections": true
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17592441353610831205
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 3261886962063035882
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 11753318239171853930
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5267403945147286876
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 4100116007209377177
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 4464431643104899423
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15240507803443647622
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14973308933437431909
+                },
+                "LmbrCentral::EditorQuadShapeComponent": {
+                    "$type": "LmbrCentral::EditorQuadShapeComponent",
+                    "Id": 17511142053988826948,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "QuadShape": {
+                        "Configuration": {
+                            "Width": 0.009999999776482582,
+                            "Height": 0.44999998807907104
+                        }
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8101868725730693340,
+                    "Parent Entity": "Entity_[4587771343569]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.36524486541748047,
+                            0.0,
+                            0.49615827202796936
+                        ],
+                        "Rotate": [
+                            0.0,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[4609246180049]": {
+            "Id": "Entity_[4609246180049]",
+            "Name": "LEDStrip",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 3048371750076440380,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 4,
+                            "Intensity": 2.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 0.4000000059604645,
+                            "LightEmitsBothDirections": true
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17592441353610831205
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 3261886962063035882
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 11753318239171853930
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5267403945147286876
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 4100116007209377177
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 4464431643104899423
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15240507803443647622
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14973308933437431909
+                },
+                "LmbrCentral::EditorQuadShapeComponent": {
+                    "$type": "LmbrCentral::EditorQuadShapeComponent",
+                    "Id": 17511142053988826948,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "QuadShape": {
+                        "Configuration": {
+                            "Width": 0.009999999776482582,
+                            "Height": 0.5199999809265137
+                        }
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8101868725730693340,
+                    "Parent Entity": "Entity_[4587771343569]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0005340576171875,
+                            0.29728031158447266,
+                            0.49615827202796936
+                        ],
+                        "Rotate": [
+                            89.99994659423828,
+                            -0.000001707547198748216,
+                            89.99994659423828
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[4622131081937]": {
+            "Id": "Entity_[4622131081937]",
+            "Name": "LEDStrip",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 3048371750076440380,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 4,
+                            "Intensity": 2.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 0.4000000059604645,
+                            "LightEmitsBothDirections": true
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17592441353610831205
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 3261886962063035882
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 11753318239171853930
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5267403945147286876
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 4100116007209377177
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 4464431643104899423
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15240507803443647622
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14973308933437431909
+                },
+                "LmbrCentral::EditorQuadShapeComponent": {
+                    "$type": "LmbrCentral::EditorQuadShapeComponent",
+                    "Id": 17511142053988826948,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "QuadShape": {
+                        "Configuration": {
+                            "Width": 0.009999999776482582,
+                            "Height": 0.5199999809265137
+                        }
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8101868725730693340,
+                    "Parent Entity": "Entity_[4587771343569]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0005340576171875,
+                            -0.29638195037841797,
+                            0.49615874886512756
+                        ],
+                        "Rotate": [
+                            89.99994659423828,
+                            -0.000001707547198748216,
+                            89.99994659423828
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[4635015983825]": {
+            "Id": "Entity_[4635015983825]",
+            "Name": "BlueButton",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 5652398519849155753,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 2,
+                            "Color": [
+                                0.5511100888252258,
+                                0.8129701614379883,
+                                1.0
+                            ],
+                            "Intensity": 0.10000000149011612,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 0.009999999776482582,
+                            "EnableShutters": true,
+                            "InnerShutterAngleDegrees": 0.5,
+                            "OuterShutterAngleDegrees": 34.5099983215332
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17683836826157424187
+                },
+                "EditorDiskShapeComponent": {
+                    "$type": "EditorDiskShapeComponent",
+                    "Id": 14634219862968978151,
+                    "ShapeColor": [
+                        0.5511100888252258,
+                        0.8129701614379883,
+                        1.0,
+                        1.0
+                    ],
+                    "DiskShape": {
+                        "Configuration": {
+                            "Radius": 0.004999999888241291
+                        }
+                    }
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 8799726215491011441
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4518108367116430410
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 6563071737283234253
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 4618500799608467723
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 8570382981349911238
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 4313347577026432991
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 4574230111357949058
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 15859365684712974673,
+                    "Parent Entity": "Entity_[4587771343569]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.3732423782348633,
+                            -0.15508556365966797,
+                            0.30566731095314026
+                        ],
+                        "Rotate": [
+                            0.0,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
+                }
+            }
         }
     },
     "Instances": {
@@ -7147,7 +7575,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": -0.000010416900295240339
+                    "value": -0.00001041690029524034
                 }
             ]
         }

@@ -1,0 +1,21 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.factor": 0.5699999928474426,
+        "baseColor.textureMap": "Textures/KairosArm_BaseColor.png",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "metallic.textureMap": "Textures/KairosArm_Metallic.png",
+        "normal.textureMap": "Textures/KairosArm_Normal.png",
+        "opacity.factor": 1.0,
+        "roughness.factor": 0.5,
+        "roughness.lowerBound": 0.05000000074505806,
+        "roughness.textureMap": "Textures/KairosArm_Roughness.png",
+        "specularF0.factor": 0.11999999731779099
+    }
+}
