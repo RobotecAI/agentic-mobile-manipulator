@@ -1,0 +1,17 @@
+slot_name,entity_type
+I01/RackSlot1,cardboardbox01
+I01/RackSlot2,cardboardbox02
+I01/RackSlot5,cardboardboxdamaged01
+I01/RackSlot6,cardboardboxdamaged02
+H01/RackSlot1,cardboardbox01
+H01/RackSlot2,cardboardbox02
+H01/RackSlot5,cardboardboxdamaged01
+H01/RackSlot6,cardboardboxdamaged02
+t1/Slot5,cardboardbox01
+t1/Slot6,cardboardbox02
+t1/Slot7,cardboardboxdamaged01
+t1/Slot8,cardboardboxdamaged02
+t2/Slot5,cardboardbox01
+t2/Slot6,cardboardbox02
+t2/Slot7,cardboardboxdamaged01
+t2/Slot8,cardboardboxdamaged02
