@@ -20,7 +20,7 @@
             },
             "Camera":
             {
-                "AllowPipelineModification": false
+                "AllowPipelineModification": true
             }
         }
     }
