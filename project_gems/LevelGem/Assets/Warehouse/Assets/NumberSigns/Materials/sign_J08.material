@@ -2,6 +2,7 @@
     "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
     "materialTypeVersion": 5,
     "propertyValues": {
-        "baseColor.textureMap": "Textures/sign_J08_basecolor.png"
+        "baseColor.textureMap": "Textures/sign_J08_basecolor.png",
+        "specularF0.factor": 0.0
     }
 }
