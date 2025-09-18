@@ -66,6 +66,7 @@
         "RobotecSmallContainersAssets",
         "RobotecSurveillanceCamerasAssets",
         "RobotecGenericDecorationsAssets",
+        "RobotecWarehousePayloadAssets",
         "HumanWorker"
     ],
     "engine_version": "2.4.0"

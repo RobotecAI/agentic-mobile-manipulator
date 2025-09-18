@@ -22,10 +22,18 @@ def main(debug: bool = False, namespace=""):
     scene_manager.clear_scene()
 
     entity_types = [
-        "cardboardbox01",
-        "cardboardbox02",
-        "cardboardboxdamaged01",
-        "cardboardboxdamaged02",
+        "cardboardbox01_v01",
+        "cardboardbox01_v02D",
+        "cardboardbox01_v03",
+        "cardboardbox02_v01",
+        "cardboardbox02_v02D",
+        "cardboardbox03_v01",
+        "cardboardbox03_v02O",
+        "cardboardbox04_v01",
+        "cardboardbox05_v01",
+        "cardboardbox06_v01",
+        "cardboardbox07_v01",
+        "cardboardbox08_v01",
     ]
     spawn_entity_types = [entity_types[i % len(entity_types)] for i in range(16)]
 
