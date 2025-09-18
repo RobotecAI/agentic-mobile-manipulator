@@ -50,586 +50,6 @@
         }
     },
     "Entities": {
-        "Entity_[11344738195502]": {
-            "Id": "Entity_[11344738195502]",
-            "Name": "RackSlot1",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9447448678337670201
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2624755162331633976
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12885476875430404662
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3481309565903052458
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2902762740627533722
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 30041090319306205
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14231266370968101439
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15507653816711135786
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 8697952929519449987,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4833338520349412134,
-                    "Parent Entity": "Entity_[5301719210030]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.314849853515625,
-                            -0.6835699081420898,
-                            0.022554591298103333
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[11349033162798]": {
-            "Id": "Entity_[11349033162798]",
-            "Name": "RackSlot6",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9447448678337670201
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2624755162331633976
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12885476875430404662
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3481309565903052458
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2902762740627533722
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 30041090319306205
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14231266370968101439
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15507653816711135786
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 2494511689568975628,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4833338520349412134,
-                    "Parent Entity": "Entity_[5301719210030]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.3543853759765625,
-                            -1.5446081161499023,
-                            0.022554591298103333
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[11353328130094]": {
-            "Id": "Entity_[11353328130094]",
-            "Name": "RackSlot3",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9447448678337670201
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2624755162331633976
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12885476875430404662
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3481309565903052458
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2902762740627533722
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 30041090319306205
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14231266370968101439
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15507653816711135786
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 8697952929519449987,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4833338520349412134,
-                    "Parent Entity": "Entity_[5301719210030]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.314849853515625,
-                            -0.6835699081420898,
-                            0.7679063081741333
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[11357623097390]": {
-            "Id": "Entity_[11357623097390]",
-            "Name": "RackSlot5",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9447448678337670201
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2624755162331633976
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12885476875430404662
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3481309565903052458
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2902762740627533722
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 30041090319306205
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14231266370968101439
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15507653816711135786
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 8697952929519449987,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4833338520349412134,
-                    "Parent Entity": "Entity_[5301719210030]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.3543834686279297,
-                            -0.6835699081420898,
-                            0.022554591298103333
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[11361918064686]": {
-            "Id": "Entity_[11361918064686]",
-            "Name": "RackSlot8",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9447448678337670201
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2624755162331633976
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12885476875430404662
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3481309565903052458
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2902762740627533722
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 30041090319306205
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14231266370968101439
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15507653816711135786
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 2494511689568975628,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4833338520349412134,
-                    "Parent Entity": "Entity_[5301719210030]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.3543853759765625,
-                            -1.5446081161499023,
-                            0.7679063081741333
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[11366213031982]": {
-            "Id": "Entity_[11366213031982]",
-            "Name": "RackSlot7",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9447448678337670201
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2624755162331633976
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12885476875430404662
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3481309565903052458
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2902762740627533722
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 30041090319306205
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14231266370968101439
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15507653816711135786
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 8697952929519449987,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4833338520349412134,
-                    "Parent Entity": "Entity_[5301719210030]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.3543834686279297,
-                            -0.6835699081420898,
-                            0.7679063081741333
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[11370507999278]": {
-            "Id": "Entity_[11370507999278]",
-            "Name": "RackSlot4",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9447448678337670201
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2624755162331633976
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12885476875430404662
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3481309565903052458
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2902762740627533722
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 30041090319306205
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14231266370968101439
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15507653816711135786
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 2494511689568975628,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4833338520349412134,
-                    "Parent Entity": "Entity_[5301719210030]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.314849853515625,
-                            -1.544607162475586,
-                            0.7679063081741333
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[11374802966574]": {
-            "Id": "Entity_[11374802966574]",
-            "Name": "RackSlot2",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9447448678337670201
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 2624755162331633976
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12885476875430404662
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3481309565903052458
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2902762740627533722
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 30041090319306205
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14231266370968101439
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 15507653816711135786
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 2494511689568975628,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4833338520349412134,
-                    "Parent Entity": "Entity_[5301719210030]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.314849853515625,
-                            -1.544607162475586,
-                            0.022554591298103333
-                        ]
-                    }
-                }
-            }
-        },
         "Entity_[14538807820674]": {
             "Id": "Entity_[14538807820674]",
             "Name": "StorageRack_2x1",
@@ -740,7 +160,7 @@
                     "Parent Entity": "Entity_[3948804511790]",
                     "Transform Data": {
                         "Translate": [
-                            -0.314849853515625,
+                            -0.41692543029785156,
                             1.555936336517334,
                             0.02255477011203766
                         ]
@@ -810,7 +230,7 @@
                     "Parent Entity": "Entity_[3948804511790]",
                     "Transform Data": {
                         "Translate": [
-                            -0.314849853515625,
+                            -0.41692543029785156,
                             0.6948986053466797,
                             0.02255477011203766
                         ]
@@ -1029,7 +449,15 @@
                         "Entity_[8235181873198]",
                         "Entity_[8239476840494]",
                         "Entity_[8243771807790]",
-                        "Entity_[8248066775086]"
+                        "Entity_[8248066775086]",
+                        "Entity_[39912715152345]",
+                        "Entity_[39917010119641]",
+                        "Entity_[43838315260889]",
+                        "Entity_[43842610228185]",
+                        "Entity_[39921305086937]",
+                        "Entity_[39925600054233]",
+                        "Entity_[43846905195481]",
+                        "Entity_[43851200162777]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -1056,6 +484,296 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4194211342250659981,
                     "Parent Entity": "Entity_[14538807820674]"
+                }
+            }
+        },
+        "Entity_[39912715152345]": {
+            "Id": "Entity_[39912715152345]",
+            "Name": "RackSlot9",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[3948804511790]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            1.555936336517334,
+                            1.4819072484970093
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[39917010119641]": {
+            "Id": "Entity_[39917010119641]",
+            "Name": "RackSlot10",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[3948804511790]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            0.6948986053466797,
+                            1.4819072484970093
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[39921305086937]": {
+            "Id": "Entity_[39921305086937]",
+            "Name": "RackSlot13",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[3948804511790]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            1.555936336517334,
+                            1.4819072484970093
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[39925600054233]": {
+            "Id": "Entity_[39925600054233]",
+            "Name": "RackSlot14",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[3948804511790]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            0.6948986053466797,
+                            1.4819072484970093
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
                 }
             }
         },
@@ -1247,6 +965,296 @@
                 }
             }
         },
+        "Entity_[43838315260889]": {
+            "Id": "Entity_[43838315260889]",
+            "Name": "RackSlot11",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[3948804511790]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            1.555936336517334,
+                            2.224396228790283
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[43842610228185]": {
+            "Id": "Entity_[43842610228185]",
+            "Name": "RackSlot12",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[3948804511790]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            0.6948986053466797,
+                            2.224396228790283
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[43846905195481]": {
+            "Id": "Entity_[43846905195481]",
+            "Name": "RackSlot15",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[3948804511790]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            1.555936336517334,
+                            2.224396228790283
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[43851200162777]": {
+            "Id": "Entity_[43851200162777]",
+            "Name": "RackSlot16",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[3948804511790]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            0.6948986053466797,
+                            2.224396228790283
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[51167120173779]": {
             "Id": "Entity_[51167120173779]",
             "Name": "Rack",
@@ -1320,14 +1328,22 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 16084224166548284024,
                     "Child Entity Order": [
-                        "Entity_[11344738195502]",
-                        "Entity_[11374802966574]",
-                        "Entity_[11353328130094]",
-                        "Entity_[11370507999278]",
-                        "Entity_[11357623097390]",
-                        "Entity_[11349033162798]",
-                        "Entity_[11366213031982]",
-                        "Entity_[11361918064686]"
+                        "Entity_[91559696886745]",
+                        "Entity_[91606941527001]",
+                        "Entity_[91563991854041]",
+                        "Entity_[91581171723225]",
+                        "Entity_[91576876755929]",
+                        "Entity_[91615531461593]",
+                        "Entity_[91585466690521]",
+                        "Entity_[91619826428889]",
+                        "Entity_[91594056625113]",
+                        "Entity_[91598351592409]",
+                        "Entity_[91555401919449]",
+                        "Entity_[91589761657817]",
+                        "Entity_[91611236494297]",
+                        "Entity_[91568286821337]",
+                        "Entity_[91602646559705]",
+                        "Entity_[91572581788633]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -1559,7 +1575,7 @@
                     "Parent Entity": "Entity_[3948804511790]",
                     "Transform Data": {
                         "Translate": [
-                            0.3543853759765625,
+                            0.4576091766357422,
                             1.555936336517334,
                             0.02255477011203766
                         ],
@@ -1634,7 +1650,7 @@
                     "Parent Entity": "Entity_[3948804511790]",
                     "Transform Data": {
                         "Translate": [
-                            0.3543853759765625,
+                            0.4576091766357422,
                             0.6948986053466797,
                             0.02255477011203766
                         ],
@@ -1786,6 +1802,1166 @@
                         "Translate": [
                             0.3543853759765625,
                             0.6948986053466797,
+                            0.7679064273834229
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91555401919449]": {
+            "Id": "Entity_[91555401919449]",
+            "Name": "RackSlot11",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            -0.6771721839904785,
+                            2.224396228790283
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91559696886745]": {
+            "Id": "Entity_[91559696886745]",
+            "Name": "RackSlot1",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.41692543029785156,
+                            -0.6771721839904785,
+                            0.02255477011203766
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91563991854041]": {
+            "Id": "Entity_[91563991854041]",
+            "Name": "RackSlot3",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            -0.6771721839904785,
+                            0.7679064273834229
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91568286821337]": {
+            "Id": "Entity_[91568286821337]",
+            "Name": "RackSlot14",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            -1.5382099151611328,
+                            1.4819072484970093
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91572581788633]": {
+            "Id": "Entity_[91572581788633]",
+            "Name": "RackSlot16",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            -1.5382099151611328,
+                            2.224396228790283
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91576876755929]": {
+            "Id": "Entity_[91576876755929]",
+            "Name": "RackSlot5",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.4576091766357422,
+                            -0.6771721839904785,
+                            0.02255477011203766
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91581171723225]": {
+            "Id": "Entity_[91581171723225]",
+            "Name": "RackSlot4",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            -1.5382099151611328,
+                            0.7679064273834229
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91585466690521]": {
+            "Id": "Entity_[91585466690521]",
+            "Name": "RackSlot7",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            -0.6771721839904785,
+                            0.7679064273834229
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91589761657817]": {
+            "Id": "Entity_[91589761657817]",
+            "Name": "RackSlot12",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            -1.5382099151611328,
+                            2.224396228790283
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91594056625113]": {
+            "Id": "Entity_[91594056625113]",
+            "Name": "RackSlot9",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            -0.6771721839904785,
+                            1.4819072484970093
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91598351592409]": {
+            "Id": "Entity_[91598351592409]",
+            "Name": "RackSlot10",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.314849853515625,
+                            -1.5382099151611328,
+                            1.4819072484970093
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91602646559705]": {
+            "Id": "Entity_[91602646559705]",
+            "Name": "RackSlot15",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            -0.6771721839904785,
+                            2.224396228790283
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91606941527001]": {
+            "Id": "Entity_[91606941527001]",
+            "Name": "RackSlot2",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.41692543029785156,
+                            -1.5382099151611328,
+                            0.02255477011203766
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91611236494297]": {
+            "Id": "Entity_[91611236494297]",
+            "Name": "RackSlot13",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 8697952929519449987,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            -0.6771721839904785,
+                            1.4819072484970093
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91615531461593]": {
+            "Id": "Entity_[91615531461593]",
+            "Name": "RackSlot6",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.4576091766357422,
+                            -1.5382099151611328,
+                            0.02255477011203766
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[91619826428889]": {
+            "Id": "Entity_[91619826428889]",
+            "Name": "RackSlot8",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9447448678337670201
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2624755162331633976
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12885476875430404662
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3481309565903052458
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2902762740627533722
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 30041090319306205
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14231266370968101439
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15507653816711135786
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 2494511689568975628,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4833338520349412134,
+                    "Parent Entity": "Entity_[5301719210030]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.3543853759765625,
+                            -1.5382099151611328,
                             0.7679064273834229
                         ],
                         "Rotate": [
