@@ -53,21 +53,23 @@ controller_server:
     general_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: false
-      xy_goal_tolerance: 0.01
-      yaw_goal_tolerance: 0.01
+      xy_goal_tolerance: 0.1
+      yaw_goal_tolerance: 0.05
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       angular_dist_threshold: 0.785
       forward_sampling_distance: 0.5
       angular_disengage_threshold: 0.3925
-      rotate_to_heading_angular_vel: 18.0
-      max_angular_accel: 16.0
+      rotate_to_heading_angular_vel: 10.0
+      max_angular_accel: 10.0
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: true
       rotate_to_heading_once: true
       desired_linear_vel: 1.0
       transform_tolerance: 0.001
+      lookahead_distance: 0.3
+      rotate_to_heading_min_angle: 0.5
 
 local_costmap:
   local_costmap:
@@ -77,15 +79,15 @@ local_costmap:
       global_frame: odom
       robot_base_frame: <robot_namespace>egobase_link
       rolling_window: true
-      width: 3
-      height: 3
+      width: 6
+      height: 6
       resolution: 0.05
       footprint: "[ [0.39, 0.335], [0.39, -0.335], [-0.39, -0.335], [-0.39, 0.335] ]"
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.30
+        cost_scaling_factor: 2.0
+        inflation_radius: 1.0
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -102,9 +104,9 @@ local_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-          raytrace_max_range: 3.0
+          raytrace_max_range: 6.0
           raytrace_min_range: 0.0
-          obstacle_max_range: 1.0
+          obstacle_max_range: 6.0
           obstacle_min_range: 0.0
         scan_rear_left:
           topic: <robot_namespace>scan_rear_left
@@ -112,9 +114,9 @@ local_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-          raytrace_max_range: 3.0
+          raytrace_max_range: 6.0
           raytrace_min_range: 0.0
-          obstacle_max_range: 1.0
+          obstacle_max_range: 6.0
           obstacle_min_range: 0.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
@@ -128,7 +130,7 @@ global_costmap:
       publish_frequency: 1.0
       global_frame: map
       robot_base_frame: <robot_namespace>egobase_link
-      footprint: "[ [0.39, 0.335], [0.39, -0.335], [-0.39, -0.335], [-0.39, 0.335] ]"
+      footprint: "[ [0.39, 0.535], [0.39, -0.535], [-0.39, -0.535], [-0.39, 0.535] ]"
       resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
@@ -162,7 +164,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.3
+        inflation_radius: 0.7
       always_send_full_costmap: True
 
 # The yaml_filename does not need to be specified since it going to be set by defaults in launch.
@@ -178,17 +180,15 @@ map_saver:
     free_thresh_default: 0.25
     occupied_thresh_default: 0.65
     map_subscribe_transient_local: True
-
+  
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 20.0
-    planner_plugins: ["GridBased"]
-    costmap_update_timeout: 1.0
+    planner_plugins: ['GridBased']
     GridBased:
-      plugin: "nav2_navfn_planner::NavfnPlanner"
-      tolerance: 0.5
-      use_astar: false
-      allow_unknown: true
+      plugin: 'nav2_navfn_planner::NavfnPlanner' # In Iron and older versions, "/" was used instead of "::"
+      use_astar: True
+      allow_unknown: True
+      tolerance: 0.2
 
 smoother_server:
   ros__parameters:
