@@ -1,7 +1,7 @@
 import argparse
 import random
 import uuid
-from typing import cast
+from typing import Dict, List, Optional, cast
 
 import numpy as np
 import pandas as pd
@@ -13,6 +13,7 @@ from rai.communication.ros2 import (
     wait_for_ros2_services,
 )
 from rosidl_runtime_py.convert import message_to_ordereddict
+from simulation_interfaces.msg import EntityState
 from simulation_interfaces.srv import (
     GetEntities,
     GetEntityState,
@@ -22,6 +23,8 @@ from simulation_interfaces.srv import (
 from tf2_geometry_msgs import do_transform_pose
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
+
+from scripts.slots import Slot, SlotsCollection
 
 
 class SceneManager:
@@ -46,19 +49,42 @@ class SceneManager:
         self.client = self.connector.node.create_client(SpawnEntity, "spawn_entity")
         self.logger = self.connector.node.get_logger()
 
-        self.slot_to_pose = {}
+        # flat slots for faster access
+        self.slots: Dict[str, Slot] = {}
+        # collections for group retrieval
+        self.slots_collections: Dict[str, SlotsCollection] = {}
 
         df = pd.read_csv(slots_file, delimiter=",")
         names = df["slot_name"].tolist()
         positions = df[["x", "y", "z"]].values
         quaternions = df[["qx", "qy", "qz", "qw"]].values
         for slot_name, position, quaternion in zip(names, positions, quaternions):
-            self.slot_to_pose[slot_name] = Pose(
+            pose = Pose(
                 position=Point(x=position[0], y=position[1], z=position[2]),
                 orientation=Quaternion(
                     x=quaternion[0], y=quaternion[1], z=quaternion[2], w=quaternion[3]
                 ),
             )
+
+            # Parse collection and slot info from slot_name
+            collection_name, slot_tag = slot_name.split("/", 1)
+            if "rack" in slot_name.lower():
+                collection_type = "rack"
+            elif "table" in slot_name.lower() or "t" in collection_name:
+                collection_type = "table"
+            else:
+                collection_type = "other"
+
+            slot = Slot(tag=slot_tag, origin_pose=pose)
+            self.slots[slot_name] = slot
+            if collection_name not in self.slots_collections:
+                slot_collection = SlotsCollection(
+                    tag=collection_name, collection_type=collection_type
+                )
+                slot_collection.add_slot(slot)
+                self.slots_collections[collection_name] = slot_collection
+            else:
+                self.slots_collections[collection_name].add_slot(slot)
 
         self.spawnable_to_uri: dict[str, str] = {}
         df = pd.read_csv(spawnables_file, delimiter=",")
@@ -84,7 +110,7 @@ class SceneManager:
     def get_slot_pose(self, slot_name: str, frame: str = "odom"):
         if frame != "odom":
             raise NotImplementedError("Only odom frame is supported")
-        return self.slot_to_pose[slot_name]
+        return self.slots[slot_name].origin_pose
 
     def get_gripping_point(self, unique_object_name: str):
         entity_state = GetEntityState.Request()
@@ -119,7 +145,7 @@ class SceneManager:
         frame: str = "odom",
     ):
         wait_for_ros2_services(self.connector, ["/spawn_entity"])
-        pose: Pose = self.slot_to_pose[slot_name]
+        pose: Pose = self.slots[slot_name].origin_pose
 
         # Add Gaussian noise to x, y
         pose.position.x += random.normalvariate(0, std_xy)
@@ -237,6 +263,181 @@ class SceneManager:
         gripping_point_pose = self.get_gripping_point(object_name)
 
         return np.abs(gripping_point_pose.position.z - object_pose.position.z)
+
+    def get_entities(self, name_filter: str) -> Optional[Dict[str, EntityState]]:
+        response = self.connector.call_service(
+            ROS2Message(payload={"filters": {"filter": name_filter}}),
+            target="/get_entities_states",
+            msg_type="simulation_interfaces/srv/GetEntitiesStates",
+            timeout_sec=3.0,
+        ).payload
+
+        entities: Dict[str, EntityState] = {}
+        if response is not None:
+            for i, name in enumerate(response.entities):
+                entities[name] = response.states[i]
+            return entities
+
+    def assign_entities_to_slots(self, entities: Dict[str, EntityState]):
+        """Assign entities to their corresponding slots based on position"""
+        assigned_slots = set()
+
+        # First pass: assign entities to slots
+        for ent_name, ent in entities.items():
+            for coll_name, collection in self.slots_collections.items():
+                for slot_name, slot in collection.slots.items():
+                    if slot.is_entity_within_slot(entity_pose=ent.pose):
+                        slot.assign_entity_to_slot(name=ent_name)
+                        assigned_slots.add((coll_name, slot_name))
+
+        # Second pass: remove entities from slots that weren't assigned
+        for coll_name, collection in self.slots_collections.items():
+            for slot_name, slot in collection.slots.items():
+                if (coll_name, slot_name) not in assigned_slots:
+                    slot.remove_entity_from_slot()
+
+    def add_collection(self, collection: SlotsCollection) -> None:
+        """Add a slots collection to the warehouse"""
+        self.slots_collections[collection.tag] = collection
+
+    def get_collection(self, tag: str) -> Optional[SlotsCollection]:
+        """Get a specific collection by tag"""
+        return self.slots_collections.get(tag)
+
+    def find_empty_racks(self) -> List[str]:
+        """Find all racks that have any empty slots"""
+        empty_racks = []
+        for tag, collection in self.slots_collections.items():
+            if collection.collection_type == "rack" and collection.find_empty_slots():
+                empty_racks.append(tag)
+        return sorted(empty_racks)
+
+    def find_empty_tables(self) -> List[str]:
+        """Find all tables that have any empty slots"""
+        empty_tables = []
+        for tag, collection in self.slots_collections.items():
+            if collection.collection_type == "table" and collection.find_empty_slots():
+                empty_tables.append(tag)
+        return sorted(empty_tables)
+
+    def find_empty_slots_on_racks(self) -> Dict[str, List[str]]:
+        """Find all empty slots on any rack"""
+        empty_slots_by_rack = {}
+        for tag, collection in self.slots_collections.items():
+            if collection.collection_type == "rack":
+                empty_slots = collection.find_empty_slots()
+                if empty_slots:
+                    empty_slots_by_rack[tag] = empty_slots
+        return empty_slots_by_rack
+
+    def find_empty_slots_on_tables(self) -> Dict[str, List[str]]:
+        """Find all empty slots on any table"""
+        empty_slots_by_table = {}
+        for tag, collection in self.slots_collections.items():
+            if collection.collection_type == "table":
+                empty_slots = collection.find_empty_slots()
+                if empty_slots:
+                    empty_slots_by_table[tag] = empty_slots
+        return empty_slots_by_table
+
+    def find_empty_slots_on_rack(self, rack_tag: str) -> List[str]:
+        """Find all empty slots on a specific rack"""
+        collection = self.get_collection(rack_tag)
+        if collection and collection.collection_type == "rack":
+            return collection.find_empty_slots()
+        return []
+
+    def find_empty_slots_on_table(self, table_tag: str) -> List[str]:
+        """Find all empty slots on a specific table"""
+        collection = self.get_collection(table_tag)
+        if collection and collection.collection_type == "table":
+            return collection.find_empty_slots()
+        return []
+
+    def get_all_empty_slots(self) -> Dict[str, List[str]]:
+        """Get all empty slots across all collections"""
+        all_empty_slots = {}
+        for tag, collection in self.slots_collections.items():
+            empty_slots = collection.find_empty_slots()
+            if empty_slots:
+                all_empty_slots[tag] = empty_slots
+        return all_empty_slots
+
+    def get_collections_by_type(
+        self, collection_type: str
+    ) -> Dict[str, SlotsCollection]:
+        """Get all collections of a specific type"""
+        filtered_collections = {}
+        for tag, collection in self.slots_collections.items():
+            if collection.collection_type == collection_type.lower():
+                filtered_collections[tag] = collection
+        return filtered_collections
+
+    def get_warehouse_summary(self) -> Dict[str, Dict[str, int]]:
+        """Get usage summary for all collections"""
+        summary = {}
+        for tag, collection in self.slots_collections.items():
+            summary[tag] = collection.get_usage_summary()
+        return summary
+
+    def get_type_summary(self) -> Dict[str, Dict[str, int]]:
+        """Get usage summary grouped by collection type"""
+        type_summary = {}
+
+        for collection in self.slots_collections.values():
+            col_type = collection.collection_type or "unknown"
+            if col_type not in type_summary:
+                type_summary[col_type] = {"total": 0, "used": 0, "free": 0}
+
+            usage = collection.get_usage_summary()
+            type_summary[col_type]["total"] += usage["total"]
+            type_summary[col_type]["used"] += usage["used"]
+            type_summary[col_type]["free"] += usage["free"]
+
+        return type_summary
+
+    def get_all_slots(self) -> Dict[str, Slot]:
+        """Get all slots from all collections in a flat dictionary (similar to flat_slots)"""
+        all_slots = {}
+        for collection in self.slots_collections.values():
+            all_slots.update(collection.slots)
+        return all_slots
+
+    def get_warehouse_layout_description(self) -> str:
+        """Return a formatted description of the warehouse layout with coordinates"""
+        lines = ["CURRENT WAREHOUSE LAYOUT:\n"]
+
+        # Group collections by type for better organization
+        collections_by_type = {}
+        for tag, collection in self.slots_collections.items():
+            col_type = collection.collection_type or "other"
+            if col_type not in collections_by_type:
+                collections_by_type[col_type] = []
+            collections_by_type[col_type].append((tag, collection))
+
+        # Sort types for consistent output
+        for collection_type in sorted(collections_by_type.keys()):
+            collections = collections_by_type[collection_type]
+            # Sort collections by tag
+            collections.sort(key=lambda x: x[0])
+
+            for tag, collection in collections:
+                # Add collection header
+                lines.append(f"{collection_type} {tag} with slots:\n")
+
+                # Sort slots by tag for consistent output
+                sorted_slots = sorted(collection.slots.items())
+
+                for slot_tag, slot in sorted_slots:
+                    if slot.is_obj_present():
+                        obj_name = slot.get_obj_name()
+                        status = f"occupied by {obj_name}"
+                    else:
+                        status = "empty"
+
+                    lines.append(f"    {slot_tag} - {status}")
+
+        return "\n".join(lines)
 
 
 @ROS2Context()

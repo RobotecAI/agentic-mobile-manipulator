@@ -1,7 +1,8 @@
 from geometry_msgs.msg import Pose
-from manipulator_controller import ManipulatorController
-from navigation_controller import NavigationController
 from rai.communication.ros2 import ROS2Connector
+
+from scripts.manipulator_controller import ManipulatorController
+from scripts.navigation_controller import NavigationController
 
 
 class KairosController:

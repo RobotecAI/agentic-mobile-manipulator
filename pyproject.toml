@@ -5,6 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "langchain-community>=0.3.21",
+    "langfuse[langchain]>=2.60.9",
     "pre-commit>=4.3.0",
     "rai-core>=2.5.0",
 ]
+[tool.setuptools.packages.find]
+include = ["scripts*"]

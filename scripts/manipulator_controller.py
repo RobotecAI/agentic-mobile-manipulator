@@ -18,7 +18,8 @@ from rai.communication.ros2 import ROS2Connector
 from rclpy.action.client import ActionClient
 from rclpy.node import Node
 from tf2_geometry_msgs import do_transform_pose
-from tools import MoveToPointTool
+
+from scripts.tools import MoveToPointTool
 
 
 class GripperController(Node):
