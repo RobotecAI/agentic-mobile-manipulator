@@ -264,6 +264,11 @@
                 },
                 {
                     "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorMeshColliderComponent/ColliderConfiguration/CollisionLayer/Index",
+                    "value": 1
+                },
+                {
+                    "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Compute Mass",
                     "value": false
                 },

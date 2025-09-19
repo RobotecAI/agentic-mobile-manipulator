@@ -20,11 +20,10 @@ from simulation_interfaces.srv import (
     SetEntityState,
     SpawnEntity,
 )
+from slots import Slot, SlotsCollection
 from tf2_geometry_msgs import do_transform_pose
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
-
-from scripts.slots import Slot, SlotsCollection
 
 
 class SceneManager:

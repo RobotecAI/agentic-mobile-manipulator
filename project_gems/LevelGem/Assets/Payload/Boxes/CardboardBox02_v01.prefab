@@ -353,6 +353,11 @@
                 },
                 {
                     "op": "replace",
+                    "path": "/Entities/Entity_[2253294108605]/Components/EditorMeshColliderComponent/ColliderConfiguration/CollisionLayer/Index",
+                    "value": 1
+                },
+                {
+                    "op": "replace",
                     "path": "/Entities/Entity_[2253294108605]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
                     "value": 0.6000000238418579
                 },
