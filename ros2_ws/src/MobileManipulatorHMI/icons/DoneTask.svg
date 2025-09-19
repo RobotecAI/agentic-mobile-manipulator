@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="300" height="300" aria-hidden="true">
+    <defs>
+        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+        </filter>
+    </defs>
+
+    <!-- tick/checkmark -->
+    <path d="M34 60 L46 72 L72 36"
+          fill="none"
+          stroke="#444"
+          stroke-width="6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          filter="url(#shadow)" />
+</svg>
