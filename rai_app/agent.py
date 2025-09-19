@@ -12,6 +12,7 @@ from tools import (
     NavigateToSlotSyncTool,
     MoveFromSlotToSlotTool,
     IsPackageDamagedTool,
+    MoveFromCollectionToCollectionTool,
 )
 from scripts.kairos_controller import KairosController
 from scripts.scene_manager import SceneManager
@@ -25,7 +26,7 @@ from rai.agents.langchain.core import (
 )
 
 
-class SiLParams(BaseModel):
+class AgentParams(BaseModel):
     task: str
     agent_model: str
     agent_vendor: Literal["openai", "ollama"]
@@ -55,12 +56,11 @@ class WarehouseContext(ContextProvider):
         entities = self.scene_manager.get_entities(name_filter="box")
         if entities:
             self.scene_manager.assign_entities_to_slots(entities=entities)
-            context = """\n\nYou will be given the layout of the warehouse with collections names and slot names that belong to collections,
-like tables or racks. You will also be given if slot is occupied by an object. Take it as truth, don't confirm
-it using detection.
+            context = """\n\nYou are given the names of every collection(table or rack) in the warehouse. Take it as truth, don't confirm it using detection.
+If names of collections provided by user are not present, return response to user.
 """
             context += "\n"
-            context += self.scene_manager.get_warehouse_layout_description()
+            context += self.scene_manager.get_warehouse_collections_description()
             context += "\n"
             return context
         else:
@@ -70,11 +70,11 @@ it using detection.
 
 @observe(as_type="generation")
 @ROS2Context()
-def run_rai_sil(run_params: SiLParams):
+def run_rai_agent(run_params: AgentParams):
     logging.getLogger("rai_agent")
     connector = ROS2Connector()
     scene_manager = SceneManager(
-        slots_file="rai_app/scenario_slots.csv",
+        slots_file="scripts/resources/slots.csv",
         spawnables_file="scripts/resources/spawnables.csv",
         connector=connector,
     )
@@ -93,22 +93,14 @@ def run_rai_sil(run_params: SiLParams):
             reasoning=False,
         )
     )
-    move_from_slot_to_slot_tool = MoveFromSlotToSlotTool(
+
+    move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
         connector=connector,
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
-    )
-    navigation_tool = NavigateToSlotSyncTool(
-        connector=connector,
-        kairos_controller=kairos_controller,
-        scene_manager=scene_manager,
-    )
-    vlm_tool = IsPackageDamagedTool(
-        connector=connector,
-        namespace_value=run_params.robot_namespace,
-        llm=vlm_llm,
     )
 
+    print(run_params.agent_base_url)
     megamind_llm = (
         ChatOpenAI(
             model=run_params.agent_model,
@@ -126,16 +118,18 @@ def run_rai_sil(run_params: SiLParams):
     movement_system_prompt = """You are a movement specialist robot agent.
 Your role is to handle navigating to slots and moving objects from slot to slot using tools."""
 
-    detection_system_prompt = """You are a detection specialist agent.
-Your role is to identify object state using tools."""
-
     megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
 You manage specialists to whom you will delegate tasks:
-- Detection specialist can identify the state of the package at current slot.
+- Movement specialist can move object from a collection to colelciton (table , racks)
+
+For proper execution of an objective you NEED to know:
+- what objects are you meant to move
+- from where to pick them
+- where to place them
+IF you CAN'T figure it out on your own, ask user for clarification
 - Movement specialist can navigate to slot and move objects from slot to slot.
 
-Use detection agent only when specificly asked about object state, for example if it is damaged. 
-Don't place two object in the same spot.
+
 """
     executor_llm = (
         ChatOpenAI(
@@ -155,14 +149,10 @@ Don't place two object in the same spot.
         Executor(
             name="movement",
             llm=executor_llm,
-            tools=[move_from_slot_to_slot_tool, navigation_tool],
+            tools=[
+                move_from_coll_to_coll,
+            ],
             system_prompt=movement_system_prompt,
-        ),
-        Executor(
-            name="detection",
-            llm=executor_llm,
-            tools=[vlm_tool],
-            system_prompt=detection_system_prompt,
         ),
     ]
     warehouse_context = WarehouseContext(scene_manager=scene_manager)
@@ -178,15 +168,19 @@ Don't place two object in the same spot.
         f"Starting to run the agent with configuration: {pformat(run_params.model_dump_json())}"
     )
 
-
     stop = False
+
     def emergency_stop_callback(_: ROS2Message):
-        """ Sets stop flag to true once called """
+        """Sets stop flag to true once called"""
         logging.info("Emergency stop callback called")
         nonlocal stop
         stop = True
 
-    connector.register_callback("/emergency_stop", callback=emergency_stop_callback, msg_type="std_msgs/msg/Empty")
+    connector.register_callback(
+        "/emergency_stop",
+        callback=emergency_stop_callback,
+        msg_type="std_msgs/msg/Empty",
+    )
 
     current_step = ""
     steps_done = []
@@ -270,12 +264,12 @@ def main():
     if args.vlm_base_url is None:
         args.vlm_base_url = args.agent_base_url
 
-    params = SiLParams(**vars(args))
+    params = AgentParams(**vars(args))
     logging.info(
         f"Starting rai_megamind agent with parameters: {pformat(params.model_dump())}"
     )
 
-    run_rai_sil(params)
+    run_rai_agent(params)
 
 
 if __name__ == "__main__":

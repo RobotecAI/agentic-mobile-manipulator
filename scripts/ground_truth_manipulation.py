@@ -86,7 +86,7 @@ def main(debug: bool = False, namespace=""):
         object_pose = scene_manager.get_pose(entity_name)
         object_height = scene_manager.get_object_height(entity_name)
         slot_pose = scene_manager.get_slot_pose(target_slot_name)
-        kairos_controller.place_object_on_rack(slot_pose, object_pose, object_height)
+        kairos_controller.move_object_to_slot(slot_pose, object_pose, object_height)
 
 
 if __name__ == "__main__":

@@ -1,9 +1,9 @@
-# rai agent
+# RAI Agent
 
 ## Setup
 
-1. Follow the basic setup instructions
-2. install python package:
+1. Follow the basic setup instructions [here](../docs/setup.md).
+2. Install the Python package:
 
 ```bash
 cd ${DEMO_ROOT}
@@ -12,28 +12,30 @@ uv pip install -e .
 
 ## Run Agent
 
-3. Launch the simulation
-4. Spawn objects in the simulation, you can do it with script:
+3. Launch the simulation.
+4. Spawn objects in the simulation using the script:
 
 ```bash
- uv run scripts/populate_scene.py
+uv run scripts/populate_scene.py
 ```
 
-5. Run agent
+5. Run the agent:
 
 ```bash
 source ros2_ws/install/setup.bash
-uv run python rai_app/agent.py --task "Move box from table t1, Slot6 to rack J01 RackSlot6" --agent_model gpt-4o --agent_vendor openai --vlm_model gpt-4o --vlm_vendor openai --robot-namespace "" --recurssion-limit 150
+uv run python rai_app/agent.py --task "Move all boxes from table t3 to the J01 rack. Then move the box from table t4 to rack j02" --agent_model "" --agent_vendor openai --agent_base_url http://127.0.0.1:8080/v1 --robot-namespace "" --recursion-limit 150
 ```
 
-7. For debugging agent langfuse is recommended. You can set it up locally -> https://langfuse.com/self-hosting/deployment/docker-compose
-   or use cloud https://cloud.langfuse.com/
+> [!TIP]
+> If the inference engine is different from llama.cpp, adjust the agent_model and agent_vendor parameters accordingly.
 
-8. Ros topics should be available:
+6. For debugging, Langfuse is recommended. You can set it up locally at https://langfuse.com/self-hosting/deployment/docker-compose or use the cloud version at https://cloud.langfuse.com/.
+
+7. ROS 2 topics should be available:
 
 ```bash
 /agent/current_step
 /agent/past_steps
 ```
 
-They will tell you what agent is currently doing and what has been done.
+These topics will inform you about the agent's current actions and completed tasks.

@@ -4,10 +4,6 @@
 
 ### O3DE
 
-To run the O3DE, run the following command and choose `DemoLevel.prefab` from the level menu.
-
-1. Open the editor
-
 ```shell
 source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ${DEMO_ROOT}/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher
@@ -32,20 +28,12 @@ Run the GenAI inference:
 ${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf unsloth/Qwen3-14B-GGUF
 ```
 
+> [!TIP]
+> This step can be skipped, provided an OpenAI compatible endpoint is available.
+
 ### Agent
 
-You can run the agent as follows:
-
-> [!NOTE]
->
-> - By default, the agent uses the **OpenAI GPT-5** model. An `OPENAI_API_KEY` environment variable must be set.
-> - To use another model, provide `--model-name` for the model identifier and `--base-url` for an OpenAI-compatible endpoint.
-> - If no arguments are given, the agent runs a default task: navigating to one of the predefined points of model's choosing, capturing an image from the camera, and describing it.
-
-```shell
-cd ${DEMO_ROOT}
-uv run python rai_app/agent.py [--prompt ...] [--model-name gpt-5] [--base-url ...]
-```
+Instructions: [Agent setup and inference](../rai_app/README.md)
 
 ## HMI
 

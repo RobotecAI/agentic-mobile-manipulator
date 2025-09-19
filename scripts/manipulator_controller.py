@@ -213,7 +213,7 @@ class GripperController(Node):
 
 
 class ArmController:
-    ARM_STAGING_POSE_DISTANCE = 0.2
+    ARM_STAGING_POSE_DISTANCE = 0.1
     BASE_JOINT_VALUES = {
         "egoarm_wrist_1_joint": -1.5223139524459839,
         "egoarm_wrist_2_joint": -1.5707021951675415,

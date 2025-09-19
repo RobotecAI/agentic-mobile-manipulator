@@ -124,17 +124,96 @@ class MoveFromSlotToSlotTool(WarehosueTool):
                 object_name=origin_object_name
             )
             target_slot = self.scene_manager.slots[target_slot_name]
-            ############### Navigate to origin slot and pick up from origin slot
-            self.kairos_controller.pick(
-                object_pose=origin_object_pose, object_height=object_height
-            )
-
-            ##################### Navigate to target slot and drop at target
-            self.kairos_controller.place(
-                target_slot.origin_pose, object_height=object_height
+            self.kairos_controller.move_object_to_slot(
+                slot_pose=target_slot.origin_pose,
+                object_pose=origin_object_pose,
+                object_height=object_height,
             )
             return f"Successfully moved object from {origin_slot_name} to {target_slot_name}"
 
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")
             return f"Failed to move object from {origin_slot_name} to {target_slot_name}: {str(e)}"
+
+
+class MoveFromCollectionToCollectionInput(BaseModel):
+    origin_collection_name: str = Field(
+        ..., description="Collection name to move objects from"
+    )
+    target_collection_name: str = Field(
+        ..., description="Collection name to move objects to"
+    )
+
+
+class MoveFromCollectionToCollectionTool(WarehosueTool):
+    name: str = "move_objects_between_collections"
+    description: str = (
+        "Move ALL objects from origin collection to target colection."
+        " A collection might be for example table or rack - like t5 (table) or X02 (rack)"
+    )
+
+    args_schema: Type[MoveFromCollectionToCollectionInput] = (
+        MoveFromCollectionToCollectionInput
+    )
+
+    def _run(self, origin_collection_name: str, target_collection_name: str):
+        """Execute complete pick and place operation between slots"""
+
+        try:
+            origin_collection = self.scene_manager.slots_collections[
+                origin_collection_name
+            ]
+        except KeyError:
+            collection_names = self.scene_manager.slots_collections.keys()
+            raise KeyError(
+                f"Collection {origin_collection_name} does not exist. Available collection names: {"\n".join(collection_names)}"
+            )
+
+        try:
+            target_collection = self.scene_manager.slots_collections[
+                target_collection_name
+            ]
+        except KeyError:
+            collection_names = self.scene_manager.slots_collections.keys()
+            return f"Collection {target_collection_name} does not exist. Available collection names: {"\n".join(collection_names)}"
+
+        origin_used_slot_names = origin_collection.find_used_slots()
+        if not origin_used_slot_names:
+            return f"There are no objects in {origin_collection_name} collection"
+
+        target_empty_slot_names = target_collection.find_empty_slots()
+        ## TODO (jmatejcz) only this slot does work in current sim
+        filtered_target_names = []
+        for name in target_empty_slot_names:
+            if "rackslot5" in name.lower():
+                filtered_target_names.append(name)
+        if len(origin_used_slot_names) > len(target_empty_slot_names):
+            return (
+                f"{target_collection.collection_type} {target_collection_name} has only {len(target_empty_slot_names)} "
+                f"empty slots and {origin_collection.collection_type} {origin_collection_name} has {len(origin_used_slot_names)} objects to move"
+            )
+
+        for origin_slot_name, target_slot_name in zip(
+            origin_used_slot_names, filtered_target_names
+        ):
+            try:
+                origin_object_name = self.scene_manager.slots[
+                    origin_slot_name
+                ].get_obj_name()
+                origin_object_pose = self.scene_manager.get_pose(
+                    entity_name=origin_object_name
+                )
+                object_height = self.scene_manager.get_object_height(
+                    object_name=origin_object_name
+                )
+                target_slot = self.scene_manager.slots[target_slot_name]
+                self.kairos_controller.move_object_to_slot(
+                    slot_pose=target_slot.origin_pose,
+                    object_pose=origin_object_pose,
+                    object_height=object_height,
+                )
+            except Exception as e:
+                logging.error(f"Error during move operation: {str(e)}")
+                return f"Failed to move object from {origin_slot_name} to {target_slot_name}: {str(e)}"
+
+        return f"Successfully moved objects from {origin_collection_name} to {target_collection_name}"

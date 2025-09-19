@@ -28,7 +28,7 @@ class KairosController:
 
         self.mani_ctrl.move_arm_to_base_pose()
 
-    def place_object_on_rack(self, slot_pose, object_pose, object_height):
+    def move_object_to_slot(self, slot_pose, object_pose, object_height):
         self.pick(object_pose, object_height)
         self.place(slot_pose, object_height)
 
