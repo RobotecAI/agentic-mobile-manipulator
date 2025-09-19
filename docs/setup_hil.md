@@ -14,7 +14,7 @@ This repository is compatible with the following system:
 
 ```shell
 cd /home/${USER}
-git clone git@github.com:RobotecAI/golden-hiptage.git
+git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
 ```
 
 #### Set the Root Directory of the Project
@@ -22,7 +22,7 @@ git clone git@github.com:RobotecAI/golden-hiptage.git
 Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following line to your `.bashrc` or `.zshrc` file:
 
 ```shell
-export DEMO_ROOT=/home/${USER}/golden-hiptage/
+export DEMO_ROOT=/home/${USER}/MobileManipulatorDemo/
 ```
 
 ### Setup ROS 2
