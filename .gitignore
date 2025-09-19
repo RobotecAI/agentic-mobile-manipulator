@@ -8,3 +8,8 @@ ros2_ws/__pycache__
 __pycache__/
 monitoring/monitoring_results*
 artifact_database.pkl
+sim/backtrace.log
+sim/imgui.ini
+.env
+.vscode/
+uv.lock
