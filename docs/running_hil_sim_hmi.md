@@ -52,5 +52,6 @@ uv run python rai_app/agent.py [--prompt ...] [--model-name gpt-5] [--base-url .
 ### Running the GUI
 
 ```shell
-${DEMO_ROOT}/MobileManipulatorHMI/build/linux/MobileManipulatorHMI
+source ${DEMO_ROOT}/ros2_ws/install/setup.bash
+ros2 run mobile_manipulator_hmi MobileManipulatorHMI
 ```

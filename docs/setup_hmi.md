@@ -9,6 +9,6 @@ The contents of this repository are compatible with the following system:
 ## Building the GUI
 
 ```shell
-cd ${DEMO_ROOT}/MobileManipulatorHMI
-cmake -B build/linux
+cd ${DEMO_ROOT}/ros2_ws/
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
