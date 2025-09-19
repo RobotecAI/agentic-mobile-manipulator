@@ -10,8 +10,8 @@
                             "LayerNames": [
                                 "Default",
                                 "Robot",
-                                {},
-                                {},
+                                "NPCs",
+                                "Floor",
                                 {},
                                 {},
                                 {},
@@ -89,6 +89,15 @@
                                         "Mask": 0
                                     },
                                     "ReadOnly": true
+                                },
+                                {
+                                    "Id": {
+                                        "GroupId": "{CC79F8FA-F7B0-4828-9F19-67F86DD85E16}"
+                                    },
+                                    "Name": "NPCCollision",
+                                    "Group": {
+                                        "Mask": 18446744073709551608
+                                    }
                                 }
                             ]
                         }
