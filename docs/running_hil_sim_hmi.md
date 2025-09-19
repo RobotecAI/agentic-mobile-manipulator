@@ -1,6 +1,8 @@
-# Running a demo
+# Running a demo on HIL, Simulation, and HMI
 
-## O3DE
+## Simulation
+
+### O3DE
 
 To run the O3DE, run the following command and choose `DemoLevel.prefab` from the level menu.
 
@@ -11,11 +13,9 @@ source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ${DEMO_ROOT}/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher
 ```
 
-2. Choose `DemoLevel.prefab` from the level menu
+## HIL
 
-3. Run the GameMode (ctrl+g)
-
-## ROS 2
+### ROS 2
 
 Run the ROS 2 stack:
 
@@ -24,7 +24,15 @@ source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ros2 launch robotec_kairos_ur10 robotec_launch.py
 ```
 
-## Agent
+### GenAI inference
+
+Run the GenAI inference:
+
+```shell
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf unsloth/Qwen3-14B-GGUF
+```
+
+### Agent
 
 You can run the agent as follows:
 
@@ -37,4 +45,12 @@ You can run the agent as follows:
 ```shell
 cd ${DEMO_ROOT}
 uv run python rai_app/agent.py [--prompt ...] [--model-name gpt-5] [--base-url ...]
+```
+
+## HMI
+
+### Running the GUI
+
+```shell
+${DEMO_ROOT}/MobileManipulatorHMI/build/linux/MobileManipulatorHMI
 ```
