@@ -28,7 +28,7 @@ bt_navigator:
 
 controller_server:
   ros__parameters:
-    controller_frequency: 40.0
+    controller_frequency: 30.0
     costmap_update_timeout: 0.30
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
@@ -66,7 +66,7 @@ controller_server:
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: true
       rotate_to_heading_once: true
-      desired_linear_vel: 2.0
+      desired_linear_vel: 1.0
       transform_tolerance: 0.001
       lookahead_distance: 1.0
       lookahead_dist: 1.0
@@ -240,7 +240,7 @@ waypoint_follower:
 
 velocity_smoother:
   ros__parameters:
-    smoothing_frequency: 40.0
+    smoothing_frequency: 30.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
     max_velocity: [2.0, 2.0, 2.0]
