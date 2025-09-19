@@ -1,39 +1,39 @@
 # Setup
 
-The contents of this repository are compatible with the following system:
+This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
 - ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
 - Python: 3.12
 
-## Building the project
+## Building the Project
 
 ### Prerequisites
 
-#### Clone the repository
+#### Clone the Repository
 
 ```shell
 cd /home/${USER}
 git clone git@github.com:RobotecAI/golden-hiptage.git
 ```
 
-#### Set root directory of the project
+#### Set the Root Directory of the Project
 
-Set root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding following line to `.bashrc` or `.zshrc` file:
+Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following line to your `.bashrc` or `.zshrc` file:
 
 ```shell
 export DEMO_ROOT=/home/${USER}/golden-hiptage/
 export O3DE_ROOT=${DEMO_ROOT}/engine/o3de
 ```
 
-#### Install base dependencies
+#### Install Base Dependencies
 
 ```bash
 sudo apt update
 sudo apt install git git-lfs ninja-build
 ```
 
-#### Clone repositories
+#### Clone Repositories
 
 ```shell
 cd ${DEMO_ROOT}
@@ -50,7 +50,7 @@ Install [packages required to build O3DE:](https://www.docs.o3de.org/docs/welcom
 sudo apt install cmake libstdc++-12-dev clang libglu1-mesa-dev libxcb-randr0-dev libxcb-xinerama0 libxcb-xinput0 libxcb-xinput-dev libxcb-xfixes0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev mesa-common-dev libunwind-dev libzstd-dev tix
 ```
 
-Register O3DE engine:
+Register the O3DE engine:
 
 ```shell
 cd ${O3DE_ROOT}
@@ -69,9 +69,9 @@ git lfs pull
 ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path  ${DEMO_ROOT}/gems/o3de-extras/Gems
 ```
 
-#### Non-canonical gems
+#### Non-canonical Gems
 
-Those are gems that are open source, but not maintained by O3DF.
+These are gems that are open source but not maintained by O3DF.
 
 ```shell
 cd  ${DEMO_ROOT}/gems
@@ -84,7 +84,7 @@ ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/project_gems/
 
 ```
 
-#### Register project
+#### Register Project
 
 ```shell
 ${O3DE_ROOT}/scripts/o3de.sh register  --project-path ${DEMO_ROOT}/sim
@@ -92,7 +92,7 @@ ${O3DE_ROOT}/scripts/o3de.sh register  --project-path ${DEMO_ROOT}/sim
 
 ### Setup ROS 2
 
-#### Build ROS 2 workspace
+#### Build the ROS 2 Workspace
 
 ```shell
 cd ${DEMO_ROOT}/ros2_ws
@@ -101,13 +101,13 @@ rosdep install --ignore-src --from-paths src -y
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
 
-Source the installation to `.bashrc` or `.zshrc` file:
+Source the installation in your `.bashrc` or `.zshrc` file:
 
 ```shell
 source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ```
 
-### Build O3DE Editor
+### Build O3DE Editor and GameLauncher
 
 ```shell
 cd ${DEMO_ROOT}/sim
@@ -119,7 +119,7 @@ cmake -B build/linux -G "Ninja Multi-Config" \
 cmake --build build/linux --config profile --target MobileManipulatorDemo Editor MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher
 ```
 
-### Setup python environment
+### Setup Python Environment
 
 1. Install uv
 
@@ -133,9 +133,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
-## Developer setup
+## Developer Setup
 
-### Conventional commits
+### Conventional Commits
 
 We use conventional commits to ensure that the commit messages are consistent and follow a specific format. Read more about conventional commits [here](https://www.conventionalcommits.org/en/v1.0.0/).
 
@@ -148,6 +148,6 @@ sudo apt install pre-commit
 pre-commit install
 ```
 
-# Next steps
+# Next Steps
 
 - [Running the demo](./running.md)

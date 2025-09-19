@@ -1,4 +1,4 @@
-# Running a demo on HIL, Simulation, and HMI
+# Running a Demo on HIL, Simulation, and HMI
 
 ## Simulation
 
@@ -13,27 +13,27 @@ ${DEMO_ROOT}/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher
 
 ### ROS 2
 
-Run the ROS 2 stack:
+To run the ROS 2 stack, execute:
 
 ```shell
 source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ros2 launch robotec_kairos_ur10 robotec_launch.py
 ```
 
-### GenAI inference
+### GenAI Inference
 
-Run the GenAI inference:
+To run the GenAI inference, use:
 
 ```shell
 ${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf unsloth/Qwen3-14B-GGUF
 ```
 
 > [!TIP]
-> This step can be skipped, provided an OpenAI compatible endpoint is available.
+> This step can be skipped if an OpenAI-compatible endpoint is available.
 
 ### Agent
 
-Instructions: [Agent setup and inference](../rai_app/README.md)
+For instructions, see: [Agent setup and inference](../rai_app/README.md)
 
 ## HMI
 

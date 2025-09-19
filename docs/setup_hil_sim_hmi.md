@@ -18,6 +18,6 @@ HMI (Human–Machine Interface) is the machine that runs the GUI.
 
 Setup instructions: [HMI setup](./setup_hmi.md)
 
-# Next steps
+# Next Steps
 
 - [Running the demo](./running_hil_sim_hmi.md)
