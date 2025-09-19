@@ -9,3 +9,4 @@ This demo presents a mobile manipulator operating in a small warehouse environme
 - [What the demo includes](./docs/demo.md)
 - [Setup instructions](./docs/setup.md)
 - [Running instructions](./docs/running.md)
+- [Selected tasks report](./docs/selected_tasks.pdf)
