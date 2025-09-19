@@ -1153,7 +1153,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Best Effort
-        Value: /UpCamera/camera_image_color
+        Value: /camera_image_color
       Value: true
   Enabled: true
   Global Options:
