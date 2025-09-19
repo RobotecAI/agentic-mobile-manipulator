@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/Left.svg</file>
+        <file>icons/Right.svg</file>
+        <file>icons/Down.svg</file>
+        <file>icons/Up.svg</file>
+        <file>icons/DoneTask.svg</file>
+        <file>icons/CurrentTask.svg</file>
+    </qresource>
+</RCC>

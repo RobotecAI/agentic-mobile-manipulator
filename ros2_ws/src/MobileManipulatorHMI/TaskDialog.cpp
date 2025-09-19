@@ -1,0 +1,97 @@
+#include "TaskDialog.h"
+#include <QApplication>
+#include <QInputMethod>
+
+TaskDialog::TaskDialog(QWidget *parent)
+    : QDialog(parent)
+{
+    setWindowTitle("Send Custom Task");
+    setModal(true);
+    resize(400, 200);
+
+    auto *mainLayout = new QVBoxLayout(this);
+
+    // Title label
+    auto *titleLabel = new QLabel("Enter task prompt for the robot:");
+    titleLabel->setStyleSheet("font-weight: bold; margin-bottom: 5px;");
+    mainLayout->addWidget(titleLabel);
+
+    // Text edit for multiline input
+    textEdit_ = new QTextEdit(this);
+    textEdit_->setPlaceholderText("Type your task here...\nExample: Navigate to kitchen and pick up the bottle");
+    textEdit_->setMaximumHeight(100);
+    mainLayout->addWidget(textEdit_);
+
+    // Button layout
+    auto *buttonLayout = new QHBoxLayout();
+    buttonLayout->addStretch();
+
+    cancelButton_ = new QPushButton("Cancel", this);
+    sendButton_ = new QPushButton("Send Task", this);
+    sendButton_->setDefault(true);
+    sendButton_->setStyleSheet("QPushButton { background-color: #4CAF50; color: white; font-weight: bold; }");
+
+    buttonLayout->addWidget(cancelButton_);
+    buttonLayout->addWidget(sendButton_);
+    mainLayout->addLayout(buttonLayout);
+
+    // Connect signals
+    connect(sendButton_, &QPushButton::clicked, this, &TaskDialog::onSendClicked);
+    connect(cancelButton_, &QPushButton::clicked, this, &TaskDialog::onCancelClicked);
+    connect(this, &QDialog::done, this, &TaskDialog::hideOnScreenKeyboard);
+    // Focus on text edit
+    textEdit_->setFocus();
+    showOnScreenKeyboard();
+}
+
+TaskDialog::~TaskDialog()
+{
+}
+
+QString TaskDialog::getTaskText() const
+{
+    return textEdit_->toPlainText().trimmed();
+}
+
+void TaskDialog::onSendClicked()
+{
+    if (!textEdit_->toPlainText().trimmed().isEmpty()) {
+        accept();
+    }
+    hideOnScreenKeyboard();
+}
+
+void TaskDialog::onCancelClicked()
+{
+    reject();
+    hideOnScreenKeyboard();
+}
+
+void TaskDialog::showOnScreenKeyboard()
+{
+    if (!onScreenKeyboardProcess_ || onScreenKeyboardProcess_->state() != QProcess::Running) {
+        onScreenKeyboardProcess_ = new QProcess(this);
+
+        // Try different virtual keyboard commands based on what's available
+        QStringList keyboards = {"onboard", "florence", "kvkbd", "xvkbd"};
+
+        for (const QString &keyboard : keyboards) {
+            onScreenKeyboardProcess_->start(keyboard);
+            if (onScreenKeyboardProcess_->waitForStarted(1000)) {
+                break;
+            }
+        }
+    }
+}
+
+void TaskDialog::hideOnScreenKeyboard()
+{
+    if (onScreenKeyboardProcess_ && onScreenKeyboardProcess_->state() == QProcess::Running) {
+        onScreenKeyboardProcess_->terminate();
+        if (!onScreenKeyboardProcess_->waitForFinished(3000)) {
+            onScreenKeyboardProcess_->kill();
+        }
+        onScreenKeyboardProcess_->deleteLater();
+        onScreenKeyboardProcess_ = nullptr;
+    }
+}

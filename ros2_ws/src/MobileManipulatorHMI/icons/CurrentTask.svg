@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+    <defs>
+        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.4"/>
+        </filter>
+        <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="0" refY="3" orient="auto">
+            <polygon points="0 0, 6 3, 0 6" fill="#444" />
+        </marker>
+    </defs>
+
+    <g transform="translate(50,50)" filter="url(#shadow)">
+        <!-- Top arrow -->
+        <path d="M0,-35 A35,35 0 0,1 25,-25"
+              fill="none" stroke="#444" stroke-width="6" marker-end="url(#arrowhead)" stroke-linecap="round"/>
+        <!-- Right arrow -->
+        <path d="M35,0 A35,35 0 0,1 25,25"
+              fill="none" stroke="#444" stroke-width="6" marker-end="url(#arrowhead)" stroke-linecap="round"/>
+        <!-- Bottom arrow -->
+        <path d="M0,35 A35,35 0 0,1 -25,25"
+              fill="none" stroke="#444" stroke-width="6" marker-end="url(#arrowhead)" stroke-linecap="round"/>
+        <!-- Left arrow -->
+        <path d="M-35,0 A35,35 0 0,1 -25,-25"
+              fill="none" stroke="#444" stroke-width="6" marker-end="url(#arrowhead)" stroke-linecap="round"/>
+    </g>
+</svg>
