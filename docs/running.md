@@ -26,15 +26,4 @@ ros2 launch robotec_kairos_ur10 robotec_launch.py
 
 ## Agent
 
-You can run the agent as follows:
-
-> [!NOTE]
->
-> - By default, the agent uses the **OpenAI GPT-5** model. An `OPENAI_API_KEY` environment variable must be set.
-> - To use another model, provide `--model-name` for the model identifier and `--base-url` for an OpenAI-compatible endpoint.
-> - If no arguments are given, the agent runs a default task: navigating to one of the predefined points of model's choosing, capturing an image from the camera, and describing it.
-
-```shell
-cd ${DEMO_ROOT}
-uv run python rai_app/agent.py [--prompt ...] [--model-name gpt-5] [--base-url ...]
-```
+Instructions: [Agent setup and inference](../rai_app/README.md)

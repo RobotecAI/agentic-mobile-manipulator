@@ -20,10 +20,11 @@ from simulation_interfaces.srv import (
     SetEntityState,
     SpawnEntity,
 )
-from slots import Slot, SlotsCollection
 from tf2_geometry_msgs import do_transform_pose
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
+
+from scripts.slots import Slot, SlotsCollection
 
 
 class SceneManager:
@@ -74,7 +75,7 @@ class SceneManager:
             else:
                 collection_type = "other"
 
-            slot = Slot(tag=slot_tag, origin_pose=pose)
+            slot = Slot(tag=slot_name, origin_pose=pose)
             self.slots[slot_name] = slot
             if collection_name not in self.slots_collections:
                 slot_collection = SlotsCollection(
@@ -395,6 +396,16 @@ class SceneManager:
 
         return type_summary
 
+    def get_collections_sorted_by_type(self) -> Dict[str, List[SlotsCollection]]:
+        collections_by_type: Dict[str, List[SlotsCollection]] = {}
+        for tag, collection in self.slots_collections.items():
+            col_type = collection.collection_type
+            if col_type not in collections_by_type:
+                collections_by_type[col_type] = []
+            collections_by_type[col_type].append(collection)
+
+        return collections_by_type
+
     def get_all_slots(self) -> Dict[str, Slot]:
         """Get all slots from all collections in a flat dictionary (similar to flat_slots)"""
         all_slots = {}
@@ -405,24 +416,18 @@ class SceneManager:
     def get_warehouse_layout_description(self) -> str:
         """Return a formatted description of the warehouse layout with coordinates"""
         lines = ["CURRENT WAREHOUSE LAYOUT:\n"]
-
-        # Group collections by type for better organization
-        collections_by_type = {}
-        for tag, collection in self.slots_collections.items():
-            col_type = collection.collection_type or "other"
-            if col_type not in collections_by_type:
-                collections_by_type[col_type] = []
-            collections_by_type[col_type].append((tag, collection))
-
+        collections_by_type = self.get_collections_sorted_by_type()
         # Sort types for consistent output
         for collection_type in sorted(collections_by_type.keys()):
             collections = collections_by_type[collection_type]
             # Sort collections by tag
             collections.sort(key=lambda x: x[0])
 
-            for tag, collection in collections:
+            for collection in collections:
                 # Add collection header
-                lines.append(f"{collection_type} {tag} with slots:\n")
+                lines.append(
+                    f"{collection_type} {collection.collection_type} with slots:\n"
+                )
 
                 # Sort slots by tag for consistent output
                 sorted_slots = sorted(collection.slots.items())
@@ -436,6 +441,17 @@ class SceneManager:
 
                     lines.append(f"    {slot_tag} - {status}")
 
+        return "\n".join(lines)
+
+    def get_warehouse_collections_description(self) -> str:
+        """Return a formatted description of the warehouse collections names (tables and racks)"""
+        collections_by_type = self.get_collections_sorted_by_type()
+        lines = ["COLLECTIONS IN THE WAREHOUSE:\n"]
+        for col_type, collections in collections_by_type.items():
+            lines.append(f"type - {col_type}:")
+            for coll in collections:
+                lines.append(f" {coll.tag}")
+            lines.append("\n")
         return "\n".join(lines)
 
 
@@ -458,6 +474,7 @@ def main():
     slots = pd.read_csv(args.slots_file, delimiter=",")
     spawnables = pd.read_csv(args.spawnables_file, delimiter=",")
     spawnables = spawnables[~spawnables["object_name"].isin(args.filter.split("|"))]
+
     object_names = [
         random.choice(list(spawnables["object_name"].tolist()))
         for _ in range(len(slots))
