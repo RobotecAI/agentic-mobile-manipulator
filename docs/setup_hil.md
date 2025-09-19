@@ -1,25 +1,25 @@
 # Setup HIL Environment
 
-The contents of this repository are compatible with the following system:
+This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
 - ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
 - Python: 3.12
 
-## Building the project
+## Building the Project
 
 ### Prerequisites
 
-#### Clone the repository
+#### Clone the Repository
 
 ```shell
 cd /home/${USER}
 git clone git@github.com:RobotecAI/golden-hiptage.git
 ```
 
-#### Set root directory of the project
+#### Set the Root Directory of the Project
 
-Set root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding following line to `.bashrc` or `.zshrc` file:
+Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following line to your `.bashrc` or `.zshrc` file:
 
 ```shell
 export DEMO_ROOT=/home/${USER}/golden-hiptage/
@@ -27,7 +27,7 @@ export DEMO_ROOT=/home/${USER}/golden-hiptage/
 
 ### Setup ROS 2
 
-#### Build ROS 2 workspace
+#### Build the ROS 2 Workspace
 
 ```shell
 cd ${DEMO_ROOT}/ros2_ws
@@ -36,13 +36,13 @@ rosdep install --ignore-src --from-paths src -y
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
 
-Source the installation to `.bashrc` or `.zshrc` file:
+Source the installation in your `.bashrc` or `.zshrc` file:
 
 ```shell
 source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ```
 
-### Setup python environment
+### Setup Python Environment
 
 1. Install uv
 
@@ -56,9 +56,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
-## Setting up llama.cpp
+## Setting Up llama.cpp
 
-llama.cpp is used as the default GenAI inference engine. Other inference engines can be used if they maintain compatibility with OpenAI API.
+llama.cpp is used as the default GenAI inference engine. Other inference engines can be used if they maintain compatibility with the OpenAI API.
 
 ### Prerequisites
 
@@ -73,7 +73,7 @@ vulkaninfo
 ### Build llama.cpp
 
 > [!TIP]
-> In this example, Vulkan is used as the backend. Choose the appropriate backend based on your setup. For more information see [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
+> In this example, Vulkan is used as the backend. Choose the appropriate backend based on your setup. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
 
 ```shell
 cd ${DEMO_ROOT}
@@ -87,9 +87,8 @@ cmake -B build -DGGML_VULKAN=1
 cmake --build build --config Release
 ```
 
-### Download model
+### Download Model
 
 ```shell
 ${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-cli -hf unsloth/Qwen3-14B-GGUF
-
 ```
