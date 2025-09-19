@@ -1,5 +1,9 @@
 # Setup HMI Environment
 
+<p align="center">
+  <img src="images/hmi.png" alt="HMI graphical interface" width="50%"/>
+</p>
+
 The contents of this repository are compatible with the following system:
 
 - System: Ubuntu 24.04
