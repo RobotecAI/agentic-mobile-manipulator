@@ -699,117 +699,6 @@
                     "value": "Entity_[4618536697854]"
                 },
                 {
-                    "op": "add",
-                    "path": "/Entities/Entity_[4618536697854]",
-                    "value": {
-                        "Id": "Entity_[4618536697854]",
-                        "Name": "DropTarget",
-                        "Components": {
-                            "EditorDisabledCompositionComponent": {
-                                "$type": "EditorDisabledCompositionComponent",
-                                "Id": 7208226128307112588,
-                                "DisabledComponents": []
-                            },
-                            "EditorEntityIconComponent": {
-                                "$type": "EditorEntityIconComponent",
-                                "Id": 11105397570768252770,
-                                "EntityIconAssetId": {
-                                    "guid": "{00000000-0000-0000-0000-000000000000}",
-                                    "subId": 0
-                                }
-                            },
-                            "EditorEntitySortComponent": {
-                                "$type": "EditorEntitySortComponent",
-                                "Id": 8878554666968333834,
-                                "Child Entity Order": []
-                            },
-                            "EditorInspectorComponent": {
-                                "$type": "EditorInspectorComponent",
-                                "Id": 793484442453737644,
-                                "ComponentOrderEntryArray": []
-                            },
-                            "EditorLockComponent": {
-                                "$type": "EditorLockComponent",
-                                "Id": 8868891195124331914,
-                                "Locked": false
-                            },
-                            "EditorOnlyEntityComponent": {
-                                "$type": "EditorOnlyEntityComponent",
-                                "Id": 7448428153432278455,
-                                "IsEditorOnly": false
-                            },
-                            "EditorPendingCompositionComponent": {
-                                "$type": "EditorPendingCompositionComponent",
-                                "Id": 15950250126343544360,
-                                "PendingComponents": []
-                            },
-                            "EditorVisibilityComponent": {
-                                "$type": "EditorVisibilityComponent",
-                                "Id": 11770588828664310480,
-                                "VisibilityFlag": true
-                            },
-                            "ScriptEditorComponent": {
-                                "$type": "ScriptEditorComponent",
-                                "Id": 10492095177298295478,
-                                "ScriptComponent": {
-                                    "Id": 0,
-                                    "ContextID": 0,
-                                    "Properties": {
-                                        "Name": "Properties",
-                                        "Properties": [],
-                                        "Groups": []
-                                    },
-                                    "Script": {
-                                        "assetId": {
-                                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                            "subId": 1
-                                        },
-                                        "loadBehavior": "PreLoad",
-                                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                                    }
-                                },
-                                "ScriptAsset": {
-                                    "assetId": {
-                                        "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                        "subId": 1
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                                }
-                            },
-                            "TransformComponent": {
-                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                                "Id": 10962375417012820687,
-                                "Parent Entity": "Entity_[3159159857995]",
-                                "Transform Data": {
-                                    "Translate": [
-                                        0.1906642913818359,
-                                        0.0,
-                                        1.458520531654358
-                                    ],
-                                    "Rotate": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    "Scale": [
-                                        1.0,
-                                        1.0,
-                                        1.0
-                                    ],
-                                    "Locked": false,
-                                    "UniformScale": 1.0
-                                },
-                                "Parent Activation Transform Mode": 0,
-                                "IsStatic": false,
-                                "InterpolatePosition": 0,
-                                "InterpolateRotation": 0
-                            }
-                        },
-                        "IsRuntimeActive": true
-                    }
-                },
-                {
                     "op": "replace",
                     "path": "/Entities/Entity_[3141979988811]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
                     "value": 0.699999988079071
@@ -943,6 +832,117 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[3146274956107]/Components/EditorColliderComponent_6/ShapeConfiguration/Box/Scale/2",
                     "value": 0.699999988079071
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[4618536697854]",
+                    "value": {
+                        "Id": "Entity_[4618536697854]",
+                        "Name": "DropTarget",
+                        "Components": {
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 7208226128307112588,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 11105397570768252770,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 8878554666968333834,
+                                "Child Entity Order": []
+                            },
+                            "EditorInspectorComponent": {
+                                "$type": "EditorInspectorComponent",
+                                "Id": 793484442453737644,
+                                "ComponentOrderEntryArray": []
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 8868891195124331914,
+                                "Locked": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 7448428153432278455,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 15950250126343544360,
+                                "PendingComponents": []
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 11770588828664310480,
+                                "VisibilityFlag": true
+                            },
+                            "ScriptEditorComponent": {
+                                "$type": "ScriptEditorComponent",
+                                "Id": 10492095177298295478,
+                                "ScriptComponent": {
+                                    "Id": 0,
+                                    "ContextID": 0,
+                                    "Properties": {
+                                        "Name": "Properties",
+                                        "Properties": [],
+                                        "Groups": []
+                                    },
+                                    "Script": {
+                                        "assetId": {
+                                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                            "subId": 1
+                                        },
+                                        "loadBehavior": "PreLoad",
+                                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                                    }
+                                },
+                                "ScriptAsset": {
+                                    "assetId": {
+                                        "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                        "subId": 1
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                                }
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 10962375417012820687,
+                                "Parent Entity": "Entity_[3159159857995]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.19066429138183594,
+                                        0.0,
+                                        1.458520531654358
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        0.0,
+                                        180.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
                 }
             ]
         },

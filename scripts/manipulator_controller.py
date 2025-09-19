@@ -221,6 +221,15 @@ class ArmController:
         "egoarm_shoulder_pan_joint": 0.018245616927742958,
     }
 
+    LOW_BASE_JOINT_VALUES = {
+        "egoarm_wrist_1_joint": -2.150108575820923,
+        "egoarm_wrist_2_joint": -1.5708777904510498,
+        "egoarm_wrist_3_joint": -0.84187912940979,
+        "egoarm_shoulder_lift_joint": -0.06665489822626114,
+        "egoarm_elbow_joint": 0.6900210380554199,
+        "egoarm_shoulder_pan_joint": 0.018179576843976974,
+    }
+
     def __init__(
         self, connector: ROS2Connector, namespace: str, ros_package_name: str
     ) -> None:
@@ -258,6 +267,9 @@ class ArmController:
 
     def move_arm_to_base_pose(self):
         self.moveit_toolkit.set_joint_values(self.BASE_JOINT_VALUES)
+
+    def move_arm_to_low_base_pose(self):
+        self.moveit_toolkit.set_joint_values(self.LOW_BASE_JOINT_VALUES)
 
     def move_arm_to_staging_pose(self, target_pose: Pose, object_height: float):
         self.move_arm(
@@ -313,6 +325,9 @@ class ManipulatorController:
 
     def move_arm_to_base_pose(self):
         self.arm_controller.move_arm_to_base_pose()
+
+    def move_arm_to_low_base_pose(self):
+        self.arm_controller.move_arm_to_low_base_pose()
 
     def move_arm_to_staging_pose(self, target_pose: Pose, object_height: float):
         self.arm_controller.move_arm_to_staging_pose(target_pose, object_height)

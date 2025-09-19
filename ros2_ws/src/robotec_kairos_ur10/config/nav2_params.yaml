@@ -28,7 +28,7 @@ bt_navigator:
 
 controller_server:
   ros__parameters:
-    controller_frequency: 20.0
+    controller_frequency: 40.0
     costmap_update_timeout: 0.30
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
@@ -61,21 +61,22 @@ controller_server:
       angular_dist_threshold: 0.785
       forward_sampling_distance: 0.5
       angular_disengage_threshold: 0.3925
-      rotate_to_heading_angular_vel: 10.0
-      max_angular_accel: 10.0
+      rotate_to_heading_angular_vel: 40.0
+      max_angular_accel: 20.0
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: true
       rotate_to_heading_once: true
-      desired_linear_vel: 1.0
+      desired_linear_vel: 2.0
       transform_tolerance: 0.001
-      lookahead_distance: 0.3
+      lookahead_distance: 1.0
+      lookahead_dist: 1.0
       rotate_to_heading_min_angle: 0.5
 
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
+      update_frequency: 10.0
+      publish_frequency: 4.0
       global_frame: odom
       robot_base_frame: <robot_namespace>egobase_link
       rolling_window: true
@@ -239,10 +240,10 @@ waypoint_follower:
 
 velocity_smoother:
   ros__parameters:
-    smoothing_frequency: 20.0
+    smoothing_frequency: 40.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [1.0, 1.0, 2.0]
+    max_velocity: [2.0, 2.0, 2.0]
     min_velocity: [-1.0, -1.0, -2.0]
     max_accel: [2.5, 2.5, 3.2]
     max_decel: [-2.5, -2.5, -3.2]

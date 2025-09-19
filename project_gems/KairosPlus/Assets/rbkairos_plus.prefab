@@ -100,7 +100,7 @@
                     "$type": "ROS2CameraSensorEditorComponent",
                     "Id": 9096869452264359802,
                     "SensorConfig": {
-                        "Frequency (HZ)": 100.0,
+                        "Frequency (HZ)": 15.0,
                         "Publishers": {
                             "Color Camera Info": {
                                 "Type": "sensor_msgs::msg::CameraInfo",
@@ -1092,6 +1092,9 @@
                     "$type": "EditorMeshColliderComponent",
                     "Id": 7897558901052518938,
                     "ColliderConfiguration": {
+                        "CollisionLayer": {
+                            "Index": 1
+                        },
                         "Position": [
                             0.0,
                             0.0,
@@ -3157,8 +3160,11 @@
                 "ROS2CameraSensorEditorComponent": {
                     "$type": "ROS2CameraSensorEditorComponent",
                     "Id": 9096869452264359802,
+                    "CameraSensorConfig": {
+                        "ClipFar": 15.0
+                    },
                     "SensorConfig": {
-                        "Frequency (HZ)": 100.0,
+                        "Frequency (HZ)": 15.0,
                         "Publishers": {
                             "Color Camera Info": {
                                 "Type": "sensor_msgs::msg::CameraInfo",
@@ -3515,7 +3521,10 @@
                                     "Max horizontal angle": 90.0,
                                     "Min range": 0.5,
                                     "Max range": 40.0
-                                }
+                                },
+                                "IgnoredLayerIndices": [
+                                    1
+                                ]
                             }
                         }
                     }
@@ -4391,7 +4400,10 @@
                                     "Max horizontal angle": 90.0,
                                     "Min range": 0.10000000149011612,
                                     "Max range": 40.0
-                                }
+                                },
+                                "IgnoredLayerIndices": [
+                                    1
+                                ]
                             }
                         }
                     }
@@ -4472,6 +4484,9 @@
                     "$type": "EditorMeshColliderComponent",
                     "Id": 4500741496104971418,
                     "ColliderConfiguration": {
+                        "CollisionLayer": {
+                            "Index": 1
+                        },
                         "Position": [
                             0.0,
                             0.0,
@@ -4718,6 +4733,9 @@
                     "$type": "EditorMeshColliderComponent",
                     "Id": 636760777260539346,
                     "ColliderConfiguration": {
+                        "CollisionLayer": {
+                            "Index": 1
+                        },
                         "Position": [
                             0.0,
                             0.0,
@@ -4855,6 +4873,9 @@
                     "$type": "EditorMeshColliderComponent",
                     "Id": 685649572430877840,
                     "ColliderConfiguration": {
+                        "CollisionLayer": {
+                            "Index": 1
+                        },
                         "Position": [
                             0.0,
                             0.0,
@@ -6501,6 +6522,9 @@
                     "$type": "EditorMeshColliderComponent",
                     "Id": 7706311010264539717,
                     "ColliderConfiguration": {
+                        "CollisionLayer": {
+                            "Index": 1
+                        },
                         "Position": [
                             0.0,
                             0.0,

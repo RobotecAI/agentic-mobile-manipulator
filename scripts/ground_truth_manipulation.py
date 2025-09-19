@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+
 from kairos_controller import KairosController
 from rai.communication.ros2 import ROS2Connector, ROS2Context
 from rclpy.impl.logging_severity import LoggingSeverity
-from scene_manager import SceneManager
+
+from scripts.scene_manager import SceneManager
 
 
 @ROS2Context()
@@ -29,15 +31,16 @@ def main(debug: bool = False, namespace=""):
         "cardboardbox02_v02D",
         "cardboardbox03_v01",
         "cardboardbox03_v02O",
-        "cardboardbox04_v01",
-        "cardboardbox05_v01",
-        "cardboardbox06_v01",
-        "cardboardbox07_v01",
-        "cardboardbox08_v01",
+        # "cardboardbox04_v01",
+        # "cardboardbox05_v01",
+        # "cardboardbox06_v01",
+        # "cardboardbox07_v01",
+        # "cardboardbox08_v01",
     ]
-    spawn_entity_types = [entity_types[i % len(entity_types)] for i in range(16)]
+    spawn_entity_types = [entity_types[i % len(entity_types)] for i in range(17)]
 
     spawn_slot_names = [
+        "t3/Slot1",
         "I01/RackSlot1",
         "I01/RackSlot2",
         "I01/RackSlot5",
@@ -56,6 +59,7 @@ def main(debug: bool = False, namespace=""):
         "t2/Slot8",
     ]
     target_slot_names = [
+        "J01/RackSlot1",
         "t3/Slot1",
         "t3/Slot2",
         "t3/Slot3",

@@ -50,221 +50,6 @@
         }
     },
     "Entities": {
-        "Entity_[121275782272271]": {
-            "Id": "Entity_[121275782272271]",
-            "Name": "Slot2",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121288667174159]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.22897815704345703,
-                            0.7735843658447266,
-                            1.0147912502288818
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121280077239567]": {
-            "Id": "Entity_[121280077239567]",
-            "Name": "Slot7",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121288667174159]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.22961997985839844,
-                            -0.7141971588134766,
-                            1.0147912502288818
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121284372206863]": {
-            "Id": "Entity_[121284372206863]",
-            "Name": "Slot1",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121288667174159]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.22897911071777344,
-                            1.7997264862060547,
-                            1.0147912502288818
-                        ]
-                    }
-                }
-            }
-        },
         "Entity_[121288667174159]": {
             "Id": "Entity_[121288667174159]",
             "Name": "Slots2",
@@ -281,14 +66,18 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 1350774150616990417,
                     "Child Entity Order": [
-                        "Entity_[121284372206863]",
-                        "Entity_[121275782272271]",
-                        "Entity_[121318731945231]",
-                        "Entity_[121301552076047]",
-                        "Entity_[121323026912527]",
-                        "Entity_[121305847043343]",
-                        "Entity_[121280077239567]",
-                        "Entity_[121292962141455]"
+                        "Entity_[143904738784299]",
+                        "Entity_[143866084078635]",
+                        "Entity_[143896148849707]",
+                        "Entity_[143870379045931]",
+                        "Entity_[143874674013227]",
+                        "Entity_[143913328718891]",
+                        "Entity_[143878968980523]",
+                        "Entity_[143900443817003]",
+                        "Entity_[143891853882411]",
+                        "Entity_[143883263947819]",
+                        "Entity_[143887558915115]",
+                        "Entity_[143909033751595]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -325,371 +114,6 @@
                             0.0,
                             0.0,
                             89.99994659423828
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121292962141455]": {
-            "Id": "Entity_[121292962141455]",
-            "Name": "Slot8",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121288667174159]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.22961902618408203,
-                            -1.7403392791748047,
-                            1.0147912502288818
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121301552076047]": {
-            "Id": "Entity_[121301552076047]",
-            "Name": "Slot4",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121288667174159]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.22897911071777344,
-                            -1.7403392791748047,
-                            1.0147912502288818
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121305847043343]": {
-            "Id": "Entity_[121305847043343]",
-            "Name": "Slot6",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121288667174159]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.22961997985839844,
-                            0.7735805511474609,
-                            1.0147912502288818
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121318731945231]": {
-            "Id": "Entity_[121318731945231]",
-            "Name": "Slot3",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121288667174159]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.22897815704345703,
-                            -0.7141914367675781,
-                            1.0147912502288818
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121323026912527]": {
-            "Id": "Entity_[121323026912527]",
-            "Name": "Slot5",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121288667174159]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.22961902618408203,
-                            1.7997207641601563,
-                            1.0147912502288818
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
                         ]
                     }
                 }
@@ -757,84 +181,9 @@
                     "Parent Entity": "Entity_[121520595408143]",
                     "Transform Data": {
                         "Translate": [
-                            -0.22897911071777344,
-                            0.7735786437988281,
+                            -0.2501497268676758,
+                            1.2745628356933594,
                             1.0147912502288818
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121512005473551]": {
-            "Id": "Entity_[121512005473551]",
-            "Name": "Slot7",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121520595408143]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.22961997985839844,
-                            -0.7141971588134766,
-                            1.0147912502288818
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
                         ]
                     }
                 }
@@ -902,8 +251,8 @@
                     "Parent Entity": "Entity_[121520595408143]",
                     "Transform Data": {
                         "Translate": [
-                            -0.22898006439208984,
-                            1.7997217178344727,
+                            -0.2501506805419922,
+                            1.9383478164672852,
                             1.0147912502288818
                         ]
                     }
@@ -929,11 +278,15 @@
                         "Entity_[121516300440847]",
                         "Entity_[121507710506255]",
                         "Entity_[121550660179215]",
-                        "Entity_[121533480310031]",
-                        "Entity_[121554955146511]",
-                        "Entity_[121537775277327]",
-                        "Entity_[121512005473551]",
-                        "Entity_[121524890375439]"
+                        "Entity_[141155959714859]",
+                        "Entity_[141160254682155]",
+                        "Entity_[141164549649451]",
+                        "Entity_[142105147487275]",
+                        "Entity_[142126622323755]",
+                        "Entity_[142118032389163]",
+                        "Entity_[142113737421867]",
+                        "Entity_[142109442454571]",
+                        "Entity_[142122327356459]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -970,226 +323,6 @@
                             0.0,
                             0.0,
                             89.99994659423828
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121524890375439]": {
-            "Id": "Entity_[121524890375439]",
-            "Name": "Slot8",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121520595408143]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.22961807250976563,
-                            -1.7403392791748047,
-                            1.0147912502288818
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121533480310031]": {
-            "Id": "Entity_[121533480310031]",
-            "Name": "Slot4",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121520595408143]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.22898101806640625,
-                            -1.7403392791748047,
-                            1.0147912502288818
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[121537775277327]": {
-            "Id": "Entity_[121537775277327]",
-            "Name": "Slot6",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1567401148089825255
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16008580886905322603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 12487976763574460909
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17883406289483013537
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 7548594116657358410
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2666186438936619975
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3398194442336002989
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 7128516616502530537
-                },
-                "ScriptEditorComponent": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 1909508655476553077,
-                    "ScriptComponent": {
-                        "Script": {
-                            "assetId": {
-                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                                "subId": 1
-                            },
-                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
-                            "subId": 1
-                        },
-                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
-                    }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8596924201967638958,
-                    "Parent Entity": "Entity_[121520595408143]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.22961902618408203,
-                            0.7735786437988281,
-                            1.0147912502288818
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
                         ]
                     }
                 }
@@ -1257,16 +390,86 @@
                     "Parent Entity": "Entity_[121520595408143]",
                     "Transform Data": {
                         "Translate": [
-                            -0.22897815704345703,
-                            -0.7141971588134766,
+                            -0.25579261779785156,
+                            0.5937709808349609,
                             1.0147912502288818
                         ]
                     }
                 }
             }
         },
-        "Entity_[121554955146511]": {
-            "Id": "Entity_[121554955146511]",
+        "Entity_[141155959714859]": {
+            "Id": "Entity_[141155959714859]",
+            "Name": "Slot4",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121520595408143]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.25579166412353516,
+                            -0.5209503173828125,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[141160254682155]": {
+            "Id": "Entity_[141160254682155]",
             "Name": "Slot5",
             "Components": {
                 "EditorDisabledCompositionComponent": {
@@ -1327,14 +530,1339 @@
                     "Parent Entity": "Entity_[121520595408143]",
                     "Transform Data": {
                         "Translate": [
-                            0.22961807250976563,
-                            1.7997198104858398,
+                            -0.25579071044921875,
+                            -1.1847343444824219,
                             1.0147912502288818
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[141164549649451]": {
+            "Id": "Entity_[141164549649451]",
+            "Name": "Slot6",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121520595408143]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.25578975677490234,
+                            -1.8655242919921875,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[142105147487275]": {
+            "Id": "Entity_[142105147487275]",
+            "Name": "Slot7",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121520595408143]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.24294090270996094,
+                            1.9383459091186523,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[142109442454571]": {
+            "Id": "Entity_[142109442454571]",
+            "Name": "Slot11",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121520595408143]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.23730087280273438,
+                            -1.1847343444824219,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[142113737421867]": {
+            "Id": "Entity_[142113737421867]",
+            "Name": "Slot10",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121520595408143]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.23729991912841797,
+                            -0.5209503173828125,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[142118032389163]": {
+            "Id": "Entity_[142118032389163]",
+            "Name": "Slot9",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121520595408143]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.23729896545410156,
+                            0.5937690734863281,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[142122327356459]": {
+            "Id": "Entity_[142122327356459]",
+            "Name": "Slot12",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121520595408143]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.23730182647705078,
+                            -1.8655242919921875,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[142126622323755]": {
+            "Id": "Entity_[142126622323755]",
+            "Name": "Slot8",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121520595408143]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.24294185638427734,
+                            1.2745628356933594,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143866084078635]": {
+            "Id": "Entity_[143866084078635]",
+            "Name": "Slot1",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.25014781951904297,
+                            1.915872573852539,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143870379045931]": {
+            "Id": "Entity_[143870379045931]",
+            "Name": "Slot2",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.25014686584472656,
+                            1.2520923614501953,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143874674013227]": {
+            "Id": "Entity_[143874674013227]",
+            "Name": "Slot10",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.2373037338256836,
+                            -0.5434188842773438,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143878968980523]": {
+            "Id": "Entity_[143878968980523]",
+            "Name": "Slot11",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.23730182647705078,
+                            -1.2072029113769531,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143883263947819]": {
+            "Id": "Entity_[143883263947819]",
+            "Name": "Slot7",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.24294281005859375,
+                            1.915872573852539,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143887558915115]": {
+            "Id": "Entity_[143887558915115]",
+            "Name": "Slot6",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.25578880310058594,
+                            -1.8879966735839844,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143891853882411]": {
+            "Id": "Entity_[143891853882411]",
+            "Name": "Slot8",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.24294281005859375,
+                            1.2520923614501953,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143896148849707]": {
+            "Id": "Entity_[143896148849707]",
+            "Name": "Slot3",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.25579071044921875,
+                            0.5712985992431641,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143900443817003]": {
+            "Id": "Entity_[143900443817003]",
+            "Name": "Slot4",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.25578975677490234,
+                            -0.5434188842773438,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143904738784299]": {
+            "Id": "Entity_[143904738784299]",
+            "Name": "Slot9",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.2373027801513672,
+                            0.5712985992431641,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143909033751595]": {
+            "Id": "Entity_[143909033751595]",
+            "Name": "Slot12",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.2373056411743164,
+                            -1.8879966735839844,
+                            1.0147912502288818
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[143913328718891]": {
+            "Id": "Entity_[143913328718891]",
+            "Name": "Slot5",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1567401148089825255
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16008580886905322603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12487976763574460909
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17883406289483013537
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7548594116657358410
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2666186438936619975
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3398194442336002989
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7128516616502530537
+                },
+                "ScriptEditorComponent": {
+                    "$type": "ScriptEditorComponent",
+                    "Id": 1909508655476553077,
+                    "ScriptComponent": {
+                        "Script": {
+                            "assetId": {
+                                "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                                "subId": 1
+                            },
+                            "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                        }
+                    },
+                    "ScriptAsset": {
+                        "assetId": {
+                            "guid": "{158428D8-B6D9-52E4-A407-E9D764805710}",
+                            "subId": 1
+                        },
+                        "assetHint": "assets/scriptcanvas/logpositiontoros.luac"
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8596924201967638958,
+                    "Parent Entity": "Entity_[121288667174159]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.25579071044921875,
+                            -1.2072029113769531,
+                            1.0147912502288818
                         ]
                     }
                 }
@@ -1435,7 +1963,7 @@
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
                                             },
-                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_t_3.azmaterial"
                                         }
                                     }
                                 }
@@ -1570,7 +2098,7 @@
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
                                             },
-                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_t_3.azmaterial"
                                         }
                                     }
                                 }
@@ -1705,7 +2233,7 @@
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
                                             },
-                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_t_4.azmaterial"
                                         }
                                     }
                                 }
@@ -1840,7 +2368,7 @@
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
                                             },
-                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_t_4.azmaterial"
                                         }
                                     }
                                 }
