@@ -20,6 +20,8 @@ from tf2_geometry_msgs import do_transform_pose
 
 from scripts.moveit_utils import decode_error_code
 
+GRIPPER_HEIGHT = 0.07
+
 
 class MoveitToolkit:
     quaternion = Quaternion(x=0.9238795325112867, y=-0.3826834323650898, z=0.0, w=0.0)
@@ -246,6 +248,7 @@ class ArmController:
     def move_arm(self, pose, frame: str | None = None, retries: int = 3):
         if frame is None:
             frame = f"{self.namespace}egoarm_base_link"
+        pose.position.z += GRIPPER_HEIGHT
         ros2_pose = do_transform_pose(
             pose,
             self.connector.get_transform(
