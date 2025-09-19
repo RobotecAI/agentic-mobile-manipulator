@@ -178,23 +178,45 @@ Don't place two object in the same spot.
         f"Starting to run the agent with configuration: {pformat(run_params.model_dump_json())}"
     )
 
+
+    stop = False
+    def emergency_stop_callback(_: ROS2Message):
+        """ Sets stop flag to true once called """
+        logging.info("Emergency stop callback called")
+        nonlocal stop
+        stop = True
+
+    connector.register_callback("/emergency_stop", callback=emergency_stop_callback, msg_type="std_msgs/msg/Empty")
+
     current_step = ""
     steps_done = []
-    for state in agent.stream(
+
+    for subgraph, state in agent.stream(
         initial_state,
         config={
             "recursion_limit": run_params.recurssion_limit,
             "callbacks": [langfuse_handler],
         },
+        subgraphs=True,
     ):
+        if stop:
+            logging.info("Stopping the megamind agent")
+            break
+
+        if len(subgraph) == 0:
+            subgraph_name = ""
+        else:
+            subgraph_name = subgraph[0].split(":")[0]
         node = next(iter(state))
         node_state = state[node]
 
         if "step" in node_state:
-            current_step = node_state["step"]
+            current_step = f'subagent: {subgraph_name}: {node_state["step"]}'
 
         if "steps_done" in node_state:
-            steps_done = node_state["steps_done"]
+            steps_done = f'subagent: {subgraph_name}: {node_state["steps_done"]}'
+
+        logging.info(f"Agent state: {current_step=}\n{steps_done=}")
 
         connector.send_message(
             message=ROS2Message(payload={"data": current_step}),
