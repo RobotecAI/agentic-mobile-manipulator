@@ -125,7 +125,7 @@ class MoveFromSlotToSlotTool(WarehosueTool):
             )
             target_slot = self.scene_manager.slots[target_slot_name]
             self.kairos_controller.move_object_to_slot(
-                slot_pose=target_slot.origin_pose,
+                target_slot_pose=target_slot.origin_pose,
                 object_pose=origin_object_pose,
                 object_height=object_height,
             )
@@ -208,7 +208,7 @@ class MoveFromCollectionToCollectionTool(WarehosueTool):
                 )
                 target_slot = self.scene_manager.slots[target_slot_name]
                 self.kairos_controller.move_object_to_slot(
-                    slot_pose=target_slot.origin_pose,
+                    target_slot_pose=target_slot.origin_pose,
                     object_pose=origin_object_pose,
                     object_height=object_height,
                 )
