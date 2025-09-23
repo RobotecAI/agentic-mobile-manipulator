@@ -266,7 +266,7 @@ class ArmController:
                 self.moveit_toolkit.plan_and_execute(
                     x=ros2_pose.x, y=ros2_pose.y, z=(ros2_pose.z)
                 )
-                time.sleep(0.2)
+                time.sleep(1.0)
                 break
             except RuntimeError as e:
                 self.logger.error(e)

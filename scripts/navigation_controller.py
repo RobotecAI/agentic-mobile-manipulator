@@ -77,7 +77,7 @@ class Navigator:
         while not self.done:
             time.sleep(0.1)
 
-        if isinstance(self.result, None):
+        if self.result is None:
             raise RuntimeError("Result should not be None")
         return self.result
 
@@ -95,7 +95,7 @@ class Navigator:
         while not self.done:
             time.sleep(0.1)
 
-        if isinstance(self.result, None):
+        if self.result is None:
             raise RuntimeError("Result should not be None")
         return self.result
 
