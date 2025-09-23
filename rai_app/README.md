@@ -10,7 +10,7 @@ cd ${DEMO_ROOT}
 uv pip install -e .
 ```
 
-## Run Agent
+## Run Agents
 
 3. Launch the simulation.
 4. Spawn objects in the simulation using the script:
@@ -19,7 +19,21 @@ uv pip install -e .
 uv run scripts/populate_scene.py
 ```
 
-5. Run the agent:
+5. Run the nav2 agent:
+
+```bash
+source ros2_ws/install/setup.bash
+uv run python rai_app/nav2_agent.py
+```
+
+6. Run the moveit agent:
+
+```bash
+source ros2_ws/install/setup.bash
+uv run python rai_app/moveit2_agent.py
+```
+
+7. Run the agent:
 
 ```bash
 source ros2_ws/install/setup.bash
@@ -29,9 +43,9 @@ uv run python rai_app/agent.py --task "Move all boxes from table t3 to the J01 r
 > [!TIP]
 > If the inference engine is different from llama.cpp, adjust the agent_model and agent_vendor parameters accordingly.
 
-6. For debugging, Langfuse is recommended. You can set it up locally at https://langfuse.com/self-hosting/deployment/docker-compose or use the cloud version at https://cloud.langfuse.com/.
+8. For debugging, Langfuse is recommended. You can set it up locally at https://langfuse.com/self-hosting/deployment/docker-compose or use the cloud version at https://cloud.langfuse.com/.
 
-7. ROS 2 topics should be available:
+The following ROS 2 topics should be available:
 
 ```bash
 /agent/current_step

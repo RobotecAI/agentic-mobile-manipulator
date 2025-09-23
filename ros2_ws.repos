@@ -55,3 +55,7 @@ repositories:
     type: git
     url: https://github.com/ros-simulation/simulation_interfaces.git
     version: 1.0.1
+  ros2_ws/src/packages/rai_interfaces:
+    type: git
+    url: https://github.com/RobotecAI/rai_interfaces.git
+    version: feat/nav2-ai

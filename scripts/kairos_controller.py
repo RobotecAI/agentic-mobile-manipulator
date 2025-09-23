@@ -11,20 +11,14 @@ class KairosController:
     def __init__(
         self,
         connector: ROS2Connector,
-        namespace: str = "",
-        ros_package_name: str = "robotec_kairos_ur10",
     ) -> None:
         self.connector = connector
-        self.namespace = namespace
-        self.ros2_package_name = ros_package_name
 
         self.node = self.connector.node
         self.logger = self.node.get_logger()
 
-        self.nav_ctrl = NavigationController()
-        self.mani_ctrl = ManipulatorController(
-            self.connector, self.namespace, self.ros2_package_name
-        )
+        self.nav_ctrl = NavigationController(self.connector)
+        self.mani_ctrl = ManipulatorController(self.connector)
 
         self.mani_ctrl.move_arm_to_base_pose()
 
