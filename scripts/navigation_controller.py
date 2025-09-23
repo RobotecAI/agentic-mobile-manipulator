@@ -118,7 +118,7 @@ class NavigationController:
     def navigate_to_staging_pose(self, target_pose: Pose):
         # self.logger.debug("Navigating to staging pose")
         nav_staging_pose = get_global_pose_from_origin(
-            Pose(position=Point(x=-NAV_STAGING_POSE_DISTANCE)), target_pose
+            Pose(position=Point(x=NAV_STAGING_POSE_DISTANCE)), target_pose
         )
         self.navigate_to_pose(
             nav_staging_pose.position,
@@ -128,7 +128,7 @@ class NavigationController:
     def navigate_to_gripping_pose(self, target_pose: Pose):
         # self.logger.debug("Navigating to gripping pose")
         nav_gripping_pose = get_global_pose_from_origin(
-            Pose(position=Point(x=-NAV_GRIPPING_POSE_DISTANCE)), target_pose
+            Pose(position=Point(x=NAV_GRIPPING_POSE_DISTANCE)), target_pose
         )
         self.navigate_to_pose(
             nav_gripping_pose.position,
@@ -138,7 +138,7 @@ class NavigationController:
     def navigate_to_low_staging_pose(self, target_pose: Pose):
         # self.logger.debug("Navigating to low staging pose")
         nav_staging_pose = get_global_pose_from_origin(
-            Pose(position=Point(x=-NAV_LOW_STAGING_POSE_DISTANCE)), target_pose
+            Pose(position=Point(x=NAV_LOW_STAGING_POSE_DISTANCE)), target_pose
         )
         self.navigate_to_pose(
             nav_staging_pose.position,
@@ -148,7 +148,7 @@ class NavigationController:
     def navigate_to_low_gripping_pose(self, target_pose: Pose):
         # self.logger.debug("Navigating to low gripping pose")
         nav_gripping_pose = get_global_pose_from_origin(
-            Pose(position=Point(x=-NAV_LOW_GRIPPING_POSE_DISTANCE)), target_pose
+            Pose(position=Point(x=NAV_LOW_GRIPPING_POSE_DISTANCE)), target_pose
         )
         self.navigate_to_pose(
             nav_gripping_pose.position,
