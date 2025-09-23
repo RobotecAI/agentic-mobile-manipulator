@@ -37,7 +37,7 @@ def main(debug: bool = False, namespace=""):
     )
     for rack in empty_slots:
         for slot in empty_slots[rack]:
-            all_slot_names.append(f"{rack}/{slot}")
+            all_slot_names.append(f"{slot}")
     spawn_slot_names = all_slot_names
     spawn_entity_types = [
         entity_types[i % len(entity_types)] for i in range(len(spawn_slot_names))
