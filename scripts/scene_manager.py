@@ -127,7 +127,8 @@ class SceneManager:
     ):
         if len(slots) != len(object_names):
             raise ValueError("Slots and object names must have the same length")
-        self.logger.info(f"Populating scene with {len(slots)} entities")
+        # TODO(maciejmajek): This line freezes execution
+        # self.logger.info(f"Populating scene with {len(slots)} entities")
         simulation_names: list[str] = []
         for slot, object_name in tqdm(
             zip(slots, object_names), desc="Spawning entities", total=len(slots)
@@ -191,7 +192,8 @@ class SceneManager:
         return name
 
     def clear_scene(self):
-        self.logger.info("Clearing spawnable entities")
+        # TODO(maciejmajek): This line freezes the execution
+        # self.logger.info("Clearing spawnable entities")
         wait_for_ros2_services(self.connector, ["/get_entities", "/delete_entity"])
         response = self.connector.call_service(
             ROS2Message(payload={}),

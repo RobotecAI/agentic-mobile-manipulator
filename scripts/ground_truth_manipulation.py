@@ -3,24 +3,29 @@
 from kairos_controller import KairosController
 from rai.communication.ros2 import ROS2Connector, ROS2Context
 from rclpy.impl.logging_severity import LoggingSeverity
+from tqdm import tqdm
 
 from scripts.scene_manager import SceneManager
 
 
 @ROS2Context()
-def main(debug: bool = False, namespace=""):
+def main(debug: bool = False):
     connector = ROS2Connector(
-        executor_type="multi_threaded", node_name="ground_truth_manipulation"
+        executor_type="single_threaded", node_name="ground_truth_manipulation"
     )
-    kairos_controller = KairosController(connector=connector, namespace=namespace)
+    kairos_controller = KairosController(connector=connector)
     if debug:
         kairos_controller.logger.set_level(LoggingSeverity.DEBUG)
+
+    print("KAIROS CONTROLLER INITIALIZED")
 
     scene_manager = SceneManager(
         slots_file="scripts/resources/slots.csv",
         spawnables_file="scripts/resources/spawnables.csv",
         connector=connector,
     )
+
+    print("SCENE MANAGER INITIALIZED")
     scene_manager.clear_scene()
 
     entity_types = [
@@ -82,11 +87,16 @@ def main(debug: bool = False, namespace=""):
         spawn_slot_names, spawn_entity_types
     )
 
-    for entity_name, target_slot_name in zip(simulation_names, target_slot_names):
+    for entity_name, target_slot_name in tqdm(
+        zip(simulation_names, target_slot_names),
+        total=min(len(simulation_names), len(target_slot_names)),
+    ):
         object_pose = scene_manager.get_pose(entity_name)
         object_height = scene_manager.get_object_height(entity_name)
         slot_pose = scene_manager.get_slot_pose(target_slot_name)
         kairos_controller.move_object_to_slot(slot_pose, object_pose, object_height)
+
+    connector.shutdown()
 
 
 if __name__ == "__main__":
@@ -94,6 +104,5 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", action="store_true")
-    parser.add_argument("--namespace", type=str, default="")
     args = parser.parse_args()
     main(**vars(args))
