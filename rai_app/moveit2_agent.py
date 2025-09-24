@@ -1,3 +1,4 @@
+import logging
 import time
 from pathlib import Path
 
@@ -243,7 +244,6 @@ class ArmController:
         self.connector = connector
         self.namespace = namespace
         self.ros_package_name = ros_package_name
-        import logging
 
         self.logger = logging.getLogger(__name__)
 
@@ -267,7 +267,7 @@ class ArmController:
                     x=ros2_pose.x, y=ros2_pose.y, z=(ros2_pose.z)
                 )
                 time.sleep(1.0)
-                break
+                return True
             except RuntimeError as e:
                 self.logger.error(e)
                 continue
@@ -347,6 +347,24 @@ class ManipulatorController:
         self.arm_controller.move_arm_to_gripping_pose(target_pose, object_height)
 
 
+def logging_wrapper(func):
+    def wrapper(self, *args, **kwargs):
+        RED = "\033[91m"
+        GREEN = "\033[92m"
+        RESET = "\033[0m"
+        self.connector.node.get_logger().info(
+            f"{GREEN}Calling {func.__name__} with args: {args} and kwargs: {kwargs}{RESET}"
+        )
+        result = func(self, *args, **kwargs)
+        color = GREEN if result.success else RED
+        msg = f"{color}Result of {func.__name__}: success={result.success}{RESET}"
+        msg += f" {result.report}" if not result.success else ""
+        self.connector.node.get_logger().info(msg)
+        return result
+
+    return wrapper
+
+
 class MoveIt2Agent(BaseAgent):
     SYSTEM_PROMPT: str = """
     You are an agent responsible for moving the robotic arm to a specified position and gripper state.
@@ -381,6 +399,7 @@ class MoveIt2Agent(BaseAgent):
     def formulate_prompt(self, prompt: str, logs: str) -> str:
         return self.SYSTEM_PROMPT + "\n\n Task:\n" + prompt + "\n\n Logs:\n" + logs
 
+    @logging_wrapper
     def set_arm_joints(
         self, request: SetArmJoints.Request, response: SetArmJoints.Response
     ):
@@ -414,10 +433,8 @@ class MoveIt2Agent(BaseAgent):
             and test_pose.orientation.w == neutral_pose.orientation.w
         )
 
+    @logging_wrapper
     def move_arm(self, request: MoveArm.Request, response: MoveArm.Response):
-        self.logger.info(
-            f"Moving arm to {request.target_pose.pose.position.x}, {request.target_pose.pose.position.y}, {request.target_pose.pose.position.z} gripper state {request.gripper_state}"
-        )
         if not self._is_neutral_pose(
             request.target_pose
         ):  # empty pose, gripper state only
@@ -427,7 +444,6 @@ class MoveIt2Agent(BaseAgent):
                     frame=request.target_pose.header.frame_id,
                 )
             except Exception as e:
-                self.logger.error(f"Failed to move arm: {e}")
                 response.success = False
                 llm_response = self.llm.invoke(
                     "The arm failed to move to the position. Check the logs and provide a short summary."
