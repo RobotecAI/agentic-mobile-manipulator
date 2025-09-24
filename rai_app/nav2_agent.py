@@ -29,6 +29,24 @@ def decode_error_code(
     return "UNKNOWN"
 
 
+def logging_wrapper(func):
+    def wrapper(self, *args, **kwargs):
+        RED = "\033[91m"
+        GREEN = "\033[92m"
+        RESET = "\033[0m"
+        self.connector.node.get_logger().info(
+            f"{GREEN}Calling {func.__name__} with args: {args[0].request} and kwargs: {kwargs}{RESET}"
+        )
+        result = func(self, *args, **kwargs)
+        color = GREEN if result.success else RED
+        msg = f"{color}Result of {func.__name__}: success={result.success}{RESET}"
+        msg += f" {result.report}" if not result.success else ""
+        self.connector.node.get_logger().info(msg)
+        return result
+
+    return wrapper
+
+
 class Nav2Agent(BaseAgent):
     SYSTEM_PROMPT: str = """
     You are an agent responsible for navigating the robot to a specified position.
@@ -83,6 +101,7 @@ class Nav2Agent(BaseAgent):
         self.navigator.cancelTask()
         self.connector.shutdown()
 
+    @logging_wrapper
     def navigate_to_pose(self, goal_handle: ServerGoalHandle) -> str:
         request = cast(NavigateToPose.Goal, goal_handle.request)
         self.navigator.goToPose(request.pose, request.behavior_tree)
@@ -121,10 +140,8 @@ class Nav2Agent(BaseAgent):
             action_result.report = "Navigate to pose has unknown result. Try again."
             return action_result
 
+    @logging_wrapper
     def drive_on_heading(self, goal_handle: ServerGoalHandle):
-        self.logger.info(
-            f"Drive on heading request received with params: {goal_handle.request.distance=}, {goal_handle.request.speed=}, {goal_handle.request.time_allowance=}"
-        )
         request = cast(DriveOnHeading.Goal, goal_handle.request)
         params: dict[str, int | float] = {
             "dist": request.distance,
@@ -178,6 +195,7 @@ class Nav2Agent(BaseAgent):
             action_result.report = "Drive on heading has unknown result. Try again."
             return action_result
 
+    @logging_wrapper
     def spin(self, goal_handle: ServerGoalHandle):
         request = cast(Spin.Goal, goal_handle.request)
 
