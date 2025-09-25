@@ -1,6 +1,5 @@
 import argparse
 import csv
-import random
 
 import pandas as pd
 from rai.communication.ros2 import ROS2Context
@@ -62,22 +61,21 @@ def main():
     slots = slots[~slots["slot_name"].str.contains(r"t\d+/Slot\d+")]
     slots = slots[~slots["slot_name"].str.contains(r"RackSlot5")]
 
-    object_names = [
-        random.choice(list(spawnables["object_name"].tolist()))
-        for _ in range(len(slots))
-    ]
+    # object_names = [
+    #     random.choice(list(spawnables["object_name"].tolist()))
+    #     for _ in range(len(slots))
+    # ]
 
-    slot_names = slots["slot_name"].tolist()
-
+    # slot_names = slots["slot_name"].tolist()
+    if args.clear:
+        scene_manager.clear_scene()
     if args.spawn:
-        scene_manager.populate_scene(slot_names, object_names)
+        # scene_manager.populate_scene(slot_names, object_names)
 
         spawn_slot_names, spawn_entity_types = load_spawn_config(
             "rai_app/resources/spawn_config.csv"
         )
         scene_manager.populate_scene(spawn_slot_names, spawn_entity_types)
-    if args.clear:
-        scene_manager.clear_scene()
 
 
 if __name__ == "__main__":
