@@ -1,10 +1,95 @@
+from abc import ABC, abstractmethod
+
 from geometry_msgs.msg import Pose
 from rai.communication.ros2 import ROS2Connector
 
 from scripts.manipulator_controller import ManipulatorController
 from scripts.navigation_controller import NavigationController
+from scripts.tools import apply_relative_transform, calculate_relative_transform
 
-LOW_GRIPPING_Z_THRESHOLD = 0.6
+LOW_GRASP_Z_THRESHOLD = 0.6
+HIGH_GRASP_Z_THRESHOLD = 1.4
+
+NAV_GRIPPING_POSE_DISTANCE = 0.90
+NAV_STAGING_POSE_DISTANCE = 1.2
+NAV_LOW_GRIPPING_POSE_DISTANCE = 1.2
+NAV_LOW_STAGING_POSE_DISTANCE = 2.0
+NAV_HIGH_GRIPPING_POSE_DISTANCE = 0.9
+NAV_HIGH_STAGING_POSE_DISTANCE = 1.4
+
+
+class ManipulationStrategy(ABC):
+    @abstractmethod
+    def get_staging_distance(self) -> float:
+        pass
+
+    @abstractmethod
+    def get_gripping_distance(self) -> float:
+        pass
+
+    @abstractmethod
+    def move_arm_to_base_pose(self, mani_ctrl: ManipulatorController):
+        pass
+
+    def get_approach_distance(self) -> float:
+        return self.get_staging_distance() - self.get_gripping_distance()
+
+
+class LowManipulationStrategy(ManipulationStrategy):
+    def get_staging_distance(self) -> float:
+        return NAV_LOW_STAGING_POSE_DISTANCE
+
+    def get_gripping_distance(self) -> float:
+        return NAV_LOW_GRIPPING_POSE_DISTANCE
+
+    def move_arm_to_base_pose(self, mani_ctrl: ManipulatorController):
+        mani_ctrl.move_arm_to_low_pose()
+
+
+class HighManipulationStrategy(ManipulationStrategy):
+    def get_staging_distance(self) -> float:
+        return NAV_HIGH_STAGING_POSE_DISTANCE
+
+    def get_gripping_distance(self) -> float:
+        return NAV_HIGH_GRIPPING_POSE_DISTANCE
+
+    def move_arm_to_base_pose(self, mani_ctrl: ManipulatorController):
+        mani_ctrl.move_arm_to_high_pose()
+
+
+class NormalManipulationStrategy(ManipulationStrategy):
+    def get_staging_distance(self) -> float:
+        return NAV_STAGING_POSE_DISTANCE
+
+    def get_gripping_distance(self) -> float:
+        return NAV_GRIPPING_POSE_DISTANCE
+
+    def move_arm_to_base_pose(self, mani_ctrl: ManipulatorController):
+        mani_ctrl.move_arm_to_base_pose()
+
+
+def determine_strategy(pose: Pose, safe_low: bool) -> ManipulationStrategy:
+    if safe_low and pose.position.z < LOW_GRASP_Z_THRESHOLD:
+        return LowManipulationStrategy()
+    elif pose.position.z > HIGH_GRASP_Z_THRESHOLD:
+        return HighManipulationStrategy()
+    else:
+        return NormalManipulationStrategy()
+
+
+def determine_grasp_type_and_point(
+    object_pose: Pose,
+    target_slot_pose: Pose,
+    top_gripping_point: Pose,
+    side_gripping_point: Pose,
+) -> tuple[str, Pose]:
+    if (
+        object_pose.position.z > HIGH_GRASP_Z_THRESHOLD
+        or target_slot_pose.position.z > HIGH_GRASP_Z_THRESHOLD
+    ):
+        return "side", side_gripping_point
+    else:
+        return "top", top_gripping_point
 
 
 class KairosController:
@@ -26,109 +111,85 @@ class KairosController:
         self,
         target_slot_pose: Pose,
         object_pose: Pose,
-        object_height: float,
-        enable_low_picking: bool = True,
-        enable_low_placing: bool = True,
+        top_gripping_point: Pose,
+        side_gripping_point: Pose,
+        safe_low_approach: bool = True,
     ):
-        """Move object from origin slot to target slot.
-        Pick up object from the top using its height
+        """Move object to target slot.
 
         Args:
-            enable_low_picking (bool): If enabled manipulator will perform special low
-            picking operation which is needed when picking from a bottom slots of racks
-            enable_low_placing (bool): If enabled manipulator will perform special low
-            placing operation which is needed when placing to a bottom slots of racks
+            target_slot_pose (Pose): Target slot pose.
+            object_pose (Pose): Object pose.
+            top_gripping_point (Pose): Gripping point when grasping from the top.
+            side_gripping_point (Pose): Gripping point when grasping from the side.
+            safe_low_manipulation (bool): If enabled manipulator will perform special low
+            manipulation to avoid collision with objects above.
         """
-        self.pick(object_pose, object_height, enable_low_picking)
-        self.place(target_slot_pose, object_height, enable_low_placing)
 
-    def move_object_from_gripping_point_to_slot(
-        self,
-        target_pose: Pose,
-        object_pose: Pose,
-        object_height: float,
-        enable_low_picking: bool = True,
-        enable_low_placing: bool = True,
+        if (
+            object_pose.position.z > HIGH_GRASP_Z_THRESHOLD
+            or target_slot_pose.position.z > HIGH_GRASP_Z_THRESHOLD
+        ):
+            self.mani_ctrl.set_grasp_type("side")
+            gripping_point = side_gripping_point
+        else:
+            self.mani_ctrl.set_grasp_type("top")
+            gripping_point = top_gripping_point
+
+        # Calculate the relative transform from object_pose to gripping_point
+        # and apply it to target_slot_pose to get placing_point
+        relative_transform = calculate_relative_transform(object_pose, gripping_point)
+        placing_point = apply_relative_transform(target_slot_pose, relative_transform)
+
+        self.navigate_to_and_pick(object_pose, gripping_point, safe_low_approach)
+        self.navigate_to_and_place(target_slot_pose, placing_point, safe_low_approach)
+
+    def lift_object(self, gripping_point: Pose):
+        self.mani_ctrl.move_arm_to_staging_pose(gripping_point)
+        self.mani_ctrl.move_arm_to_target_pose(gripping_point)
+        self.mani_ctrl.close_gripper()
+        self.mani_ctrl.move_arm_to_above_target_pose(gripping_point)
+
+    def place_object(self, placing_point: Pose):
+        self.mani_ctrl.move_arm_to_above_target_pose(placing_point)
+        self.mani_ctrl.move_arm_to_target_pose(placing_point)
+        self.mani_ctrl.open_gripper()
+        self.mani_ctrl.move_arm_to_staging_pose(placing_point)
+
+    def navigate_to_and_pick(
+        self, object_pose: Pose, gripping_point: Pose, safe_low_approach: bool
     ):
-        """Move object from its gripping to target slot.
+        """Pick an object from the specified pose."""
 
-        Args:
-            enable_low_picking (bool): If enabled manipulator will perform special low
-            picking operation which is needed when picking from a bottom slots of racks
-            enable_low_placing (bool): If enabled manipulator will perform special low
-            placing operation which is needed when placing to a bottom slots of racks
-        """
-        self.pick(
-            object_pose=object_pose,
-            object_height=0.0,
-            low_picking=enable_low_picking,
+        strategy = determine_strategy(object_pose, safe_low_approach)
+        approach_distance = strategy.get_approach_distance()
+
+        self.nav_ctrl.navigate_to_target_pose(
+            object_pose, strategy.get_staging_distance()
         )
-        self.place(target_pose, object_height, low_placing=enable_low_placing)
+        strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
+        self.nav_ctrl.move_back(-approach_distance)
 
-    def pick(self, object_pose: Pose, object_height: float, low_picking: bool):
-        if low_picking and object_pose.position.z < LOW_GRIPPING_Z_THRESHOLD:
-            self.pick_low(object_pose, object_height)
-            return
+        self.lift_object(gripping_point=gripping_point)
 
-        self.nav_ctrl.navigate_to_staging_pose(object_pose)
-        self.nav_ctrl.move_back(-0.2)
-
-        self.mani_ctrl.move_arm_to_staging_pose(object_pose, object_height)
-        self.mani_ctrl.move_arm_to_gripping_pose(object_pose, object_height)
-
-        self.mani_ctrl.close_gripper()
-
-        self.mani_ctrl.move_arm_to_staging_pose(object_pose, object_height)
-
-        self.nav_ctrl.move_back()
-
+        self.nav_ctrl.move_back(approach_distance)
         self.mani_ctrl.move_arm_to_base_pose()
 
-    def pick_low(self, object_pose: Pose, object_height: float):
-        self.nav_ctrl.navigate_to_low_staging_pose(object_pose)
-        self.mani_ctrl.move_arm_to_low_base_pose()
-        self.nav_ctrl.move_back(-0.8)
+    def navigate_to_and_place(
+        self, target_slot_pose: Pose, placing_point: Pose, safe_low_approach: bool
+    ):
+        """Place an object in the specified pose."""
+        strategy = determine_strategy(target_slot_pose, safe_low_approach)
+        approach_distance = strategy.get_approach_distance()
 
-        self.mani_ctrl.move_arm_to_staging_pose(object_pose, object_height)
-        self.mani_ctrl.move_arm_to_gripping_pose(object_pose, object_height)
+        self.nav_ctrl.navigate_to_target_pose(
+            target_slot_pose, strategy.get_staging_distance()
+        )
+        strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
 
-        self.mani_ctrl.close_gripper()
+        self.nav_ctrl.move_back(-approach_distance)
 
-        self.mani_ctrl.move_arm_to_staging_pose(object_pose, object_height)
+        self.place_object(placing_point=placing_point)
 
-        self.nav_ctrl.move_back(0.8)
-
-        self.mani_ctrl.move_arm_to_base_pose()
-
-    def place(self, target_pose: Pose, object_height: float, low_placing: bool):
-        if low_placing and target_pose.position.z < LOW_GRIPPING_Z_THRESHOLD:
-            self.place_low(target_pose, object_height)
-            return
-        self.nav_ctrl.navigate_to_staging_pose(target_pose)
-        self.nav_ctrl.navigate_to_gripping_pose(target_pose)
-
-        self.mani_ctrl.move_arm_to_staging_pose(target_pose, object_height)
-        self.mani_ctrl.move_arm_to_gripping_pose(target_pose, object_height)
-
-        self.mani_ctrl.open_gripper()
-
-        self.mani_ctrl.move_arm_to_staging_pose(target_pose, object_height)
-        self.mani_ctrl.move_arm_to_base_pose()
-
-        self.nav_ctrl.move_back()
-
-    def place_low(self, slot_pose: Pose, object_height: float):
-        self.nav_ctrl.navigate_to_low_staging_pose(slot_pose)
-        self.mani_ctrl.move_arm_to_low_base_pose()
-        self.nav_ctrl.move_back(-0.8)
-
-        self.mani_ctrl.move_arm_to_staging_pose(slot_pose, object_height)
-        self.mani_ctrl.move_arm_to_gripping_pose(slot_pose, object_height)
-
-        self.mani_ctrl.open_gripper()
-
-        self.mani_ctrl.move_arm_to_staging_pose(slot_pose, object_height)
-
-        self.nav_ctrl.move_back(0.8)
-
+        self.nav_ctrl.move_back(approach_distance)
         self.mani_ctrl.move_arm_to_base_pose()

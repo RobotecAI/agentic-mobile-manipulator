@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import itertools
+import random
+
 from kairos_controller import KairosController
 from rai.communication.ros2 import ROS2Connector, ROS2Context
 from rclpy.impl.logging_severity import LoggingSeverity
@@ -36,51 +39,28 @@ def main(debug: bool = False):
         "cardboardbox02_v02D",
         "cardboardbox03_v01",
         "cardboardbox03_v02O",
-        # "cardboardbox04_v01",
-        # "cardboardbox05_v01",
-        # "cardboardbox06_v01",
-        # "cardboardbox07_v01",
-        # "cardboardbox08_v01",
+        "cardboardbox04_v01",
+        "cardboardbox05_v01",
+        "cardboardbox06_v01",
+        "cardboardbox07_v01",
+        "cardboardbox08_v01",
     ]
-    spawn_entity_types = [entity_types[i % len(entity_types)] for i in range(17)]
 
-    spawn_slot_names = [
-        "t3/Slot1",
-        "I01/RackSlot1",
-        "I01/RackSlot2",
-        "I01/RackSlot5",
-        "I01/RackSlot6",
-        "H01/RackSlot1",
-        "H01/RackSlot2",
-        "H01/RackSlot5",
-        "H01/RackSlot6",
-        "t1/Slot5",
-        "t1/Slot6",
-        "t1/Slot7",
-        "t1/Slot8",
-        "t2/Slot5",
-        "t2/Slot6",
-        "t2/Slot7",
-        "t2/Slot8",
+    all_slot_names = [
+        [f"{rack}/RackSlot{i}" for i in range(1, 10)]
+        + [f"{rack}/RackSlot{i}" for i in range(13, 22)]
+        for rack in ["I01", "I02"]
     ]
-    target_slot_names = [
-        "J01/RackSlot1",
-        "t3/Slot1",
-        "t3/Slot2",
-        "t3/Slot3",
-        "t3/Slot4",
-        "t4/Slot1",
-        "t4/Slot2",
-        "t4/Slot3",
-        "t4/Slot4",
-        "C04/RackSlot1",
-        "C04/RackSlot2",
-        "C04/RackSlot5",
-        "C04/RackSlot6",
-        "B04/RackSlot1",
-        "B04/RackSlot2",
-        "B04/RackSlot5",
-        "B04/RackSlot6",
+    all_slot_names = list(itertools.chain.from_iterable(all_slot_names))
+    all_slot_names += [f"t3/Slot{i}" for i in range(1, 7)] + [
+        f"t4/Slot{i}" for i in range(1, 7)
+    ]
+    random.shuffle(all_slot_names)
+
+    spawn_slot_names = all_slot_names[: len(all_slot_names) // 2]
+    target_slot_names = all_slot_names[len(all_slot_names) // 2 :]
+    spawn_entity_types = [
+        entity_types[i % len(entity_types)] for i in range(len(spawn_slot_names))
     ]
 
     simulation_names = scene_manager.populate_scene(
@@ -92,9 +72,12 @@ def main(debug: bool = False):
         total=min(len(simulation_names), len(target_slot_names)),
     ):
         object_pose = scene_manager.get_pose(entity_name)
-        object_height = scene_manager.get_object_height(entity_name)
         slot_pose = scene_manager.get_slot_pose(target_slot_name)
-        kairos_controller.move_object_to_slot(slot_pose, object_pose, object_height)
+        top_gripping_point = scene_manager.get_gripping_point(entity_name)
+        side_gripping_point = scene_manager.get_pose(entity_name + "_SideGrippingPoint")
+        kairos_controller.move_object_to_slot(
+            slot_pose, object_pose, top_gripping_point, side_gripping_point
+        )
 
     connector.shutdown()
 
