@@ -179,8 +179,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "Intensity": 2000.0,
-                            "AttenuationRadius": 141.42135620117188
+                            "Intensity": 8000.0,
+                            "AttenuationRadius": 282.84271240234375
                         }
                     }
                 },
@@ -227,8 +227,8 @@
                     ],
                     "QuadShape": {
                         "Configuration": {
-                            "Width": 60.0,
-                            "Height": 60.0
+                            "Width": 100.0,
+                            "Height": 100.0
                         }
                     }
                 },
@@ -240,7 +240,7 @@
                         "Translate": [
                             20.575130462646484,
                             15.694619178771973,
-                            17.316387176513672
+                            10.921650886535645
                         ],
                         "Rotate": [
                             180.0,
