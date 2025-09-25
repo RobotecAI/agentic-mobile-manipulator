@@ -1,7 +1,8 @@
 import argparse
+import math
 import random
 import uuid
-from typing import Dict, List, Optional, cast
+from typing import Dict, List, Optional, Tuple, cast
 
 import numpy as np
 import pandas as pd
@@ -137,35 +138,8 @@ class SceneManager:
             simulation_names.append(simulation_name)
         return simulation_names
 
-    def spawn_on_spot(
-        self,
-        slot_name: str,
-        object_name: str,
-        std_xy: float = 0.0,
-        std_yaw: float = 0.0,
-        frame: str = "odom",
-    ):
+    def spawn_object(self, pose: Pose, object_name: str, frame: str = "odom"):
         wait_for_ros2_services(self.connector, ["/spawn_entity"])
-        pose: Pose = self.slots[slot_name].origin_pose
-
-        # Add Gaussian noise to x, y
-        pose.position.x += random.normalvariate(0, std_xy)
-        pose.position.y += random.normalvariate(0, std_xy)
-
-        # Convert quaternion -> Euler
-        q = pose.orientation
-        roll, pitch, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
-
-        # Add Gaussian noise to yaw
-        yaw += random.normalvariate(0, std_yaw)
-
-        # Convert back to quaternion
-        q_new = quaternion_from_euler(roll, pitch, yaw)
-        pose.orientation.x = q_new[0]
-        pose.orientation.y = q_new[1]
-        pose.orientation.z = q_new[2]
-        pose.orientation.w = q_new[3]
-
         name = object_name + str(uuid.uuid4())[:8]
 
         req = SpawnEntity.Request()
@@ -190,6 +164,36 @@ class SceneManager:
         ).payload
         result = cast(SpawnEntity.Response, result)
         return name
+
+    def spawn_on_spot(
+        self,
+        slot_name: str,
+        object_name: str,
+        std_xy: float = 0.0,
+        std_yaw: float = 0.0,
+        frame: str = "odom",
+    ):
+        wait_for_ros2_services(self.connector, ["/spawn_entity"])
+        pose: Pose = self.slots[slot_name].origin_pose
+        # Add Gaussian noise to x, y
+        pose.position.x += random.normalvariate(0, std_xy)
+        pose.position.y += random.normalvariate(0, std_xy)
+
+        # Convert quaternion -> Euler
+        q = pose.orientation
+        roll, pitch, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+
+        # Add Gaussian noise to yaw
+        yaw += random.normalvariate(0, std_yaw)
+
+        # Convert back to quaternion
+        q_new = quaternion_from_euler(roll, pitch, yaw)
+        pose.orientation.x = q_new[0]
+        pose.orientation.y = q_new[1]
+        pose.orientation.z = q_new[2]
+        pose.orientation.w = q_new[3]
+
+        return self.spawn_object(pose=pose, object_name=object_name, frame=frame)
 
     def clear_scene(self):
         # TODO(maciejmajek): This line freezes the execution
@@ -450,11 +454,128 @@ class SceneManager:
         collections_by_type = self.get_collections_sorted_by_type()
         lines = ["COLLECTIONS IN THE WAREHOUSE:\n"]
         for col_type, collections in collections_by_type.items():
-            lines.append(f"type - {col_type}:")
-            for coll in collections:
-                lines.append(f" {coll.tag}")
-            lines.append("\n")
+            # Add section header
+            if col_type == "garbage_bin":
+                continue
+
+            else:
+                lines.append(f"{col_type.upper()} COLLECTIONS:")
+
+                for coll in collections:
+                    lines.append(f"{coll.tag}")
+                lines.append("")
+
         return "\n".join(lines)
+
+    def quaternion_to_forward_vector(
+        self, q: Quaternion, forward_axis="x"
+    ) -> np.ndarray:
+        """Convert quaternion to forward vector.
+
+        Args:
+            q: Quaternion orientation
+            forward_axis: Which axis is forward ('x', 'y', or 'z')
+        """
+        x, y, z, w = q.x, q.y, q.z, q.w
+
+        if forward_axis == "x":
+            # X-axis forward (common in 2D navigation)
+            forward = np.array(
+                [1 - 2 * (y * y + z * z), 2 * (x * y + w * z), 2 * (x * z - w * y)]
+            )
+        elif forward_axis == "y":
+            # Y-axis forward
+            forward = np.array(
+                [2 * (x * y - w * z), 1 - 2 * (x * x + z * z), 2 * (y * z + w * x)]
+            )
+        else:  # 'z'
+            # Z-axis forward (3D cameras looking down/up)
+            forward = np.array(
+                [2 * (x * z + w * y), 2 * (y * z - w * x), 1 - 2 * (x * x + y * y)]
+            )
+
+        return forward / np.linalg.norm(forward)
+
+    def find_nearest_object_in_fov(
+        self,
+        camera_pose: Pose,
+        entities_states: Dict[str, EntityState],
+        fov_angle_degrees: float = 60.0,
+        forward_axis: str = "x",
+    ) -> Optional[tuple]:
+        """
+        Find the nearest object within the camera's field of view.
+
+        Args:
+            camera_pose: The pose of the camera
+            all_entities_states: Dict of entity name to EntityState objects
+            fov_angle_degrees: Field of view cone half-angle in degrees (default 60°)
+            forward_axis: Which axis is forward in camera frame ('x', 'y', or 'z')
+
+        Returns:
+            Tuple of (object_name, object_pose) for nearest object in FOV, or None
+        """
+
+        if not entities_states:
+            return None
+
+        cam_pos = np.array(
+            [camera_pose.position.x, camera_pose.position.y, camera_pose.position.z]
+        )
+        cam_forward = self.quaternion_to_forward_vector(
+            camera_pose.orientation, forward_axis
+        )
+
+        # FOV threshold
+        cos_fov = math.cos(math.radians(fov_angle_degrees))
+
+        nearest_name = None
+        nearest_pose = None
+        nearest_distance = float("inf")
+
+        for obj_name, entity_state in entities_states.items():
+            obj_pose = entity_state.pose
+
+            # Object position
+            obj_pos = np.array(
+                [obj_pose.position.x, obj_pose.position.y, obj_pose.position.z]
+            )
+
+            # Vector from camera to object
+            to_object = obj_pos - cam_pos
+            distance = np.linalg.norm(to_object)
+
+            # Skip if too close to camera
+            if distance < 1e-6:
+                continue
+
+            # Check if object is within FOV cone
+            to_object_normalized = to_object / distance
+            dot_product = np.dot(cam_forward, to_object_normalized)
+
+            if dot_product > cos_fov:  # Object is within FOV
+                if distance < nearest_distance:
+                    nearest_distance = distance
+                    nearest_pose = obj_pose
+                    nearest_name = obj_name
+
+        if nearest_name is not None:
+            return (nearest_name, nearest_pose)
+        return None
+
+    def get_trash_pose(self, trash_notice_pose: Pose) -> Tuple[str, Pose]:
+        """Returns the nearest trash object (name , pose) in the fov of the robot"""
+        all_entities_states = self.get_entities(name_filter="cardboardbox03_v02O")
+        if not all_entities_states:
+            raise ValueError("No entites in simulation")
+
+        trash = self.find_nearest_object_in_fov(
+            camera_pose=trash_notice_pose, entities_states=all_entities_states
+        )
+        if trash:
+            return trash
+        else:
+            raise ValueError("Trash pose not detected")
 
 
 @ROS2Context()
