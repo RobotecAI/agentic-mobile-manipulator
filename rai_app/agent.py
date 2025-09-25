@@ -10,9 +10,6 @@ import logging
 from llms import get_model
 from pprint import pformat
 from tools import (
-    NavigateToSlotSyncTool,
-    MoveFromSlotToSlotTool,
-    IsPackageDamagedTool,
     MoveFromCollectionToCollectionTool,
 )
 from scripts.kairos_controller import KairosController
@@ -81,7 +78,11 @@ def run_rai_agent(run_params: AgentParams):
     )
     kairos_controller = KairosController(connector=connector)
 
-    vlm_llm = get_model(model=run_params.vlm_model, vendor=run_params.vlm_vendor, base_url=run_params.vlm_base_url)
+    vlm_llm = get_model(
+        model=run_params.vlm_model,
+        vendor=run_params.vlm_vendor,
+        base_url=run_params.vlm_base_url,
+    )
 
     move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
         connector=connector,
@@ -90,14 +91,18 @@ def run_rai_agent(run_params: AgentParams):
     )
 
     print(run_params.agent_base_url)
-    megamind_llm = get_model(model=run_params.agent_model, vendor=run_params.agent_vendor, base_url=run_params.agent_base_url)
+    megamind_llm = get_model(
+        model=run_params.agent_model,
+        vendor=run_params.agent_vendor,
+        base_url=run_params.agent_base_url,
+    )
 
     movement_system_prompt = """You are a movement specialist robot agent.
-Your role is to handle navigating to slots and moving objects from slot to slot using tools."""
+Your role is to handle navigating to slots and moving objects from collection to collection using tools."""
 
     megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
 You manage specialists to whom you will delegate tasks:
-- Movement specialist can move object from a collection to colelciton (table , racks)
+- Movement specialist can move object from a collection to collection (table , racks)
 
 For proper execution of an objective you NEED to know:
 - what objects are you meant to move
@@ -108,7 +113,11 @@ IF you CAN'T figure it out on your own, ask user for clarification
 
 
 """
-    executor_llm = get_model(model=run_params.executor_model, vendor=run_params.executor_vendor, base_url=run_params.executor_base_url)
+    executor_llm = get_model(
+        model=run_params.executor_model,
+        vendor=run_params.executor_vendor,
+        base_url=run_params.executor_base_url,
+    )
 
     executors = [
         Executor(

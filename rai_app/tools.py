@@ -25,7 +25,9 @@ class NavigateToSlotoolInput(BaseModel):
 
 class NavigateToSlotSyncTool(WarehosueTool):
     name: str = "navigate_to_slot"
-    description: str = "Navigate to a specific slot"
+    description: str = (
+        "Navigate to a specific slot. Use this tool when asked to navigate to specific slot."
+    )
 
     args_schema: Type[NavigateToSlotoolInput] = NavigateToSlotoolInput
 
@@ -50,6 +52,7 @@ class IsPackageDamagedTool(BaseROS2Tool):
     llm: BaseChatModel
 
     def _run(self) -> bool:
+
         SYSTEM_PROMPT = "You are an expert in image analysis and your speciality is the description of images"
         logging.info("Getting image")
         tool = GetROS2ImageConfiguredTool(
@@ -150,6 +153,7 @@ class MoveFromCollectionToCollectionTool(WarehosueTool):
     description: str = (
         "Move ALL objects from origin collection to target colection."
         " A collection might be for example table or rack - like t5 (table) or X02 (rack)"
+        "Use this tool when asked to move objects from one collection to other"
     )
 
     args_schema: Type[MoveFromCollectionToCollectionInput] = (
@@ -185,7 +189,11 @@ class MoveFromCollectionToCollectionTool(WarehosueTool):
         ## TODO (jmatejcz) only this slot does work in current sim
         filtered_target_names = []
         for name in target_empty_slot_names:
-            if "rackslot5" in name.lower():
+            if (
+                "rackslot5" in name.lower()
+                or "rackslot4" in name.lower()
+                or "rackslot6" in name.lower()
+            ):
                 filtered_target_names.append(name)
         if len(origin_used_slot_names) > len(target_empty_slot_names):
             return (
