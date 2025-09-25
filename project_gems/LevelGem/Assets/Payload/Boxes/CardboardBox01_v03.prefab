@@ -140,6 +140,16 @@
             "Source": "CardboardBoxes/CardboardBox01_v03.prefab",
             "Patches": [
                 {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1236809723066208]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
+                    "value": 0.5
+                },
+                {
                     "op": "add",
                     "path": "/Entities/Entity_[171035063400288]",
                     "value": {
@@ -226,19 +236,14 @@
                     }
                 },
                 {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1236809723066208]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
-                    "value": 0.5
-                },
-                {
                     "op": "add",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorEntitySortComponent/Child Entity Order/0",
                     "value": "Entity_[171035063400288]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2167394762685]/Components/EditorEntitySortComponent/Child Entity Order/1",
+                    "value": "Entity_[45529861631034]"
                 },
                 {
                     "op": "add",
@@ -410,7 +415,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.09245041757822037
+                    "value": 0.09245041757822035
                 },
                 {
                     "op": "add",
@@ -421,6 +426,92 @@
                         "Tags": [
                             "Grippable"
                         ]
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[45529861631034]",
+                    "value": {
+                        "Id": "Entity_[45529861631034]",
+                        "Name": "SideGrippingPoint",
+                        "Components": {
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 13252717361269380557,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 12702696999156530712,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 6485769534216860674,
+                                "Child Entity Order": []
+                            },
+                            "EditorInspectorComponent": {
+                                "$type": "EditorInspectorComponent",
+                                "Id": 3958271712367967168,
+                                "ComponentOrderEntryArray": []
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 15910197803156632633,
+                                "Locked": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 5515209470334043171,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 12877713102765816510,
+                                "PendingComponents": []
+                            },
+                            "EditorStaticRigidBodyComponent": {
+                                "$type": "EditorStaticRigidBodyComponent",
+                                "Id": 10142154095588754129
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 16779246188136047561,
+                                "VisibilityFlag": true
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 17494122675509117742,
+                                "Parent Entity": "Entity_[2167394762685]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.2444596290588379,
+                                        0.0,
+                                        0.23381030559539795
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        90.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            }
+                        },
+                        "IsRuntimeActive": true
                     }
                 }
             ]

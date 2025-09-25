@@ -4,6 +4,7 @@ import time
 from typing import Type
 
 import numpy as np
+import tf_transformations
 
 # generic ros libraries
 from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
@@ -30,6 +31,119 @@ def get_global_pose_from_origin(local_pose: Pose, origin: Pose):
     transform.transform.translation.z = origin.position.z
     transform.transform.rotation = origin.orientation
     return do_transform_pose(pose=local_pose, transform=transform)
+
+
+def calculate_relative_transform(from_pose: Pose, to_pose: Pose) -> Pose:
+    """Calculate the relative transform from one pose to another.
+
+    Args:
+        from_pose: The source pose
+        to_pose: The target pose
+
+    Returns:
+        A Pose representing the transform needed to go from from_pose to to_pose
+    """
+
+    # Convert quaternions to transformation matrices
+    from_quat = [
+        from_pose.orientation.x,
+        from_pose.orientation.y,
+        from_pose.orientation.z,
+        from_pose.orientation.w,
+    ]
+    to_quat = [
+        to_pose.orientation.x,
+        to_pose.orientation.y,
+        to_pose.orientation.z,
+        to_pose.orientation.w,
+    ]
+
+    from_matrix = tf_transformations.quaternion_matrix(from_quat)
+    to_matrix = tf_transformations.quaternion_matrix(to_quat)
+
+    # Set translation components
+    from_matrix[0, 3] = from_pose.position.x
+    from_matrix[1, 3] = from_pose.position.y
+    from_matrix[2, 3] = from_pose.position.z
+
+    to_matrix[0, 3] = to_pose.position.x
+    to_matrix[1, 3] = to_pose.position.y
+    to_matrix[2, 3] = to_pose.position.z
+
+    # Calculate relative transform: T_relative = T_from^-1 * T_to
+    relative_matrix = np.linalg.inv(from_matrix) @ to_matrix
+
+    # Extract translation and rotation from the relative transform
+    relative_translation = relative_matrix[:3, 3]
+    relative_quat = tf_transformations.quaternion_from_matrix(relative_matrix)
+
+    # Create and return the relative pose
+    relative_pose = Pose()
+    relative_pose.position.x = relative_translation[0]
+    relative_pose.position.y = relative_translation[1]
+    relative_pose.position.z = relative_translation[2]
+    relative_pose.orientation.x = relative_quat[0]
+    relative_pose.orientation.y = relative_quat[1]
+    relative_pose.orientation.z = relative_quat[2]
+    relative_pose.orientation.w = relative_quat[3]
+
+    return relative_pose
+
+
+def apply_relative_transform(base_pose: Pose, relative_transform: Pose) -> Pose:
+    """Apply a relative transform to a base pose.
+
+    Args:
+        base_pose: The base pose to transform
+        relative_transform: The relative transform to apply
+
+    Returns:
+        The resulting pose after applying the transform
+    """
+    # Convert poses to transformation matrices
+    base_quat = [
+        base_pose.orientation.x,
+        base_pose.orientation.y,
+        base_pose.orientation.z,
+        base_pose.orientation.w,
+    ]
+    rel_quat = [
+        relative_transform.orientation.x,
+        relative_transform.orientation.y,
+        relative_transform.orientation.z,
+        relative_transform.orientation.w,
+    ]
+
+    base_matrix = tf_transformations.quaternion_matrix(base_quat)
+    rel_matrix = tf_transformations.quaternion_matrix(rel_quat)
+
+    # Set translation components
+    base_matrix[0, 3] = base_pose.position.x
+    base_matrix[1, 3] = base_pose.position.y
+    base_matrix[2, 3] = base_pose.position.z
+
+    rel_matrix[0, 3] = relative_transform.position.x
+    rel_matrix[1, 3] = relative_transform.position.y
+    rel_matrix[2, 3] = relative_transform.position.z
+
+    # Apply transform: T_result = T_base * T_relative
+    result_matrix = base_matrix @ rel_matrix
+
+    # Extract translation and rotation
+    result_translation = result_matrix[:3, 3]
+    result_quat = tf_transformations.quaternion_from_matrix(result_matrix)
+
+    # Create and return the result pose
+    result_pose = Pose()
+    result_pose.position.x = result_translation[0]
+    result_pose.position.y = result_translation[1]
+    result_pose.position.z = result_translation[2]
+    result_pose.orientation.x = result_quat[0]
+    result_pose.orientation.y = result_quat[1]
+    result_pose.orientation.z = result_quat[2]
+    result_pose.orientation.w = result_quat[3]
+
+    return result_pose
 
 
 class MoveToPointToolInput(BaseModel):

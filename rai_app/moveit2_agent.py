@@ -108,13 +108,10 @@ class MoveitToolkit:
 
         return moveitpy
 
-    def plan_and_execute(self, x, y, z):
+    def plan_and_execute(self, pose: Pose):
         pose_stamped = PoseStamped()
         pose_stamped.header.frame_id = self.manipulator_frame
-        pose_stamped.pose = Pose(
-            position=Point(x=x, y=y, z=z),
-            orientation=self.quaternion,
-        )
+        pose_stamped.pose = pose
 
         self.planning_component.set_start_state_to_current_state()
         self.planning_component.set_goal_state(
@@ -252,21 +249,19 @@ class ArmController:
     def move_arm(self, pose: Pose, frame: str | None = None, retries: int = 3):
         if frame is None:
             frame = f"{self.namespace}egoarm_base_link"
-        pose.position.z += GRIPPER_HEIGHT
         ros2_pose = do_transform_pose(
             pose,
             self.connector.get_transform(
                 f"{self.namespace}egoarm_base_link", frame, timeout_sec=60
             ),
-        ).position
+        )
 
-        self.logger.info(f"Moving arm to {ros2_pose.x}, {ros2_pose.y}, {ros2_pose.z}")
+        self.logger.info(
+            f"Moving arm to {ros2_pose.position.x}, {ros2_pose.position.y}, {ros2_pose.position.z}"
+        )
         for _ in range(retries):
             try:
-                self.moveit_toolkit.plan_and_execute(
-                    x=ros2_pose.x, y=ros2_pose.y, z=(ros2_pose.z)
-                )
-                time.sleep(1.0)
+                self.moveit_toolkit.plan_and_execute(ros2_pose)
                 return True
             except RuntimeError as e:
                 self.logger.error(e)
