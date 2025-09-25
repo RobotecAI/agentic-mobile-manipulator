@@ -1,0 +1,4 @@
+geometry_msgs/Pose pose
+string obstacle_type
+string anomaly_description
+string filename
