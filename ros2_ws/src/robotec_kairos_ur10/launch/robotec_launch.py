@@ -156,35 +156,9 @@ def generate_launch_description():
         }.items()
     )
 
-    rgbd_pc = ComposableNodeContainer(
-            name='container0',
-            namespace='',
-            package='rclcpp_components',
-            executable='component_container',
-            composable_node_descriptions=[
-                ComposableNode(
-                    package='depth_image_proc',
-                    plugin='depth_image_proc::PointCloudXyzrgbNode',
-                    name='point_cloud_xyzrgb_node',
-                    remappings=[('rgb/camera_info', (robot_namespace, '/rgbd_camera/camera_info')),
-                                ('rgb/image_rect_color', (robot_namespace, '/rgbd_camera/camera_image_color')),
-                                ('depth_registered/image_rect', (robot_namespace, '/rgbd_camera/camera_image_depth')),
-                                ('/points', (robot_namespace, '/rgbd_camera/pointcloud'))],
-                    parameters=[
-                        {'use_sim_time': True},
-                        {'approximate_sync': True}
-                    ]
-                ),
-            ],
-            output='screen',
-            parameters=[{'use_sim_time': True, 'approximate_sync': True}]
-    
-    )
-
     nodes_to_start = [
         OpaqueFunction(function=launch_setup),
         nav2_launch,
-        rgbd_pc,
     ]
 
     return LaunchDescription(nodes_to_start)
