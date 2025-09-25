@@ -518,6 +518,64 @@
                 }
             }
         },
+        "Entity_[148883267860645]": {
+            "Id": "Entity_[148883267860645]",
+            "Name": "2",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12302490205611410859
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 5301111172639924603
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 2656579366358260318,
+                    "Child Entity Order": [
+                        "Instance_[64104908404901]/ContainerEntity",
+                        "Instance_[63507907950757]/ContainerEntity",
+                        "Instance_[175036098945409]/ContainerEntity",
+                        "Instance_[90386588508545]/ContainerEntity",
+                        "Instance_[11294873237717]/ContainerEntity",
+                        "Instance_[9881828997333]/ContainerEntity"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 11941007296623428581
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 12333795007274896263
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 12827077026306573322
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13673202293894806967
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14236365345618230443
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 11350427407811435942,
+                    "Parent Entity": "Entity_[9670121407715]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            15.0,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[15117430090225]": {
             "Id": "Entity_[15117430090225]",
             "Name": "double",
@@ -16127,6 +16185,88 @@
                 }
             }
         },
+        "Entity_[5609807451211]": {
+            "Id": "Entity_[5609807451211]",
+            "Name": "InsideGICapsule",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 17085463077141777581,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 3,
+                            "Intensity": 1000.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
+                        }
+                    }
+                },
+                "EditorCapsuleShapeComponent": {
+                    "$type": "EditorCapsuleShapeComponent",
+                    "Id": 4116286189720978021,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "CapsuleShape": {
+                        "Configuration": {
+                            "Height": 25.0
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10116973017867384084
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13746465212633179318
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17269174187331240459
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12930982459215446256
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7782873648114784363
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11488900398710015590
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 6887165623959444650
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15370283738266385700
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12380404304194590940,
+                    "Parent Entity": "Entity_[9700186178787]",
+                    "Transform Data": {
+                        "Translate": [
+                            14.509553909301758,
+                            26.38589096069336,
+                            3.5112807750701904
+                        ],
+                        "Rotate": [
+                            0.0,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[59840545098937]": {
             "Id": "Entity_[59840545098937]",
             "Name": "Office",
@@ -16193,6 +16333,88 @@
                 }
             }
         },
+        "Entity_[60743589562422]": {
+            "Id": "Entity_[60743589562422]",
+            "Name": "InsideGICapsule",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 17085463077141777581,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 3,
+                            "Intensity": 500.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
+                        }
+                    }
+                },
+                "EditorCapsuleShapeComponent": {
+                    "$type": "EditorCapsuleShapeComponent",
+                    "Id": 4116286189720978021,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "CapsuleShape": {
+                        "Configuration": {
+                            "Height": 25.0
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10116973017867384084
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13746465212633179318
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17269174187331240459
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12930982459215446256
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7782873648114784363
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11488900398710015590
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 6887165623959444650
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15370283738266385700
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12380404304194590940,
+                    "Parent Entity": "Entity_[9700186178787]",
+                    "Transform Data": {
+                        "Translate": [
+                            14.509553909301758,
+                            23.253856658935547,
+                            3.5112807750701904
+                        ],
+                        "Rotate": [
+                            0.0,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[61051328299862]": {
             "Id": "Entity_[61051328299862]",
             "Name": "Ceiling",
@@ -16247,6 +16469,252 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7859307209661763922,
                     "Parent Entity": "Entity_[128233206743894]"
+                }
+            }
+        },
+        "Entity_[62551770794038]": {
+            "Id": "Entity_[62551770794038]",
+            "Name": "InsideGICapsule",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 17085463077141777581,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 3,
+                            "Intensity": 1000.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
+                        }
+                    }
+                },
+                "EditorCapsuleShapeComponent": {
+                    "$type": "EditorCapsuleShapeComponent",
+                    "Id": 4116286189720978021,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "CapsuleShape": {
+                        "Configuration": {
+                            "Height": 25.0
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10116973017867384084
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13746465212633179318
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17269174187331240459
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12930982459215446256
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7782873648114784363
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11488900398710015590
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 6887165623959444650
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15370283738266385700
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12380404304194590940,
+                    "Parent Entity": "Entity_[9700186178787]",
+                    "Transform Data": {
+                        "Translate": [
+                            14.509553909301758,
+                            5.5434346199035645,
+                            3.5112807750701904
+                        ],
+                        "Rotate": [
+                            0.0,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[6816693261387]": {
+            "Id": "Entity_[6816693261387]",
+            "Name": "InsideGICapsule",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 17085463077141777581,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 3,
+                            "Intensity": 500.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
+                        }
+                    }
+                },
+                "EditorCapsuleShapeComponent": {
+                    "$type": "EditorCapsuleShapeComponent",
+                    "Id": 4116286189720978021,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "CapsuleShape": {
+                        "Configuration": {
+                            "Height": 10.0
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10116973017867384084
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13746465212633179318
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17269174187331240459
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12930982459215446256
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7782873648114784363
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11488900398710015590
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 6887165623959444650
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15370283738266385700
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12380404304194590940,
+                    "Parent Entity": "Entity_[9700186178787]",
+                    "Transform Data": {
+                        "Translate": [
+                            21.998462677001953,
+                            16.44223403930664,
+                            3.5112860202789307
+                        ],
+                        "Rotate": [
+                            0.0,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[90756821026870]": {
+            "Id": "Entity_[90756821026870]",
+            "Name": "InsideGICapsule",
+            "Components": {
+                "AZ::Render::EditorAreaLightComponent": {
+                    "$type": "AZ::Render::EditorAreaLightComponent",
+                    "Id": 17085463077141777581,
+                    "Controller": {
+                        "Configuration": {
+                            "LightType": 3,
+                            "Intensity": 500.0,
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
+                        }
+                    }
+                },
+                "EditorCapsuleShapeComponent": {
+                    "$type": "EditorCapsuleShapeComponent",
+                    "Id": 4116286189720978021,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "CapsuleShape": {
+                        "Configuration": {
+                            "Height": 10.0
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10116973017867384084
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13746465212633179318
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17269174187331240459
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12930982459215446256
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7782873648114784363
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11488900398710015590
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 6887165623959444650
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15370283738266385700
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12380404304194590940,
+                    "Parent Entity": "Entity_[9700186178787]",
+                    "Transform Data": {
+                        "Translate": [
+                            21.998462677001953,
+                            11.649178504943848,
+                            3.5112860202789307
+                        ],
+                        "Rotate": [
+                            0.0,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
                 }
             }
         },
@@ -16343,8 +16811,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 13208448554738093762,
                     "Child Entity Order": [
-                        "Entity_[9618581800163]",
-                        "Entity_[9665826440419]",
                         "Entity_[9670121407715]",
                         "Entity_[9700186178787]"
                     ]
@@ -16681,7 +17147,8 @@
                         "Configuration": {
                             "LightType": 4,
                             "Intensity": 1000.0,
-                            "AttenuationRadius": 100.0
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
                         }
                     }
                 },
@@ -16736,12 +17203,12 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12515436990169496768,
-                    "Parent Entity": "Entity_[9597106963683]",
+                    "Parent Entity": "Entity_[9700186178787]",
                     "Transform Data": {
                         "Translate": [
                             14.955915451049805,
                             22.63164710998535,
-                            3.8457798957824707
+                            4.039928436279297
                         ]
                     }
                 }
@@ -16933,7 +17400,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "AttenuationRadius": 31.62277603149414
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
                         }
                     }
                 },
@@ -17013,7 +17481,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "AttenuationRadius": 31.62277603149414
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
                         }
                     }
                 },
@@ -17167,7 +17636,7 @@
         },
         "Entity_[9640056636643]": {
             "Id": "Entity_[9640056636643]",
-            "Name": "2",
+            "Name": "1",
             "Components": {
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -17181,17 +17650,12 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 2656579366358260318,
                     "Child Entity Order": [
-                        "Instance_[4935584499761]/ContainerEntity",
-                        "Instance_[6211189786673]/ContainerEntity",
-                        "Instance_[6185419982897]/ContainerEntity",
-                        "Instance_[6198304884785]/ContainerEntity",
-                        "Instance_[6224074688561]/ContainerEntity",
-                        "Instance_[6034430447638]/ContainerEntity",
-                        "Instance_[6030135480342]/ContainerEntity",
-                        "Instance_[6038725414934]/ContainerEntity",
-                        "Instance_[6043020382230]/ContainerEntity",
-                        "Instance_[6047315349526]/ContainerEntity",
-                        "Instance_[11321535189014]/ContainerEntity"
+                        "Instance_[64104908404901]/ContainerEntity",
+                        "Instance_[63507907950757]/ContainerEntity",
+                        "Instance_[175036098945409]/ContainerEntity",
+                        "Instance_[90386588508545]/ContainerEntity",
+                        "Instance_[11294873237717]/ContainerEntity",
+                        "Instance_[9881828997333]/ContainerEntity"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -17217,14 +17681,7 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 11350427407811435942,
-                    "Parent Entity": "Entity_[9670121407715]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            15.0,
-                            0.0
-                        ]
-                    }
+                    "Parent Entity": "Entity_[9670121407715]"
                 }
             }
         },
@@ -17316,7 +17773,8 @@
                         "Configuration": {
                             "LightType": 4,
                             "Intensity": 200.0,
-                            "AttenuationRadius": 44.72135925292969
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 5.0
                         }
                     }
                 },
@@ -17376,7 +17834,7 @@
                         "Translate": [
                             5.183643341064453,
                             11.375250816345215,
-                            2.9896011352539063
+                            4.037111759185791
                         ]
                     }
                 }
@@ -17392,7 +17850,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "AttenuationRadius": 31.62277603149414
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
                         }
                     }
                 },
@@ -17472,7 +17931,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "AttenuationRadius": 31.62277603149414
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
                         }
                     }
                 },
@@ -17635,7 +18095,8 @@
                         "Configuration": {
                             "LightType": 4,
                             "Intensity": 1000.0,
-                            "AttenuationRadius": 100.0
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
                         }
                     }
                 },
@@ -17690,12 +18151,12 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12515436990169496768,
-                    "Parent Entity": "Entity_[9597106963683]",
+                    "Parent Entity": "Entity_[9700186178787]",
                     "Transform Data": {
                         "Translate": [
                             14.955915451049805,
                             7.503143310546875,
-                            3.8457798957824707
+                            4.039928436279297
                         ]
                     }
                 }
@@ -17717,8 +18178,8 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 1084018923067438520,
                     "Child Entity Order": [
-                        "Entity_[9704481146083]",
-                        "Entity_[9640056636643]"
+                        "Entity_[9640056636643]",
+                        "Entity_[148883267860645]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -18024,7 +18485,8 @@
                         "Configuration": {
                             "LightType": 4,
                             "Intensity": 200.0,
-                            "AttenuationRadius": 44.72135925292969
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 5.0
                         }
                     }
                 },
@@ -18084,7 +18546,7 @@
                         "Translate": [
                             5.183643341064453,
                             18.877635955810547,
-                            3.006845474243164
+                            4.054356098175049
                         ]
                     }
                 }
@@ -18100,7 +18562,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "AttenuationRadius": 31.62277603149414
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
                         }
                     }
                 },
@@ -18186,6 +18649,8 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 14889109282343781960,
                     "Child Entity Order": [
+                        "Entity_[9618581800163]",
+                        "Entity_[9665826440419]",
                         "Entity_[9648646571235]",
                         "Entity_[9691596244195]",
                         "Entity_[9657236505827]",
@@ -18193,7 +18658,12 @@
                         "Entity_[9708776113379]",
                         "Entity_[9627171734755]",
                         "Entity_[9695891211491]",
-                        "Entity_[9652941538531]"
+                        "Entity_[9652941538531]",
+                        "Entity_[60743589562422]",
+                        "Entity_[5609807451211]",
+                        "Entity_[62551770794038]",
+                        "Entity_[90756821026870]",
+                        "Entity_[6816693261387]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -18223,57 +18693,6 @@
                 }
             }
         },
-        "Entity_[9704481146083]": {
-            "Id": "Entity_[9704481146083]",
-            "Name": "1",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 12302490205611410859
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 5301111172639924603
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 2656579366358260318,
-                    "Child Entity Order": [
-                        "Instance_[4935584499761]/ContainerEntity",
-                        "Instance_[6211189786673]/ContainerEntity",
-                        "Instance_[6185419982897]/ContainerEntity",
-                        "Instance_[6198304884785]/ContainerEntity",
-                        "Instance_[6224074688561]/ContainerEntity",
-                        "Instance_[11308650287126]/ContainerEntity"
-                    ]
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 11941007296623428581
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 12333795007274896263
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 12827077026306573322
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 13673202293894806967
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 14236365345618230443
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 11350427407811435942,
-                    "Parent Entity": "Entity_[9670121407715]"
-                }
-            }
-        },
         "Entity_[9708776113379]": {
             "Id": "Entity_[9708776113379]",
             "Name": "Wall",
@@ -18284,7 +18703,8 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "AttenuationRadius": 31.62277603149414
+                            "AttenuationRadiusMode": 0,
+                            "AttenuationRadius": 20.0
                         }
                     }
                 },
@@ -18356,43 +18776,8 @@
         }
     },
     "Instances": {
-        "Instance_[11308650287126]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[9704481146083]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 2.765751838684082
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.504245758056641
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 5.573296546936035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 180.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 180.0
-                }
-            ]
-        },
-        "Instance_[11321535189014]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
+        "Instance_[11294873237717]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -18407,7 +18792,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.712011337280273
+                    "value": 7.503662586212158
                 },
                 {
                     "op": "replace",
@@ -18488,6 +18873,216 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[5301719210030]/Name",
                     "value": "A02"
+                }
+            ]
+        },
+        "Instance_[148887562827941]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[148883267860645]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 22.348295211791992
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 7.712011337280273
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 5.573296546936035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 180.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 180.0
+                }
+            ]
+        },
+        "Instance_[148891857795237]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[148883267860645]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 17.860858917236328
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 7.712011337280273
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 5.573296546936035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 180.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 180.0
+                }
+            ]
+        },
+        "Instance_[148896152762533]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[148883267860645]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 26.53940773010254
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 7.712011337280273
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 5.573296546936035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 180.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 180.0
+                }
+            ]
+        },
+        "Instance_[148900447729829]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[148883267860645]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 7.231400966644287
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 7.712011337280273
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 5.573296546936035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 180.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 180.0
+                }
+            ]
+        },
+        "Instance_[148904742697125]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[148883267860645]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 12.496620178222656
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 7.712011337280273
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 5.573296546936035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 180.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 180.0
+                }
+            ]
+        },
+        "Instance_[148909037664421]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[148883267860645]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 2.670876979827881
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 7.712011337280273
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 5.573296546936035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 180.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 180.0
                 }
             ]
         },
@@ -18938,6 +19533,41 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[5301719210030]/Name",
                     "value": "D04"
+                }
+            ]
+        },
+        "Instance_[175036098945409]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[9640056636643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 7.231400966644287
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 7.503662586212158
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 5.573296546936035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 180.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 180.0
                 }
             ]
         },
@@ -20556,43 +21186,8 @@
                 }
             ]
         },
-        "Instance_[4935584499761]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[9704481146083]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 22.348295211791992
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.504245758056641
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 5.573296546936035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 180.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 180.0
-                }
-            ]
-        },
-        "Instance_[6030135480342]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
+        "Instance_[63507907950757]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -20607,7 +21202,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.712011337280273
+                    "value": 7.503662586212158
                 },
                 {
                     "op": "replace",
@@ -20626,43 +21221,8 @@
                 }
             ]
         },
-        "Instance_[6034430447638]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[9640056636643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 17.860858917236328
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.712011337280273
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 5.573296546936035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 180.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 180.0
-                }
-            ]
-        },
-        "Instance_[6038725414934]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
+        "Instance_[64104908404901]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -20677,7 +21237,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.712011337280273
+                    "value": 7.503662586212158
                 },
                 {
                     "op": "replace",
@@ -20696,43 +21256,8 @@
                 }
             ]
         },
-        "Instance_[6043020382230]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[9640056636643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 7.231400966644287
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.712011337280273
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 5.573296546936035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 180.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 180.0
-                }
-            ]
-        },
-        "Instance_[6047315349526]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
+        "Instance_[90386588508545]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -20747,7 +21272,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.712011337280273
+                    "value": 7.503662586212158
                 },
                 {
                     "op": "replace",
@@ -20766,13 +21291,13 @@
                 }
             ]
         },
-        "Instance_[6185419982897]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
+        "Instance_[9881828997333]": {
+            "Source": "Assets/Warehouse/Building/CeilingLamp_local.prefab",
             "Patches": [
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[9704481146083]"
+                    "value": "../Entity_[9640056636643]"
                 },
                 {
                     "op": "replace",
@@ -20782,112 +21307,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.504245758056641
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 5.573296546936035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 180.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 180.0
-                }
-            ]
-        },
-        "Instance_[6198304884785]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[9704481146083]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 26.53940773010254
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.504245758056641
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 5.573296546936035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 180.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 180.0
-                }
-            ]
-        },
-        "Instance_[6211189786673]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[9704481146083]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 12.496620178222656
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.504245758056641
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 5.573296546936035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 180.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 180.0
-                }
-            ]
-        },
-        "Instance_[6224074688561]": {
-            "Source": "Warehouse_low_30x30m/CeilingLamp.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[9704481146083]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 7.231400966644287
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 7.504245758056641
+                    "value": 7.503662586212158
                 },
                 {
                     "op": "replace",
