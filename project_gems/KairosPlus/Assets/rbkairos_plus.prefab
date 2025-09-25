@@ -99,6 +99,9 @@
                 "ROS2CameraSensorEditorComponent": {
                     "$type": "ROS2CameraSensorEditorComponent",
                     "Id": 9096869452264359802,
+                    "CameraSensorConfig": {
+                        "Depth": false
+                    },
                     "SensorConfig": {
                         "Frequency (HZ)": 15.0,
                         "Publishers": {
@@ -115,7 +118,8 @@
                                 "Topic": "wrist_camera/camera_image_color",
                                 "QoS": {
                                     "Reliability": 1,
-                                    "Durability": 1
+                                    "Durability": 1,
+                                    "Depth": 2
                                 }
                             },
                             "Depth Camera Info": {
@@ -3391,6 +3395,7 @@
                     "$type": "ROS2CameraSensorEditorComponent",
                     "Id": 9096869452264359802,
                     "CameraSensorConfig": {
+                        "Depth": false,
                         "ClipFar": 15.0
                     },
                     "SensorConfig": {
@@ -3409,7 +3414,8 @@
                                 "Topic": "rgbd_camera/camera_image_color",
                                 "QoS": {
                                     "Reliability": 1,
-                                    "Durability": 1
+                                    "Durability": 1,
+                                    "Depth": 2
                                 }
                             },
                             "Depth Camera Info": {
