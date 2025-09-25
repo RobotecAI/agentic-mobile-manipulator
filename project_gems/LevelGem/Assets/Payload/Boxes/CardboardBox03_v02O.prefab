@@ -102,6 +102,11 @@
             "Source": "CardboardBoxes/CardboardBox03_v02O.prefab",
             "Patches": [
                 {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[38592471142610]"
+                },
+                {
                     "op": "add",
                     "path": "/Entities/Entity_[17650210607314]",
                     "value": {
@@ -163,7 +168,7 @@
                                     "Translate": [
                                         0.00015544891357421875,
                                         -0.0047969818115234375,
-                                        0.2445008754730225
+                                        0.24450087547302246
                                     ],
                                     "Rotate": [
                                         0.0,
@@ -189,11 +194,6 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[38592471142610]"
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[2506697179069]/Components/EditorEntitySortComponent/Child Entity Order/0",
                     "value": "Entity_[17650210607314]"
                 },
@@ -201,6 +201,11 @@
                     "op": "add",
                     "path": "/Entities/Entity_[2506697179069]/Components/EditorEntitySortComponent/Child Entity Order/1",
                     "value": "Entity_[2510992146365]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2506697179069]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Entity_[12947659788749]"
                 },
                 {
                     "op": "add",
@@ -527,6 +532,92 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[2510992146365]/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 0.5
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[12947659788749]",
+                    "value": {
+                        "Id": "Entity_[12947659788749]",
+                        "Name": "SideGrippingPoint",
+                        "Components": {
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 10121166563084557802,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 3498276146427988434,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 921947341075928958,
+                                "Child Entity Order": []
+                            },
+                            "EditorInspectorComponent": {
+                                "$type": "EditorInspectorComponent",
+                                "Id": 10189354980505433188,
+                                "ComponentOrderEntryArray": []
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 16534567796709217689,
+                                "Locked": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 15665858298786545392,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 17921230539851777825,
+                                "PendingComponents": []
+                            },
+                            "EditorStaticRigidBodyComponent": {
+                                "$type": "EditorStaticRigidBodyComponent",
+                                "Id": 2518667023850010063
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 4436555224728118784,
+                                "VisibilityFlag": true
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 11019106456595923066,
+                                "Parent Entity": "Entity_[2506697179069]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.12137985229492188,
+                                        0.0007114410400390625,
+                                        0.13306093215942383
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        90.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
                 }
             ]
         }

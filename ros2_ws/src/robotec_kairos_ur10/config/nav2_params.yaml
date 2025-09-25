@@ -35,14 +35,15 @@ controller_server:
     min_theta_velocity_threshold: 0.001
     failure_tolerance: 0.3
     progress_checker_plugins: ["progress_checker"]
-    goal_checker_plugins: ["general_goal_checker"] # "precise_goal_checker"
+    goal_checker_plugins: ["goal_checker"] # "precise_goal_checker"
     controller_plugins: ["FollowPath"]
     use_realtime_priority: false
 
     # Progress checker parameters
     progress_checker:
-      plugin: "nav2_controller::SimpleProgressChecker"
-      required_movement_radius: 0.5
+      plugin: "nav2_controller::PoseProgressChecker"
+      required_movement_radius: 0.2
+      required_movement_angle: 0.2
       movement_time_allowance: 10.0
     # Goal checker parameters
     #precise_goal_checker:
@@ -50,11 +51,12 @@ controller_server:
     #  xy_goal_tolerance: 0.25
     #  yaw_goal_tolerance: 0.25
     #  stateful: True
-    general_goal_checker:
-      plugin: "nav2_controller::SimpleGoalChecker"
+    goal_checker:
+      plugin: "nav2_controller::StoppedGoalChecker"
       stateful: false
       xy_goal_tolerance: 0.1
-      yaw_goal_tolerance: 0.05
+      yaw_goal_tolerance: 0.01
+      rot_stopped_velocity: 0.0005
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
@@ -62,7 +64,7 @@ controller_server:
       forward_sampling_distance: 0.5
       angular_disengage_threshold: 0.3925
       rotate_to_heading_angular_vel: 40.0
-      max_angular_accel: 20.0
+      max_angular_accel: 10.0
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: true
       rotate_to_heading_once: true
