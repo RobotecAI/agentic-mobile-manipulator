@@ -1,0 +1,235 @@
+from __future__ import annotations
+
+import argparse
+import base64
+import time
+from datetime import datetime
+from typing import Literal, cast
+
+import numpy as np
+import rclpy
+import rclpy.time
+from cv_bridge import CvBridge
+from langchain_core.exceptions import OutputParserException
+from langchain_core.messages import SystemMessage
+from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field
+from rai.communication.ros2 import ROS2Connector, ROS2Context, ROS2Message
+from rai.messages import (
+    HumanMultimodalMessage,
+    preprocess_image,
+)
+from robotec_kairos_ur10.msg import Anomaly
+from rosidl_runtime_py import message_to_ordereddict
+from scripts.scene_manager import SceneManager
+from llms import get_model
+
+from sensor_msgs.msg import Image
+from tf2_ros import PoseStamped
+
+SYSTEM_PROMPT = "You are an expert in warehouse environment based on AMR camera. You are tested in simulation."
+# PROMPT = "Verify if there is an obstacle on a robot's path. Please don't report typical warehouse envirionemt as obstacles. To be an obstacle a object should be places in an unusual place and obstruct the clear navigation path of the robot. For example a package laying in the pathway might be an obstance and standing rack visible in the image is not."
+PROMPT = "Verify if there is an obstacle on warehouse alleys. Please report anomalies only. Please don't report typical warehouse envirionemt as obstacles."
+
+
+class AnomalyDescription(BaseModel):
+    anomaly_detected: bool = Field(..., description="True if obstacle is detected")
+    obstacle_type: Literal[
+        "none", "box", "contamination", "fallen_object", "other_object"
+    ] = Field(..., description="The type of the obstacle")
+    anomaly_description: str = Field(
+        ...,
+        description="A description of the obstacle. Max 20 chars. Leave empty if no obstacle",
+    )
+
+
+class ModelConfig(BaseModel):
+    vendor: Literal["openai", "ollama"]
+    model: str
+    base_url: str | None = None
+
+
+def save_image_to_disk(b64_img: str, directory: str = "./saved_images"):
+    import os
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    filename = f"{directory}/image_{timestamp}.png"
+    with open(filename, "wb") as f:
+        f.write(base64.b64decode(b64_img))
+    return filename
+
+
+class VlmWarehouseInspector:
+    def __init__(
+        self,
+        vlm: ChatOllama | ChatOpenAI,
+        slots_file: str,
+        spawnables_file: str,
+        camera_topic: str,
+        ego_target_frame: str,
+        ego_source_frame: str,
+        anomaly_images_dir: str,
+        anomalies_topic: str,
+        prompt: str = PROMPT,
+        system_prompt: str = SYSTEM_PROMPT,
+    ):
+        self.camera_topic = camera_topic
+        self.ego_target_frame = ego_target_frame
+        self.ego_source_frame = ego_source_frame
+        self.anomaly_images_dir = anomaly_images_dir
+        self.anomalies_topic = anomalies_topic
+        self.prompt = prompt
+        self.system_prompt = system_prompt
+
+        self.connector = ROS2Connector(executor_type="multi_threaded")
+        self.get_logger = self.connector.node.get_logger
+        self.scene_manager = SceneManager(
+            slots_file=slots_file,
+            spawnables_file=spawnables_file,
+            connector=self.connector,
+        )
+
+        self.vlm = vlm.with_structured_output(AnomalyDescription)
+
+    def loop(self):
+        while True:
+            try:
+                msg: Image = self.connector.receive_message(
+                    self.camera_topic, timeout_sec=1.0
+                ).payload
+            except ValueError:
+                self.get_logger().error(f"Failed to receive a message from {self.camera_topic}")
+                continue
+            stamp = rclpy.time.Time.from_msg(msg.header.stamp)
+            image = CvBridge().imgmsg_to_cv2(  # type: ignore
+                msg, desired_encoding="bgr8"
+            )
+            b64_img = preprocess_image(image)
+
+            ts = time.perf_counter()
+            self.vlm_callback(b64_img, image, stamp)
+            self.get_logger().info(f"VLM analysis took: {time.perf_counter() - ts}")
+
+    def vlm_callback(self, b64_img: str, image: np.ndarray, stamp: rclpy.time.Time):
+        robot_location = self.get_robot_location()
+        result: AnomalyDescription = self.detect_obstacle(b64_img)
+        self.get_logger().info(f"Result: {result.model_dump()}")
+
+        img_stamp = stamp.nanoseconds
+        robot_location_stamp = rclpy.time.Time.from_msg(
+            robot_location.header.stamp
+        ).nanoseconds
+        time_diff = abs(img_stamp - robot_location_stamp) / 1e9
+        if time_diff > 0.5:
+            self.get_logger().error(
+                f"Time difference between image and robot location is too large: {time_diff:.3f} seconds"
+            )
+            return
+
+        if result.anomaly_detected:
+            self.get_logger().info(f"Obstacle detected: {result.model_dump()}")
+            try:
+                _, trash_pose = self.scene_manager.get_trash_pose(robot_location.pose)
+            except ValueError:
+                self.get_logger().error("No trash pose detected")
+                return
+            self.get_logger().info(f"Trash pose: {trash_pose}")
+
+            filename = save_image_to_disk(b64_img, self.anomaly_images_dir)
+
+            message = Anomaly()
+            message.pose = trash_pose
+            message.obstacle_type = result.obstacle_type
+            message.anomaly_description = result.anomaly_description
+            message.filename = filename
+
+            self.connector.send_message(
+                ROS2Message(payload=message_to_ordereddict(message)),
+                target=self.anomalies_topic,
+                msg_type="robotec_kairos_ur10/msg/Anomaly",
+            )
+    
+    def detect_obstacle(self, b64_img: str) -> AnomalyDescription:
+        task = [
+            SystemMessage(content=self.system_prompt),
+            HumanMultimodalMessage(
+                content=self.prompt,
+                images=[b64_img],
+            ),
+        ]
+
+        response = None
+        for _ in range(3):
+            try:
+                response = cast(AnomalyDescription, self.vlm.invoke(task))
+                break
+            except OutputParserException as e:
+                self.get_logger().error(f"Failed to set output parser: {e}")
+        if response is None:
+            raise Exception("Failed to set output parser")
+        return response
+
+    def get_robot_location(self) -> PoseStamped:
+        transform = self.connector.get_transform(
+            target_frame=self.ego_target_frame,
+            source_frame=self.ego_source_frame,
+            timeout_sec=1.0,
+        )
+
+        transform_time = rclpy.time.Time.from_msg(transform.header.stamp)
+        current_time = self.connector._node.get_clock().now()
+
+        age_seconds = (current_time - transform_time).nanoseconds / 1e9
+        self.get_logger().info(
+            f"Got transform from {self.ego_source_frame} to {self.ego_target_frame} with age {age_seconds:.1f} seconds"
+        )
+        pose = PoseStamped()
+        pose.header.frame_id = self.ego_target_frame
+        pose.header.stamp = transform.header.stamp
+        pose.pose.position.x = transform.transform.translation.x
+        pose.pose.position.y = transform.transform.translation.y
+        pose.pose.position.z = transform.transform.translation.z
+        pose.pose.orientation = transform.transform.rotation
+        return pose
+
+
+
+@ROS2Context()
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--slots-file", type=str, default="scripts/resources/slots.csv")
+    parser.add_argument(
+        "--spawnables-file", type=str, default="scripts/resources/spawnables.csv"
+    )
+    parser.add_argument("--vlm-vendor", type=str)
+    parser.add_argument("--vlm-model", type=str)
+    parser.add_argument("--vlm-base_url", type=str, default=None)
+    parser.add_argument(
+        "--camera-topic", type=str, default="/rgbd_camera/camera_image_color"
+    )
+    parser.add_argument("--ego-source-frame", type=str, default="odom")
+    parser.add_argument("--ego-target-frame", type=str, default="egobase_footprint")
+    parser.add_argument("--anomaly-images-dir", type=str, default="./anomaly_images")
+    parser.add_argument("--anomalies-topic", type=str, default="/inspection_result")
+    args = parser.parse_args()
+    vlm = get_model(model=args.vlm_model, vendor=args.vlm_vendor, base_url=args.vlm_base_url)
+
+    inspector = VlmWarehouseInspector(
+        vlm = vlm,
+        slots_file=args.slots_file,
+        spawnables_file=args.spawnables_file,
+        camera_topic=args.camera_topic,
+        ego_target_frame=args.ego_target_frame,
+        ego_source_frame=args.ego_source_frame,
+        anomaly_images_dir=args.anomaly_images_dir,
+        anomalies_topic=args.anomalies_topic,
+    )
+
+    inspector.loop()
+
+
+if __name__ == "__main__":
+    main()
