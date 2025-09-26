@@ -2918,7 +2918,10 @@
                     "Id": 8634397508556647893,
                     "m_template": {
                         "$type": "JointsTrajectoryComponent",
-                        "Action name": "joint_trajectory_controller/follow_joint_trajectory"
+                        "Action name": "joint_trajectory_controller/follow_joint_trajectory",
+                        "Check for position errors": true,
+                        "Check for velocity": true,
+                        "Joint velocity tolerance": 0.009999999776482582
                     }
                 },
                 "ROS2FrameEditorComponent": {
@@ -7835,7 +7838,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": -0.000010416900295240339
+                    "value": -0.00001041690029524034
                 }
             ]
         }

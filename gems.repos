@@ -2,7 +2,7 @@ repositories:
   ./gems/o3de-extras:
     type: git
     url: https://github.com/robotecai/o3de-extras.git
-    version: 502e3feca85f799840fa992d4806660dea19470e
+    version: f1680447db79d0e37558ecc8f8700deceba06eee
   ./gems/o3de-humanworker-gem:
     type: git
     url: https://github.com/RobotecAI/o3de-humanworker-gem.git
