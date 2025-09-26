@@ -1,5 +1,4 @@
 import logging
-import time
 from pathlib import Path
 
 # generic ros libraries
@@ -205,8 +204,6 @@ class GripperController(Node):
         rclpy.spin_until_future_complete(self, future)
         if future.result() is None:
             raise RuntimeError("Gripper command failed")
-
-        time.sleep(1)
 
     def close_gripper(self):
         self.gripper_command(0.0)
