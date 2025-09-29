@@ -5,16 +5,17 @@ import uuid
 from pydantic import BaseModel
 from dataclasses import field
 from collections import deque
-from typing import Callable, Dict, List, Optional, Deque
+from typing import Callable, List, Optional, Deque
 from langgraph.checkpoint.memory import InMemorySaver
 import rclpy
 from langchain_core.callbacks.base import BaseCallbackHandler
 from langgraph.graph.state import CompiledStateGraph
 from rclpy.node import Node
-from rclpy.subscription import Subscription
 
 from rai.communication.ros2 import ROS2Connector, ROS2Message
 from context_providers import WarehouseContext
+from robotec_kairos_ur10.msg import Anomaly
+from geometry_msgs.msg import Pose
 
 
 class TaskExecution(BaseModel):
@@ -26,19 +27,42 @@ class TaskExecution(BaseModel):
 class TaskSubscriber(Node):
     """ROS2 node that subscribes to multiple task topics"""
 
-    def __init__(self, connector: ROS2Connector, topics: List[str], new_task_callback):
+    def __init__(
+        self,
+        connector: ROS2Connector,
+        task_topics: List[str],
+        new_task_callback,
+        inspection_topics: List[str],
+        inspection_callback,
+    ):
         super().__init__("task_subscriber")
         self.connector = connector
-        self.topic_subscriptions: Dict[str, Subscription] = {}
         self.new_task_callback = new_task_callback
-        for topic in topics:
-            self.add_topic(topic)
+        self.inspection_callback = inspection_callback
+        for topic in task_topics:
+            self.add_task_topic(topic)
+        for topic in inspection_topics:
+            self.add_inspection_topic(topic=topic)
 
-    def add_topic(self, topic: str):
+    def add_task_topic(self, topic: str):
         try:
-            self.connector.register_callback(topic, self.new_task_callback)
+            self.connector.register_callback(
+                topic,
+                self.new_task_callback,
+                msg_type="std_msgs/msg/String",
+            )
         except ValueError:
-            logging.warning(f"{topic} not found")
+            logging.warning(f"Task topic: {topic} not found")
+
+    def add_inspection_topic(self, topic: str):
+        try:
+            self.connector.register_callback(
+                topic,
+                self.inspection_callback,
+                msg_type="robotec_kairos_ur10/msg/Anomaly",
+            )
+        except ValueError:
+            logging.warning(f"Inspection topic: {topic} not found")
 
     def remove_topic(self, topic: str):
         self.connector.registered_callbacks.pop(topic)
@@ -52,6 +76,7 @@ class AgentOrchestrator:
         connector,
         agent: CompiledStateGraph,
         task_topics: List[str],
+        inspection_topics: List[str],
         initial_state_creator: Callable,
         recurssion_limit: int,
         agent_callbacks: List[BaseCallbackHandler],
@@ -64,7 +89,11 @@ class AgentOrchestrator:
         # when the interrupting task is done
         self.pasued_tasks_queue: Deque[TaskExecution] = deque(maxlen=10)
         self.task_subscriber = TaskSubscriber(
-            connector=connector, topics=task_topics, new_task_callback=self.add_task
+            connector=connector,
+            task_topics=task_topics,
+            new_task_callback=self.add_task,
+            inspection_topics=inspection_topics,
+            inspection_callback=self.add_inspection_task,
         )
 
         self.initial_state_creator = initial_state_creator
@@ -73,7 +102,7 @@ class AgentOrchestrator:
         self.agent_callbacks = agent_callbacks
         self.agent = self.add_checkpointing_to_agent(self.agent_graph)
 
-        self.connector = ROS2Connector()
+        self.connector = connector
         # for now we don't use change self.running but it can be useful
         # to shutdown orchestrator gracefully
         self.running = True
@@ -83,6 +112,25 @@ class AgentOrchestrator:
         self.stop: bool = False
         self.task_count = 0
         self.lock = threading.Lock()
+
+    def add_inspection_task(self, msg: ROS2Message):
+        anomaly: Anomaly = msg.payload
+        # TODO  (jmatejcz) for now we classify box on the floor as trash
+        # in the future this might need adjustment as well as prompt in inspection agent
+        if anomaly.obstacle_type != "box":
+            return
+        trash_pose: Pose = anomaly.pose
+        prompt = (
+            f"Trash was detected at pose: (x={trash_pose.position}, y={trash_pose.position.y}, z={trash_pose.position.z},"
+            f" qx={trash_pose.orientation.x}, qy={trash_pose.orientation.y}, qz={trash_pose.orientation.z}, qw={trash_pose.orientation.w}."
+            " Throw it out to the garbage bin."
+        )
+        task_exe = TaskExecution(prompt=prompt)
+        with self.lock:
+            try:
+                self.task_queue.put_nowait(task_exe)
+            except asyncio.QueueFull:
+                logging.warning("Task queue is full, dropping task")
 
     def add_task(self, msg: ROS2Message):
         """Add a new task to the queue"""
@@ -236,6 +284,7 @@ if __name__ == "__main__":
         NavigateToSlotSyncTool,
         IsPackageDamagedTool,
         MoveFromCollectionToCollectionTool,
+        ThrowTrashOutTool,
     )
     from scripts.kairos_controller import KairosController
     from scripts.scene_manager import SceneManager
@@ -285,6 +334,11 @@ if __name__ == "__main__":
         namespace_value="",
         llm=llm,
     )
+    throw_trash_out_tool = ThrowTrashOutTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+    )
 
     movement_system_prompt = """You are a movement specialist robot agent.
 Your role is to handle navigating to slots and moving objects from collection to collection using tools."""
@@ -309,7 +363,7 @@ IF you CAN'T figure it out on your own, ask user for clarification.
         Executor(
             name="movement",
             llm=llm,
-            tools=[move_from_coll_to_coll, navigation_tool],
+            tools=[move_from_coll_to_coll, navigation_tool, throw_trash_out_tool],
             system_prompt=movement_system_prompt,
         ),
         Executor(
@@ -332,11 +386,13 @@ IF you CAN'T figure it out on your own, ask user for clarification.
     )
 
     langfuse_handler = CallbackHandler()
-    task_topics = ["/safety_issues", "/inspection_issues", "/user_tasks"]
+    task_topics = ["/user_tasks"]
+    inspection_topics = ["inspection_result"]
     orchestrator = AgentOrchestrator(
         connector=connector,
         agent=agent,
         task_topics=task_topics,
+        inspection_topics=inspection_topics,
         initial_state_creator=get_initial_megamind_state,
         recurssion_limit=100,
         agent_callbacks=[langfuse_handler],

@@ -1,4 +1,4 @@
-from typing import Type, cast
+from typing import Type, cast, Optional
 
 from pydantic import BaseModel, Field
 
@@ -12,6 +12,9 @@ from scripts.scene_manager import SceneManager
 from langchain_core.language_models.chat_models import BaseChatModel
 
 from rai.messages import HumanMultimodalMessage, MultimodalArtifact, SystemMessage
+from geometry_msgs.msg import Point, Pose, Quaternion
+
+from tf_transformations import euler_from_quaternion, quaternion_from_euler
 
 
 class WarehosueTool(BaseROS2Tool):
@@ -123,14 +126,17 @@ class MoveFromSlotToSlotTool(WarehosueTool):
             origin_object_pose = self.scene_manager.get_pose(
                 entity_name=origin_object_name
             )
-            object_height = self.scene_manager.get_object_height(
-                object_name=origin_object_name
-            )
             target_slot = self.scene_manager.slots[target_slot_name]
+
+            gripping_point = self.scene_manager.get_gripping_point(origin_object_name)
+            side_gripping_point = self.scene_manager.get_pose(
+                origin_object_name + "_SideGrippingPoint"
+            )
             self.kairos_controller.move_object_to_slot(
                 target_slot_pose=target_slot.origin_pose,
                 object_pose=origin_object_pose,
-                object_height=object_height,
+                top_gripping_point=gripping_point,
+                side_gripping_point=side_gripping_point,
             )
             return f"Successfully moved object from {origin_slot_name} to {target_slot_name}"
 
@@ -208,20 +214,96 @@ class MoveFromCollectionToCollectionTool(WarehosueTool):
                 origin_object_name = self.scene_manager.slots[
                     origin_slot_name
                 ].get_obj_name()
+                if origin_object_name is None:
+                    raise ValueError(
+                        f"There is no package at origin slot {origin_object_name}"
+                    )
                 origin_object_pose = self.scene_manager.get_pose(
                     entity_name=origin_object_name
                 )
-                object_height = self.scene_manager.get_object_height(
-                    object_name=origin_object_name
-                )
+
                 target_slot = self.scene_manager.slots[target_slot_name]
+                gripping_point = self.scene_manager.get_gripping_point(
+                    origin_object_name
+                )
+                side_gripping_point = self.scene_manager.get_pose(
+                    origin_object_name + "_SideGrippingPoint"
+                )
                 self.kairos_controller.move_object_to_slot(
                     target_slot_pose=target_slot.origin_pose,
                     object_pose=origin_object_pose,
-                    object_height=object_height,
+                    top_gripping_point=gripping_point,
+                    side_gripping_point=side_gripping_point,
                 )
             except Exception as e:
                 logging.error(f"Error during move operation: {str(e)}")
                 return f"Failed to move object from {origin_slot_name} to {target_slot_name}: {str(e)}"
 
         return f"Successfully moved objects from {origin_collection_name} to {target_collection_name}"
+
+
+class ThrowTrashOutInput(BaseModel):
+    x: float = Field(..., description="X coordinate of the trash location in meters")
+    y: float = Field(..., description="Y coordinate of the trash location in meters")
+    z: float = Field(..., description="Z coordinate of the trash location in meters")
+    qx: float = Field(..., description="X component of orientation quaternion")
+    qy: float = Field(..., description="Y component of orientation quaternion")
+    qz: float = Field(..., description="Z component of orientation quaternion")
+    qw: float = Field(
+        ..., description="W component of orientation quaternion (scalar part)"
+    )
+
+
+class ThrowTrashOutTool(WarehosueTool):
+    name: str = "throw_out_trash"
+    description: str = "Throw out trash that is at certain location"
+
+    args_schema: Type[ThrowTrashOutInput] = ThrowTrashOutInput
+
+    def _run(
+        self,
+        x: float,
+        y: float,
+        z: float,
+        qx: float,
+        qy: float,
+        qz: float,
+        qw: float,
+    ):
+        """Execute throwing out"""
+
+        trash_gripping_point = Pose(
+            position=Point(x=x, y=y, z=z),
+            orientation=Quaternion(
+                x=float(qx),
+                y=float(qy),
+                z=float(qz),
+                w=float(qw),
+            ),
+        )
+        trash_pose = Pose(
+            position=Point(x=x, y=y, z=z / 2),
+            orientation=Quaternion(
+                x=float(qx),
+                y=float(qy),
+                z=float(qz),
+                w=float(qw),
+            ),
+        )
+
+        # NOTE (jmatejcz) now we have 1 bin, but if we had multiple,
+        # we would choose the nearest
+        bin_pose = list(
+            self.scene_manager.slots_collections["GarbageContainer01"].slots.values()
+        )[0].origin_pose
+        try:
+            self.kairos_controller.throw_object_to_bin(
+                bin_slot_pose=bin_pose,
+                object_pose=trash_pose,
+                top_gripping_point=trash_gripping_point,
+            )
+            return f"Successfully thrown out trash from {trash_pose} to garbage bin"
+
+        except Exception as e:
+            logging.error(f"Error during move operation: {str(e)}")
+            return f"Failed to throw out garbage from {trash_pose} to garbage bin: {str(e)}"
