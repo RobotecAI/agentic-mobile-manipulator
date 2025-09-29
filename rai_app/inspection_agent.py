@@ -5,7 +5,9 @@ import base64
 import time
 from datetime import datetime
 from typing import Literal, cast
+from pathlib import Path
 
+from geometry_msgs.msg import Pose
 import numpy as np
 import rclpy
 import rclpy.time
@@ -24,7 +26,7 @@ from robotec_kairos_ur10.msg import Anomaly
 from rosidl_runtime_py import message_to_ordereddict
 from scripts.scene_manager import SceneManager
 from llms import get_model
-
+from tf_transformations import euler_from_quaternion
 from sensor_msgs.msg import Image
 from tf2_ros import PoseStamped
 
@@ -50,16 +52,55 @@ class ModelConfig(BaseModel):
     base_url: str | None = None
 
 
-def save_image_to_disk(b64_img: str, directory: str = "./saved_images"):
-    import os
+def save_image_to_disk(b64_img: str, directory: str = "./saved_images") -> str:
+    directory_path = Path(directory).resolve()
+    if not directory_path.exists():
+        directory_path.mkdir(parents=True)
 
-    if not os.path.exists(directory):
-        os.makedirs(directory)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    filename = f"{directory}/image_{timestamp}.png"
-    with open(filename, "wb") as f:
+    image_path = directory_path / f"image_{timestamp}.png"
+    with image_path.open("wb") as f:
         f.write(base64.b64decode(b64_img))
-    return filename
+    return str(image_path)
+
+
+def are_poses_close(
+    pose1: Pose, pose2: Pose, distance: float, rot_degrees: float
+) -> bool:
+    position_ok = (
+        np.linalg.norm(
+            np.array([pose1.position.x, pose1.position.y, pose1.position.z])
+            - np.array([pose2.position.x, pose2.position.y, pose2.position.z])
+        )
+        < distance
+    )
+
+    q1 = [
+        pose1.orientation.x,
+        pose1.orientation.y,
+        pose1.orientation.z,
+        pose1.orientation.w,
+    ]
+    q2 = [
+        pose2.orientation.x,
+        pose2.orientation.y,
+        pose2.orientation.z,
+        pose2.orientation.w,
+    ]
+
+    _, _, yaw1 = euler_from_quaternion(q1)
+    _, _, yaw2 = euler_from_quaternion(q2)
+    yaw_diff = np.abs(np.degrees(yaw1 - yaw2))
+    orientation_ok = yaw_diff < rot_degrees
+
+    return position_ok and orientation_ok
+
+def are_anomalies_close(
+    anomaly1: Anomaly, anomaly2: Anomaly, distance: float, rot_degrees: float
+) -> bool:
+    obstacle_type_match = anomaly1.obstacle_type == anomaly2.obstacle_type
+    poses_match = are_poses_close(anomaly1.pose, anomaly2.pose, distance, rot_degrees) 
+    return poses_match and obstacle_type_match
 
 
 class VlmWarehouseInspector:
@@ -75,6 +116,8 @@ class VlmWarehouseInspector:
         anomalies_topic: str,
         prompt: str = PROMPT,
         system_prompt: str = SYSTEM_PROMPT,
+        match_anomaly_max_distance: float = 0.1,
+        match_anomaly_max_yaw_degrees: float = 10.0,
     ):
         self.camera_topic = camera_topic
         self.ego_target_frame = ego_target_frame
@@ -83,6 +126,8 @@ class VlmWarehouseInspector:
         self.anomalies_topic = anomalies_topic
         self.prompt = prompt
         self.system_prompt = system_prompt
+        self.match_anomaly_max_distance = match_anomaly_max_distance
+        self.match_anomaly_max_yaw_degrees = match_anomaly_max_yaw_degrees
 
         self.connector = ROS2Connector(executor_type="multi_threaded")
         self.get_logger = self.connector.node.get_logger
@@ -94,6 +139,8 @@ class VlmWarehouseInspector:
 
         self.vlm = vlm.with_structured_output(AnomalyDescription)
 
+        self.reported_anomalies: list[Anomaly] = list()
+
     def loop(self):
         while True:
             try:
@@ -101,7 +148,9 @@ class VlmWarehouseInspector:
                     self.camera_topic, timeout_sec=1.0
                 ).payload
             except ValueError:
-                self.get_logger().error(f"Failed to receive a message from {self.camera_topic}")
+                self.get_logger().error(
+                    f"Failed to receive a message from {self.camera_topic}"
+                )
                 continue
             stamp = rclpy.time.Time.from_msg(msg.header.stamp)
             image = CvBridge().imgmsg_to_cv2(  # type: ignore
@@ -112,6 +161,14 @@ class VlmWarehouseInspector:
             ts = time.perf_counter()
             self.vlm_callback(b64_img, image, stamp)
             self.get_logger().info(f"VLM analysis took: {time.perf_counter() - ts}")
+
+    def check_if_anomaly_is_reported(self, anomaly: Anomaly) -> bool:
+        for reported_anomaly in self.reported_anomalies:
+            if are_anomalies_close(
+                reported_anomaly, anomaly, self.match_anomaly_max_distance, self.match_anomaly_max_yaw_degrees
+            ):
+                return True
+        return False
 
     def vlm_callback(self, b64_img: str, image: np.ndarray, stamp: rclpy.time.Time):
         robot_location = self.get_robot_location()
@@ -136,22 +193,30 @@ class VlmWarehouseInspector:
             except ValueError:
                 self.get_logger().error("No trash pose detected")
                 return
+
             self.get_logger().info(f"Trash pose: {trash_pose}")
 
-            filename = save_image_to_disk(b64_img, self.anomaly_images_dir)
 
             message = Anomaly()
             message.pose = trash_pose
             message.obstacle_type = result.obstacle_type
             message.anomaly_description = result.anomaly_description
+
+            if self.check_if_anomaly_is_reported(message):
+                self.get_logger().info(f"Anomaly already reported: {message}")
+                return
+
+            filename = save_image_to_disk(b64_img, self.anomaly_images_dir)
             message.filename = filename
+
+            self.reported_anomalies.append(message)
 
             self.connector.send_message(
                 ROS2Message(payload=message_to_ordereddict(message)),
                 target=self.anomalies_topic,
                 msg_type="robotec_kairos_ur10/msg/Anomaly",
             )
-    
+
     def detect_obstacle(self, b64_img: str) -> AnomalyDescription:
         task = [
             SystemMessage(content=self.system_prompt),
@@ -196,7 +261,6 @@ class VlmWarehouseInspector:
         return pose
 
 
-
 @ROS2Context()
 def main():
     parser = argparse.ArgumentParser()
@@ -215,10 +279,12 @@ def main():
     parser.add_argument("--anomaly-images-dir", type=str, default="./anomaly_images")
     parser.add_argument("--anomalies-topic", type=str, default="/inspection_result")
     args = parser.parse_args()
-    vlm = get_model(model=args.vlm_model, vendor=args.vlm_vendor, base_url=args.vlm_base_url)
+    vlm = get_model(
+        model=args.vlm_model, vendor=args.vlm_vendor, base_url=args.vlm_base_url
+    )
 
     inspector = VlmWarehouseInspector(
-        vlm = vlm,
+        vlm=vlm,
         slots_file=args.slots_file,
         spawnables_file=args.spawnables_file,
         camera_topic=args.camera_topic,

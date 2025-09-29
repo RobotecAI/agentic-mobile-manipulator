@@ -4,6 +4,7 @@ import csv
 from geometry_msgs.msg import Point, Pose
 from rai.communication.ros2 import ROS2Connector, ROS2Context
 
+from scripts.kairos_controller import NAV_GRIPPING_POSE_DISTANCE
 from scripts.scene_manager import SceneManager
 
 
@@ -14,7 +15,6 @@ def load_spawn_config(spawn_config_file):
     """
     spawn_slot_names = []
     spawn_entity_types = []
-
     with open(spawn_config_file, "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -76,7 +76,9 @@ def main():
 
     for trash_pose in trash_poses:
         print(f"Navigating to staging pose {trash_pose}")
-        controller.nav_ctrl.navigate_to_gripping_pose(trash_pose)
+        controller.nav_ctrl.navigate_to_target_pose(
+            trash_pose, NAV_GRIPPING_POSE_DISTANCE
+        )
 
 
 if __name__ == "__main__":
