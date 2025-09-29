@@ -69,14 +69,19 @@ class SceneManager:
 
             # Parse collection and slot info from slot_name
             collection_name, slot_tag = slot_name.split("/", 1)
-            if "rack" in slot_name.lower():
+            slot = Slot(tag=slot_name, origin_pose=pose)
+
+            if "garbagecontainer" in slot_name.lower():
+                collection_type = "garbage_bin"
+            elif "rack" in slot_name.lower():
                 collection_type = "rack"
+            # NOTE(jmatejcz) checking if name has 't' is not the most reliable way
+            # but works for now when there is no items in 'other' collection
             elif "table" in slot_name.lower() or "t" in collection_name:
                 collection_type = "table"
             else:
                 collection_type = "other"
 
-            slot = Slot(tag=slot_name, origin_pose=pose)
             self.slots[slot_name] = slot
             if collection_name not in self.slots_collections:
                 slot_collection = SlotsCollection(
@@ -566,11 +571,17 @@ class SceneManager:
     def get_trash_pose(self, trash_notice_pose: Pose) -> Tuple[str, Pose]:
         """Returns the nearest trash object (name , pose) in the fov of the robot"""
         all_entities_states = self.get_entities(name_filter="cardboardbox03_v02O")
+        # we want gripping point entities, so filter rest
         if not all_entities_states:
             raise ValueError("No entites in simulation")
 
+        entities_states = {}
+        for name, state in all_entities_states.items():
+            if "GrippingPoint" in name and "Side" not in name:
+                entities_states[name] = state
+
         trash = self.find_nearest_object_in_fov(
-            camera_pose=trash_notice_pose, entities_states=all_entities_states
+            camera_pose=trash_notice_pose, entities_states=entities_states
         )
         if trash:
             return trash

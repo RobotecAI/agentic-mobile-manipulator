@@ -2,6 +2,7 @@ import argparse
 import csv
 
 import pandas as pd
+from geometry_msgs.msg import Point, Pose
 from rai.communication.ros2 import ROS2Context
 
 from scripts.scene_manager import SceneManager
@@ -76,6 +77,23 @@ def main():
             "rai_app/resources/spawn_config.csv"
         )
         scene_manager.populate_scene(spawn_slot_names, spawn_entity_types)
+
+    ### spawn trash
+    # pose = Pose(
+    #     position=Point(x=19.240, y=15.230, z=0.023),
+    # )
+    # scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
+
+    # pose = Pose(
+    #     position=Point(x=13.240, y=7.230, z=0.023),
+    # )
+    # scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
+
+    pose = Pose(
+        position=Point(x=17.240, y=4.230, z=0.023),
+    )
+    scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
+    scene_manager.connector.shutdown()
 
 
 if __name__ == "__main__":
