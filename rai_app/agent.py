@@ -11,6 +11,7 @@ from llms import get_model
 from pprint import pformat
 from tools import (
     MoveFromCollectionToCollectionTool,
+    ThrowTrashOutTool,
 )
 from scripts.kairos_controller import KairosController
 from scripts.scene_manager import SceneManager
@@ -90,6 +91,12 @@ def run_rai_agent(run_params: AgentParams):
         scene_manager=scene_manager,
     )
 
+    throw_trash_out_tool = ThrowTrashOutTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+    )
+
     print(run_params.agent_base_url)
     megamind_llm = get_model(
         model=run_params.agent_model,
@@ -98,11 +105,15 @@ def run_rai_agent(run_params: AgentParams):
     )
 
     movement_system_prompt = """You are a movement specialist robot agent.
-Your role is to handle navigating to slots and moving objects from collection to collection using tools."""
+Your role is to handle navigating to slots and moving objects from slot to slot using tools.
+You can also throw out trash by providing the location that trash was noticed."""
 
     megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
 You manage specialists to whom you will delegate tasks:
-- Movement specialist can move object from a collection to collection (table , racks)
+- Movement specialist can move object from a collection to colelciton (table , racks). 
+Additionaly movement agent can throw trash out - for that it needs pose at which trash was noticed.
+
+Don't place two object in the same spot.
 
 For proper execution of an objective you NEED to know:
 - what objects are you meant to move
@@ -110,8 +121,6 @@ For proper execution of an objective you NEED to know:
 - where to place them
 IF you CAN'T figure it out on your own, ask user for clarification
 - Movement specialist can navigate to slot and move objects from slot to slot.
-
-
 """
     executor_llm = get_model(
         model=run_params.executor_model,
@@ -125,6 +134,7 @@ IF you CAN'T figure it out on your own, ask user for clarification
             llm=executor_llm,
             tools=[
                 move_from_coll_to_coll,
+                throw_trash_out_tool,
             ],
             system_prompt=movement_system_prompt,
         ),

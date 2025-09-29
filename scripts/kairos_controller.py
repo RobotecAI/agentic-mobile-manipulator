@@ -144,6 +144,21 @@ class KairosController:
         self.navigate_to_and_pick(object_pose, gripping_point, safe_low_approach)
         self.navigate_to_and_place(target_slot_pose, placing_point, safe_low_approach)
 
+    def throw_object_to_bin(
+        self, bin_slot_pose: Pose, object_pose: Pose, top_gripping_point: Pose
+    ):
+        self.mani_ctrl.set_grasp_type("top")
+
+        # Calculate the relative transform from object_pose to gripping_point
+        # and apply it to target_slot_pose to get placing_point
+        relative_transform = calculate_relative_transform(
+            object_pose, top_gripping_point
+        )
+        placing_point = apply_relative_transform(bin_slot_pose, relative_transform)
+
+        self.navigate_to_and_pick(object_pose, top_gripping_point, False)
+        self.navigate_to_and_throw_to_bin(bin_slot_pose, placing_point, False)
+
     def lift_object(self, gripping_point: Pose):
         self.mani_ctrl.move_arm_to_staging_pose(gripping_point)
         self.mani_ctrl.move_arm_to_target_pose(gripping_point)
@@ -189,6 +204,30 @@ class KairosController:
 
         self.nav_ctrl.move_back(-approach_distance)
 
+        self.place_object(placing_point=placing_point)
+
+        self.nav_ctrl.move_back(approach_distance)
+        self.mani_ctrl.move_arm_to_base_pose()
+
+    def navigate_to_and_throw_to_bin(
+        self, bin_slot_pose: Pose, placing_point: Pose, safe_low_approach: bool
+    ):
+        """Place an object in the specified pose."""
+        strategy = determine_strategy(bin_slot_pose, safe_low_approach)
+        approach_distance = strategy.get_approach_distance()
+
+        self.nav_ctrl.navigate_to_target_pose(
+            bin_slot_pose, strategy.get_staging_distance()
+        )
+        # strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
+
+        bin_slot_pose.position.y += 0.7
+        bin_slot_pose.position.z += 0.4
+        self.mani_ctrl.move_arm_to_staging_pose(bin_slot_pose)
+        bin_slot_pose.position.y -= 0.7
+        bin_slot_pose.position.z -= 0.4
+
+        self.nav_ctrl.move_back(-approach_distance)
         self.place_object(placing_point=placing_point)
 
         self.nav_ctrl.move_back(approach_distance)
