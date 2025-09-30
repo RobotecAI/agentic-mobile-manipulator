@@ -16,9 +16,11 @@ from rai.communication.ros2 import ROS2Connector, ROS2Message
 from context_providers import WarehouseContext
 from robotec_kairos_ur10.msg import Anomaly
 from geometry_msgs.msg import Pose
+from agent_callbacks import AgentProgessCallback
 
 
 class TaskExecution(BaseModel):
+    id: str = field(default_factory=lambda: str(uuid.uuid4()))
     prompt: str = ""
     thread_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     is_paused: bool = False
@@ -73,7 +75,7 @@ class AgentOrchestrator:
 
     def __init__(
         self,
-        connector,
+        connector: ROS2Connector,
         agent: CompiledStateGraph,
         task_topics: List[str],
         inspection_topics: List[str],
@@ -204,6 +206,7 @@ class AgentOrchestrator:
                 "configurable": {"thread_id": task.thread_id},
                 "recursion_limit": self.recurssion_limit,
                 "callbacks": self.agent_callbacks,
+                "tags": [f"task-id:{task.id}"],
             },
             subgraphs=True,
         ):
@@ -387,7 +390,9 @@ IF you CAN'T figure it out on your own, ask user for clarification.
 
     langfuse_handler = CallbackHandler()
     task_topics = ["/user_tasks"]
-    inspection_topics = ["inspection_result"]
+    inspection_topics = ["/inspection_result"]
+
+    ros2_callback = AgentProgessCallback(connector)
     orchestrator = AgentOrchestrator(
         connector=connector,
         agent=agent,
@@ -395,6 +400,6 @@ IF you CAN'T figure it out on your own, ask user for clarification.
         inspection_topics=inspection_topics,
         initial_state_creator=get_initial_megamind_state,
         recurssion_limit=100,
-        agent_callbacks=[langfuse_handler],
+        agent_callbacks=[langfuse_handler, ros2_callback],
     )
     asyncio.run(orchestrator.orchestrator_loop())
