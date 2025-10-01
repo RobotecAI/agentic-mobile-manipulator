@@ -22,7 +22,7 @@ repositories:
   ./gems/robotec-warehouse-assets:
     type: git
     url: https://github.com/RobotecAI/robotec-warehouse-assets.git
-    version: cdd9540130d18a81b1e36a903d0a45710d81f262
+    version: chore/ladders-physics
   ./gems/robotec-generic-assets:
     type: git
     url: https://github.com/RobotecAI/robotec-generic-assets.git
