@@ -1,3 +1,7 @@
+import logging
+import time
+from typing import Any, Dict, List
+
 from langchain_core.callbacks import AsyncCallbackHandler
 from rai.communication.ros2 import ROS2Message, ROS2Connector
 import logging
@@ -5,11 +9,27 @@ from typing import List, Any, Dict
 
 
 class AgentProgessCallback(AsyncCallbackHandler):
-    def __init__(self, connector: ROS2Connector):
+    def __init__(self, connector: ROS2Connector, logger: logging.Logger | None = None):
         self.connector = connector
+        if logger is None:
+            self.logger = logging.getLogger(__name__)
+        else:
+            self.logger = logger
 
-    async def on_chat_model_start(self, serialized, messages, **kwargs):
-        pass
+        self.start_time = None
+        self.end_time = None
+
+    async def on_llm_end(self, *args, **kwargs):
+        self.end_time = time.time()
+        if self.start_time is None:
+            self.logger.error("LLM start time is not set")
+            return
+        self.logger.info(
+            f"LLM call took {self.end_time - self.start_time:.2f} seconds."
+        )
+
+    async def on_chat_model_start(self, *args, **kwargs):
+        self.start_time = time.time()
 
     async def on_chain_end(self, outputs, **kwargs):
         tags = kwargs.get("tags", [])
