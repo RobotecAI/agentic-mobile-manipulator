@@ -1,4 +1,4 @@
-from typing import Type, cast, Optional
+from typing import Type, cast
 
 from pydantic import BaseModel, Field
 
@@ -14,7 +14,6 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from rai.messages import HumanMultimodalMessage, MultimodalArtifact, SystemMessage
 from geometry_msgs.msg import Point, Pose, Quaternion
 
-from tf_transformations import euler_from_quaternion, quaternion_from_euler
 
 
 class WarehosueTool(BaseROS2Tool):
@@ -41,7 +40,7 @@ class NavigateToSlotSyncTool(WarehosueTool):
             slot_names = self.scene_manager.slots.keys()
             return f"Slot {slot_name} does not exist. Available slot names: {"\n".join(slot_names)}"
 
-        self.kairos_controller.nav_ctrl.navigate_to_staging_pose(
+        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
             target_pose=slot.origin_pose
         )
         return f"Successfully navigated to slot {slot_name}"

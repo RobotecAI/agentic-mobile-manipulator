@@ -600,7 +600,9 @@ class SceneManager:
         trash = self.find_nearest_object_in_fov(
             camera_pose=trash_notice_pose, entities_states=entities_states
         )
+
         if trash:
+            self.logger.info(f"Trash detected: {trash[0]} at pose:{trash[1]}")
             return trash
         else:
             raise ValueError("Trash pose not detected")

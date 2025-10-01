@@ -4,7 +4,7 @@ from typing import Optional
 
 
 def get_model(
-    model: str, vendor: str, base_url: Optional[str], reasoning: bool = False
+    model: str, vendor: str, base_url: Optional[str] = None, reasoning: bool = False
 ) -> ChatOllama | ChatOpenAI:
     if vendor == "openai":
         return ChatOpenAI(model=model, base_url=base_url)

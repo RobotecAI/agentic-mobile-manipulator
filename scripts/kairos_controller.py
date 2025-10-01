@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Literal, Tuple
 
 from geometry_msgs.msg import Pose
 from rai.communication.ros2 import ROS2Connector
@@ -82,7 +83,7 @@ def determine_grasp_type_and_point(
     target_slot_pose: Pose,
     top_gripping_point: Pose,
     side_gripping_point: Pose,
-) -> tuple[str, Pose]:
+) -> Tuple[Literal["top", "side"], Pose]:
     if (
         object_pose.position.z > HIGH_GRASP_Z_THRESHOLD
         or target_slot_pose.position.z > HIGH_GRASP_Z_THRESHOLD
@@ -126,15 +127,10 @@ class KairosController:
             manipulation to avoid collision with objects above.
         """
 
-        if (
-            object_pose.position.z > HIGH_GRASP_Z_THRESHOLD
-            or target_slot_pose.position.z > HIGH_GRASP_Z_THRESHOLD
-        ):
-            self.mani_ctrl.set_grasp_type("side")
-            gripping_point = side_gripping_point
-        else:
-            self.mani_ctrl.set_grasp_type("top")
-            gripping_point = top_gripping_point
+        grasp_type, gripping_point = determine_grasp_type_and_point(
+            object_pose, target_slot_pose, top_gripping_point, side_gripping_point
+        )
+        self.mani_ctrl.set_grasp_type(grasp_type)
 
         # Calculate the relative transform from object_pose to gripping_point
         # and apply it to target_slot_pose to get placing_point
@@ -156,7 +152,7 @@ class KairosController:
         )
         placing_point = apply_relative_transform(bin_slot_pose, relative_transform)
 
-        self.navigate_to_and_pick(object_pose, top_gripping_point, False)
+        self.approach_and_pick(object_pose, top_gripping_point, False)
         self.navigate_to_and_throw_to_bin(bin_slot_pose, placing_point, False)
 
     def lift_object(self, gripping_point: Pose):
@@ -179,9 +175,26 @@ class KairosController:
         strategy = determine_strategy(object_pose, safe_low_approach)
         approach_distance = strategy.get_approach_distance()
 
-        self.nav_ctrl.navigate_to_target_pose(
+        self.nav_ctrl.approach_target_along_orientation(
             object_pose, strategy.get_staging_distance()
         )
+        strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
+        self.nav_ctrl.move_back(-approach_distance)
+
+        self.lift_object(gripping_point=gripping_point)
+
+        self.nav_ctrl.move_back(approach_distance)
+        self.mani_ctrl.move_arm_to_base_pose()
+
+    def approach_and_pick(
+        self, object_pose: Pose, gripping_point: Pose, safe_low_approach: bool
+    ):
+        """Try approaching object from 4 directions and pick it from the specified pose."""
+
+        strategy = determine_strategy(object_pose, safe_low_approach)
+        approach_distance = strategy.get_approach_distance()
+
+        self.nav_ctrl.approach_target(object_pose, strategy.get_staging_distance())
         strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
         self.nav_ctrl.move_back(-approach_distance)
 
@@ -197,7 +210,7 @@ class KairosController:
         strategy = determine_strategy(target_slot_pose, safe_low_approach)
         approach_distance = strategy.get_approach_distance()
 
-        self.nav_ctrl.navigate_to_target_pose(
+        self.nav_ctrl.approach_target_along_orientation(
             target_slot_pose, strategy.get_staging_distance()
         )
         strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
@@ -216,10 +229,9 @@ class KairosController:
         strategy = determine_strategy(bin_slot_pose, safe_low_approach)
         approach_distance = strategy.get_approach_distance()
 
-        self.nav_ctrl.navigate_to_target_pose(
+        self.nav_ctrl.approach_target_along_orientation(
             bin_slot_pose, strategy.get_staging_distance()
         )
-        # strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
 
         bin_slot_pose.position.y += 0.7
         bin_slot_pose.position.z += 0.4
