@@ -37,9 +37,9 @@ PROMPT = "Verify if there is an obstacle on warehouse alleys. Please report anom
 
 class AnomalyDescription(BaseModel):
     anomaly_detected: bool = Field(..., description="True if obstacle is detected")
-    obstacle_type: Literal[
-        "none", "box", "contamination", "fallen_object", "other_object"
-    ] = Field(..., description="The type of the obstacle")
+    obstacle_type: Literal["box", "contamination", "fallen_object", "other_object"] = (
+        Field(..., description="The type of the obstacle")
+    )
     anomaly_description: str = Field(
         ...,
         description="A description of the obstacle. Max 20 chars. Leave empty if no obstacle",
@@ -95,11 +95,12 @@ def are_poses_close(
 
     return position_ok and orientation_ok
 
+
 def are_anomalies_close(
     anomaly1: Anomaly, anomaly2: Anomaly, distance: float, rot_degrees: float
 ) -> bool:
     obstacle_type_match = anomaly1.obstacle_type == anomaly2.obstacle_type
-    poses_match = are_poses_close(anomaly1.pose, anomaly2.pose, distance, rot_degrees) 
+    poses_match = are_poses_close(anomaly1.pose, anomaly2.pose, distance, rot_degrees)
     return poses_match and obstacle_type_match
 
 
@@ -165,7 +166,10 @@ class VlmWarehouseInspector:
     def check_if_anomaly_is_reported(self, anomaly: Anomaly) -> bool:
         for reported_anomaly in self.reported_anomalies:
             if are_anomalies_close(
-                reported_anomaly, anomaly, self.match_anomaly_max_distance, self.match_anomaly_max_yaw_degrees
+                reported_anomaly,
+                anomaly,
+                self.match_anomaly_max_distance,
+                self.match_anomaly_max_yaw_degrees,
             ):
                 return True
         return False
@@ -195,7 +199,6 @@ class VlmWarehouseInspector:
                 return
 
             self.get_logger().info(f"Trash pose: {trash_pose}")
-
 
             message = Anomaly()
             message.pose = trash_pose
