@@ -18,6 +18,8 @@ from robotec_kairos_ur10.msg import Anomaly
 from geometry_msgs.msg import Pose
 from agent_callbacks import AgentProgessCallback
 
+from llms import get_model
+
 
 class TaskExecution(BaseModel):
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
@@ -131,6 +133,7 @@ class AgentOrchestrator:
         with self.lock:
             try:
                 self.task_queue.put_nowait(task_exe)
+                logging.info(f"Added inspection task {task_exe.prompt}")
             except asyncio.QueueFull:
                 logging.warning("Task queue is full, dropping task")
 
@@ -298,108 +301,100 @@ if __name__ == "__main__":
         get_initial_megamind_state,
     )
 
-    logging.getLogger("rai_agent")
-    connector = ROS2Connector()
-    scene_manager = SceneManager(
-        slots_file="scripts/resources/slots.csv",
-        spawnables_file="scripts/resources/spawnables.csv",
-        connector=connector,
-    )
-    kairos_controller = KairosController(connector=connector)
-
-    agent_model = "gpt-4o"
-    agent_vendor = "openai"
-
-    llm = (
-        ChatOpenAI(
-            model=agent_model,
-            streaming=True,
+    def main():
+        logging.getLogger("rai_agent")
+        connector = ROS2Connector()
+        scene_manager = SceneManager(
+            slots_file="scripts/resources/slots.csv",
+            spawnables_file="scripts/resources/spawnables.csv",
+            connector=connector,
         )
-        if agent_vendor == "openai"
-        else ChatOllama(
-            model=agent_model,
-            reasoning=False,
+        kairos_controller = KairosController(connector=connector)
+
+        llm = get_model(model="qwen3:8b", vendor="ollama", reasoning=False)
+
+        move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
+            connector=connector,
+            kairos_controller=kairos_controller,
+            scene_manager=scene_manager,
         )
-    )
-
-    move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
-        connector=connector,
-        kairos_controller=kairos_controller,
-        scene_manager=scene_manager,
-    )
-    navigation_tool = NavigateToSlotSyncTool(
-        connector=connector,
-        kairos_controller=kairos_controller,
-        scene_manager=scene_manager,
-    )
-    vlm_tool = IsPackageDamagedTool(
-        connector=connector,
-        namespace_value="",
-        llm=llm,
-    )
-    throw_trash_out_tool = ThrowTrashOutTool(
-        connector=connector,
-        kairos_controller=kairos_controller,
-        scene_manager=scene_manager,
-    )
-
-    movement_system_prompt = """You are a movement specialist robot agent.
-Your role is to handle navigating to slots and moving objects from collection to collection using tools."""
-
-    detection_system_prompt = """You are a detection specialist agent.
-Your role is to identify object state using tools."""
-
-    megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
-You manage specialists to whom you will delegate tasks:
-- Movement specialist can move object from a collection to collection (table, racks) and navigate to given slot.
-- Detection specialist can identify the state of the package at current slot. 
-Use detection agent only when specificly asked about object state, for example if it is damaged. 
-
-For proper execution of an objective you NEED to know:
-- what objects are you meant to move
-- from where to pick them
-- where to place them
-IF you CAN'T figure it out on your own, ask user for clarification.
-"""
-
-    executors = [
-        Executor(
-            name="movement",
+        navigation_tool = NavigateToSlotSyncTool(
+            connector=connector,
+            kairos_controller=kairos_controller,
+            scene_manager=scene_manager,
+        )
+        vlm_tool = IsPackageDamagedTool(
+            connector=connector,
+            namespace_value="",
             llm=llm,
-            tools=[move_from_coll_to_coll, navigation_tool, throw_trash_out_tool],
-            system_prompt=movement_system_prompt,
-        ),
-        Executor(
-            name="detection",
-            llm=llm,
-            tools=[vlm_tool],
-            system_prompt=detection_system_prompt,
-        ),
-    ]
-    warehouse_context = WarehouseContext(scene_manager=scene_manager)
-    # TODO create megamind has to return not compiled StateGraph
-    # because checkpointing has to be added before compiling
-    # currently rai-core implements create_megamind which returns compiled graph
-    # so temporarly we have to  change installed package
-    agent = create_megamind(
-        megamind_system_prompt=megamind_system_prompt,
-        megamind_llm=llm,
-        executors=executors,
-        context_providers=[warehouse_context],
-    )
+        )
+        throw_trash_out_tool = ThrowTrashOutTool(
+            connector=connector,
+            kairos_controller=kairos_controller,
+            scene_manager=scene_manager,
+        )
 
-    langfuse_handler = CallbackHandler()
-    task_topics = ["/user_tasks"]
-    inspection_topics = ["/inspection_result"]
+        movement_system_prompt = """You are a movement specialist robot agent.
+    Your role is to handle navigating to slots and moving objects from collection to collection using tools."""
 
-    ros2_callback = AgentProgessCallback(connector)
-    orchestrator = AgentOrchestrator(
-        connector=connector,
-        agent=agent,
-        task_topics=task_topics,
-        inspection_topics=inspection_topics,
-        initial_state_creator=get_initial_megamind_state,
-        recurssion_limit=100,
-        agent_callbacks=[langfuse_handler, ros2_callback],
-    )
-    asyncio.run(orchestrator.orchestrator_loop())
+        detection_system_prompt = """You are a detection specialist agent.
+    Your role is to identify object state using tools."""
+
+        megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
+    You manage specialists to whom you will delegate tasks:
+    - Movement specialist can move object from a collection to collection (table, racks) and navigate to given slot.
+    - Detection specialist can identify the state of the package at current slot. 
+    Use detection agent only when specificly asked about object state, for example if it is damaged. 
+    Agents do not have access to your prompt, so you MUST include all neccessery information when delegating tasks,
+    like collection names or object position.
+
+    For proper execution of an objective you NEED to know:
+    - what objects are you meant to move
+    - from where to pick them
+    - where to place them
+    IF you CAN'T figure it out on your own, ask user for clarification.
+    """
+
+        executors = [
+            Executor(
+                name="movement",
+                llm=llm,
+                tools=[move_from_coll_to_coll, navigation_tool, throw_trash_out_tool],
+                system_prompt=movement_system_prompt,
+            ),
+            Executor(
+                name="detection",
+                llm=llm,
+                tools=[vlm_tool],
+                system_prompt=detection_system_prompt,
+            ),
+        ]
+        warehouse_context = WarehouseContext(scene_manager=scene_manager)
+        # TODO create megamind has to return not compiled StateGraph
+        # because checkpointing has to be added before compiling
+        # currently rai-core implements create_megamind which returns compiled graph
+        # so temporarly we have to  change installed package
+        agent = create_megamind(
+            megamind_system_prompt=megamind_system_prompt,
+            megamind_llm=llm,
+            executors=executors,
+            context_providers=[warehouse_context],
+        )
+
+        langfuse_handler = CallbackHandler()
+        task_topics = ["/user_tasks"]
+        inspection_topics = ["/inspection_result"]
+
+        ros2_callback = AgentProgessCallback(connector)
+        orchestrator = AgentOrchestrator(
+            connector=connector,
+            agent=agent,
+            task_topics=task_topics,
+            inspection_topics=inspection_topics,
+            initial_state_creator=get_initial_megamind_state,
+            recurssion_limit=100,
+            agent_callbacks=[langfuse_handler, ros2_callback],
+        )
+        asyncio.run(orchestrator.orchestrator_loop())
+
+    main()
