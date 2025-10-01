@@ -222,7 +222,19 @@ class SceneManager:
                 timeout_sec=3.0,
             )
 
-    def move_entity(self, entity_name, x=0.0, y=0.0, z=0.0, sx=0.0, sy=0.0, sz=0.0):
+    def move_entity(
+        self,
+        entity_name,
+        dx=0.0,
+        dy=0.0,
+        dz=0.0,
+        sx=0.0,
+        sy=0.0,
+        sz=0.0,
+        ax=0.0,
+        ay=0.0,
+        az=0.0,
+    ):
         wait_for_ros2_services(
             self.connector, ["/get_entity_state", "/set_entity_state"]
         )
@@ -235,13 +247,13 @@ class SceneManager:
             msg_type="simulation_interfaces/srv/GetEntityState",
             timeout_sec=3.0,
         ).payload
-        entity_state = cast(GetEntityState.Response, response).result
+        entity_state = cast(GetEntityState.Response, response)
 
         req = SetEntityState.Request()
         req.entity = entity_name  # Entity name in simulation
-        req.state.pose.position.x = entity_state.state.pose.position.x + x
-        req.state.pose.position.y = entity_state.state.pose.position.y + y
-        req.state.pose.position.z = entity_state.state.pose.position.z + z
+        req.state.pose.position.x = entity_state.state.pose.position.x + dx
+        req.state.pose.position.y = entity_state.state.pose.position.y + dy
+        req.state.pose.position.z = entity_state.state.pose.position.z + dz
         req.state.pose.orientation.x = entity_state.state.pose.orientation.x
         req.state.pose.orientation.y = entity_state.state.pose.orientation.y
         req.state.pose.orientation.z = entity_state.state.pose.orientation.z
@@ -249,9 +261,9 @@ class SceneManager:
         req.state.twist.linear.x = sx
         req.state.twist.linear.y = sy
         req.state.twist.linear.z = sz
-        req.state.twist.angular.x = 0.0
-        req.state.twist.angular.y = 0.0
-        req.state.twist.angular.z = 0.0
+        req.state.twist.angular.x = ax
+        req.state.twist.angular.y = ay
+        req.state.twist.angular.z = az
         req.state.header.frame_id = entity_state.state.header.frame_id
 
         result = self.connector.call_service(
@@ -260,12 +272,17 @@ class SceneManager:
             msg_type="simulation_interfaces/srv/SetEntityState",
             timeout_sec=3.0,
         ).payload
-        future = cast(SetEntityState.Response, result).result
+        response = cast(SetEntityState.Response, result)
 
-        if future.result() is not None:
-            print(f"Move result: {future.result}")
+        if response.result is not None:
+            if response.result.result == 1:
+                print(f"Moved {entity_name}")
+            else:
+                self.logger.error(
+                    f"Failed to move {entity_name}. Error: {response.result.error_message}"
+                )
         else:
-            self.logger.error(f"Service call failed: {future.exception()}")
+            raise RuntimeError(f"Failed to move {entity_name}. Error: {response}")
 
     def get_object_height(self, object_name: str):
         """Calculate the height of an object's gripping point based on its base"""

@@ -103,7 +103,7 @@
         },
         "Entity_[49611556468444]": {
             "Id": "Entity_[49611556468444]",
-            "Name": "physics",
+            "Name": "PlasticBarrel1",
             "Components": {
                 "EditorColliderComponent": {
                     "$type": "EditorColliderComponent",
@@ -169,6 +169,7 @@
                     "Id": 2729512024350246258,
                     "Configuration": {
                         "entityId": "",
+                        "Angular damping": 0.5,
                         "Mass": 375.0297546386719,
                         "Centre of mass offset": [
                             2.972807555678969e-9,
