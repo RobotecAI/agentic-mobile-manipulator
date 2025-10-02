@@ -11,29 +11,28 @@ Run:
         --embedding-model mxbai-embed-large
 
 """
+
 from __future__ import annotations
 
 import argparse
 import os
 import textwrap
-from typing import Type, List, Any, Dict
+from typing import Any, Dict, List, Type
 
-from pydantic import BaseModel, Field
-from langchain_core.tools import BaseTool
-from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import OllamaEmbeddings
-
-from rai import get_llm_model
+from langchain_community.vectorstores import FAISS
+from langchain_core.tools import BaseTool
+from pydantic import BaseModel, Field
+from rai import get_llm_model, get_tracing_callbacks
 from rai.agents.langchain import create_react_runnable
-from langchain.schema import HumanMessage
 from rai.messages import HumanMultimodalMessage, preprocess_image
-from rai import get_tracing_callbacks
 
+SYSTEM_PROMPT = """You are a warehouse safety expert. Your task is to inspect potential warehouse safety violations and identify violations in the provided image. Get neccessary context from the vector database using the vector_search tool before answering questions. Justify your answers with relevant passages from the database."""
 
-SYSTEM_PROMPT = f"""You are a warehouse safety expert. Your task is to inspect potential warehouse safety violations and identify violations in the provided image. Get neccessary context from the vector database using the vector_search tool before answering questions. Justify your answers with relevant passages from the database."""
 
 class VectorSearchToolInput(BaseModel):
     """Input schema for the vector search tool."""
+
     query: str = Field(description="Natural language query for semantic search")
     k: int = Field(default=10, description="Number of top documents to retrieve (1-20)")
 
@@ -68,7 +67,11 @@ class VectorSearchTool(BaseTool):
             meta = getattr(d, "metadata", {}) or {}
             snippet = d.page_content.strip().replace("\n", " ")
             snippet = textwrap.shorten(snippet, width=500, placeholder=" …")
-            meta_str = ", ".join(f"{k}={v}" for k, v in meta.items()) if meta else "(no metadata)"
+            meta_str = (
+                ", ".join(f"{k}={v}" for k, v in meta.items())
+                if meta
+                else "(no metadata)"
+            )
             formatted.append(f"[{i}] {snippet}\n    META: {meta_str}")
 
         result = "Retrieved passages (use them to answer):\n" + "\n".join(formatted)
@@ -139,14 +142,18 @@ def run_test_cases(agent: Any) -> None:
             print(f"[WARN {idx}] Image not found: {image_path}")
         state: Dict[str, List[Any]] = {"messages": []}
         try:
-            images_list = [preprocess_image(image_path)] if os.path.exists(image_path) else []
+            images_list = (
+                [preprocess_image(image_path)] if os.path.exists(image_path) else []
+            )
             state["messages"].append(
                 HumanMultimodalMessage(
                     content=question,
                     images=images_list,
                 )
             )
-            response: Any = agent.invoke(state, config={"callbacks": get_tracing_callbacks()})
+            response: Any = agent.invoke(
+                state, config={"callbacks": get_tracing_callbacks()}
+            )
         except Exception as e:
             print(f"[ERR {idx}] Agent error for image {image_path}: {e}")
             continue
@@ -161,10 +168,14 @@ def run_test_cases(agent: Any) -> None:
 def parse_args():
     parser = argparse.ArgumentParser(description="RAI vector DB ReAct agent demo")
     parser.add_argument(
-        "--vector-store-dir", required=True, help="Directory containing FAISS index.faiss & index.pkl"
+        "--vector-store-dir",
+        required=True,
+        help="Directory containing FAISS index.faiss & index.pkl",
     )
     parser.add_argument(
-        "--model-type", default="complex_model", help="Model type as defined in RAI config.toml"
+        "--model-type",
+        default="complex_model",
+        help="Model type as defined in RAI config.toml",
     )
     parser.add_argument(
         "--embedding-model",
@@ -184,5 +195,5 @@ def main():
     run_test_cases(agent)
 
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     main()
