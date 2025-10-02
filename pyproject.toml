@@ -9,7 +9,7 @@ dependencies = [
     "langfuse[langchain]>=2.60.9",
     "pre-commit>=4.3.0",
     "pytest>=8.4.2",
-    "rai-core>=2.5.0",
+    "rai-core>=2.5.1",
 ]
 [tool.setuptools.packages.find]
 include = ["scripts*"]
