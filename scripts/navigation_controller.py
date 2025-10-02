@@ -1,9 +1,17 @@
 import time
-from typing import Any, Callable
+from typing import Any, Callable, List
 
 import numpy as np
-from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
+import pandas as pd
+from geometry_msgs.msg import (
+    Point,
+    Pose,
+    PoseStamped,
+    Quaternion,
+)
 from rai.communication.ros2 import ROS2Connector, ROS2Message
+from rosidl_runtime_py.convert import message_to_ordereddict
+from std_msgs.msg import Header
 
 from scripts.tools import get_global_pose_from_origin, get_lookat_yaw
 
@@ -91,6 +99,24 @@ class Navigator:
         if self.result is None:
             raise RuntimeError("Result should not be None")
 
+        return self.result
+
+    def follow_waypoints(self, poses: List[PoseStamped]):
+        self.reset_state()
+        from rai_interfaces.action import FollowWaypoints
+
+        goal = FollowWaypoints.Goal(goal_index=0, number_of_loops=1, poses=poses)
+        self.run_start_action(
+            action_data=ROS2Message(payload=message_to_ordereddict(goal)),
+            target="rai/nav2/follow_waypoints",
+            msg_type="rai_interfaces/action/FollowWaypoints",
+            on_feedback=self.feedback_callback,
+            on_done=self.done_callback,
+        )
+        while not self.done:
+            time.sleep(0.1)
+        if self.result is None:
+            raise RuntimeError("Result should not be None")
         return self.result
 
     def get_logger(self):
@@ -225,3 +251,36 @@ class NavigationController:
             self.navigator.connector.node.get_clock().now().to_msg()
         )
         return self.navigator.navigate_to_pose(poseWithTimestamp)
+
+    def warehouse_route(self):
+        # TODO:
+        # warehouse route should use follow path action
+        # however, nav2 server often rejects the goal
+        # so we use follow waypoints action instead
+        df = pd.read_csv("scripts/resources/warehouse_route.csv")
+        poses = [
+            PoseStamped(
+                pose=Pose(
+                    position=Point(x=row["x"], y=row["y"], z=row["z"]),
+                    orientation=Quaternion(
+                        x=row["qx"], y=row["qy"], z=row["qz"], w=row["qw"]
+                    ),
+                ),
+                header=Header(frame_id="odom"),
+            )
+            for _, row in df.iterrows()
+        ]
+        return self.navigator.follow_waypoints(poses)
+
+
+def main():
+    # run warehouse route by default
+    # TODO: remove when connected to other parts of the system
+    connector = ROS2Connector()
+    navigator = NavigationController(connector)
+    navigator.warehouse_route()
+    time.sleep(10000)
+
+
+if __name__ == "__main__":
+    main()
