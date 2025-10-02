@@ -6,6 +6,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from nav2_msgs.action import DriveOnHeading as Nav2DriveOnHeading
+from nav2_msgs.action import FollowWaypoints as Nav2FollowWaypoints
 from nav2_msgs.action import NavigateToPose as Nav2NavigateToPose
 from nav2_msgs.action import Spin as Nav2Spin
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
@@ -15,13 +16,17 @@ from rai.communication.ros2 import (
     ROS2Connector,
     ROS2Context,
 )
-from rai_interfaces.action import DriveOnHeading, NavigateToPose, Spin
+from rai_interfaces.action import DriveOnHeading, FollowWaypoints, NavigateToPose, Spin
 from rclpy.action.server import ServerGoalHandle
 from tf_transformations import euler_from_quaternion
 
 
 def decode_error_code(
-    code: int, action_class: Nav2NavigateToPose | Nav2DriveOnHeading | Nav2Spin
+    code: int,
+    action_class: Nav2NavigateToPose
+    | Nav2DriveOnHeading
+    | Nav2Spin
+    | Nav2FollowWaypoints,
 ) -> str:
     for name, value in action_class.Result.__dict__.items():
         if isinstance(value, int) and value == code:
@@ -79,6 +84,11 @@ class Nav2Agent(BaseAgent):
             action_name="/rai/nav2/spin",
             action_type="rai_interfaces/action/Spin",
             generate_feedback_callback=self.spin,
+        )
+        self.connector.create_action(
+            action_name="/rai/nav2/follow_waypoints",
+            action_type="rai_interfaces/action/FollowWaypoints",
+            generate_feedback_callback=self.follow_waypoints,
         )
         self.logger.info("Nav2Agent initialized")
 
@@ -253,6 +263,50 @@ class Nav2Agent(BaseAgent):
         else:
             action_result.success = False
             action_result.report = "Turn has unknown result. Try again."
+            return action_result
+
+    @logging_wrapper
+    def follow_waypoints(self, goal_handle: ServerGoalHandle):
+        request = cast(FollowWaypoints.Goal, goal_handle.request)
+
+        for _ in range(request.number_of_loops):
+            self.navigator.followWaypoints(poses=request.poses[request.goal_index :])
+
+        while not self.navigator.isTaskComplete():
+            time.sleep(0.1)
+
+        result = self.navigator.getResult()
+        feedback = self.navigator.getFeedback()
+
+        action_result = FollowWaypoints.Result()
+        if result == TaskResult.SUCCEEDED:
+            goal_handle.succeed()
+            action_result.success = True
+            action_result.report = "Followed waypoints successfully."
+            return action_result
+        elif result == TaskResult.CANCELED:
+            goal_handle.canceled()
+            action_result.success = False
+            action_result.report = "Followed waypoints has been canceled."
+            return action_result
+        elif result == TaskResult.FAILED:
+            reason = self.navigator.result_future.result().result.error_code
+            enum_name = decode_error_code(reason, Nav2Spin)
+
+            goal_handle.abort()
+            response = self.llm.invoke(
+                self.formulate_prompt(
+                    f"Followed waypoints has failed with error code {enum_name}. Check the logs and provide a short summary.",
+                    str(feedback),
+                    request.poses,
+                )
+            )
+            action_result.success = False
+            action_result.report = response.content
+            return action_result
+        else:
+            action_result.success = False
+            action_result.report = "Followed waypoints has unknown result. Try again."
             return action_result
 
 

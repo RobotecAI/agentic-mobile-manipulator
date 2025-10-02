@@ -13,11 +13,11 @@ ${DEMO_ROOT}/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher
 
 ### ROS 2
 
-To run the ROS 2 stack, execute:
+To run the ROS 2 stack and control agents, execute:
 
 ```shell
 source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-ros2 launch robotec_kairos_ur10 robotec_launch.py
+./scripts/run_ros2_stack.sh
 ```
 
 ### GenAI Inference
