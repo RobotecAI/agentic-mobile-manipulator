@@ -1,4 +1,5 @@
 import argparse
+import copy
 import math
 import random
 import uuid
@@ -202,7 +203,7 @@ class SceneManager:
         frame: str = "odom",
     ):
         wait_for_ros2_services(self.connector, ["/spawn_entity"])
-        pose: Pose = self.slots[slot_name].origin_pose
+        pose: Pose = copy.deepcopy(self.slots[slot_name].origin_pose)
         # Add Gaussian noise to x, y
         pose.position.x += random.normalvariate(0, std_xy)
         pose.position.y += random.normalvariate(0, std_xy)
@@ -330,6 +331,27 @@ class SceneManager:
             for i, name in enumerate(response.entities):
                 entities[name] = response.states[i]
             return entities
+
+    def find_entity_slot(self, entity_name: str) -> Optional[Slot]:
+        """Find the slot that contains the given entity"""
+        entity_pose = self.get_pose(entity_name)
+        for _, collection in self.slots_collections.items():
+            for slot_name, slot in collection.slots.items():
+                if slot.is_entity_within_slot(entity_pose=entity_pose):
+                    return slot
+
+    def find_entity_pose(self, entity_name: str) -> Pose:
+        """
+        Find the slot that contains the given entity based on its position
+        If entity is in slot return slot pose else return entity pose
+        """
+        entity_pose = self.get_pose(entity_name)
+        for _, collection in self.slots_collections.items():
+            for slot_name, slot in collection.slots.items():
+                if slot.is_entity_within_slot(entity_pose=entity_pose):
+                    return slot.origin_pose
+
+        return entity_pose
 
     def assign_entities_to_slots(self, entities: Dict[str, EntityState]):
         """Assign entities to their corresponding slots based on position"""
@@ -639,6 +661,30 @@ class SceneManager:
             return trash
         else:
             raise ValueError("Trash pose not detected")
+
+    def get_angle_between_points(self, p1, p2, p3) -> float:
+        v1 = np.array([p3.x - p2.x, p3.y - p2.y])
+        v2 = np.array([p1.x - p2.x, p1.y - p2.y])
+        cos_angle = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+        angle = np.arccos(np.clip(cos_angle, -1.0, 1.0))
+        return angle
+
+    def find_closest_side_gripping_point(
+        self, entity_name: str, camera_pose: Pose
+    ) -> Pose:
+        side_gripping_points = [
+            self.get_pose(entity_name + f"_SideGrippingPoint{i}") for i in range(1, 5)
+        ]
+        object_pose = self.get_pose(entity_name)
+
+        closest_gripping_point = max(
+            enumerate(side_gripping_points),
+            # find the point with most straight angle to the robot
+            key=lambda p: self.get_angle_between_points(
+                camera_pose.position, p[1].position, object_pose.position
+            ),
+        )
+        return closest_gripping_point[1]
 
 
 @ROS2Context()

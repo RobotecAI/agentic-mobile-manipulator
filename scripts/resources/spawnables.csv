@@ -3,8 +3,8 @@ ego,product_asset:///assets/rbkairos_plus.spawnable
 cardboardbox01_v01,product_asset:///assets/payload/boxes/cardboardbox01_v01.spawnable
 cardboardbox01_v02D,product_asset:///assets/payload/boxes/cardboardbox01_v02D.spawnable
 cardboardbox01_v03,product_asset:///assets/payload/boxes/cardboardbox01_v03.spawnable
-cardboardbox02_v01,product_asset:///assets/payload/boxes/cardboardbox01_v01.spawnable
-cardboardbox02_v02D,product_asset:///assets/payload/boxes/cardboardbox01_v02D.spawnable
+cardboardbox02_v01,product_asset:///assets/payload/boxes/cardboardbox02_v01.spawnable
+cardboardbox02_v02D,product_asset:///assets/payload/boxes/cardboardbox02_v02D.spawnable
 cardboardbox03_v01,product_asset:///assets/payload/boxes/cardboardbox03_v01.spawnable
 cardboardbox03_v02O,product_asset:///assets/payload/boxes/cardboardbox03_v02O.spawnable
 cardboardbox04_v01,product_asset:///assets/payload/boxes/cardboardbox04_v01.spawnable
