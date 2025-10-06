@@ -16,19 +16,21 @@ def main(debug: bool = False):
     connector = ROS2Connector(
         executor_type="single_threaded", node_name="ground_truth_manipulation"
     )
-    kairos_controller = KairosController(connector=connector)
-    if debug:
-        kairos_controller.logger.set_level(LoggingSeverity.DEBUG)
-
-    print("KAIROS CONTROLLER INITIALIZED")
-
     scene_manager = SceneManager(
         slots_file="scripts/resources/slots.csv",
         spawnables_file="scripts/resources/spawnables.csv",
         connector=connector,
     )
-
     print("SCENE MANAGER INITIALIZED")
+
+    kairos_controller = KairosController(
+        connector=connector, scene_manager=scene_manager
+    )
+    if debug:
+        kairos_controller.logger.set_level(LoggingSeverity.DEBUG)
+
+    print("KAIROS CONTROLLER INITIALIZED")
+
     scene_manager.clear_scene()
 
     entity_types = [
@@ -45,7 +47,7 @@ def main(debug: bool = False):
         "cardboardbox07_v01",
         "cardboardbox08_v01",
     ]
-
+    all_slot_names = []
     all_slot_names = [
         [f"{rack}/RackSlot{i}" for i in range(1, 10)]
         + [f"{rack}/RackSlot{i}" for i in range(13, 22)]
@@ -64,20 +66,17 @@ def main(debug: bool = False):
     ]
 
     simulation_names = scene_manager.populate_scene(
-        spawn_slot_names, spawn_entity_types
+        spawn_slot_names, spawn_entity_types, None, 0.0, 0.1
     )
+
+    import math
 
     for entity_name, target_slot_name in tqdm(
         zip(simulation_names, target_slot_names),
         total=min(len(simulation_names), len(target_slot_names)),
     ):
-        object_pose = scene_manager.get_pose(entity_name)
-        slot_pose = scene_manager.get_slot_pose(target_slot_name)
-        top_gripping_point = scene_manager.get_gripping_point(entity_name)
-        side_gripping_point = scene_manager.get_pose(entity_name + "_SideGrippingPoint")
-        kairos_controller.move_object_to_slot(
-            slot_pose, object_pose, top_gripping_point, side_gripping_point
-        )
+        kairos_controller.rotate_object(entity_name, math.pi / 2)
+        # kairos_controller.move_object_to_slot(entity_name, target_slot_name)
 
     connector.shutdown()
 

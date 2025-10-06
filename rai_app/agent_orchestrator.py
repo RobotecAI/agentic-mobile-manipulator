@@ -298,7 +298,9 @@ def main():
         spawnables_file="scripts/resources/spawnables.csv",
         connector=connector,
     )
-    kairos_controller = KairosController(connector=connector)
+    kairos_controller = KairosController(
+        connector=connector, scene_manager=scene_manager
+    )
 
     llm = get_model(model="qwen3:8b", vendor="ollama", reasoning=False)
 

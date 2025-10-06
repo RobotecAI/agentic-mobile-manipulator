@@ -277,22 +277,14 @@ class MoveFromCollectionToCollectionTool(WarehouseTool):
         if origin_object_name is None:
             raise ValueError(f"There is no package at origin slot {origin_object_name}")
 
-        origin_object_pose = self.scene_manager.get_pose(entity_name=origin_object_name)
-
         target_slot = self.scene_manager.slots[target_slot.tag]
-        gripping_point = self.scene_manager.get_gripping_point(origin_object_name)
-        side_gripping_point = self.scene_manager.get_pose(
-            origin_object_name + "_SideGrippingPoint"
-        )
         try:
             logging.info(
                 f"Proceeding with moving object from slot {origin_slot.tag} to {target_slot.tag}"
             )
             self.kairos_controller.move_object_to_slot(
-                target_slot_pose=target_slot.origin_pose,
-                object_pose=origin_object_pose,
-                top_gripping_point=gripping_point,
-                side_gripping_point=side_gripping_point,
+                target_slot_name=target_slot.tag,
+                entity_name=origin_object_name,
             )
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")

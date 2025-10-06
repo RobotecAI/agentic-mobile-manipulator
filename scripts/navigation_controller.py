@@ -12,6 +12,7 @@ from geometry_msgs.msg import (
 from rai.communication.ros2 import ROS2Connector, ROS2Message
 from rosidl_runtime_py.convert import message_to_ordereddict
 from std_msgs.msg import Header
+from tf_transformations import euler_from_quaternion
 
 from scripts.tools import get_global_pose_from_origin, get_lookat_yaw
 
@@ -115,6 +116,29 @@ class Navigator:
         )
         while not self.done:
             time.sleep(0.1)
+
+    def spin(self, angle: float):
+        self.reset_state()
+
+        robot_transform = self.connector.get_transform("map", "egobase_link")
+        robot_quat = robot_transform.transform.rotation
+        robot_yaw = euler_from_quaternion(
+            [robot_quat.x, robot_quat.y, robot_quat.z, robot_quat.w]
+        )[2]
+
+        target_yaw = robot_yaw + angle
+
+        self.run_start_action(
+            action_data=ROS2Message(payload={"target_yaw": target_yaw}),
+            target="rai/nav2/spin",
+            msg_type="rai_interfaces/action/Spin",
+            on_feedback=self.feedback_callback,
+            on_done=self.done_callback,
+        )
+
+        while not self.done:
+            time.sleep(0.1)
+
         if self.result is None:
             raise RuntimeError("Result should not be None")
         return self.result
@@ -250,7 +274,28 @@ class NavigationController:
         poseWithTimestamp.header.stamp = (
             self.navigator.connector.node.get_clock().now().to_msg()
         )
-        return self.navigator.navigate_to_pose(poseWithTimestamp)
+        poseWithTimestamp.pose.position.z = 0.0
+
+        return self.navigator.navigate_to_pose(poseWithTimestamp).result
+
+    def get_current_pose(self) -> Pose:
+        transform = self.navigator.connector.get_transform("map", "egobase_link")
+        return Pose(
+            position=Point(
+                x=transform.transform.translation.x,
+                y=transform.transform.translation.y,
+                z=transform.transform.translation.z,
+            ),
+            orientation=Quaternion(
+                x=transform.transform.rotation.x,
+                y=transform.transform.rotation.y,
+                z=transform.transform.rotation.z,
+                w=transform.transform.rotation.w,
+            ),
+        )
+
+    def spin(self, angle: float):
+        return self.navigator.spin(angle).result
 
     def warehouse_route(self):
         # TODO:
