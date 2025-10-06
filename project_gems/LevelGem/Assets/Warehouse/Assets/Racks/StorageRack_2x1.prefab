@@ -68,7 +68,8 @@
                     "Child Entity Order": [
                         "Entity_[3948804511790]",
                         "Entity_[5301719210030]",
-                        "Entity_[51167120173779]"
+                        "Entity_[48062553579228]",
+                        "Entity_[22103434993305]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -1838,6 +1839,53 @@
                 }
             }
         },
+        "Entity_[22103434993305]": {
+            "Id": "Entity_[22103434993305]",
+            "Name": "FloorLines",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 7859609158029818892
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13834642906199405592
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 11251248758593765434,
+                    "Child Entity Order": [
+                        "Instance_[69932190801561]/ContainerEntity",
+                        "Instance_[45676042143894]/ContainerEntity"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 4349482218741372014
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 6579213441770339919
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 6080010842334605491
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 10687043714336874755
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 11813766380598081176
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4368586017854421372,
+                    "Parent Entity": "Entity_[14538807820674]"
+                }
+            }
+        },
         "Entity_[2301544268426]": {
             "Id": "Entity_[2301544268426]",
             "Name": "RackSlot1",
@@ -2042,7 +2090,7 @@
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
                                             },
-                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_g05.azmaterial"
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
                                         }
                                     }
                                 }
@@ -2136,7 +2184,7 @@
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
                                             },
-                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_f02.azmaterial"
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
                                         }
                                     }
                                 }
@@ -2299,7 +2347,7 @@
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
                                             },
-                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_f09.azmaterial"
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
                                         }
                                     }
                                 }
@@ -2393,7 +2441,7 @@
                                             "assetId": {
                                                 "guid": "{7E1A06FA-A19B-55C3-B5E6-0BE7A88D4CFE}"
                                             },
-                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_k02.azmaterial"
+                                            "assetHint": "assets/warehouse/assets/numbersigns/materials/sign_00.azmaterial"
                                         }
                                     }
                                 }
@@ -2433,9 +2481,56 @@
                 }
             }
         },
+        "Entity_[48062553579228]": {
+            "Id": "Entity_[48062553579228]",
+            "Name": "Rack",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15886919134084592558
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 9392396834745368477
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 5830114366449070915,
+                    "Child Entity Order": [
+                        "Entity_[51167120173779]",
+                        "Instance_[4481748011982]/ContainerEntity"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 11367214675859784082
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 5387635847572662333
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 13953406758051596457
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 16808952281811124546
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 10473017699489403803
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 17954725943240382762,
+                    "Parent Entity": "Entity_[14538807820674]"
+                }
+            }
+        },
         "Entity_[51167120173779]": {
             "Id": "Entity_[51167120173779]",
-            "Name": "Rack",
+            "Name": "NumberSigns",
             "Components": {
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -2452,8 +2547,7 @@
                         "Entity_[2746745046264]",
                         "Entity_[4262412987623]",
                         "Entity_[4266707954919]",
-                        "Entity_[2995853149432]",
-                        "Instance_[2845356619805]/ContainerEntity"
+                        "Entity_[2995853149432]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -2479,7 +2573,7 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 6583619032525663202,
-                    "Parent Entity": "Entity_[14538807820674]",
+                    "Parent Entity": "Entity_[48062553579228]",
                     "Transform Data": {
                         "Translate": [
                             0.0,
@@ -4151,13 +4245,48 @@
         }
     },
     "Instances": {
-        "Instance_[2845356619805]": {
-            "Source": "WarehouseRack_Small_x2.prefab",
+        "Instance_[4481748011982]": {
+            "Source": "WarehouseRack_Small_3shelves_x2.prefab",
             "Patches": [
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[51167120173779]"
+                    "value": "../Entity_[48062553579228]"
+                }
+            ]
+        },
+        "Instance_[45676042143894]": {
+            "Source": "Lines/Rack450x120_EndLines.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[22103434993305]"
+                }
+            ]
+        },
+        "Instance_[48248727554198]": {
+            "Source": "Lines/Rack450x120_EndLines.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[22103434993305]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 180.0
+                }
+            ]
+        },
+        "Instance_[69932190801561]": {
+            "Source": "Lines/Rack450x120_SideLines.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[22103434993305]"
                 }
             ]
         }
