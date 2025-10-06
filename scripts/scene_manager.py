@@ -2,7 +2,7 @@ import argparse
 import math
 import random
 import uuid
-from typing import Dict, List, Optional, Tuple, cast
+from typing import Dict, List, Optional, Sequence, Tuple, cast
 
 import numpy as np
 import pandas as pd
@@ -128,24 +128,46 @@ class SceneManager:
         self,
         slots: list[str],
         object_names: list[str],
+        items_stored: Optional[Sequence[None | str]] = None,
         std_xy: float = 0.0,
         std_yaw: float = 0.0,
     ):
-        if len(slots) != len(object_names):
-            raise ValueError("Slots and object names must have the same length")
+        if items_stored is None:
+            items_stored = [None] * len(object_names)
+
+        if len(slots) != len(object_names) != len(items_stored):
+            raise ValueError(
+                "Slots and object names must have the same length and items stored"
+            )
+
         # TODO(maciejmajek): This line freezes execution
         # self.logger.info(f"Populating scene with {len(slots)} entities")
         simulation_names: list[str] = []
-        for slot, object_name in tqdm(
-            zip(slots, object_names), desc="Spawning entities", total=len(slots)
+        for slot, object_name, item in tqdm(
+            zip(slots, object_names, items_stored),
+            desc="Spawning entities",
+            total=len(slots),
         ):
-            simulation_name = self.spawn_on_spot(slot, object_name, std_xy, std_yaw)
+            simulation_name = self.spawn_on_spot(
+                slot, object_name, item, std_xy, std_yaw
+            )
             simulation_names.append(simulation_name)
         return simulation_names
 
-    def spawn_object(self, pose: Pose, object_name: str, frame: str = "odom"):
+    def spawn_object(
+        self,
+        pose: Pose,
+        object_name: str,
+        item_stored: Optional[str] = None,
+        frame: str = "odom",
+    ):
         wait_for_ros2_services(self.connector, ["/spawn_entity"])
-        name = object_name + str(uuid.uuid4())[:8]
+        # NOTE (jmatejcz) item stored will be added to name of object
+        # and thats how it will be distinguished
+        if item_stored:
+            name = object_name + f"__{item_stored}__" + str(uuid.uuid4())[:8]
+        else:
+            name = object_name + str(uuid.uuid4())[:8]
 
         req = SpawnEntity.Request()
         req.name = name
@@ -174,6 +196,7 @@ class SceneManager:
         self,
         slot_name: str,
         object_name: str,
+        item_stored: Optional[str] = None,
         std_xy: float = 0.0,
         std_yaw: float = 0.0,
         frame: str = "odom",
@@ -198,7 +221,9 @@ class SceneManager:
         pose.orientation.z = q_new[2]
         pose.orientation.w = q_new[3]
 
-        return self.spawn_object(pose=pose, object_name=object_name, frame=frame)
+        return self.spawn_object(
+            pose=pose, object_name=object_name, item_stored=item_stored, frame=frame
+        )
 
     def clear_scene(self):
         # TODO(maciejmajek): This line freezes the execution
@@ -323,6 +348,12 @@ class SceneManager:
             for slot_name, slot in collection.slots.items():
                 if (coll_name, slot_name) not in assigned_slots:
                     slot.remove_entity_from_slot()
+
+    def assign_collections_to_item_types(
+        self, collections_names: List[str], item_types: List[str]
+    ):
+        for coll_name, item_type in zip(collections_names, item_types):
+            self.slots_collections[coll_name].item_type = item_type
 
     def add_collection(self, collection: SlotsCollection) -> None:
         """Add a slots collection to the warehouse"""
@@ -473,20 +504,22 @@ class SceneManager:
 
     def get_warehouse_collections_description(self) -> str:
         """Return a formatted description of the warehouse collections names (tables and racks)"""
+
         collections_by_type = self.get_collections_sorted_by_type()
         lines = ["COLLECTIONS IN THE WAREHOUSE:\n"]
         for col_type, collections in collections_by_type.items():
-            # Add section header
             if col_type == "garbage_bin":
                 continue
 
             else:
                 lines.append(f"{col_type.upper()} COLLECTIONS:")
-
                 for coll in collections:
-                    lines.append(f"{coll.tag}")
-                lines.append("")
-
+                    if coll.item_type:
+                        lines.append(
+                            f"name: {coll.tag}, type of items stored: {coll.item_type}"
+                        )
+                    else:
+                        lines.append(f"name: {coll.tag}")
         return "\n".join(lines)
 
     def quaternion_to_forward_vector(
