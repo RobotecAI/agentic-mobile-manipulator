@@ -160,21 +160,21 @@ def main():
         )
         scene_manager.populate_scene(spawn_slot_names, spawn_entity_types, items_stored)
 
-    ### spawn trash
+    # spawn trash
     pose = Pose(
         position=Point(x=14.240, y=17.230, z=0.023),
     )
     scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
 
-    # pose = Pose(
-    #     position=Point(x=21.240, y=1.930, z=0.023),
-    # )
-    # scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
-
     pose = Pose(
-        position=Point(x=19.240, y=4.230, z=0.023),
+        position=Point(x=21.240, y=1.930, z=0.023),
     )
     scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
+
+    # pose = Pose(
+    #     position=Point(x=18.240, y=8.230, z=0.023),
+    # )
+    # scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
     scene_manager.connector.shutdown()
 
 
