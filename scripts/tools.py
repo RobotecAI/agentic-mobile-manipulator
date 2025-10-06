@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import copy
 import time
 from typing import Type
 
@@ -88,6 +89,53 @@ def calculate_relative_transform(from_pose: Pose, to_pose: Pose) -> Pose:
     relative_pose.orientation.w = relative_quat[3]
 
     return relative_pose
+
+
+def rotate_pose(pose: Pose, angle, direction, point=None):
+    """
+    Rotate a pose around an arbitrary axis and point using tf_transformations.rotation_matrix().
+
+    Args:
+        pose: The Pose to rotate
+        angle: The rotation angle in radians
+        direction: The axis of rotation (3-element iterable)
+        point: The point to rotate about (3-element iterable)
+
+    Returns:
+        Pose: The rotated pose
+    """
+    # If no point specified, rotate around the pose's own position
+    if point is None:
+        point = [pose.position.x, pose.position.y, pose.position.z]
+    # Convert pose position and orientation to transformation matrix
+    quat = [
+        pose.orientation.x,
+        pose.orientation.y,
+        pose.orientation.z,
+        pose.orientation.w,
+    ]
+    pose_matrix = tf_transformations.quaternion_matrix(quat)
+    pose_matrix[0, 3] = pose.position.x
+    pose_matrix[1, 3] = pose.position.y
+    pose_matrix[2, 3] = pose.position.z
+
+    # Get rotation matrix
+    rot_matrix = tf_transformations.rotation_matrix(angle, direction, point)
+
+    # Apply rotation: T_rotated = T_rotation * T_pose
+    rotated_matrix = rot_matrix @ pose_matrix
+
+    # Extract new position and orientation
+    new_pose = copy.deepcopy(pose)
+    new_pose.position.x = rotated_matrix[0, 3]
+    new_pose.position.y = rotated_matrix[1, 3]
+    new_pose.position.z = rotated_matrix[2, 3]
+    new_quat = tf_transformations.quaternion_from_matrix(rotated_matrix)
+    new_pose.orientation.x = new_quat[0]
+    new_pose.orientation.y = new_quat[1]
+    new_pose.orientation.z = new_quat[2]
+    new_pose.orientation.w = new_quat[3]
+    return new_pose
 
 
 def apply_relative_transform(base_pose: Pose, relative_transform: Pose) -> Pose:

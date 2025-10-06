@@ -34,7 +34,7 @@ class Slot:
         entity_y = entity_pose.position.y
         entity_z = entity_pose.position.z
 
-        height_match = True if abs(entity_z - slot_z) <= 0.03 else False
+        height_match = True if abs(entity_z - slot_z) <= 0.1 else False
         distance = math.sqrt((entity_x - slot_x) ** 2 + (entity_y - slot_y) ** 2)
 
         # Check if within 0.1 meter radius and on the same height
