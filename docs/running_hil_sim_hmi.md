@@ -41,5 +41,5 @@ For instructions, see: [Agent setup and inference](../rai_app/README.md)
 
 ```shell
 source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-ros2 run mobile_manipulator_hmi MobileManipulatorHMI
+ros2 launch mobile_manipulator_hmi hmi_launch.py
 ```

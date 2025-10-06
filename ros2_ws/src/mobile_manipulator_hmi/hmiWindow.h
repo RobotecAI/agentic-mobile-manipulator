@@ -19,12 +19,15 @@
 #include <rcl_interfaces/msg/log.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <std_srvs/srv/trigger.hpp>
+#include <demo_msgs/msg/utilization.hpp>
 #include "TaskDialog.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class HMIWindow;
 }
 QT_END_NAMESPACE
+
+class QFrame;
 
 
 namespace HardcodedConfig {
@@ -89,12 +92,18 @@ private:
     void setDoneTasks(const QStringList& done);
 
     void updateRobotPose();
+    void setFrameUtilization(QFrame* frame, float percent);
+    void setFrameBinaryState(QFrame* frame, bool ok);
+    void setFrameDisabled(QFrame* frame);
     
     Ui::HMIWindow *ui;
     rclcpp::Node::SharedPtr node_;
     QTimer *ros_timer_;
+    QTimer *agent_fill_timer_;
+    int agent_fill_percent_ = 0;
     std::map<std::string, QPushButton*> camera_buttons_;
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_;
+    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr top_image_sub_;
     rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pub_;
     rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr path_sub_;
@@ -108,7 +117,7 @@ private:
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr restart_srv_;
 
     rclcpp::Subscription<rcl_interfaces::msg::Log>::SharedPtr log_sub_;
-    rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr resource_sub_;
+    rclcpp::Subscription<demo_msgs::msg::Utilization>::SharedPtr utilization_sub_;
 
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
