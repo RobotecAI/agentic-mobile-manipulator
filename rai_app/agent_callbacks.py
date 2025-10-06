@@ -3,9 +3,7 @@ import time
 from typing import Any, Dict, List
 
 from langchain_core.callbacks import AsyncCallbackHandler
-from rai.communication.ros2 import ROS2Message, ROS2Connector
-import logging
-from typing import List, Any, Dict
+from rai.communication.ros2 import ROS2Connector, ROS2Message
 
 
 class AgentProgessCallback(AsyncCallbackHandler):
@@ -57,7 +55,7 @@ class AgentProgessCallback(AsyncCallbackHandler):
             self.connector.send_message(
                 message=ROS2Message(
                     payload={
-                        "data": f"task-id: {task_id}, current_step: {node_state["step"]}"
+                        "data": f"task-id: {task_id}, current_step: {node_state['step']}"
                     }
                 ),
                 msg_type="std_msgs/msg/String",
@@ -72,7 +70,7 @@ class AgentProgessCallback(AsyncCallbackHandler):
             self.connector.send_message(
                 message=ROS2Message(
                     payload={
-                        "data": f"task-id: {task_id}, current_step: {node_state["steps_done"]}"
+                        "data": f"task-id: {task_id}, current_step: {node_state['steps_done']}"
                     }
                 ),
                 msg_type="std_msgs/msg/String",

@@ -1,6 +1,7 @@
-from langchain_openai import ChatOpenAI
-from langchain_ollama import ChatOllama
 from typing import Optional
+
+from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 
 
 def get_model(

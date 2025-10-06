@@ -56,6 +56,18 @@ class Slot:
     def get_obj_name(self) -> Optional[str]:
         return self._entity_name
 
+    def get_item_stored(self) -> Optional[str]:
+        """
+        Return item stored in object, based on name.
+        If no object stored, return None
+        """
+        if self._entity_name:
+            # NOTE (jmatejcz) assuming '__' is only present in name when item stored
+            # in this object
+            if "__" in self._entity_name:
+                item_stored = self._entity_name.split("__")[1]
+                return item_stored.lower()
+
 
 class SlotsCollection:
     """Represents a collection of slots like a table or rack"""
@@ -69,6 +81,8 @@ class SlotsCollection:
         self.tag = tag
         self.collection_type = collection_type
         self.slots: Dict[str, Slot] = {}
+        # item type stored in tis collection
+        self.item_type: Optional[str] = None
 
     def add_slot(self, slot: Slot) -> None:
         """Add a slot to this collection"""
@@ -82,21 +96,21 @@ class SlotsCollection:
         """Get all slots in this collection"""
         return self.slots.copy()
 
-    def find_empty_slots(self) -> List[str]:
+    def find_empty_slots(self) -> List[Slot]:
         """Find all empty slots in this collection"""
         empty_slots = []
-        for tag, slot in self.slots.items():
+        for _, slot in self.slots.items():
             if not slot.is_obj_present():
-                empty_slots.append(tag)
-        return sorted(empty_slots)
+                empty_slots.append(slot)
+        return empty_slots
 
-    def find_used_slots(self) -> List[str]:
+    def find_used_slots(self) -> List[Slot]:
         """Find all used slots in this collection"""
         used_slots = []
-        for tag, slot in self.slots.items():
+        for _, slot in self.slots.items():
             if slot.is_obj_present():
-                used_slots.append(tag)
-        return sorted(used_slots)
+                used_slots.append(slot)
+        return used_slots
 
     def get_slot_with_object(self, obj_name: str) -> Optional[Slot]:
         """Find the slot containing a specific object"""
@@ -104,6 +118,17 @@ class SlotsCollection:
             if slot.get_obj_name() == obj_name:
                 return slot
         return None
+
+    def find_slots_with_item_type(self, item_type: str) -> List[Slot]:
+        """
+        Find all slots in this collection that have
+        object with ceratin item type inside
+        """
+        slots_with_item_type = []
+        for _, slot in self.slots.items():
+            if item_type.lower() == slot.get_item_stored():
+                slots_with_item_type.append(slot)
+        return slots_with_item_type
 
     def get_usage_summary(self) -> Dict[str, int]:
         """Get usage summary for this collection"""
@@ -116,6 +141,39 @@ class SlotsCollection:
             "used": used_count,
             "free": free_count,
         }
+
+    @property
+    def middle(self) -> Pose:
+        """Calculate and return the average pose of all slots in this collection"""
+        if not self.slots:
+            return Pose()
+
+        total_x = 0.0
+        total_y = 0.0
+        total_z = 0.0
+        count = len(self.slots)
+
+        for slot in self.slots.values():
+            total_x += slot.origin_pose.position.x
+            total_y += slot.origin_pose.position.y
+            total_z += slot.origin_pose.position.z
+
+        # Calculate averages
+        avg_pose = Pose()
+        avg_pose.position = Point(
+            x=total_x / count, y=total_y / count, z=total_z / count
+        )
+
+        # For orientation, use the first slot's orientation
+        first_slot = next(iter(self.slots.values()))
+        avg_pose.orientation = Quaternion(
+            x=first_slot.origin_pose.orientation.x,
+            y=first_slot.origin_pose.orientation.y,
+            z=first_slot.origin_pose.orientation.z,
+            w=first_slot.origin_pose.orientation.w,
+        )
+
+        return avg_pose
 
     def __repr__(self) -> str:
         return self.__str__()

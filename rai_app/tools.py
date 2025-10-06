@@ -1,44 +1,182 @@
-from typing import Type, cast
-
-from pydantic import BaseModel, Field
-
-from rai.tools.ros2.base import BaseROS2Tool
 import logging
-from rai.tools.ros2.simple import GetROS2ImageConfiguredTool
+import time
+from typing import List, Optional, Type, cast
 
+from geometry_msgs.msg import Point, Pose, Quaternion
+from langchain_core.language_models.chat_models import BaseChatModel
+from pydantic import BaseModel, Field
+from rai.messages import HumanMultimodalMessage, MultimodalArtifact, SystemMessage
+from rai.tools.ros2.base import BaseROS2Tool
+from rai.tools.ros2.simple import GetROS2ImageConfiguredTool
 
 from scripts.kairos_controller import KairosController
 from scripts.scene_manager import SceneManager
-from langchain_core.language_models.chat_models import BaseChatModel
-
-from rai.messages import HumanMultimodalMessage, MultimodalArtifact, SystemMessage
-from geometry_msgs.msg import Point, Pose, Quaternion
+from scripts.slots import Slot
 
 
-
-class WarehosueTool(BaseROS2Tool):
+class WarehouseTool(BaseROS2Tool):
     kairos_controller: KairosController
     scene_manager: SceneManager
 
+    # TODO (jmatejcz) boxes will be distinguishable in the future
+    # for now mock it
+    # given rack should store a boxes of given type, but does not have to
+    # we should check type of boxes we have on the rack/table
 
-class NavigateToSlotoolInput(BaseModel):
+    def refresh_data(self):
+        # NOTE (jmatejcz) calling this only before checking collection
+        # assumes that packages won't change their positions
+        # during tool call
+        entities = self.scene_manager.get_entities(name_filter="box")
+        if entities:
+            self.scene_manager.assign_entities_to_slots(entities)
+
+    def filter_for_slots_in_arm_range(self, slots: List[Slot]) -> List[Slot]:
+        # arm can't access top slots
+        # on every rack they are named the same
+        excluded_slot_names = [
+            "RackSlot10",
+            "RackSlot11",
+            "RackSlot12",
+            "RackSlot22",
+            "RackSlot23",
+            "RackSlot24",
+        ]
+        filitered_slots = []
+        for slot in slots:
+            slot_name_part = slot.tag.split("/")[1]
+            if slot_name_part not in excluded_slot_names:
+                filitered_slots.append(slot)
+        return filitered_slots
+
+    def check_the_origin_collection(
+        self, collection_name: str, item_type: Optional[str] = None
+    ) -> List[Slot]:
+        """Check if there is any object to move from given collection.
+
+        Args:
+            item_type (Optional[str], optional): When passed, only take into
+            consideration packages with certain item type inside. Defaults to None.
+
+        Raises:
+            ValueError: raises when there is no such collection
+            RuntimeError: raises when there are no objects in slots
+            or when there are no packages containing given item type
+
+        Returns:
+            List[Slot]: Returns all slots that have objects to move.
+            If item type passed, returns only slots where a package that
+            has this item type is located.
+        """
+        self.refresh_data()
+        logging.info(
+            f"Checking for appropriate objects in origin collection {collection_name}..."
+        )
+        coll = self.scene_manager.get_collection(tag=collection_name)
+        if not coll:
+            # return f"No collection named {collection_name}"
+            raise ValueError(f"No collection named {collection_name}")
+
+        # navigate to the middle , in front/back of the collection
+        # TODO (jmatejcz) check from other side if this unavialble after merging of navigation update
+
+        # TODO (jamtejcz) should rack be always checked from both sides?
+        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
+            coll.middle, 2.0
+        )
+
+        # sleep to mock the visual effect of 'scanning'
+        time.sleep(1)
+        used_slots = coll.find_used_slots()
+        used_slots = self.filter_for_slots_in_arm_range(used_slots)
+        if not used_slots:
+            raise RuntimeError(
+                f"There is no objects in the collection {collection_name}"
+            )
+        if item_type:
+            slots_with_item = coll.find_slots_with_item_type(item_type=item_type)
+            slots_with_item = self.filter_for_slots_in_arm_range(slots_with_item)
+            if not slots_with_item:
+                raise RuntimeError(
+                    (
+                        f"There is no packages with given item type: {item_type} "
+                        f"in the collection {collection_name}"
+                    )
+                )
+            else:
+                logging.info(
+                    (
+                        f"Origin Collection {collection_name} has {len(slots_with_item)} "
+                        f"appropriate packages with item '{item_type}' in robot's arm range"
+                    )
+                )
+                return slots_with_item
+        else:
+            logging.info(
+                f"Origin Collection {collection_name} has {len(used_slots)} appropriate packages in robot's arm range"
+            )
+            return used_slots
+
+    def check_the_target_collection(self, collection_name: str) -> List[Slot]:
+        """Check if there are any empty slots in the collection
+
+
+
+        Raises:
+            ValueError: raises when there is no such collection
+            RuntimeError: raises when there are no empty slots in the collection
+
+        Returns:
+            List[Slot]: List of empty slots
+        """
+        self.refresh_data()
+        logging.info(
+            f"Checking for empty slots in target collection {collection_name}..."
+        )
+        coll = self.scene_manager.get_collection(tag=collection_name)
+        if not coll:
+            raise ValueError(f"No collection named {collection_name}")
+
+        # navigate to the middle , in front/back of the collection
+        # TODO (jmatejcz) check from other side if this unavialble after merging of navigation update
+
+        # TODO (jamtejcz) should rack be always checked from both sides?
+        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
+            coll.middle, 2.0
+        )
+
+        # sleep to mock the visual effect of 'scanning'
+        time.sleep(1)
+
+        empty_slots = coll.find_empty_slots()
+        empty_slots = self.filter_for_slots_in_arm_range(empty_slots)
+        if not empty_slots:
+            raise RuntimeError(
+                f"There is no empty slots in the collection {collection_name}"
+            )
+        else:
+            logging.info(
+                f"Target collection {collection_name} has {len(empty_slots)} empty slots"
+            )
+            return empty_slots
+
+
+class NavigateToSloToolInput(BaseModel):
     slot_name: str = Field(..., description="Name of the slot to navigate to")
 
 
-class NavigateToSlotSyncTool(WarehosueTool):
+class NavigateToSlotSyncTool(WarehouseTool):
     name: str = "navigate_to_slot"
-    description: str = (
-        "Navigate to a specific slot. Use this tool when asked to navigate to specific slot."
-    )
+    description: str = "Navigate to a specific slot. Use this tool when asked to navigate to specific slot."
 
-    args_schema: Type[NavigateToSlotoolInput] = NavigateToSlotoolInput
+    args_schema: Type[NavigateToSloToolInput] = NavigateToSloToolInput
 
     def _run(self, slot_name: str) -> str:
         try:
             slot = self.scene_manager.slots[slot_name]
         except KeyError:
             slot_names = self.scene_manager.slots.keys()
-            return f"Slot {slot_name} does not exist. Available slot names: {"\n".join(slot_names)}"
+            return f"Slot {slot_name} does not exist. Available slot names: {'\n'.join(slot_names)}"
 
         self.kairos_controller.nav_ctrl.approach_target_along_orientation(
             target_pose=slot.origin_pose
@@ -54,7 +192,6 @@ class IsPackageDamagedTool(BaseROS2Tool):
     llm: BaseChatModel
 
     def _run(self) -> bool:
-
         SYSTEM_PROMPT = "You are an expert in image analysis and your speciality is the description of images"
         logging.info("Getting image")
         tool = GetROS2ImageConfiguredTool(
@@ -83,53 +220,73 @@ class IsPackageDamagedTool(BaseROS2Tool):
         return response.is_package_damaged
 
 
-class MoveFromSlotToSlotToolInput(BaseModel):
-    origin_slot_name: str = Field(..., description="Slot name to move object from")
-    target_slot_name: str = Field(..., description="Slot name to move object to")
-
-
-class MoveFromSlotToSlotTool(WarehosueTool):
-    name: str = "move_object_from_slot_to_another_slot"
-    description: str = (
-        "Move object from origin slot than navigate to target slot and drop it there"
+class MoveFromCollectionToCollectionInput(BaseModel):
+    origin_collection_name: str = Field(
+        ..., description="Collection name to move object from"
+    )
+    item_type: Optional[str] = Field(
+        default=None,
+        description=(
+            "Provide this field if you want to move package with certain type of item inside."
+            " If not leave it with default value."
+        ),
+    )
+    target_collection_name: str = Field(
+        ..., description="Collection name to move object to"
     )
 
-    args_schema: Type[MoveFromSlotToSlotToolInput] = MoveFromSlotToSlotToolInput
 
-    def _run(self, origin_slot_name: str, target_slot_name: str):
+class MoveFromCollectionToCollectionTool(WarehouseTool):
+    name: str = "move_object_between_collections"
+    description: str = (
+        "Move ONE object from origin collection to target colection. "
+        "A collection might be for example table or rack - like t5 (table) or X02 (rack). "
+        "Use this tool when you want to move object from one collection to other. "
+        "If you provide item type, the package with certain type of item will be moved."
+    )
+
+    args_schema: Type[MoveFromCollectionToCollectionInput] = (
+        MoveFromCollectionToCollectionInput
+    )
+
+    def _run(
+        self,
+        origin_collection_name: str,
+        target_collection_name: str,
+        item_type: Optional[str] = None,
+    ):
         """Execute complete pick and place operation between slots"""
         try:
-            origin_slot = self.scene_manager.slots[origin_slot_name]
-        except KeyError:
-            slot_names = self.scene_manager.slots.keys()
-            return f"Slot {origin_slot_name} does not exist. Available slot names: {"\n".join(slot_names)}"
+            target_empty_slots = self.check_the_target_collection(
+                target_collection_name
+            )
+            origin_valid_slots = self.check_the_origin_collection(
+                origin_collection_name, item_type=item_type
+            )
+        except Exception as e:
+            return str(e)
 
-        try:
-            target_slot = self.scene_manager.slots[target_slot_name]
-        except KeyError:
-            slot_names = self.scene_manager.slots.keys()
-            return f"Slot {target_slot_name} does not exist. Available slot names: {"\n".join(slot_names)}"
+        if not origin_valid_slots:
+            return (
+                f"There are no objects in origin collection {origin_collection_name} ."
+            )
 
+        origin_slot = origin_valid_slots[0]
+        target_slot = target_empty_slots[0]
         origin_object_name = origin_slot.get_obj_name()
-        target_object_name = target_slot.get_obj_name()
-
         if origin_object_name is None:
             raise ValueError(f"There is no package at origin slot {origin_object_name}")
-        if target_object_name:
-            raise ValueError(
-                f"There is already a package at target slot {target_object_name}"
-            )
 
+        origin_object_pose = self.scene_manager.get_pose(entity_name=origin_object_name)
+
+        target_slot = self.scene_manager.slots[target_slot.tag]
+        gripping_point = self.scene_manager.get_gripping_point(origin_object_name)
+        side_gripping_point = self.scene_manager.get_pose(
+            origin_object_name + "_SideGrippingPoint"
+        )
         try:
-            # Get origin slot and object information
-            origin_object_pose = self.scene_manager.get_pose(
-                entity_name=origin_object_name
-            )
-            target_slot = self.scene_manager.slots[target_slot_name]
-
-            gripping_point = self.scene_manager.get_gripping_point(origin_object_name)
-            side_gripping_point = self.scene_manager.get_pose(
-                origin_object_name + "_SideGrippingPoint"
+            logging.info(
+                f"Proceeding with moving object from slot {origin_slot.tag} to {target_slot.tag}"
             )
             self.kairos_controller.move_object_to_slot(
                 target_slot_pose=target_slot.origin_pose,
@@ -137,108 +294,14 @@ class MoveFromSlotToSlotTool(WarehosueTool):
                 top_gripping_point=gripping_point,
                 side_gripping_point=side_gripping_point,
             )
-            return f"Successfully moved object from {origin_slot_name} to {target_slot_name}"
-
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")
-            return f"Failed to move object from {origin_slot_name} to {target_slot_name}: {str(e)}"
-
-
-class MoveFromCollectionToCollectionInput(BaseModel):
-    origin_collection_name: str = Field(
-        ..., description="Collection name to move objects from"
-    )
-    target_collection_name: str = Field(
-        ..., description="Collection name to move objects to"
-    )
-
-
-class MoveFromCollectionToCollectionTool(WarehosueTool):
-    name: str = "move_objects_between_collections"
-    description: str = (
-        "Move ALL objects from origin collection to target colection."
-        " A collection might be for example table or rack - like t5 (table) or X02 (rack)"
-        "Use this tool when asked to move objects from one collection to other"
-    )
-
-    args_schema: Type[MoveFromCollectionToCollectionInput] = (
-        MoveFromCollectionToCollectionInput
-    )
-
-    def _run(self, origin_collection_name: str, target_collection_name: str):
-        """Execute complete pick and place operation between slots"""
-
-        try:
-            origin_collection = self.scene_manager.slots_collections[
-                origin_collection_name
-            ]
-        except KeyError:
-            collection_names = self.scene_manager.slots_collections.keys()
-            raise KeyError(
-                f"Collection {origin_collection_name} does not exist. Available collection names: {"\n".join(collection_names)}"
-            )
-
-        try:
-            target_collection = self.scene_manager.slots_collections[
-                target_collection_name
-            ]
-        except KeyError:
-            collection_names = self.scene_manager.slots_collections.keys()
-            return f"Collection {target_collection_name} does not exist. Available collection names: {"\n".join(collection_names)}"
-
-        origin_used_slot_names = origin_collection.find_used_slots()
-        if not origin_used_slot_names:
-            return f"There are no objects in {origin_collection_name} collection"
-
-        target_empty_slot_names = target_collection.find_empty_slots()
-        ## TODO (jmatejcz) only this slot does work in current sim
-        filtered_target_names = []
-        for name in target_empty_slot_names:
-            if (
-                "rackslot5" in name.lower()
-                or "rackslot4" in name.lower()
-                or "rackslot6" in name.lower()
-            ):
-                filtered_target_names.append(name)
-        if len(origin_used_slot_names) > len(target_empty_slot_names):
-            return (
-                f"{target_collection.collection_type} {target_collection_name} has only {len(target_empty_slot_names)} "
-                f"empty slots and {origin_collection.collection_type} {origin_collection_name} has {len(origin_used_slot_names)} objects to move"
-            )
-
-        for origin_slot_name, target_slot_name in zip(
-            origin_used_slot_names, filtered_target_names
-        ):
-            try:
-                origin_object_name = self.scene_manager.slots[
-                    origin_slot_name
-                ].get_obj_name()
-                if origin_object_name is None:
-                    raise ValueError(
-                        f"There is no package at origin slot {origin_object_name}"
-                    )
-                origin_object_pose = self.scene_manager.get_pose(
-                    entity_name=origin_object_name
-                )
-
-                target_slot = self.scene_manager.slots[target_slot_name]
-                gripping_point = self.scene_manager.get_gripping_point(
-                    origin_object_name
-                )
-                side_gripping_point = self.scene_manager.get_pose(
-                    origin_object_name + "_SideGrippingPoint"
-                )
-                self.kairos_controller.move_object_to_slot(
-                    target_slot_pose=target_slot.origin_pose,
-                    object_pose=origin_object_pose,
-                    top_gripping_point=gripping_point,
-                    side_gripping_point=side_gripping_point,
-                )
-            except Exception as e:
-                logging.error(f"Error during move operation: {str(e)}")
-                return f"Failed to move object from {origin_slot_name} to {target_slot_name}: {str(e)}"
-
-        return f"Successfully moved objects from {origin_collection_name} to {target_collection_name}"
+            return f"Failed to move object from {origin_slot.tag} to {target_slot.tag}: {str(e)}"
+        finally:
+            entities = self.scene_manager.get_entities(name_filter="box")
+            if entities:
+                self.scene_manager.assign_entities_to_slots(entities=entities)
+        return f"Successfully moved ONE object from {origin_collection_name} to {target_collection_name}"
 
 
 class ThrowTrashOutInput(BaseModel):
@@ -253,7 +316,7 @@ class ThrowTrashOutInput(BaseModel):
     )
 
 
-class ThrowTrashOutTool(WarehosueTool):
+class ThrowTrashOutTool(WarehouseTool):
     name: str = "throw_out_trash"
     description: str = "Throw out trash that is at certain location"
 

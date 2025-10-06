@@ -11,8 +11,8 @@ repos:
       - id: ruff
         args: [--extend-select, "I,RUF022", --fix, --ignore, E731]
         types_or: [python]
-        files: ^(agent/|scripts/|rai_app/nav2_agent.py|rai_app/moveit2_agent.py|rai_app/warehouse_regulations_agent/)
+        files: ^(rai_app/|scripts/)
 
       - id: ruff-format
         types_or: [python]
-        files: ^(agent/|scripts/|rai_app/nav2_agent.py|rai_app/moveit2_agent.py|rai_app/warehouse_regulations_agent/)
+        files: ^(rai_app/|scripts/)
