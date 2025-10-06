@@ -3,7 +3,12 @@
 #include <tf2/exceptions.h>
 #include <chrono>
 #include <cmath>
+#include <optional>
+#include <unordered_map>
 #include <QMessageBox>
+#include <rclcpp/qos.hpp>
+#include <QTransform>
+#include <QTime>
 
 void CallService(QWidget *parent, rclcpp::Node::SharedPtr &node, rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr& client)
 {
@@ -33,15 +38,15 @@ HMIWindow::HMIWindow(QWidget *parent)
     rclcpp::init(0, nullptr);
     node_ = rclcpp::Node::make_shared("hmi_window_node");
 
-    // create cameras buttons and assign callback
-    for (const auto& [name, topic] : HardcodedConfig::CameraTopics) {
-        auto button = new QPushButton(name.c_str(), this);
-        camera_buttons_[name] = button;
-        ui->groupBoxCamera->layout()->addWidget(button);
-        button->connect(button, &QPushButton::clicked, [this, name]() {
-            cameraButtonCallback(name);
-        });
-    }
+    // connect pre-defined camera buttons from UI
+    camera_buttons_["Camera 1"] = ui->wristCameraButton;
+    connect(ui->wristCameraButton, &QPushButton::clicked, [this]() {
+        cameraButtonCallback("Camera 1");
+    });
+    camera_buttons_["Camera 2"] = ui->baseCameraButton;
+    connect(ui->baseCameraButton, &QPushButton::clicked, [this]() {
+        cameraButtonCallback("Camera 2");
+    });
 
     // Setup cmd_vel publisher
     cmd_vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>(HardcodedConfig::CmdVelTopic, 10);
@@ -63,18 +68,49 @@ HMIWindow::HMIWindow(QWidget *parent)
 
     user_prompt_pub_ = node_->create_publisher<std_msgs::msg::String>(HardcodedConfig::UserPromptTopic, 10);
 
-    assert(ui->tableWidgetUtilization->rowCount() >= 3);
-    resource_sub_ = node_->create_subscription<std_msgs::msg::Float32MultiArray>(
-        HardcodedConfig::ResourceTopics, 10,
-        [this](const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
-            if (msg->data.size() >= 3) {
-                const float cpu = msg->data[0];
-                const float gpu = msg->data[1];
-                const float ram = msg->data[2];
-                ui->tableWidgetUtilization->item(0, 0)->setText(QString::number(cpu, 'f', 1) + " %");
-                ui->tableWidgetUtilization->item(1, 0)->setText(QString::number(gpu, 'f', 1) + " %");
-                ui->tableWidgetUtilization->item(2, 0)->setText(QString::number(ram, 'f', 1) + " %");
+    // Top camera subscription created below with explicit QoS
+
+    // Utilization table has 3 rows in UI: CPU, RAM, GPU (in that order)
+    // Subscribe to new demo_msgs/msg/Utilization message on /utilization
+    utilization_sub_ = node_->create_subscription<demo_msgs::msg::Utilization>(
+        "/utilization", 10,
+        [this](const demo_msgs::msg::Utilization::SharedPtr msg) {
+            // Build name -> value map
+            std::unordered_map<std::string, float> values;
+            const size_t n = std::min(msg->component_names.size(), msg->component_values.size());
+            values.reserve(n);
+            for (size_t i = 0; i < n; ++i) {
+                values[msg->component_names[i]] = msg->component_values[i];
             }
+
+            auto get = [&values](const char* key) -> std::optional<float> {
+                auto it = values.find(key);
+                if (it == values.end()) return std::nullopt;
+                return it->second;
+            };
+
+            // Update table rows (0: CPU, 1: RAM, 2: GPU)
+            if (auto v = get("cpu"); v.has_value()) {
+                setFrameUtilization(ui->cpuFrame, *v);
+            }
+            if (auto v = get("ram"); v.has_value()) {
+                setFrameUtilization(ui->ramFrame, *v);
+            }
+            if (auto v = get("gpu"); v.has_value()) {
+                setFrameUtilization(ui->gpuFrame, *v);
+            }
+            if (auto v = get("npu"); v.has_value()) {
+                if (v.value() == -1.0) {
+                    // Grey out when NPU not present/not reported
+                    setFrameDisabled(ui->npuFrame);
+                } else {
+                    setFrameUtilization(ui->npuFrame, *v);
+                }
+            }
+
+            // Binary states for Nav2 and MoveIt2
+            setFrameBinaryState(ui->nav2Frame, msg->nav2_state);
+            setFrameBinaryState(ui->moveit2Frame, msg->moveit2_state);
         });
     // Setup log subscriber
     log_sub_ = node_->create_subscription<rcl_interfaces::msg::Log>(
@@ -109,22 +145,19 @@ HMIWindow::HMIWindow(QWidget *parent)
     }
 
     // create task buttons
-    for (const auto& [name, task] : HardcodedConfig::Tasks) {
-        auto button = new QPushButton(name.c_str(), this);
-        ui->groupBoxPredefinedTasks->layout()->addWidget(button);
-        button->connect(button, &QPushButton::clicked, [this, task]() {
-            RCLCPP_INFO(node_->get_logger(), "Publishing task: %s", task.c_str());
-            std_msgs::msg::String msg;
-            msg.data = task;
-            task_pub_->publish(msg);
-        });
-    }
+    // for (const auto& [name, task] : HardcodedConfig::Tasks) {
+    //     auto button = new QPushButton(name.c_str(), this);
+    //     ui->groupBoxPredefinedTasks->layout()->addWidget(button);
+    //     button->connect(button, &QPushButton::clicked, [this, task]() {
+    //         RCLCPP_INFO(node_->get_logger(), "Publishing task: %s", task.c_str());
+    //         std_msgs::msg::String msg;
+    //         msg.data = task;
+    //         task_pub_->publish(msg);
+    //     });
+    // }
 
-    // create custom task button
-    auto customTaskButton = new QPushButton("...", this);
-    customTaskButton->setStyleSheet("QPushButton { background-color: #2196F3; color: white; font-weight: bold; }");
-    ui->groupBoxPredefinedTasks->layout()->addWidget(customTaskButton);
-    connect(customTaskButton, &QPushButton::clicked, this, &HMIWindow::openCustomTaskDialog);
+    // connect custom task button from UI
+    connect(ui->taskCustomButton, &QPushButton::clicked, this, &HMIWindow::openCustomTaskDialog);
 
     // Enable zooming on graphics views
     ui->graphicsViewMap->setDragMode(QGraphicsView::RubberBandDrag);
@@ -190,6 +223,43 @@ HMIWindow::HMIWindow(QWidget *parent)
     
     // Make window fullscreen
     showFullScreen();
+
+    // Agent vertical fill animation for system tiles (excluding CPU/GPU/NPU/RAM which are driven by /utilization)
+    agent_fill_timer_ = new QTimer(this);
+    connect(agent_fill_timer_, &QTimer::timeout, [this]() {
+        agent_fill_percent_ += 5; // step 5%
+        if (agent_fill_percent_ > 100) agent_fill_percent_ = 0; // wrap
+        const int p = agent_fill_percent_;
+        // Frames to update sequentially each tick
+        const QList<QFrame*> frames = {
+            ui->agentFrame,
+            // cpu/gpu/npu/ram/nav2/moveit2 updated by /utilization subscriber
+            ui->inspectionFrame,
+            ui->safetyFrame
+        };
+        for (QFrame* frame : frames) {
+            if (!frame) continue;
+            // pick color by threshold: <50% green, 50-79% yellow, 80-100% red
+            const QString fillColor = (p >= 80)
+                ? "rgba(255,0,0,255)"          // red
+                : (p >= 50)
+                    ? "rgba(255,193,7,255)"   // yellow (amber)
+                    : "rgba(76,175,80,255)";  // green
+            // Build vertical gradient: green from bottom to p%, transparent above
+            const QString style = QString(
+                "QFrame#%1 { background: qlineargradient(x1:0, y1:1, x2:0, y2:0, "
+                "stop:0 %2, "
+                "stop:%3 %2, "
+                "stop:%4 rgba(0,0,0,0), "
+                "stop:1 rgba(0,0,0,0)); }")
+                .arg(frame->objectName())
+                .arg(fillColor)
+                .arg(QString::number(p / 100.0, 'f', 2))
+                .arg(QString::number(std::min(1.0, p / 100.0 + 0.001), 'f', 2));
+            frame->setStyleSheet(style);
+        }
+    });
+    agent_fill_timer_->start(1000); // 1 Hz -> 1% per second
 }
 
 void HMIWindow::cameraButtonCallback(const std::string& cameraName) {
@@ -206,9 +276,27 @@ void HMIWindow::cameraButtonCallback(const std::string& cameraName) {
     // reset previous subscription
     image_sub_.reset();
     // Setup image subscription
-    image_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
-        topic, 10,[this](const sensor_msgs::msg::Image::SharedPtr msg)
-        {imageCallback(msg, ui->graphicsViewCameras); });
+    {
+        rclcpp::QoS image_qos(rclcpp::KeepLast(5));
+        image_qos.best_effort();
+        image_qos.durability_volatile();
+        image_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
+            topic, image_qos, [this](const sensor_msgs::msg::Image::SharedPtr msg)
+            { imageCallback(msg, ui->graphicsViewCameras); });
+    }
+
+    // ensure top camera subscription exists
+    if (!top_image_sub_) {
+    {
+        rclcpp::QoS top_qos(rclcpp::KeepLast(5));
+        top_qos.best_effort();
+        top_qos.durability_volatile();
+        top_image_sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
+            "/camera_image_color", top_qos, [this](const sensor_msgs::msg::Image::SharedPtr msg) {
+                imageCallback(msg, ui->topCameraGraphicsView);
+            });
+    }
+    }
 }
 
 HMIWindow::~HMIWindow()
@@ -238,12 +326,18 @@ void HMIWindow::imageCallback(const sensor_msgs::msg::Image::SharedPtr msg, QGra
     Q_ASSERT(view); // "GraphicsView is null";
     if (auto enconding = EncodingMap.find(msg->encoding); enconding != EncodingMap.end()) {
         QImage image(msg->data.data(), static_cast<int>(msg->width), static_cast<int>(msg->height), QImage::Format_RGBA8888);
+        // Rotate top camera view 90 degrees left (counterclockwise)
+        if (view == ui->topCameraGraphicsView) {
+            QTransform rotateLeft;
+            rotateLeft.rotate(-90.0); // counterclockwise
+            image = image.transformed(rotateLeft);
+        }
         if (!view->scene()) {
             view->setScene(new QGraphicsScene());
         }
         view->scene()->clear();
         view->scene()->addPixmap(QPixmap::fromImage(image));
-        view->fitInView(ui->graphicsViewCameras->scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
+        view->fitInView(view->scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
     }
     else
     {
@@ -285,6 +379,53 @@ void HMIWindow::updateRobotPose()
             last_log_time = now;
         }
     }
+}
+
+void HMIWindow::setFrameUtilization(QFrame* frame, float percent)
+{
+    if (!frame) return;
+    // Clamp percent to [0,100]
+    if (std::isnan(percent) || std::isinf(percent)) return;
+    const double p = std::max(0.0, std::min(100.0, static_cast<double>(percent)));
+    const QString fillColor = (p >= 80.0)
+        ? "rgba(255,0,0,255)"
+        : (p >= 50.0)
+            ? "rgba(255,193,7,255)"
+            : "rgba(76,175,80,255)";
+    const QString style = QString(
+        "QFrame#%1 { background: qlineargradient(x1:0, y1:1, x2:0, y2:0, "
+        "stop:0 %2, "
+        "stop:%3 %2, "
+        "stop:%4 rgba(0,0,0,0), "
+        "stop:1 rgba(0,0,0,0)); }")
+        .arg(frame->objectName())
+        .arg(fillColor)
+        .arg(QString::number(p / 100.0, 'f', 2))
+        .arg(QString::number(std::min(1.0, p / 100.0 + 0.001), 'f', 2));
+    frame->setStyleSheet(style);
+}
+
+void HMIWindow::setFrameBinaryState(QFrame* frame, bool ok)
+{
+    if (!frame) return;
+    const QString fillColor = ok ? "rgba(76,175,80,255)" : "rgba(255,0,0,255)";
+    // 100% filled with the chosen color
+    const QString style = QString(
+        "QFrame#%1 { background: qlineargradient(x1:0, y1:1, x2:0, y2:0, "
+        "stop:0 %2, stop:1 %2); }")
+        .arg(frame->objectName())
+        .arg(fillColor);
+    frame->setStyleSheet(style);
+}
+
+void HMIWindow::setFrameDisabled(QFrame* frame)
+{
+    if (!frame) return;
+    const QString style = QString(
+        "QFrame#%1 { background: qlineargradient(x1:0, y1:1, x2:0, y2:0, "
+        "stop:0 rgba(120,120,120,255), stop:1 rgba(120,120,120,255)); }")
+        .arg(frame->objectName());
+    frame->setStyleSheet(style);
 }
 
 void HMIWindow::logCallback(const rcl_interfaces::msg::Log::SharedPtr msg)
@@ -365,17 +506,19 @@ void HMIWindow::openCustomTaskDialog()
 void HMIWindow::setCurrentTaskName(const QString& name)
 {
     // Remove existing current task (index 0)
-    if (ui->listTask->count() > 0)
-    {
-        auto ptr = ui->listTask->item(0);
-        if (ptr)
-        {
-            delete ptr;
-        }
-    }
+    // if (ui->listTask->count() > 0)
+    // {
+    //     auto ptr = ui->listTask->item(0);
+    //     if (ptr)
+    //     {
+    //         delete ptr;
+    //     }
+    // }
     // Add current task with appropriate icon
     if (!name.isEmpty()) {
-        auto listItem = new QListWidgetItem(name);
+        const QString timestamp = QTime::currentTime().toString("HH:mm:ss");
+        const QString display = QString("%1: %2").arg(timestamp, name);
+        auto listItem = new QListWidgetItem(display);
         listItem->setIcon(QIcon(":/icons/CurrentTask.svg")); // Use robot icon for current task
         ui->listTask->insertItem(0, listItem);
         ui->listTask->setCurrentItem(listItem);

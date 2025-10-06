@@ -1,4 +1,4 @@
-# Running a Demo
+# Running the Demo
 
 ## O3DE
 
@@ -16,6 +16,15 @@ To run the ROS 2 stack and control agents, execute:
 ```shell
 source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 ./scripts/run_ros2_stack.sh
+```
+
+## HMI
+
+To run the HMI, execute:
+
+```shell
+source ${DEMO_ROOT}/ros2_ws/install/setup.bash
+ros2 launch mobile_manipulator_hmi hmi_launch.py
 ```
 
 ## Agent
