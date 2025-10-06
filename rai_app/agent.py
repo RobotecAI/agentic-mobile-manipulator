@@ -1,28 +1,26 @@
 import argparse
-from typing import Literal, Optional
-from rai.communication.ros2 import ROS2Connector, ROS2Context, ROS2Message
-from langfuse.decorators import observe
-from pydantic import BaseModel
-from langchain_openai import ChatOpenAI
-from langchain_ollama import ChatOllama
-from langfuse.callback import CallbackHandler
 import logging
-from llms import get_model
 from pprint import pformat
+from typing import Literal, Optional
+
+from langfuse.callback import CallbackHandler
+from langfuse.decorators import observe
+from llms import get_model
+from pydantic import BaseModel
+from rai.agents.langchain.core import (
+    ContextProvider,
+    Executor,
+    create_megamind,
+    get_initial_megamind_state,
+)
+from rai.communication.ros2 import ROS2Connector, ROS2Context, ROS2Message
 from tools import (
     MoveFromCollectionToCollectionTool,
     ThrowTrashOutTool,
 )
+
 from scripts.kairos_controller import KairosController
 from scripts.scene_manager import SceneManager
-
-
-from rai.agents.langchain.core import (
-    create_megamind,
-    Executor,
-    get_initial_megamind_state,
-    ContextProvider,
-)
 
 
 class AgentParams(BaseModel):
@@ -47,7 +45,6 @@ langfuse_handler = CallbackHandler()
 
 
 class WarehouseContext(ContextProvider):
-
     def __init__(self, scene_manager: SceneManager) -> None:
         self.scene_manager = scene_manager
 
@@ -79,11 +76,11 @@ def run_rai_agent(run_params: AgentParams):
     )
     kairos_controller = KairosController(connector=connector)
 
-    vlm_llm = get_model(
-        model=run_params.vlm_model,
-        vendor=run_params.vlm_vendor,
-        base_url=run_params.vlm_base_url,
-    )
+    # vlm_llm = get_model(
+    #     model=run_params.vlm_model,
+    #     vendor=run_params.vlm_vendor,
+    #     base_url=run_params.vlm_base_url,
+    # )
 
     move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
         connector=connector,
@@ -189,10 +186,10 @@ IF you CAN'T figure it out on your own, ask user for clarification
         node_state = state[node]
 
         if "step" in node_state:
-            current_step = f'subagent: {subgraph_name}: {node_state["step"]}'
+            current_step = f"subagent: {subgraph_name}: {node_state['step']}"
 
         if "steps_done" in node_state:
-            steps_done = f'subagent: {subgraph_name}: {node_state["steps_done"]}'
+            steps_done = f"subagent: {subgraph_name}: {node_state['steps_done']}"
 
         logging.info(f"Agent state: {current_step=}\n{steps_done=}")
 

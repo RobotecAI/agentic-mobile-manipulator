@@ -2,23 +2,37 @@ import asyncio
 import logging
 import threading
 import uuid
-from pydantic import BaseModel
-from dataclasses import field
 from collections import deque
-from typing import Callable, List, Optional, Deque
-from langgraph.checkpoint.memory import InMemorySaver
+from dataclasses import field
+from typing import Callable, Deque, List, Optional
+
 import rclpy
-from langchain_core.callbacks.base import BaseCallbackHandler
-from langgraph.graph.state import CompiledStateGraph
-from rclpy.node import Node
-
-from rai.communication.ros2 import ROS2Connector, ROS2Message
-from context_providers import WarehouseContext
-from robotec_kairos_ur10.msg import Anomaly
-from geometry_msgs.msg import Pose
 from agent_callbacks import AgentProgessCallback
-
+from context_providers import WarehouseContext
+from geometry_msgs.msg import Pose
+from langchain_core.callbacks.base import BaseCallbackHandler
+from langfuse.callback import CallbackHandler
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.graph.state import CompiledStateGraph
 from llms import get_model
+from pydantic import BaseModel
+from rai.agents.langchain.core import (
+    Executor,
+    create_megamind,
+    get_initial_megamind_state,
+)
+from rai.communication.ros2 import ROS2Connector, ROS2Message
+from rclpy.node import Node
+from robotec_kairos_ur10.msg import Anomaly
+from tools import (
+    IsPackageDamagedTool,
+    MoveFromCollectionToCollectionTool,
+    ThrowTrashOutTool,
+)
+
+from scripts.kairos_controller import KairosController
+from scripts.populate_scene import load_item_type_assignment_file
+from scripts.scene_manager import SceneManager
 
 
 class TaskExecution(BaseModel):
@@ -261,11 +275,9 @@ class AgentOrchestrator:
                         self.current_task = await asyncio.wait_for(
                             self.task_queue.get(), timeout=1.0
                         )
-                        logging.info(f"task {self.current_task.prompt}")
                         current_task_future = asyncio.create_task(
                             self.run_agent(self.current_task)
                         )
-                        logging.info("after creating task")
                     except TimeoutError:
                         await asyncio.sleep(1)
                         continue
@@ -278,69 +290,58 @@ class AgentOrchestrator:
             await asyncio.sleep(0.01)
 
 
-if __name__ == "__main__":
-    from typing import Optional
-    from rai.communication.ros2 import ROS2Connector
-    from pydantic import BaseModel
-    from langchain_openai import ChatOpenAI
-    from langchain_ollama import ChatOllama
-    from langfuse.callback import CallbackHandler
-    import logging
-    from tools import (
-        NavigateToSlotSyncTool,
-        IsPackageDamagedTool,
-        MoveFromCollectionToCollectionTool,
-        ThrowTrashOutTool,
+def main():
+    logging.getLogger("rai_agent")
+    connector = ROS2Connector()
+    scene_manager = SceneManager(
+        slots_file="scripts/resources/slots.csv",
+        spawnables_file="scripts/resources/spawnables.csv",
+        connector=connector,
     )
-    from scripts.kairos_controller import KairosController
-    from scripts.scene_manager import SceneManager
+    kairos_controller = KairosController(connector=connector)
 
-    from rai.agents.langchain.core import (
-        create_megamind,
-        Executor,
-        get_initial_megamind_state,
+    llm = get_model(model="qwen3:8b", vendor="ollama", reasoning=False)
+
+    move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+    )
+    # navigation_tool = NavigateToSlotSyncTool(
+    #     connector=connector,
+    #     kairos_controller=kairos_controller,
+    #     scene_manager=scene_manager,
+    # )
+    vlm_tool = IsPackageDamagedTool(
+        connector=connector,
+        namespace_value="",
+        llm=llm,
+    )
+    throw_trash_out_tool = ThrowTrashOutTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+    )
+    warehouse_context = WarehouseContext(scene_manager=scene_manager)
+    entities = scene_manager.get_entities(name_filter="box")
+    if entities:
+        scene_manager.assign_entities_to_slots(entities)
+    collection_names, item_types = load_item_type_assignment_file(
+        "rai_app/resources/rack_assignment.csv"
     )
 
-    def main():
-        logging.getLogger("rai_agent")
-        connector = ROS2Connector()
-        scene_manager = SceneManager(
-            slots_file="scripts/resources/slots.csv",
-            spawnables_file="scripts/resources/spawnables.csv",
-            connector=connector,
-        )
-        kairos_controller = KairosController(connector=connector)
+    scene_manager.assign_collections_to_item_types(collection_names, item_types)
 
-        llm = get_model(model="qwen3:8b", vendor="ollama", reasoning=False)
+    context = warehouse_context.get_context()
+    movement_system_prompt = f"""You are a movement specialist robot agent.
+    Your role is to handle navigating to slots and moving objects from collection to collection using tools.
+    {context}
+    """
 
-        move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
-            connector=connector,
-            kairos_controller=kairos_controller,
-            scene_manager=scene_manager,
-        )
-        navigation_tool = NavigateToSlotSyncTool(
-            connector=connector,
-            kairos_controller=kairos_controller,
-            scene_manager=scene_manager,
-        )
-        vlm_tool = IsPackageDamagedTool(
-            connector=connector,
-            namespace_value="",
-            llm=llm,
-        )
-        throw_trash_out_tool = ThrowTrashOutTool(
-            connector=connector,
-            kairos_controller=kairos_controller,
-            scene_manager=scene_manager,
-        )
-
-        movement_system_prompt = """You are a movement specialist robot agent.
-    Your role is to handle navigating to slots and moving objects from collection to collection using tools."""
-
-        detection_system_prompt = """You are a detection specialist agent.
+    detection_system_prompt = """You are a detection specialist agent.
     Your role is to identify object state using tools."""
 
-        megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
+    megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
     You manage specialists to whom you will delegate tasks:
     - Movement specialist can move object from a collection to collection (table, racks) and navigate to given slot.
     - Detection specialist can identify the state of the package at current slot. 
@@ -355,46 +356,48 @@ if __name__ == "__main__":
     IF you CAN'T figure it out on your own, ask user for clarification.
     """
 
-        executors = [
-            Executor(
-                name="movement",
-                llm=llm,
-                tools=[move_from_coll_to_coll, navigation_tool, throw_trash_out_tool],
-                system_prompt=movement_system_prompt,
-            ),
-            Executor(
-                name="detection",
-                llm=llm,
-                tools=[vlm_tool],
-                system_prompt=detection_system_prompt,
-            ),
-        ]
-        warehouse_context = WarehouseContext(scene_manager=scene_manager)
-        # TODO create megamind has to return not compiled StateGraph
-        # because checkpointing has to be added before compiling
-        # currently rai-core implements create_megamind which returns compiled graph
-        # so temporarly we have to  change installed package
-        agent = create_megamind(
-            megamind_system_prompt=megamind_system_prompt,
-            megamind_llm=llm,
-            executors=executors,
-            context_providers=[warehouse_context],
-        )
+    executors = [
+        Executor(
+            name="movement",
+            llm=llm,
+            tools=[move_from_coll_to_coll, throw_trash_out_tool],
+            system_prompt=movement_system_prompt,
+        ),
+        Executor(
+            name="detection",
+            llm=llm,
+            tools=[vlm_tool],
+            system_prompt=detection_system_prompt,
+        ),
+    ]
 
-        langfuse_handler = CallbackHandler()
-        task_topics = ["/user_tasks"]
-        inspection_topics = ["/inspection_result"]
+    # TODO create megamind has to return not compiled StateGraph
+    # because checkpointing has to be added before compiling
+    # currently rai-core implements create_megamind which returns compiled graph
+    # so temporarly we have to  change installed package
+    agent = create_megamind(
+        megamind_system_prompt=megamind_system_prompt,
+        megamind_llm=llm,
+        executors=executors,
+        context_providers=[warehouse_context],
+    )
 
-        ros2_callback = AgentProgessCallback(connector)
-        orchestrator = AgentOrchestrator(
-            connector=connector,
-            agent=agent,
-            task_topics=task_topics,
-            inspection_topics=inspection_topics,
-            initial_state_creator=get_initial_megamind_state,
-            recurssion_limit=100,
-            agent_callbacks=[langfuse_handler, ros2_callback],
-        )
-        asyncio.run(orchestrator.orchestrator_loop())
+    langfuse_handler = CallbackHandler()
+    task_topics = ["/user_tasks"]
+    inspection_topics = ["/inspection_result"]
 
+    ros2_callback = AgentProgessCallback(connector)
+    orchestrator = AgentOrchestrator(
+        connector=connector,
+        agent=agent,
+        task_topics=task_topics,
+        inspection_topics=inspection_topics,
+        initial_state_creator=get_initial_megamind_state,
+        recurssion_limit=100,
+        agent_callbacks=[langfuse_handler, ros2_callback],
+    )
+    asyncio.run(orchestrator.orchestrator_loop())
+
+
+if __name__ == "__main__":
     main()

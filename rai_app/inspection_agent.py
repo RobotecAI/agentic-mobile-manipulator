@@ -4,18 +4,19 @@ import argparse
 import base64
 import time
 from datetime import datetime
-from typing import Literal, cast
 from pathlib import Path
+from typing import Literal, cast
 
-from geometry_msgs.msg import Pose
 import numpy as np
 import rclpy
 import rclpy.time
 from cv_bridge import CvBridge
+from geometry_msgs.msg import Pose
 from langchain_core.exceptions import OutputParserException
 from langchain_core.messages import SystemMessage
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
+from llms import get_model
 from pydantic import BaseModel, Field
 from rai.communication.ros2 import ROS2Connector, ROS2Context, ROS2Message
 from rai.messages import (
@@ -24,11 +25,11 @@ from rai.messages import (
 )
 from robotec_kairos_ur10.msg import Anomaly
 from rosidl_runtime_py import message_to_ordereddict
-from scripts.scene_manager import SceneManager
-from llms import get_model
-from tf_transformations import euler_from_quaternion
 from sensor_msgs.msg import Image
 from tf2_ros import PoseStamped
+from tf_transformations import euler_from_quaternion
+
+from scripts.scene_manager import SceneManager
 
 SYSTEM_PROMPT = "You are an expert in warehouse environment based on AMR camera. You are tested in simulation."
 # PROMPT = "Verify if there is an obstacle on a robot's path. Please don't report typical warehouse envirionemt as obstacles. To be an obstacle a object should be places in an unusual place and obstruct the clear navigation path of the robot. For example a package laying in the pathway might be an obstance and standing rack visible in the image is not."
