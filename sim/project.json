@@ -67,6 +67,7 @@
         "RobotecSurveillanceCamerasAssets",
         "RobotecGenericDecorationsAssets",
         "RobotecWarehousePayloadAssets",
+        "RobotecWarehouseFloorMarkingAssets",
         "HumanWorker"
     ],
     "engine_version": "2.4.0"

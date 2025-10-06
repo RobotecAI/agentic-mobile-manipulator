@@ -918,7 +918,7 @@
                                 "Parent Entity": "Entity_[3159159857995]",
                                 "Transform Data": {
                                     "Translate": [
-                                        0.19066429138183594,
+                                        0.1906642913818359,
                                         0.0,
                                         1.458520531654358
                                     ],
@@ -1337,22 +1337,32 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 9.994016647338867
+                    "value": 0.010388307273387909
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 21.034698486328125
+                    "value": 23.507104873657227
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 2.6086585521698
+                    "value": 2.285794496536255
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 0.47653988003730774
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
+                    "value": 8.82651424407959
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 88.2939453125
+                    "value": -3.1026816368103027
                 }
             ]
         },
@@ -1367,7 +1377,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 12.133846282958984
+                    "value": 12.121359825134277
                 },
                 {
                     "op": "replace",
@@ -1377,7 +1387,12 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 2.7004685401916504
+                    "value": 2.7030222415924072
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
+                    "value": 11.558012008666992
                 }
             ]
         },
@@ -1392,22 +1407,17 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 10.711743354797363
+                    "value": 0.011910654604434967
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 9.008148193359377
+                    "value": 6.9571661949157715
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 2.630446672439575
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": -82.55728912353516
+                    "value": 2.2847583293914795
                 }
             ]
         }
