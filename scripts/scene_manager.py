@@ -3,7 +3,8 @@ import copy
 import math
 import random
 import uuid
-from typing import Dict, List, Optional, Sequence, Tuple, cast
+from operator import attrgetter
+from typing import Dict, List, NamedTuple, Optional, Sequence, Tuple, cast
 
 import numpy as np
 import pandas as pd
@@ -27,6 +28,12 @@ from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
 
 from scripts.slots import Slot, SlotsCollection
+
+
+class ObjectWithDistance(NamedTuple):
+    obj_name: str
+    entity_state: EntityState
+    distance: float
 
 
 class SceneManager:
@@ -573,6 +580,110 @@ class SceneManager:
 
         return forward / np.linalg.norm(forward)
 
+    def _get_objects_in_fov_with_distances(
+        self,
+        camera_pose: Pose,
+        entities_states: Dict[str, EntityState],
+        fov_angle_degrees: float = 60.0,
+        forward_axis: str = "x",
+    ) -> Optional[list[ObjectWithDistance]]:
+        """
+        Identify all entities within the camera's field of view (FOV) and compute their distances.
+
+        Parameters
+        ----------
+        camera_pose : Pose
+            The pose of the camera in the world frame (position and orientation).
+        entities_states : dict[str, EntityState]
+            A mapping from entity names to their corresponding states (positions, orientations, etc.).
+        fov_angle_degrees : float, optional
+            The camera’s horizontal field of view angle in degrees. Defaults to 60.0.
+        forward_axis : str, optional
+            The axis representing the camera’s forward direction (e.g., "x", "y", or "z").
+            Defaults to "x".
+
+        Returns
+        -------
+        list[ObjectWithDistance] or None
+            A list of objects that are within the camera’s FOV, each annotated with its
+            distance from the camera. Returns None if no entities are within the FOV.
+
+        Notes
+        -----
+        - This method filters entities based on angular position relative to the camera's
+          forward direction and computes Euclidean distances.
+        - It assumes that the entities' positions are expressed in the same coordinate frame
+          as the `camera_pose`.
+        """
+        if not entities_states:
+            return None
+
+        cam_pos = np.array(
+            [camera_pose.position.x, camera_pose.position.y, camera_pose.position.z]
+        )
+        cam_forward = self.quaternion_to_forward_vector(
+            camera_pose.orientation, forward_axis
+        )
+
+        # FOV threshold
+        cos_fov = math.cos(math.radians(fov_angle_degrees))
+
+        filtered_objects: list[ObjectWithDistance] = []
+
+        for obj_name, entity_state in entities_states.items():
+            obj_pose = entity_state.pose
+
+            # Object position
+            obj_pos = np.array(
+                [obj_pose.position.x, obj_pose.position.y, obj_pose.position.z]
+            )
+
+            # Vector from camera to object
+            to_object = obj_pos - cam_pos
+            distance = float(np.linalg.norm(to_object))
+
+            # Skip if too close to camera
+            if distance < 1e-6:
+                continue
+
+            # Check if object is within FOV cone
+            to_object_normalized = to_object / distance
+            dot_product = np.dot(cam_forward, to_object_normalized)
+
+            if dot_product > cos_fov:  # Object is within FOV
+                filtered_objects.append(
+                    ObjectWithDistance(obj_name, entity_state, distance)
+                )
+        return filtered_objects
+
+    def find_nearest_out_of_slot_in_fov(
+        self,
+        camera_pose: Pose,
+        entities_states: Dict[str, EntityState],
+        fov_angle_degrees: float = 60.0,
+        forward_axis: str = "x",
+        filter_poses: Optional[list[Pose]] = None,
+    ):
+        objects_in_fov = self._get_objects_in_fov_with_distances(
+            camera_pose, entities_states, fov_angle_degrees, forward_axis
+        )
+        if objects_in_fov is None:
+            return None
+        if filter_poses is None:
+            filter_poses = []
+        objects_in_fov.sort(key=attrgetter("distance"))
+
+        for o_name, o_state, _ in objects_in_fov:
+            if o_state.pose in filter_poses:
+                continue
+            found_slot_flag = False
+            for slot in self.slots.values():
+                if slot.is_entity_within_slot(o_state.pose):
+                    found_slot_flag = True
+            if not found_slot_flag:
+                return (o_name, o_state.pose)
+        return None
+
     def find_nearest_object_in_fov(
         self,
         camera_pose: Pose,
@@ -592,57 +703,21 @@ class SceneManager:
         Returns:
             Tuple of (object_name, object_pose) for nearest object in FOV, or None
         """
-
-        if not entities_states:
+        objects_in_fov = self._get_objects_in_fov_with_distances(
+            camera_pose, entities_states, fov_angle_degrees, forward_axis
+        )
+        if objects_in_fov is None:
             return None
 
-        cam_pos = np.array(
-            [camera_pose.position.x, camera_pose.position.y, camera_pose.position.z]
-        )
-        cam_forward = self.quaternion_to_forward_vector(
-            camera_pose.orientation, forward_axis
-        )
+        found = min(objects_in_fov, key=attrgetter("distance"))
 
-        # FOV threshold
-        cos_fov = math.cos(math.radians(fov_angle_degrees))
+        return (found.obj_name, found.entity_state.pose)
 
-        nearest_name = None
-        nearest_pose = None
-        nearest_distance = float("inf")
-
-        for obj_name, entity_state in entities_states.items():
-            obj_pose = entity_state.pose
-
-            # Object position
-            obj_pos = np.array(
-                [obj_pose.position.x, obj_pose.position.y, obj_pose.position.z]
-            )
-
-            # Vector from camera to object
-            to_object = obj_pos - cam_pos
-            distance = np.linalg.norm(to_object)
-
-            # Skip if too close to camera
-            if distance < 1e-6:
-                continue
-
-            # Check if object is within FOV cone
-            to_object_normalized = to_object / distance
-            dot_product = np.dot(cam_forward, to_object_normalized)
-
-            if dot_product > cos_fov:  # Object is within FOV
-                if distance < nearest_distance:
-                    nearest_distance = distance
-                    nearest_pose = obj_pose
-                    nearest_name = obj_name
-
-        if nearest_name is not None:
-            return (nearest_name, nearest_pose)
-        return None
-
-    def get_trash_pose(self, trash_notice_pose: Pose) -> Tuple[str, Pose]:
+    def get_trash_pose(
+        self, trash_notice_pose: Pose, filter_poses: Optional[list[Pose]] = None
+    ) -> Tuple[str, Pose]:
         """Returns the nearest trash object (name , pose) in the fov of the robot"""
-        all_entities_states = self.get_entities(name_filter="cardboardbox03_v02O")
+        all_entities_states = self.get_entities(name_filter="cardboardbox")
         # we want gripping point entities, so filter rest
         if not all_entities_states:
             raise ValueError("No entites in simulation")
@@ -652,12 +727,14 @@ class SceneManager:
             if "GrippingPoint" in name and "Side" not in name:
                 entities_states[name] = state
 
-        trash = self.find_nearest_object_in_fov(
-            camera_pose=trash_notice_pose, entities_states=entities_states
+        trash = self.find_nearest_out_of_slot_in_fov(
+            camera_pose=trash_notice_pose,
+            entities_states=entities_states,
+            filter_poses=filter_poses,
         )
 
         if trash:
-            self.logger.info(f"Trash detected: {trash[0]} at pose:{trash[1]}")
+            self.logger.debug(f"Trash detected: {trash[0]} at pose:{trash[1]}")
             return trash
         else:
             raise ValueError("Trash pose not detected")
