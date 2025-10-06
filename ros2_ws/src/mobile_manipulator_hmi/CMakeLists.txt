@@ -18,6 +18,22 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+ament_python_install_package(${PROJECT_NAME})
+
+# --- Install Python scripts ---
+install(
+  PROGRAMS
+    mobile_manipulator_hmi/utilization_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME utilization_node
+)
+
+# --- Install launch files ---
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}/
+)
 
 ament_package()
 
@@ -47,6 +63,7 @@ find_package(image_transport REQUIRED)               # image_transport API
 find_package(std_srvs REQUIRED)                        # for using standard ROS services
 find_package(cv_bridge REQUIRED)                     # conversion between ROS images and OpenCV
 find_package(OpenCV REQUIRED)
+find_package(demo_msgs REQUIRED)               # custom Utilization message
 
 # add source directoty to include path
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -83,6 +100,7 @@ target_link_libraries(MobileManipulatorHMI PRIVATE
         geometry_msgs::geometry_msgs__rosidl_typesupport_cpp
         rcl_interfaces::rcl_interfaces__rosidl_typesupport_cpp
         std_srvs::std_srvs__rosidl_typesupport_cpp
+        demo_msgs::demo_msgs__rosidl_typesupport_cpp
         tf2_ros::tf2_ros
         tf2::tf2
         image_transport::image_transport
