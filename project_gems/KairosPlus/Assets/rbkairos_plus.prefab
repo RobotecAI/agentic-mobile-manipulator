@@ -6318,10 +6318,6 @@
             "Id": "Entity_[45011296624336]",
             "Name": "egobase_footprint",
             "Components": {
-                "EditorBoxShapeComponent": {
-                    "$type": "EditorBoxShapeComponent",
-                    "Id": 311482866401976960
-                },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 6704478533904118055
@@ -6368,6 +6364,22 @@
                     "Configuration": {
                         "entityId": ""
                     }
+                },
+                "EditorSphereShapeComponent": {
+                    "$type": "EditorSphereShapeComponent",
+                    "Id": 14115461851705207757,
+                    "SphereShape": {
+                        "Configuration": {
+                            "Radius": 1.5
+                        }
+                    }
+                },
+                "EditorTagComponent": {
+                    "$type": "EditorTagComponent",
+                    "Id": 13505596039605398881,
+                    "Tags": [
+                        "SafetyBubble"
+                    ]
                 },
                 "EditorVisibilityComponent": {
                     "$type": "EditorVisibilityComponent",
