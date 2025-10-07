@@ -2920,8 +2920,7 @@
                         "$type": "JointsTrajectoryComponent",
                         "Action name": "joint_trajectory_controller/follow_joint_trajectory",
                         "Check for position errors": true,
-                        "Check for velocity": true,
-                        "Joint velocity tolerance": 0.009999999776482582
+                        "Check for velocity": true
                     }
                 },
                 "ROS2FrameEditorComponent": {
@@ -3398,7 +3397,6 @@
                     "$type": "ROS2CameraSensorEditorComponent",
                     "Id": 9096869452264359802,
                     "CameraSensorConfig": {
-                        "Depth": false,
                         "ClipFar": 15.0
                     },
                     "SensorConfig": {
