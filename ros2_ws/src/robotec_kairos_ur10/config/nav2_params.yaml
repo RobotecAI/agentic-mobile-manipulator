@@ -86,41 +86,60 @@ local_costmap:
       height: 6
       resolution: 0.05
       footprint: "[ [0.39, 0.335], [0.39, -0.335], [-0.39, -0.335], [-0.39, 0.335] ]"
-      plugins: ["voxel_layer", "inflation_layer"]
+      plugins: ["voxel_layer_lidars2d", "voxel_layer_rgbd", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
+        enabled: True
         cost_scaling_factor: 2.0
         inflation_radius: 1.0
-      voxel_layer:
-        plugin: "nav2_costmap_2d::VoxelLayer"
+      voxel_layer_lidars2d:
+          plugin: "nav2_costmap_2d::ObstacleLayer"
+          enabled: True
+          observation_sources: scan_front_right scan_rear_left
+          footprint_clearing_enabled: true
+          max_obstacle_height: 1.5
+          combination_method: 1
+          scan_front_right:
+            topic: <robot_namespace>scan_front_right
+            max_obstacle_height: 2.0
+            clearing: True
+            marking: True
+            data_type: "LaserScan"
+            raytrace_max_range: 6.0
+            raytrace_min_range: 0.0
+            obstacle_max_range: 6.0
+            obstacle_min_range: 0.0
+          scan_rear_left:
+            topic: <robot_namespace>scan_rear_left
+            max_obstacle_height: 2.0
+            clearing: True
+            marking: True
+            data_type: "LaserScan"
+            raytrace_max_range: 6.0
+            raytrace_min_range: 0.0
+            obstacle_max_range: 6.0
+            obstacle_min_range: 0.0
+      voxel_layer_rgbd:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
         publish_voxel_map: True
-        origin_z: 0.0
-        z_resolution: 0.05
-        z_voxels: 16
-        max_obstacle_height: 2.0
+        max_obstacle_height: 1.5
         mark_threshold: 0
-        observation_sources: scan_front_right scan_rear_left
-        scan_front_right:
-          topic: <robot_namespace>scan_front_right
-          max_obstacle_height: 2.0
-          clearing: True
+        observation_sources: rgbd_camera
+        footprint_clearing_enabled: True
+        track_unknown_space: True
+        combination_method: 1
+        rgbd_camera:
+          topic: /rgbd_camera/pointcloud
+          data_type: "PointCloud2"
           marking: True
-          data_type: "LaserScan"
-          raytrace_max_range: 6.0
-          raytrace_min_range: 0.0
-          obstacle_max_range: 6.0
-          obstacle_min_range: 0.0
-        scan_rear_left:
-          topic: <robot_namespace>scan_rear_left
-          max_obstacle_height: 2.0
           clearing: True
-          marking: True
-          data_type: "LaserScan"
-          raytrace_max_range: 6.0
-          raytrace_min_range: 0.0
-          obstacle_max_range: 6.0
-          obstacle_min_range: 0.0
+          min_obstacle_height: 0.05
+          max_obstacle_height: 1.0
+          obstacle_min_range: 1.2
+          obstacle_max_range: 10.0
+          raytrace_min_range: 1.2
+          raytrace_max_range: 10.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
@@ -140,11 +159,11 @@ global_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: scan_front_right scan_rear_left
+        observation_sources: scan_front_right scan_rear_left rgbd_camera
         scan_front_right:
           topic: <robot_namespace>scan_front_right
           max_obstacle_height: 2.0
-          clearing: True
+          clearing: False
           marking: True
           data_type: "LaserScan"
           raytrace_max_range: 3.0
@@ -161,6 +180,17 @@ global_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0
+        rgbd_camera:
+          topic: /rgbd_camera/pointcloud
+          data_type: "PointCloud2"
+          marking: True
+          clearing: True
+          min_obstacle_height: 0.05
+          max_obstacle_height: 1.0
+          obstacle_min_range: 0.0
+          obstacle_max_range: 10.0
+          raytrace_min_range: 0.0
+          raytrace_max_range: 10.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
