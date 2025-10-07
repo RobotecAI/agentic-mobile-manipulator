@@ -50,6 +50,7 @@
   <exec_depend>depth_image_proc</exec_depend>
   <exec_depend>interactive_marker_twist_server</exec_depend>
   <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>tf_transformations</exec_depend>
   
   <member_of_group>rosidl_interface_packages</member_of_group>
   <export>
