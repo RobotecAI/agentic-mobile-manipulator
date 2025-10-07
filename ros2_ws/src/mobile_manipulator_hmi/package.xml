@@ -17,7 +17,6 @@
   <depend>std_srvs</depend>
   <depend>cv_bridge</depend>
   <depend>robotec_kairos_ur10</depend>
-  <exec_depend>ament_python</exec_depend>
   <exec_depend>qt5-qmake</exec_depend>
   <exec_depend>qtbase5-dev</exec_depend>
   <exec_depend>python3-psutil</exec_depend>
