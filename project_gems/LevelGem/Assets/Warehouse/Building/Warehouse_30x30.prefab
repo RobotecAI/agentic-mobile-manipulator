@@ -1727,7 +1727,7 @@
                     "Transform Data": {
                         "Translate": [
                             15.0,
-                            29.71070098876953,
+                            29.153207778930664,
                             0.0
                         ],
                         "Rotate": [
@@ -22271,7 +22271,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": -0.9952878952026367
+                    "value": -0.9952878952026368
                 },
                 {
                     "op": "replace",
@@ -23023,78 +23023,13 @@
             "Source": "Assets/Warehouse/Assets/Racks/StorageRack_2x1.prefab",
             "Patches": [
                 {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[26894230415857]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 0.07748770713806152
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": -2.807701110839844
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.0000019073486328125
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
-                    "value": 2.0
-                },
-                {
                     "op": "remove",
                     "path": "/Entities/Entity_[22103434993305]/Components/EditorEntitySortComponent/Child Entity Order/1"
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{C3B3C76F-1FD2-5BE5-93FF-76316F65A77B}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{B76E96F3-6FAD-57DC-B291-9947EE7416F8}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[3948804511790]/Name",
                     "value": "F05"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{C3B3C76F-1FD2-5BE5-93FF-76316F65A77B}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{B76E96F3-6FAD-57DC-B291-9947EE7416F8}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
                 },
                 {
                     "op": "replace",
@@ -23108,6 +23043,81 @@
                 {
                     "op": "remove",
                     "path": "/Instances/Instance_[48248727554198]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C3B3C76F-1FD2-5BE5-93FF-76316F65A77B}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f05.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C3B3C76F-1FD2-5BE5-93FF-76316F65A77B}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f05.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[26894230415857]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 0.07748770713806152
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": -2.8077011108398438
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.0000019073486328125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
+                    "value": 2.0
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Instance_[1160165643510476]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/3",
+                    "value": "Instance_[1160169938477772]/ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{B76E96F3-6FAD-57DC-B291-9947EE7416F8}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f06.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{B76E96F3-6FAD-57DC-B291-9947EE7416F8}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f06.azmaterial"
                 }
             ]
         },
@@ -23146,48 +23156,8 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{F6E71A52-50B7-52F1-A4E6-809D6A2F29A9}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{80FBA16B-B297-527C-8846-7C43D4FE5B59}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[3948804511790]/Name",
                     "value": "F09"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{F6E71A52-50B7-52F1-A4E6-809D6A2F29A9}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{80FBA16B-B297-527C-8846-7C43D4FE5B59}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
                 },
                 {
                     "op": "replace",
@@ -23197,6 +23167,56 @@
                 {
                     "op": "remove",
                     "path": "/Instances/Instance_[45676042143894]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{80FBA16B-B297-527C-8846-7C43D4FE5B59}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f10.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F6E71A52-50B7-52F1-A4E6-809D6A2F29A9}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f09.azmaterial"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Instance_[1160169938477772]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/3",
+                    "value": "Instance_[1160165643510476]/ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{80FBA16B-B297-527C-8846-7C43D4FE5B59}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f10.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{F6E71A52-50B7-52F1-A4E6-809D6A2F29A9}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f09.azmaterial"
                 }
             ]
         },
@@ -23230,48 +23250,8 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{C9940407-BDF7-57C4-B47A-CB1E666FFA13}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{71F959FA-699F-5EAD-A732-7D37D9FB578D}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[3948804511790]/Name",
                     "value": "F01"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{C9940407-BDF7-57C4-B47A-CB1E666FFA13}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{71F959FA-699F-5EAD-A732-7D37D9FB578D}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
                 },
                 {
                     "op": "replace",
@@ -23281,6 +23261,56 @@
                 {
                     "op": "remove",
                     "path": "/Instances/Instance_[48248727554198]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{71F959FA-699F-5EAD-A732-7D37D9FB578D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f02.azmaterial"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Instance_[1160165643510476]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/3",
+                    "value": "Instance_[1160169938477772]/ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{71F959FA-699F-5EAD-A732-7D37D9FB578D}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f02.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C9940407-BDF7-57C4-B47A-CB1E666FFA13}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f01.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C9940407-BDF7-57C4-B47A-CB1E666FFA13}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f01.azmaterial"
                 }
             ]
         },
@@ -23318,48 +23348,8 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{664DDC9E-C728-53A1-A47B-2CA596F69BED}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{C354E194-A4A5-5472-ABCD-7C42CF7FB83E}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[3948804511790]/Name",
                     "value": "F03"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{664DDC9E-C728-53A1-A47B-2CA596F69BED}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{C354E194-A4A5-5472-ABCD-7C42CF7FB83E}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
                 },
                 {
                     "op": "replace",
@@ -23373,6 +23363,56 @@
                 {
                     "op": "remove",
                     "path": "/Instances/Instance_[48248727554198]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{664DDC9E-C728-53A1-A47B-2CA596F69BED}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f03.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{664DDC9E-C728-53A1-A47B-2CA596F69BED}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f03.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C354E194-A4A5-5472-ABCD-7C42CF7FB83E}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f04.azmaterial"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Instance_[1160165643510476]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/3",
+                    "value": "Instance_[1160169938477772]/ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{C354E194-A4A5-5472-ABCD-7C42CF7FB83E}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f04.azmaterial"
                 }
             ]
         },
@@ -23410,48 +23450,8 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{02135A20-E51C-567B-B590-46912A933B61}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{162BF5F6-5B02-52FA-88C1-09DB93DBF7D9}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[3948804511790]/Name",
                     "value": "F07"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{02135A20-E51C-567B-B590-46912A933B61}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
-                    "value": "{162BF5F6-5B02-52FA-88C1-09DB93DBF7D9}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
-                    "value": ""
                 },
                 {
                     "op": "replace",
@@ -23465,6 +23465,56 @@
                 {
                     "op": "remove",
                     "path": "/Instances/Instance_[48248727554198]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{162BF5F6-5B02-52FA-88C1-09DB93DBF7D9}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4266707954919]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f08.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{162BF5F6-5B02-52FA-88C1-09DB93DBF7D9}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2995853149432]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f08.azmaterial"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Instance_[1160169938477772]/ContainerEntity"
+                },
+                {
+                    "op": "add",
+                    "path": "/Instances/Instance_[69932190801561]/Entities/Entity_[69940780736153]/Components/EditorEntitySortComponent/Child Entity Order/3",
+                    "value": "Instance_[1160165643510476]/ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{02135A20-E51C-567B-B590-46912A933B61}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2746745046264]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f07.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetId/guid",
+                    "value": "{02135A20-E51C-567B-B590-46912A933B61}"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[4262412987623]/Components/EditorMaterialComponent/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/assets/numbersigns/materials/sign_f07.azmaterial"
                 }
             ]
         },
@@ -24959,7 +25009,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": -0.000027320686058374122
+                    "value": -0.00002732068605837412
                 },
                 {
                     "op": "replace",
