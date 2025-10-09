@@ -118,3 +118,11 @@ cmake -B build/linux -G "Ninja Multi-Config" \
     -DCMAKE_LINKER_TYPE=MOLD
 cmake --build build/linux --config profile --target MobileManipulatorDemo Editor MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher
 ```
+
+### Export project to binary file
+
+```shell
+sudo apt install python3-resolvelib python3-puremagic
+cd ${DEMO_ROOT}/sim
+bash ./export.sh .
+```
