@@ -13,4 +13,8 @@ dependencies = [
     "rai-core>=2.5.1",
 ]
 [tool.setuptools.packages.find]
-include = ["scripts*"]
+include = ["scripts*", "rai_app*"]
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"

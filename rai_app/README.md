@@ -3,30 +3,24 @@
 ## Setup
 
 1. Follow the basic setup instructions [here](../docs/setup.md).
-2. Install the Python package:
-
-```bash
-cd ${DEMO_ROOT}
-uv pip install -e .
-```
 
 ## Run Agents
 
-3. Launch the simulation.
-4. Spawn objects in the simulation using the script:
+2. Launch the simulation.
+3. Spawn objects in the simulation using the script:
 
 ```bash
 uv run scripts/populate_scene.py
 ```
 
-5. Run ROS 2 stack and control agents
+4. Run ROS 2 stack and control agents
 
 ```bash
 source ros2_ws/install/setup.bash
 ./scripts/run_ros2_stack.sh
 ```
 
-6. Run the agent:
+5. Run the agent:
 
 ```bash
 source ros2_ws/install/setup.bash
@@ -36,7 +30,7 @@ uv run python rai_app/agent.py --task "Move all boxes from table t3 to the J01 r
 > [!TIP]
 > If the inference engine is different from llama.cpp, adjust the agent_model and agent_vendor parameters accordingly.
 
-7. For debugging, Langfuse is recommended. You can set it up locally at https://langfuse.com/self-hosting/deployment/docker-compose or use the cloud version at https://cloud.langfuse.com/.
+6. For debugging, Langfuse is recommended. You can set it up locally at https://langfuse.com/self-hosting/deployment/docker-compose or use the cloud version at https://cloud.langfuse.com/.
 
 The following ROS 2 topics should be available:
 
