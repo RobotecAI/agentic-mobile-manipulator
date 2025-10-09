@@ -122,6 +122,198 @@
             },
             "platformFlags": 2,
             "pathHint": "assets/payload/boxes/cardboardbox08_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A6983CCB-595D-5016-9316-FB7E6927DA24}",
+                "subId": 3225632960
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox01_v01d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{7E052B88-3A05-5A91-97FA-93E650941B55}",
+                "subId": 1204984041
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox01_v02d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{37801E77-5DC1-500D-8BE5-67D83FBFB8F8}",
+                "subId": 2708339175
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox01_v03d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{019E8133-FB92-5C23-973D-3F9207290D79}",
+                "subId": 2310003759
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox02_v01d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{CFAB02A0-775F-534F-80EE-BC3CFC348478}",
+                "subId": 928587216
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox02_v02d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{1B722575-BFB1-55BA-8F8E-D5D1044FC48E}",
+                "subId": 3786220711
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox03_v01d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{BD7010A1-1D03-55D4-895E-909BC0512466}",
+                "subId": 3623446585
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox03_v02od.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D5963FCD-0153-5035-9937-3C5782A3E808}",
+                "subId": 1034061862
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox04_v01d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{319D3E49-0C64-5748-89D3-057383366916}",
+                "subId": 623256287
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox05_v01d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{375ABF46-1042-54DF-8329-CB78703E6C31}",
+                "subId": 3696008138
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox06_v01d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{14C5EF6B-245E-5D87-8E56-475266231647}",
+                "subId": 833495885
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox07_v01d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{BC34E621-6824-5320-8980-1FFCAE6A55CD}",
+                "subId": 924016201
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/damaged/cardboardbox08_v01d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{FF5F2DA9-00B6-5651-910A-BC47894E8DE3}",
+                "subId": 1575336340
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox01_v01t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D3CEBDE7-5665-5766-82F0-52B6077D0638}",
+                "subId": 3696108394
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox01_v02t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A156B5A1-CDEE-5FC6-923B-5222F1232932}",
+                "subId": 1929007387
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox01_v03t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{0F0DA91B-BB95-5CEB-AC87-D7603BF25891}",
+                "subId": 3062897960
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox02_v01t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B1A21275-C4A1-5320-B058-FC766F70202C}",
+                "subId": 3802847776
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox02_v02t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{DED565F1-65CF-58A6-ADD9-1B38DBC049A1}",
+                "subId": 3288678890
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox03_v01t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{78AC625F-C945-5C26-9469-C4088E60877F}",
+                "subId": 661937904
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox03_v02ot.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{118B5EE0-1E7B-5757-83BA-3FB00489FD26}",
+                "subId": 572091716
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox04_v01t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{1FDF83FE-2F0E-5F4E-99C5-2483204EC6F0}",
+                "subId": 1873139990
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox05_v01t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{DEF58803-CCCA-592A-A39B-417D05793EC5}",
+                "subId": 2040371290
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox06_v01t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C2BD7AE2-AD6D-5708-83C2-21C010FEF955}",
+                "subId": 782343021
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox07_v01t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{200447FC-EAE6-544C-9601-CFF6B3985F79}",
+                "subId": 3250854012
+            },
+            "platformFlags": 2,
+            "pathHint": "assets/payload/boxes/trash/cardboardbox08_v01t.spawnable"
         }
     ]
 }

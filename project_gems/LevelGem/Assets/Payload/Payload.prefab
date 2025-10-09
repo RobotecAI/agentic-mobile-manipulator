@@ -81,7 +81,6 @@
                         "Instance_[3526109310313]/ContainerEntity",
                         "Instance_[1844397478602]/ContainerEntity",
                         "Instance_[1930296824522]/ContainerEntity",
-                        "Entity_[7421605551116]",
                         "Entity_[7425900518412]"
                     ]
                 },
@@ -109,63 +108,6 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7880885013181178382,
                     "Parent Entity": "ContainerEntity"
-                }
-            }
-        },
-        "Entity_[7421605551116]": {
-            "Id": "Entity_[7421605551116]",
-            "Name": "Boxes",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 3877638653368311032
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 6797498839491176870
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 13202978013876750716,
-                    "Child Entity Order": [
-                        "Instance_[5269000428724]/ContainerEntity",
-                        "Instance_[4324223141639]/ContainerEntity",
-                        "Instance_[233667018656566]/ContainerEntity",
-                        "Instance_[4367172814599]/ContainerEntity",
-                        "Instance_[4410122487559]/ContainerEntity",
-                        "Instance_[4453072160519]/ContainerEntity",
-                        "Instance_[4496021833479]/ContainerEntity",
-                        "Instance_[4538971506439]/ContainerEntity",
-                        "Instance_[4581921179399]/ContainerEntity",
-                        "Instance_[4624870852359]/ContainerEntity",
-                        "Instance_[4667820525319]/ContainerEntity",
-                        "Instance_[4753719871239]/ContainerEntity"
-                    ]
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 11598894057568495065
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 11672147142199881115
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 6691275475821165605
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 15393064070091809839
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 16023141771628345523
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 13675094439713951770,
-                    "Parent Entity": "Entity_[4085417425892]"
                 }
             }
         },
@@ -290,31 +232,6 @@
                 }
             ]
         },
-        "Instance_[233667018656566]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox03_v02O.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 3.0218324661254883
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 23.015954971313477
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.0000010132789611816406
-                }
-            ]
-        },
         "Instance_[29600810255254]": {
             "Source": "Assets/Payload/MiscContainers/PaintCan.prefab",
             "Patches": [
@@ -406,12 +323,12 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 5.8831586837768555
+                    "value": 1.9318313598632813
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 27.662105560302734
+                    "value": 27.47470474243164
                 },
                 {
                     "op": "replace",
@@ -421,61 +338,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": -35.79279327392578
-                }
-            ]
-        },
-        "Instance_[4324223141639]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox01_v01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[1236440355878752]/Components/EditorEntitySortComponent/Child Entity Order/0",
-                    "value": "Instance_[75162803418976]/ContainerEntity"
-                },
-                {
-                    "op": "remove",
-                    "path": "/Entities/Entity_[1236440355878752]/Components/EditorEntitySortComponent/Child Entity Order/1"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.9757671356201172
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 23.02070999145508
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.000001430511474609375
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[75162803418976]/Entities/Entity_[1995596070845]/Components/EditorRigidBodyComponent/Configuration/Mass",
-                    "value": 24.60163688659668
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[75162803418976]/Entities/Entity_[1995596070845]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.4555915296077728
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[75162803418976]/Entities/Entity_[1995596070845]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/4",
-                    "value": 0.251117080450058
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[75162803418976]/Entities/Entity_[1995596070845]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.453935444355011
+                    "value": -35.79279708862305
                 }
             ]
         },
@@ -588,105 +451,6 @@
                 {
                     "op": "remove",
                     "path": "/Entities/Entity_[971863663976]/Components/EditorStaticRigidBodyComponent"
-                }
-            ]
-        },
-        "Instance_[4367172814599]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox01_v02D.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 2.4520723819732666
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 23.019350051879883
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 9.5367431640625e-7
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[4305442415519]/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Mass",
-                    "value": 22.934572219848633
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[4305442415519]/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.4098454415798187
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[4305442415519]/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/4",
-                    "value": 0.214776411652565
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[4305442415519]/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.41887667775154114
-                }
-            ]
-        },
-        "Instance_[4410122487559]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox01_v03.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[1236809723066208]/Components/EditorEntitySortComponent/Child Entity Order/0",
-                    "value": "Instance_[220298338285408]/ContainerEntity"
-                },
-                {
-                    "op": "remove",
-                    "path": "/Entities/Entity_[1236809723066208]/Components/EditorEntitySortComponent/Child Entity Order/1"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 3.869267463684082
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 22.336685180664063
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.0000011920928955078125
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[220298338285408]/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Mass",
-                    "value": 24.678647994995117
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[220298338285408]/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.4579323530197144
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[220298338285408]/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/4",
-                    "value": 0.25224825739860535
-                },
-                {
-                    "op": "replace",
-                    "path": "/Instances/Instance_[220298338285408]/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.45631030201911926
                 }
             ]
         },
@@ -946,206 +710,6 @@
                 }
             ]
         },
-        "Instance_[4453072160519]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox02_v01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 3.315718412399292
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 22.342626571655273
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 9.5367431640625e-7
-                }
-            ]
-        },
-        "Instance_[4496021833479]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox02_v02D.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 2.8112432956695557
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 22.33745765686035
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.0000016689300537109375
-                }
-            ]
-        },
-        "Instance_[4538971506439]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox03_v01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 2.2839314937591553
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 22.33614921569824
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.0000016689300537109375
-                }
-            ]
-        },
-        "Instance_[4581921179399]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox04_v01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.7899092435836792
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 22.338075637817383
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.0000016689300537109375
-                }
-            ]
-        },
-        "Instance_[4624870852359]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox05_v01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.059673309326172
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 22.968706130981445
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 9.5367431640625e-7
-                }
-            ]
-        },
-        "Instance_[4667820525319]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox06_v01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.262598991394043
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 22.298358917236328
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.0000011920928955078125
-                }
-            ]
-        },
-        "Instance_[4753719871239]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox08_v01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 1.5132241249084473
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 23.008516311645508
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 7.152557373046875e-7
-                }
-            ]
-        },
-        "Instance_[5269000428724]": {
-            "Source": "Assets/Payload/Boxes/CardboardBox07_v01.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[7421605551116]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 0.7642323970794678
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 22.257755279541016
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 8.344650268554688e-7
-                }
-            ]
-        },
         "Instance_[6639915090838]": {
             "Source": "Assets/Payload/MiscContainers/PlasticBarrel1.prefab",
             "Patches": [
@@ -1337,7 +901,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 0.010388307273387909
+                    "value": 0.010388307273387907
                 },
                 {
                     "op": "replace",
@@ -1377,7 +941,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 12.121359825134277
+                    "value": 12.121359825134276
                 },
                 {
                     "op": "replace",
@@ -1407,7 +971,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 0.011910654604434967
+                    "value": 0.011910654604434969
                 },
                 {
                     "op": "replace",
