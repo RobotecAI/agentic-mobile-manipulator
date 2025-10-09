@@ -35,7 +35,11 @@ def main(
         scene_manager.clear_scene()
 
     if entity_types is None:
-        entity_types = [item for item in scene_manager.spawnable_to_uri]
+        entity_types = [
+            item
+            for item in scene_manager.spawnable_to_uri
+            if item.startswith("cardboardbox")
+        ]
 
     all_slot_names = []
 
