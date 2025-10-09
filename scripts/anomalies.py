@@ -1,6 +1,7 @@
 import argparse
 import random
 
+import pandas as pd
 from geometry_msgs.msg import Point, Pose, Quaternion
 from rai.communication.ros2 import (
     ROS2Connector,
@@ -29,21 +30,6 @@ spawning_points = [
     (12.31, 26.86, 0.01, 0.0, 0.0, 0.0, 1.0),
     (8.64, 26.88, 0.01, 0.0, 0.0, 0.0, 1.0),
     (3.97, 25.58, 0.01, 0.0, 0.0, 0.0, 1.0),
-]
-
-object_names = [
-    "cardboardbox01_v01",
-    "cardboardbox01_v02D",
-    "cardboardbox01_v03",
-    "cardboardbox02_v01",
-    "cardboardbox02_v02D",
-    "cardboardbox03_v01",
-    "cardboardbox03_v02O",
-    "cardboardbox04_v01",
-    "cardboardbox05_v01",
-    "cardboardbox06_v01",
-    "cardboardbox07_v01",
-    "cardboardbox08_v01",
 ]
 
 
@@ -116,14 +102,23 @@ def main():
         default=1,
         help="Intensity of the spill. Scales area covered by the spill.",
     )
+    parser.add_argument(
+        "--spawnables-file", type=str, default="scripts/resources/spawnables.csv"
+    )
 
     args = parser.parse_args()
     connector = ROS2Connector()
     scene_manager = SceneManager(
         connector=connector,
         slots_file="scripts/resources/slots.csv",
-        spawnables_file="scripts/resources/spawnables.csv",
+        spawnables_file=args.spawnables_file,
     )
+    # TODO: Reuse spawnables file from SceneManager class
+    spawnables = pd.read_csv(args.spawnables_file)
+    spawnables = spawnables[
+        ~spawnables["object_name"].isin(["ego", "oilspill1", "oilspill2"])
+    ]
+    object_names = spawnables["object_name"].tolist()
     wait_for_ros2_services(connector, ["/spawn_entity", "/delete_entity"])
 
     if args.clear:
