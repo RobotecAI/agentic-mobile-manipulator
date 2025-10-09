@@ -47,7 +47,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 O3DE_PROJECT_PATH=$DIR
 echo Using project path at $O3DE_PROJECT_PATH
 
-O3DE_PATH=/home/kdabrowski/o3de
+O3DE_PATH=../engine/o3de
 if [ ! -f ${O3DE_PATH}/scripts/o3de.sh ]
 then
     echo Engine path $O3DE_PATH is invalid in this script. Make sure to install the engine to $O3DE_PATH or update this script''s $O3DE_PATH to point to the installed engine path on this system.
