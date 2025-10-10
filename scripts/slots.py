@@ -34,12 +34,15 @@ class Slot:
         entity_y = entity_pose.position.y
         entity_z = entity_pose.position.z
 
-        height_match = True if abs(entity_z - slot_z) <= 0.3 else False
+        z_diff = abs(entity_z - slot_z)
+        if z_diff <= 0.05:
+            height_match = True
+        else:
+            height_match = False
 
         distance = math.sqrt((entity_x - slot_x) ** 2 + (entity_y - slot_y) ** 2)
 
-        # Check if within 0.1 meter radius and on the same height
-        return height_match and distance <= 0.3
+        return height_match and distance <= 0.15
 
     def assign_entity_to_slot(self, name: str):
         self._entity_name = name

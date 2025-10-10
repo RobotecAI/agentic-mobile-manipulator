@@ -158,21 +158,51 @@ def main():
         spawn_slot_names, spawn_entity_types, items_stored = load_spawn_config(
             "rai_app/resources/spawn_config_racks.csv"
         )
-        scene_manager.populate_scene(spawn_slot_names, spawn_entity_types, items_stored)
+        filtered_spawn_slots = []
+        filtered_entity_types = []
+        filtered_items = []
+        for slot_name, ent_type, item in zip(
+            spawn_slot_names[:], spawn_entity_types[:], items_stored[:]
+        ):
+            # ~ once every 30 times
+            if random.randint(1, 30) == 1:
+                spawn_slot_names.remove(slot_name)
+                spawn_entity_types.remove(ent_type)
+                items_stored.remove(item)
+                filtered_spawn_slots.append(slot_name)
+                filtered_entity_types.append(ent_type)
+                filtered_items.append(item)
 
-    # spawn trash
+        scene_manager.populate_scene(
+            spawn_slot_names, spawn_entity_types, items_stored, std_yaw=0.0
+        )
+        scene_manager.populate_scene(
+            filtered_spawn_slots, filtered_entity_types, filtered_items, std_yaw=1.5
+        )
+
+    # spawn trash and boxes on the floor
     pose = Pose(
-        position=Point(x=14.240, y=17.230, z=0.023),
+        position=Point(x=10.240, y=5.0, z=0.023),
     )
-    scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
+    scene_manager.spawn_object(pose=pose, object_name="cardboardbox02_v01T")
 
     pose = Pose(
-        position=Point(x=21.240, y=1.930, z=0.023),
+        position=Point(x=15.240, y=9.0, z=0.023),
     )
-    scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
+    scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v01")
+
+    pose = Pose(
+        position=Point(x=18.240, y=3.0, z=0.023),
+    )
+    scene_manager.spawn_object(pose=pose, object_name="cardboardbox01_v01")
 
     # pose = Pose(
-    #     position=Point(x=18.240, y=8.230, z=0.023),
+    #     position=Point(x=21.240, y=1.930, z=0.023),
+    # )
+    # scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
+
+    # pose = Pose(
+    #     position=Point(x=9.240, y=5.230, z=0.023),
     # )
     # scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
     scene_manager.connector.shutdown()
