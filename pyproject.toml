@@ -10,7 +10,7 @@ dependencies = [
     "pre-commit>=4.3.0",
     "psutil>=7.1.0",
     "pytest>=8.4.2",
-    "rai-core>=2.5.1",
+    "rai-core>=2.5.3",
 ]
 [tool.setuptools.packages.find]
 include = ["scripts*", "rai_app*"]
