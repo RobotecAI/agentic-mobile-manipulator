@@ -42,7 +42,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 
 from scripts.scene_manager import SceneManager
 
-SYSTEM_PROMPT = "You are an expert in warehouse environment based on AMR camera. You are tested in simulation. You follow strict OSHA regulation: there should be no objects on the warehouse floor. Boxes directly under racks can be on the floor. Trash can be on the floor. Safety equipment can be on the floor. The OSHA guideline is for there to be no tripping hazard."
+SYSTEM_PROMPT = "You are an expert in warehouse environment based on AMR camera. You are tested in simulation. You follow strict OSHA regulation: there should be no objects on the warehouse floor. Boxes directly under racks can be on the floor. Bins can be on the floor. Safety equipment can be on the floor. The OSHA guideline is for there to be no tripping hazard."
 # PROMPT = "Verify if there is an obstacle on a robot's path. Please don't report typical warehouse envirionemt as obstacles. To be an obstacle a object should be places in an unusual place and obstruct the clear navigation path of the robot. For example a package laying in the pathway might be an obstance and standing rack visible in the image is not."
 PROMPT = (
     "Detect if there is an object on the floor. Decide if the object is trash or a box."

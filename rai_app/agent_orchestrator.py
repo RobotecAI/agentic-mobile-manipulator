@@ -133,9 +133,11 @@ class AgentOrchestrator:
 
     def add_inspection_task(self, msg: ROS2Message):
         anomaly: Anomaly = msg.payload
-        # TODO  (jmatejcz) for now we classify box on the floor as trash
-        # in the future this might need adjustment as well as prompt in inspection agent
-        if anomaly.obstacle_type != "box":
+        # NOTE: Currently, a box laying of the floor will NOT be put into the trash bin
+        if anomaly.obstacle_type == "box":
+            logging.warning(
+                "Obstacle of type 'box` detected. Obstacles of type `box` will NOT be put into the trash bin!"
+            )
             return
         trash_pose: Pose = anomaly.pose
         prompt = (
