@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import copy
+import math
 import time
 from typing import Type
 
@@ -21,6 +22,7 @@ from moveit.planning import (
 from nav2_simple_commander.robot_navigator import BasicNavigator
 from pydantic import BaseModel, Field
 from tf2_geometry_msgs import TransformStamped, do_transform_pose
+from tf_transformations import euler_from_quaternion
 
 
 def get_global_pose_from_origin(local_pose: Pose, origin: Pose):
@@ -136,6 +138,17 @@ def rotate_pose(pose: Pose, angle, direction, point=None):
     new_pose.orientation.z = new_quat[2]
     new_pose.orientation.w = new_quat[3]
     return new_pose
+
+
+def get_yaw_difference(pose1: Pose, pose2: Pose):
+    q1 = pose1.orientation
+    q2 = pose2.orientation
+    roll1, pitch1, yaw1 = euler_from_quaternion([q1.x, q1.y, q1.z, q1.w])
+    roll2, pitch2, yaw2 = euler_from_quaternion([q2.x, q2.y, q2.z, q2.w])
+    yaw_diff = yaw2 - yaw1
+    # normalize to [-pi, pi]
+    yaw_diff = math.atan2(math.sin(yaw_diff), math.cos(yaw_diff))
+    return yaw_diff
 
 
 def apply_relative_transform(base_pose: Pose, relative_transform: Pose) -> Pose:

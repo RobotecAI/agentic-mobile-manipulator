@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Literal, Tuple
 
 import numpy as np
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Point, Pose
 from rai.communication.ros2 import ROS2Connector
 
 from scripts.manipulator_controller import ManipulatorController
@@ -12,6 +12,7 @@ from scripts.tools import (
     apply_relative_transform,
     calculate_relative_transform,
     get_global_pose_from_origin,
+    get_yaw_difference,
     rotate_pose,
 )
 
@@ -121,7 +122,7 @@ class KairosController:
             )
             return "side", side_gripping_point
         else:
-            top_gripping_point = self.scene_manager.get_gripping_point(entity_name)
+            top_gripping_point = self.scene_manager.get_top_gripping_point(entity_name)
             return "top", top_gripping_point
 
     def move_object_to_slot(
@@ -152,6 +153,12 @@ class KairosController:
         self.navigate_to_and_pick(object_pose, gripping_point)
         self.navigate_to_and_place(target_slot_pose, placing_point)
 
+    def allign_object_with_slot(self, slot_pose: Pose, entity_name: str):
+        obj_pose = self.scene_manager.get_pose(entity_name=entity_name)
+        yaw_diff = get_yaw_difference(obj_pose, slot_pose)
+        self.enable_safe_low_approach()
+        self.rotate_object(entity_name=entity_name, angle=yaw_diff)
+
     def rotate_object(
         self,
         entity_name: str,
@@ -163,7 +170,7 @@ class KairosController:
             return
 
         self.mani_ctrl.set_grasp_type("top")
-        gripping_point = self.scene_manager.get_gripping_point(entity_name)
+        gripping_point = self.scene_manager.get_top_gripping_point(entity_name)
 
         strategy = determine_strategy(object_pose, self.safe_low_approach)
         approach_distance = strategy.get_approach_distance()
@@ -233,7 +240,7 @@ class KairosController:
         self.mani_ctrl.move_arm_to_low_pose()
         self.nav_ctrl.move_back(-0.1)
 
-        gripping_point = self.scene_manager.get_gripping_point(entity_name)
+        gripping_point = self.scene_manager.get_top_gripping_point(entity_name)
         placing_point = rotate_pose(gripping_point, angle, np.array([0, 0, 1]))
 
         self.lift_object(gripping_point=gripping_point)
@@ -342,6 +349,26 @@ class KairosController:
             target_slot_pose, strategy.get_staging_distance()
         )
         strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
+
+        self.nav_ctrl.move_back(-approach_distance)
+
+        self.place_object(placing_point=placing_point)
+
+        self.nav_ctrl.move_back(approach_distance)
+        self.mani_ctrl.move_arm_to_base_pose()
+
+    def place_on_the_table(self, target_slot_pose: Pose, placing_point: Pose):
+        strategy = determine_strategy(target_slot_pose, self.safe_low_approach)
+        approach_distance = strategy.get_approach_distance()
+
+        self.nav_ctrl.approach_target_along_orientation(
+            target_slot_pose, strategy.get_staging_distance()
+        )
+        staging_placing_point = apply_relative_transform(
+            placing_point, Pose(position=Point(x=0.4 + approach_distance, z=0.1))
+        )
+
+        self.mani_ctrl.move_arm_to_staging_pose(staging_placing_point)
 
         self.nav_ctrl.move_back(-approach_distance)
 
