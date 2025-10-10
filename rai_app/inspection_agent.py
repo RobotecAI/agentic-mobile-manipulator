@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from queue import Queue
 from threading import Thread
-from typing import Literal, cast
+from typing import Literal, Optional, cast
 
 import numpy as np
 import rclpy
@@ -37,10 +37,10 @@ from robotec_kairos_ur10.msg import Anomaly
 from rosidl_runtime_py import message_to_ordereddict
 from sensor_msgs.msg import Image
 from tf2_ros import PoseStamped
-from tf_transformations import euler_from_quaternion
 from visualization_msgs.msg import Marker, MarkerArray
 
 from scripts.scene_manager import SceneManager
+from scripts.tools import get_yaw_difference
 
 SYSTEM_PROMPT = "You are an expert in warehouse environment based on AMR camera. You are tested in simulation. You follow strict OSHA regulation: there should be no objects on the warehouse floor. Boxes directly under racks can be on the floor. Bins can be on the floor. Safety equipment can be on the floor. The OSHA guideline is for there to be no tripping hazard."
 # PROMPT = "Verify if there is an obstacle on a robot's path. Please don't report typical warehouse envirionemt as obstacles. To be an obstacle a object should be places in an unusual place and obstruct the clear navigation path of the robot. For example a package laying in the pathway might be an obstance and standing rack visible in the image is not."
@@ -89,22 +89,7 @@ def are_poses_close(
         < distance
     )
 
-    q1 = [
-        pose1.orientation.x,
-        pose1.orientation.y,
-        pose1.orientation.z,
-        pose1.orientation.w,
-    ]
-    q2 = [
-        pose2.orientation.x,
-        pose2.orientation.y,
-        pose2.orientation.z,
-        pose2.orientation.w,
-    ]
-
-    _, _, yaw1 = euler_from_quaternion(q1)
-    _, _, yaw2 = euler_from_quaternion(q2)
-    yaw_diff = np.abs(np.degrees(yaw1 - yaw2))
+    yaw_diff = get_yaw_difference(pose1, pose2)
     orientation_ok = yaw_diff < rot_degrees
 
     return position_ok and orientation_ok
@@ -113,9 +98,11 @@ def are_poses_close(
 def are_anomalies_close(
     anomaly1: Anomaly, anomaly2: Anomaly, distance: float, rot_degrees: float
 ) -> bool:
-    obstacle_type_match = anomaly1.obstacle_type == anomaly2.obstacle_type
+    # NOTE (jmatejcz) model can detect same thing as different types so I think
+    # commecting this amtch out is a good idea
+    # obstacle_type_match = anomaly1.obstacle_type == anomaly2.obstacle_type
     poses_match = are_poses_close(anomaly1.pose, anomaly2.pose, distance, rot_degrees)
-    return poses_match and obstacle_type_match
+    return poses_match
 
 
 @dataclass
@@ -136,7 +123,7 @@ class VlmWarehouseInspector(BaseAgent):
         camera_topic: str,
         ego_target_frame: str,
         ego_source_frame: str,
-        anomaly_images_dir: str,
+        anomaly_images_dir: Optional[str],
         anomalies_topic: str,
         prompt: str = PROMPT,
         system_prompt: str = SYSTEM_PROMPT,
@@ -195,7 +182,7 @@ class VlmWarehouseInspector(BaseAgent):
             robot_location_stamp = rclpy.time.Time.from_msg(robot_location.header.stamp)
 
             try:
-                _, candidate_pose = self.scene_manager.get_trash_pose(
+                _, candidate_pose = self.scene_manager.get_anomaly_box_pose(
                     robot_location.pose, [x.pose for x in self.reported_anomalies]
                 )
             except ValueError:
@@ -250,14 +237,15 @@ class VlmWarehouseInspector(BaseAgent):
             message.pose = task.object_pose
             message.obstacle_type = result.obstacle_type
             message.anomaly_description = result.anomaly_description
-            self.get_logger().info(f"Sending anomaly: {message}")
 
             if self.check_if_anomaly_is_reported(message):
                 self.get_logger().info(f"Anomaly already reported: {message}")
                 return
 
-            filename = save_image_to_disk(task.b64_img, self.anomaly_images_dir)
-            message.filename = filename
+            self.get_logger().info(f"Sending anomaly: {message}")
+            if self.anomaly_images_dir:
+                filename = save_image_to_disk(task.b64_img, self.anomaly_images_dir)
+                message.filename = filename
 
             self.reported_anomalies.append(message)
 
@@ -321,7 +309,7 @@ class VlmWarehouseInspector(BaseAgent):
         current_time = self.connector._node.get_clock().now()
 
         age_seconds = (current_time - transform_time).nanoseconds / 1e9
-        self.get_logger().info(
+        self.get_logger().debug(
             f"Got transform from {self.ego_source_frame} to {self.ego_target_frame} with age {age_seconds:.1f} seconds"
         )
         pose = PoseStamped()
@@ -350,13 +338,13 @@ def main():
     parser.add_argument(
         "--vlm-base_url",
         type=str,
-        default="http://via-ip-robo-srv-004.robotec.tm.pl:11434",
     )
     parser.add_argument(
         "--camera-topic", type=str, default="/rgbd_camera/camera_image_color"
     )
     parser.add_argument("--ego-source-frame", type=str, default="egobase_footprint")
     parser.add_argument("--ego-target-frame", type=str, default="odom")
+    parser.add_argument("--no-images-saving", action="store_true")
     parser.add_argument("--anomaly-images-dir", type=str, default="./anomaly_images")
     parser.add_argument("--anomalies-topic", type=str, default="/inspection_result")
     parser.add_argument("--n-seconds", type=int, default=5)
@@ -372,7 +360,9 @@ def main():
         camera_topic=args.camera_topic,
         ego_target_frame=args.ego_target_frame,
         ego_source_frame=args.ego_source_frame,
-        anomaly_images_dir=args.anomaly_images_dir,
+        anomaly_images_dir=(
+            args.anomaly_images_dir if not args.no_images_saving else None
+        ),
         anomalies_topic=args.anomalies_topic,
         n_seconds=args.n_seconds,
     )

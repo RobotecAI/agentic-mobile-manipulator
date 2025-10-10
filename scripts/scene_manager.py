@@ -126,7 +126,7 @@ class SceneManager:
             raise NotImplementedError("Only odom frame is supported")
         return self.slots[slot_name].origin_pose
 
-    def get_gripping_point(self, unique_object_name: str):
+    def get_top_gripping_point(self, unique_object_name: str):
         entity_state = GetEntityState.Request()
         entity_state.entity = unique_object_name + "_GrippingPoint"
         pose = self.get_pose(entity_state.entity)
@@ -321,7 +321,7 @@ class SceneManager:
         """Calculate the height of an object's gripping point based on its base"""
         object_pose = self.get_pose(object_name)
         # gripping_point_pose = self.get_pose(f"{object_name}_GrippingPoint")
-        gripping_point_pose = self.get_gripping_point(object_name)
+        gripping_point_pose = self.get_top_gripping_point(object_name)
 
         return np.abs(gripping_point_pose.position.z - object_pose.position.z)
 
@@ -338,6 +338,14 @@ class SceneManager:
             for i, name in enumerate(response.entities):
                 entities[name] = response.states[i]
             return entities
+
+    def filter_out_gripping_point_entites(self, entities: Dict[str, EntityState]):
+        filtered_entities = {}
+        for name, ent in entities.items():
+            if "grippingpoint" not in name.lower():
+                filtered_entities[name] = ent
+
+        return filtered_entities
 
     def find_entity_slot(self, entity_name: str) -> Optional[Slot]:
         """Find the slot that contains the given entity"""
@@ -364,8 +372,10 @@ class SceneManager:
         """Assign entities to their corresponding slots based on position"""
         assigned_slots = set()
 
+        filtered_entities = self.filter_out_gripping_point_entites(entities=entities)
+
         # First pass: assign entities to slots
-        for ent_name, ent in entities.items():
+        for ent_name, ent in filtered_entities.items():
             for coll_name, collection in self.slots_collections.items():
                 for slot_name, slot in collection.slots.items():
                     if slot.is_entity_within_slot(entity_pose=ent.pose):
@@ -547,6 +557,8 @@ class SceneManager:
                         lines.append(
                             f"name: {coll.tag}, type of items stored: {coll.item_type}"
                         )
+                    elif "t1" in coll.tag or "t2" in coll.tag:
+                        lines.append(f"name: {coll.tag} - inspection area")
                     else:
                         lines.append(f"name: {coll.tag}")
         return "\n".join(lines)
@@ -663,7 +675,7 @@ class SceneManager:
         fov_angle_degrees: float = 60.0,
         forward_axis: str = "x",
         filter_poses: Optional[list[Pose]] = None,
-    ):
+    ) -> Optional[Tuple[str, EntityState]]:
         objects_in_fov = self._get_objects_in_fov_with_distances(
             camera_pose, entities_states, fov_angle_degrees, forward_axis
         )
@@ -681,7 +693,7 @@ class SceneManager:
                 if slot.is_entity_within_slot(o_state.pose):
                     found_slot_flag = True
             if not found_slot_flag:
-                return (o_name, o_state.pose)
+                return (o_name, o_state)
         return None
 
     def find_nearest_object_in_fov(
@@ -713,29 +725,35 @@ class SceneManager:
 
         return (found.obj_name, found.entity_state.pose)
 
-    def get_trash_pose(
+    def get_anomaly_box_pose(
         self, trash_notice_pose: Pose, filter_poses: Optional[list[Pose]] = None
     ) -> Tuple[str, Pose]:
-        """Returns the nearest trash object (name , pose) in the fov of the robot"""
-        all_entities_states = self.get_entities(name_filter="cardboardbox")
+        """
+        Returns the nearest object (name , pose) in the fov of the robot
+        that is a box not within slot
+        """
+        all_entities = self.get_entities(name_filter="cardboardbox")
         # we want gripping point entities, so filter rest
-        if not all_entities_states:
+        if not all_entities:
             raise ValueError("No entites in simulation")
 
-        entities_states = {}
-        for name, state in all_entities_states.items():
-            if "GrippingPoint" in name and "Side" not in name:
-                entities_states[name] = state
+        filtered_entities = self.filter_out_gripping_point_entites(
+            entities=all_entities
+        )
 
-        trash = self.find_nearest_out_of_slot_in_fov(
+        obj = self.find_nearest_out_of_slot_in_fov(
             camera_pose=trash_notice_pose,
-            entities_states=entities_states,
+            entities_states=filtered_entities,
             filter_poses=filter_poses,
         )
 
-        if trash:
-            self.logger.debug(f"Trash detected: {trash[0]} at pose:{trash[1]}")
-            return trash
+        if obj:
+            trash_name = obj[0]
+            trash_gripping_point = self.get_top_gripping_point(trash_name)
+            self.logger.debug(
+                f"Trash detected: {trash_name} at pose {trash_gripping_point}"
+            )
+            return trash_name, trash_gripping_point
         else:
             raise ValueError("Trash pose not detected")
 

@@ -9,7 +9,6 @@ from typing import Callable, Deque, List, Optional
 import rclpy
 from agent_callbacks import AgentProgessCallback
 from context_providers import WarehouseContext
-from geometry_msgs.msg import Pose
 from langchain_core.callbacks.base import BaseCallbackHandler
 from langfuse.callback import CallbackHandler
 from langgraph.checkpoint.memory import InMemorySaver
@@ -25,8 +24,11 @@ from rai.communication.ros2 import ROS2Connector, ROS2Message
 from rclpy.node import Node
 from robotec_kairos_ur10.msg import Anomaly
 from tools import (
+    CorrectBoxPositionTool,
+    HouseKeepTool,
     IsPackageDamagedTool,
     MoveFromCollectionToCollectionTool,
+    MoveFromPoseToInspectionAreaTool,
     ThrowTrashOutTool,
 )
 
@@ -100,7 +102,7 @@ class AgentOrchestrator:
         agent_callbacks: List[BaseCallbackHandler],
     ):
         # low priority queue of tasks to execute
-        self.task_queue: asyncio.Queue[TaskExecution] = asyncio.Queue(maxsize=20)
+        self.task_queue: asyncio.Queue[TaskExecution] = asyncio.Queue(maxsize=50)
         # when task is interrupted mid execution,
         # the checkpoint is saved and stored. The task is
         # put onto paused task lifo queue and will be resumed
@@ -133,19 +135,26 @@ class AgentOrchestrator:
 
     def add_inspection_task(self, msg: ROS2Message):
         anomaly: Anomaly = msg.payload
-        # NOTE: Currently, a box laying of the floor will NOT be put into the trash bin
+        pose = anomaly.pose
+        # TODO  (jmatejcz) for now we classify box on the floor as trash
+        # in the future this might need adjustment as well as prompt in inspection agent
+        pose_prompt = (
+            f" was detected at pose (x={pose.position}, y={pose.position.y}, z={pose.position.z},"
+            f" qx={pose.orientation.x}, qy={pose.orientation.y}, qz={pose.orientation.z}, qw={pose.orientation.w}. "
+        )
         if anomaly.obstacle_type == "box":
+            prompt = "box" + pose_prompt
+            prompt += "Move it to the inspection area."
+            task_exe = TaskExecution(prompt=prompt)
+        elif anomaly.obstacle_type == "trash":
+            prompt = "trash" + pose_prompt
+            prompt += "Throw it out to the garbage bin."
+            task_exe = TaskExecution(prompt=prompt)
+        else:
             logging.warning(
-                "Obstacle of type 'box` detected. Obstacles of type `box` will NOT be put into the trash bin!"
+                f"Anomaly type {anomaly.obstacle_type} not valid for any action"
             )
             return
-        trash_pose: Pose = anomaly.pose
-        prompt = (
-            f"Trash was detected at pose: (x={trash_pose.position}, y={trash_pose.position.y}, z={trash_pose.position.z},"
-            f" qx={trash_pose.orientation.x}, qy={trash_pose.orientation.y}, qz={trash_pose.orientation.z}, qw={trash_pose.orientation.w}."
-            " Throw it out to the garbage bin."
-        )
-        task_exe = TaskExecution(prompt=prompt)
         with self.lock:
             try:
                 self.task_queue.put_nowait(task_exe)
@@ -155,28 +164,15 @@ class AgentOrchestrator:
 
     def add_task(self, msg: ROS2Message):
         """Add a new task to the queue"""
-        logging.info(f"Adding task {msg.payload.data}")
-
         # TODO (jmatejcz) when new msg type drops prio will be extracted from msg
-        # for now it is mocked that every second msg is high prio
+        # for now no high prio tasks
         task_exe = TaskExecution(prompt=msg.payload.data)
-
-        # high_prio task is changed both in this
-        # funtion which is a callback of ros thread
-        # and in the main ochestrator loop
-        # additionally this funtion can be accesed by multiple ros2 callbacks
         with self.lock:
-            if self.task_count % 2 == 0:
-                try:
-                    self.task_queue.put_nowait(task_exe)
-                except asyncio.QueueFull:
-                    logging.warning("Task queue is full, dropping task")
-            else:
-                logging.info("High prio task recieved")
-
-                self.high_prio_task = task_exe
-
-            self.task_count += 1
+            try:
+                self.task_queue.put_nowait(task_exe)
+                logging.info(f"Added task {task_exe.prompt}")
+            except asyncio.QueueFull:
+                logging.warning("Task queue is full, dropping task")
 
     async def interrupt_current_task(self):
         """
@@ -294,6 +290,8 @@ class AgentOrchestrator:
 
 def main():
     logging.getLogger("rai_agent")
+    task_topics = ["/user_tasks", "/correct_boxes"]
+    inspection_topics = ["/inspection_result"]
     connector = ROS2Connector()
     scene_manager = SceneManager(
         slots_file="scripts/resources/slots.csv",
@@ -311,17 +309,28 @@ def main():
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
     )
-    # navigation_tool = NavigateToSlotSyncTool(
-    #     connector=connector,
-    #     kairos_controller=kairos_controller,
-    #     scene_manager=scene_manager,
-    # )
     vlm_tool = IsPackageDamagedTool(
         connector=connector,
         namespace_value="",
         llm=llm,
     )
     throw_trash_out_tool = ThrowTrashOutTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+    )
+    housekeep_tool = HouseKeepTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+        task_topic=task_topics[0],
+    )
+    correct_box_tool = CorrectBoxPositionTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+    )
+    move_to_inspection_are_tool = MoveFromPoseToInspectionAreaTool(
         connector=connector,
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
@@ -338,39 +347,40 @@ def main():
 
     context = warehouse_context.get_context()
     movement_system_prompt = f"""You are a movement specialist robot agent.
-    Your role is to handle navigating to slots and moving objects from collection to collection using tools.
+    Your role is to handle moving objects from collection to collection, throwing out trash,
+    moving to inspection area or correcting placements.
+    using tools.
     {context}
     """
 
     detection_system_prompt = """You are a detection specialist agent.
-    Your role is to identify object state using tools."""
+    Your role is to do housekeeping and identify objects state using tools."""
 
     megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
     You manage specialists to whom you will delegate tasks:
-    - Movement specialist can move object from a collection to collection (table, racks) and navigate to given slot.
-    - Detection specialist can identify the state of the package at current slot. 
-    Use detection agent only when specificly asked about object state, for example if it is damaged. 
-    Agents do not have access to your prompt, so you MUST include all neccessery information when delegating tasks,
-    like collection names or object position.
+    - Movement specialist can move object from a collection to collection (table, racks, bins, inspection areas),
+    throw out trash, correct boxes placement 
+    - Detection specialist can do housekeeping and identify the state of the package at current slot.
 
-    For proper execution of an objective you NEED to know:
-    - what objects are you meant to move
-    - from where to pick them
-    - where to place them
-    IF you CAN'T figure it out on your own, ask user for clarification.
+    Specialist does not have access to exact positions so be sure to always pass exact pose when it is provided.
     """
 
     executors = [
         Executor(
             name="movement",
             llm=llm,
-            tools=[move_from_coll_to_coll, throw_trash_out_tool],
+            tools=[
+                move_from_coll_to_coll,
+                throw_trash_out_tool,
+                correct_box_tool,
+                move_to_inspection_are_tool,
+            ],
             system_prompt=movement_system_prompt,
         ),
         Executor(
             name="detection",
             llm=llm,
-            tools=[vlm_tool],
+            tools=[vlm_tool, housekeep_tool],
             system_prompt=detection_system_prompt,
         ),
     ]
@@ -383,12 +393,10 @@ def main():
         megamind_system_prompt=megamind_system_prompt,
         megamind_llm=llm,
         executors=executors,
-        context_providers=[warehouse_context],
+        # context_providers=[warehouse_context],
     )
 
     langfuse_handler = CallbackHandler()
-    task_topics = ["/user_tasks"]
-    inspection_topics = ["/inspection_result"]
 
     ros2_callback = AgentProgessCallback(connector)
     orchestrator = AgentOrchestrator(
