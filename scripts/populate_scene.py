@@ -156,6 +156,12 @@ def main():
         #     output_file="rai_app/resources/spawn_config_racks.csv",
         # )
         spawn_slot_names, spawn_entity_types, items_stored = load_spawn_config(
+            "rai_app/resources/spawn_config_table.csv"
+        )
+        scene_manager.populate_scene(
+            spawn_slot_names, spawn_entity_types, items_stored, std_yaw=0.0
+        )
+        spawn_slot_names, spawn_entity_types, items_stored = load_spawn_config(
             "rai_app/resources/spawn_config_racks.csv"
         )
         filtered_spawn_slots = []
