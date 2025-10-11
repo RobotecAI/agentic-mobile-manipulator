@@ -7,7 +7,7 @@ from dataclasses import field
 from typing import Callable, Deque, List, Optional
 
 import rclpy
-from agent_callbacks import AgentProgessCallback
+from agent_callbacks import AgentActionsCallback, AgentProgessCallback
 from context_providers import WarehouseContext
 from langchain_core.callbacks.base import BaseCallbackHandler
 from langfuse.callback import CallbackHandler
@@ -97,9 +97,10 @@ class AgentOrchestrator:
         agent: CompiledStateGraph,
         task_topics: List[str],
         inspection_topics: List[str],
+        action_topic: str,
         initial_state_creator: Callable,
         recurssion_limit: int,
-        agent_callbacks: List[BaseCallbackHandler],
+        langchain_callbacks: List[BaseCallbackHandler],
     ):
         # low priority queue of tasks to execute
         self.task_queue: asyncio.Queue[TaskExecution] = asyncio.Queue(maxsize=50)
@@ -119,7 +120,7 @@ class AgentOrchestrator:
         self.initial_state_creator = initial_state_creator
         self.agent_graph = agent
         self.recurssion_limit = recurssion_limit
-        self.agent_callbacks = agent_callbacks
+        self.agent_callbacks = langchain_callbacks
         self.agent = self.add_checkpointing_to_agent(self.agent_graph)
 
         self.connector = connector
@@ -132,6 +133,10 @@ class AgentOrchestrator:
         self.stop: bool = False
         self.task_count = 0
         self.lock = threading.Lock()
+
+        self.action_callback = AgentActionsCallback(
+            connector=connector, topic=action_topic
+        )
 
     def add_inspection_task(self, msg: ROS2Message):
         anomaly: Anomaly = msg.payload
@@ -215,7 +220,7 @@ class AgentOrchestrator:
             logging.info(f"Starting agent for task: {task.prompt}")
             initial_state = self.initial_state_creator(task.prompt)
 
-        async for subgraph, state in self.agent.astream(
+        async for chunk in self.agent.astream(
             initial_state,
             config={
                 "configurable": {"thread_id": task.thread_id},
@@ -224,10 +229,13 @@ class AgentOrchestrator:
                 "tags": [f"task-id:{task.id}"],
             },
             subgraphs=True,
+            stream_mode=["messages"],
         ):
             if self.stop:
                 logging.info("Stopping the agent")
                 break
+
+            await self.action_callback.process_stream_chunk(chunk)
 
     def spin_task_subscriber(self):
         rclpy.spin(self.task_subscriber)
@@ -302,7 +310,7 @@ def main():
         connector=connector, scene_manager=scene_manager
     )
 
-    llm = get_model(model="qwen3:8b", vendor="ollama", reasoning=False)
+    llm = get_model(model="qwen3:14b", vendor="ollama", reasoning=True)
 
     move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
         connector=connector,
@@ -404,9 +412,10 @@ def main():
         agent=agent,
         task_topics=task_topics,
         inspection_topics=inspection_topics,
+        action_topic="/agent/current_action",
         initial_state_creator=get_initial_megamind_state,
         recurssion_limit=100,
-        agent_callbacks=[langfuse_handler, ros2_callback],
+        langchain_callbacks=[langfuse_handler, ros2_callback],
     )
     asyncio.run(orchestrator.orchestrator_loop())
 
