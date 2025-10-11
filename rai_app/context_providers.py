@@ -10,9 +10,6 @@ class WarehouseContext(ContextProvider):
         self.scene_manager = scene_manager
 
     def get_context(self) -> str:
-        context = """\nYou are given the names of every collection(table or rack) in the warehouse. Take it as truth, don't confirm it using detection.
-Racks are grouped by the items that are stored on them.
-If names of collections provided by user are not present, return response to user.
-"""
+        context = "Collection t2 is the outbound shipment table used for preparing shipments.\nCollection t4 is the inspection table used for inspecting returned packages by a human.\n"
         context += self.scene_manager.get_warehouse_collections_description()
         return context

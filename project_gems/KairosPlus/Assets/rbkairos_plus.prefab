@@ -6368,7 +6368,7 @@
                     "Id": 14115461851705207757,
                     "SphereShape": {
                         "Configuration": {
-                            "Radius": 1.5
+                            "Radius": 5.0
                         }
                     }
                 },

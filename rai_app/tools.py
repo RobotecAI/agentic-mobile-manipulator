@@ -1,5 +1,7 @@
 import logging
 import math
+import random
+import re
 import time
 from typing import Dict, List, Optional, Tuple, Type, cast
 
@@ -14,6 +16,7 @@ from rai.tools.ros2.simple import GetROS2ImageConfiguredTool
 from std_msgs.msg import Header
 from tf_transformations import euler_from_quaternion
 
+from rai_app.knowledge import Collection, get_object_type_to_racks
 from scripts.kairos_controller import KairosController
 from scripts.scene_manager import SceneManager
 from scripts.slots import Slot, SlotsCollection
@@ -194,7 +197,7 @@ class IsPackageDamagedTool(BaseROS2Tool):
     description: str = "Ask VLM if package in current slot is damaged."
 
     namespace_value: str
-    llm: BaseChatModel
+    vlm: BaseChatModel
 
     def _run(self) -> bool:
         SYSTEM_PROMPT = "You are an expert in image analysis and your speciality is the description of images"
@@ -219,10 +222,45 @@ class IsPackageDamagedTool(BaseROS2Tool):
                 images=[b64_img],
             ),
         ]
-        llm = self.llm.with_structured_output(ROS2ImgDescription)
-        response = cast(ROS2ImgDescription, llm.invoke(task))
+        vlm = self.vlm.with_structured_output(ROS2ImgDescription)
+        response = cast(ROS2ImgDescription, vlm.invoke(task))
         logging.info(f"Package damaged = {response.is_package_damaged}")
         return response.is_package_damaged
+
+
+class DescribeImageToolInput(BaseModel):
+    prompt: str = Field(..., description="Prompt for the image description model.")
+
+
+class DescribeImageTool(BaseROS2Tool):
+    name: str = "describe_image"
+    description: str = "Describe the image in detail."
+
+    args_schema: Type[DescribeImageToolInput] = DescribeImageToolInput
+
+    vlm: BaseChatModel
+
+    def _run(self, prompt: str) -> str:
+        SYSTEM_PROMPT = "You are an expert in image analysis and your speciality is the description of images"
+        logging.info("Getting image")
+        tool = GetROS2ImageConfiguredTool(
+            connector=self.connector,
+            topic="/wrist_camera/camera_image_color",
+        )
+        _, artifact = tool._run()
+        artifact: MultimodalArtifact
+        b64_img = artifact["images"][0]
+
+        task = [
+            SystemMessage(content=SYSTEM_PROMPT),
+            HumanMultimodalMessage(
+                content=prompt,
+                images=[b64_img],
+            ),
+        ]
+        response = self.vlm.invoke(task)
+        logging.info(f"Image described = {response.content}")
+        return str(response.content)
 
 
 class MoveFromCollectionToCollectionInput(BaseModel):
@@ -296,7 +334,10 @@ class MoveFromCollectionToCollectionTool(WarehouseTool):
             return f"Failed to move object from {origin_slot.tag} to {target_slot.tag}: {str(e)}"
         finally:
             self.refresh_data()
-        return f"Successfully moved ONE object from {origin_collection_name} to {target_collection_name}"
+        return_text = "Successfully moved one"
+        return_text += f"package with {str(item_type)}" if item_type else "package"
+        return_text += f" from {origin_collection_name} to {target_collection_name}"
+        return return_text
 
 
 class MoveFromPoseToInspectionAreaToolInput(BaseModel):
@@ -812,3 +853,112 @@ class CorrectBoxPositionTool(WarehouseTool):
         self.kairos_controller.allign_object_with_slot(
             slot_pose=target_slot.origin_pose, entity_name=obj_name
         )
+
+
+class SortReturnedPackageToolInput(BaseModel):
+    pass
+
+
+class SortReturnedPackageTool(WarehouseTool):
+    name: str = "sort_returned_package"
+    description: str = (
+        "Moves returned package to inspection table or designated rack based on item's condition and content."
+        "Run this tool multiple times to move all the packages."
+        "When there are no more packages to sort, the tool will return 'No more packages to sort' message."
+        "This tool does not need parameters. The objects to be sorted are resolved automatically."
+    )
+    vlm: BaseChatModel
+
+    args_schema: Type[SortReturnedPackageToolInput] = SortReturnedPackageToolInput
+
+    def _check_if_damaged(self, package_slot: Slot) -> bool:
+        is_box_damaged_tool = IsPackageDamagedTool(
+            connector=self.connector,
+            vlm=self.vlm,
+            namespace_value="",
+        )
+        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
+            package_slot.origin_pose, 1.0
+        )
+        return is_box_damaged_tool._run()
+
+    def _get_free_collections_slot(self, collections_names: List[str]):
+        # TODO: Ideally this should be done with item already being held
+        for collection_name in collections_names:
+            collection = self.scene_manager.get_collection(collection_name)
+            if collection is None:
+                raise RuntimeError("Internal error. Please notify the operator.")
+            free_slots = collection.find_empty_slots()
+            free_slots = self.filter_for_slots_in_arm_range(free_slots)
+            free_slots = sorted(free_slots, key=lambda x: x.tag)
+            if len(free_slots) > 0:
+                return free_slots[0]
+        raise RuntimeError(
+            f"There are no free slots in the collections {collections_names}. Please notify the operator."
+        )
+
+    def _get_free_inspection_table_slot(self):
+        # TODO: We should first drive to the inspection table in good faith that there are free slots
+        # This implementaion is hacky
+
+        free_slot = self._get_free_collections_slot([Collection.INSPECTION_TABLE.value])
+
+        return free_slot
+
+    def _extract_item_stored(self, entity_name: str):
+        # get what's in the box based on visual ques e.g. qr code
+        # this would be usually done using dedicated camera software
+        # we are taking the information directly from the object name
+
+        item_name_reqex = re.compile(r"__(.*?)__")
+        item_stored = item_name_reqex.search(entity_name)  # type: ignore
+        item_stored = cast(str, item_stored.group(1))  # type: ignore
+        return item_stored
+
+    def _get_target_collection(self, item_stored: str) -> Slot:
+        possible_racks = get_object_type_to_racks(item_stored)
+        free_slot = self._get_free_collections_slot(possible_racks)
+        return free_slot
+
+    def _run(self):
+        try:
+            used_slots = self.check_the_origin_collection(
+                Collection.RETURNED_PACKAGES_TABLE.value
+            )
+        except RuntimeError as e:
+            if "There is no objects in the collection" in str(e):
+                return "No more packages to sort. All packages have been sorted."
+
+        # TODO: random choice to avoid deadlock when a failed tool call is retried
+        # should be replaced with a more robust solution
+
+        package_slot = random.choice(used_slots)
+        entity_name = package_slot.get_obj_name()
+        if not entity_name:
+            raise RuntimeError(
+                f"There is no object at the slot {package_slot.tag}. This should not happen."
+            )
+
+        is_damaged = self._check_if_damaged(package_slot)
+        self.connector.logger.info(f"Is damaged: {is_damaged}")
+        target_slot: Slot | None = None
+
+        if is_damaged:
+            target_slot = self._get_free_inspection_table_slot()
+            self.connector.logger.info(f"Target slot: {target_slot.tag}")
+        else:
+            item_stored = self._extract_item_stored(entity_name)
+            target_slot = self._get_target_collection(item_stored)
+            self.connector.logger.info(f"Target slot: {target_slot.tag}")
+
+        self.connector.logger.info(f"Moving object to slot: {target_slot.tag}")
+
+        self.kairos_controller.move_object_to_slot(
+            target_slot_name=target_slot.tag,
+            entity_name=entity_name,
+        )
+        return_text = "Moved "
+        return_text += "damaged" if is_damaged else " non-damaged "
+        return_text += "package to "
+        return_text += "Inspection table" if is_damaged else "respective rack."
+        return return_text
