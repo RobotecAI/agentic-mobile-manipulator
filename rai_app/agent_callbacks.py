@@ -3,7 +3,7 @@ import time
 from typing import Any, Dict, List
 
 from langchain_core.callbacks import AsyncCallbackHandler
-from rai.communication.ros2 import ROS2Connector, ROS2Message
+from rai.communication.ros2 import ROS2Connector, ROS2HRIMessage, ROS2Message
 
 
 class AgentProgessCallback(AsyncCallbackHandler):
@@ -42,37 +42,17 @@ class AgentProgessCallback(AsyncCallbackHandler):
             # but outputs returned by certain nodes
             # will contain the step and steps_done fields
             if isinstance(outputs, dict):
-                if "step" in outputs:
-                    await self._send_current_step_message(outputs, tags)
                 if "steps_done" in outputs:
-                    await self._send_past_steps_message(outputs, tags)
+                    await self._send_past_steps_message(outputs)
 
-    async def _send_current_step_message(
-        self, node_state: Dict[str, Any], tags: List[str]
-    ):
-        task_id = self.get_task_id(tags)
-        if "step" in node_state:
-            self.connector.send_message(
-                message=ROS2Message(
-                    payload={
-                        "data": f"task-id: {task_id}, current_step: {node_state['step']}"
-                    }
-                ),
-                msg_type="std_msgs/msg/String",
-                target="/agent/current_step",
-            )
-
-    async def _send_past_steps_message(
-        self, node_state: Dict[str, Any], tags: List[str]
-    ):
-        task_id = self.get_task_id(tags)
+    async def _send_past_steps_message(self, node_state: Dict[str, Any]):
         if "steps_done" in node_state:
+            msg = ""
+            for step in node_state["steps_done"]:
+                msg += step
+                msg += "\n"
             self.connector.send_message(
-                message=ROS2Message(
-                    payload={
-                        "data": f"task-id: {task_id}, current_step: {node_state['steps_done']}"
-                    }
-                ),
+                message=ROS2Message(payload={"data": msg}),
                 msg_type="std_msgs/msg/String",
                 target="/agent/past_steps",
             )
@@ -92,3 +72,86 @@ class AgentProgessCallback(AsyncCallbackHandler):
         for tag in tags:
             if "task-id" in tag:
                 return tag.split(":")[-1]
+
+
+class AgentActionsCallback:
+    def __init__(self, connector: ROS2Connector, topic: str) -> None:
+        self.connector = connector
+        self.action_topic = topic
+
+    async def _send_text(self, task_id: str, node_name: str, text: str, topic: str):
+        msg = ROS2HRIMessage(
+            payload={"text": text, "communication_id": f"{node_name}:{task_id}"}
+        )
+        self.connector.send_message(
+            message=msg,
+            msg_type="rai_interfaces/msg/HRIMessage",
+            target=topic,
+        )
+
+    async def _send_tool_call(
+        self,
+        task_id: str,
+        node_name: str,
+        tool_name: str,
+        tool_call_args: Dict[str, str],
+        topic: str,
+    ):
+        payload = {
+            "type": "tool_call",
+            "tool_name": tool_name,
+            "tool_args": tool_call_args,
+        }
+        msg = ROS2HRIMessage(
+            payload={"text": str(payload), "communication_id": f"{node_name}:{task_id}"}
+        )
+        self.connector.send_message(
+            message=msg,
+            msg_type="rai_interfaces/msg/HRIMessage",
+            target=topic,
+        )
+
+    async def process_stream_chunk(self, chunk):
+        """Process streaming messages (both text tokens and tool calls)."""
+
+        subgraph_tuple, mode, data = chunk
+
+        # extract node name from subgraph (e.g. 'movement')
+        subgraph = subgraph_tuple[0]
+        node_name, node_run_id = subgraph.split(":")
+
+        # NOTE skipping analyzer node as its output is already in past_steps
+        if node_name == "structured_output":
+            return
+        if mode != "messages":
+            return
+
+        message_chunk, metadata = data
+
+        if hasattr(message_chunk, "additional_kwargs"):
+            reasoning = message_chunk.additional_kwargs.get("reasoning_content")
+            if reasoning:
+                await self._send_text(
+                    task_id=node_run_id,
+                    text=reasoning,
+                    topic=self.action_topic,
+                    node_name=node_name,
+                )
+
+        if hasattr(message_chunk, "content") and message_chunk.content:
+            await self._send_text(
+                task_id=node_run_id,
+                text=message_chunk.content,
+                topic=self.action_topic,
+                node_name=node_name,
+            )
+
+        if hasattr(message_chunk, "tool_calls") and message_chunk.tool_calls:
+            for tool_call in message_chunk.tool_calls:
+                await self._send_tool_call(
+                    task_id=node_run_id,
+                    tool_call_args=tool_call["args"],
+                    tool_name=tool_call["name"],
+                    topic=self.action_topic,
+                    node_name=node_name,
+                )
