@@ -27,6 +27,7 @@ from tf2_geometry_msgs import do_transform_pose
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
 
+from rai_app.knowledge import get_object_type_to_racks_all
 from scripts.slots import Slot, SlotsCollection
 
 
@@ -544,23 +545,12 @@ class SceneManager:
     def get_warehouse_collections_description(self) -> str:
         """Return a formatted description of the warehouse collections names (tables and racks)"""
 
-        collections_by_type = self.get_collections_sorted_by_type()
-        lines = ["COLLECTIONS IN THE WAREHOUSE:\n"]
-        for col_type, collections in collections_by_type.items():
-            if col_type == "garbage_bin":
-                continue
-
-            else:
-                lines.append(f"{col_type.upper()} COLLECTIONS:")
-                for coll in collections:
-                    if coll.item_type:
-                        lines.append(
-                            f"name: {coll.tag}, type of items stored: {coll.item_type}"
-                        )
-                    elif "t1" in coll.tag or "t2" in coll.tag:
-                        lines.append(f"name: {coll.tag} - inspection area")
-                    else:
-                        lines.append(f"name: {coll.tag}")
+        object_type_to_racks = get_object_type_to_racks_all()
+        lines = ["The following objects are stored in the warehouse:\n"]
+        for object_type, racks in object_type_to_racks.items():
+            lines.append(
+                f"{object_type} is usually stored in the following collections: {racks}"
+            )
         return "\n".join(lines)
 
     def quaternion_to_forward_vector(

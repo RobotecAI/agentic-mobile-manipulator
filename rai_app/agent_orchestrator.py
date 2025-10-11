@@ -20,21 +20,47 @@ from rai.agents.langchain.core import (
     create_megamind,
     get_initial_megamind_state,
 )
-from rai.communication.ros2 import ROS2Connector, ROS2Message
+from rai.communication.ros2 import (
+    ROS2Connector,
+    ROS2Message,
+    wait_for_ros2_actions,
+    wait_for_ros2_services,
+    wait_for_ros2_topics,
+)
 from rclpy.node import Node
 from robotec_kairos_ur10.msg import Anomaly
 from tools import (
     CorrectBoxPositionTool,
+    DescribeImageTool,
     HouseKeepTool,
     IsPackageDamagedTool,
     MoveFromCollectionToCollectionTool,
     MoveFromPoseToInspectionAreaTool,
+    SortReturnedPackageTool,
     ThrowTrashOutTool,
 )
 
+from rai_app.prompts import (
+    HOUSEKEEP_EXECUTOR_SYSTEM_PROMPT,
+    IMAGE_ANALYSIS_EXECUTOR_SYSTEM_PROMPT,
+    MEGAMIND_SYSTEM_PROMPT_TEMPLATE,
+    MOVEMENT_EXECUTOR_SYSTEM_PROMPT,
+)
 from scripts.kairos_controller import KairosController
 from scripts.populate_scene import load_item_type_assignment_file
 from scripts.scene_manager import SceneManager
+
+TOPICS_TO_WAIT_FOR: list[str] = ["/wrist_camera/camera_image_color"]
+SERVICES_TO_WAIT_FOR: list[str] = [
+    "/rai/moveit2/set_arm_joints",
+    "/rai/moveit2/move_arm",
+]
+ACTIONS_TO_WAIT_FOR: list[str] = [
+    "/rai/nav2/navigate_to_pose",
+    "/rai/nav2/drive_on_heading",
+    "/rai/nav2/spin",
+    "/rai/nav2/follow_waypoints",
+]
 
 
 class TaskExecution(BaseModel):
@@ -301,6 +327,11 @@ def main():
     task_topics = ["/user_tasks", "/correct_boxes"]
     inspection_topics = ["/inspection_result"]
     connector = ROS2Connector()
+
+    wait_for_ros2_actions(connector, ACTIONS_TO_WAIT_FOR)
+    wait_for_ros2_topics(connector, TOPICS_TO_WAIT_FOR)
+    wait_for_ros2_services(connector, SERVICES_TO_WAIT_FOR)
+
     scene_manager = SceneManager(
         slots_file="scripts/resources/slots.csv",
         spawnables_file="scripts/resources/spawnables.csv",
@@ -311,16 +342,17 @@ def main():
     )
 
     llm = get_model(model="qwen3:14b", vendor="ollama", reasoning=True)
+    vlm = get_model(model="gemma3:12b", vendor="ollama", reasoning=False)
 
     move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
         connector=connector,
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
     )
-    vlm_tool = IsPackageDamagedTool(
+    is_package_damaged_tool = IsPackageDamagedTool(
         connector=connector,
         namespace_value="",
-        llm=llm,
+        vlm=vlm,
     )
     throw_trash_out_tool = ThrowTrashOutTool(
         connector=connector,
@@ -343,6 +375,19 @@ def main():
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
     )
+
+    sort_returned_package_tool = SortReturnedPackageTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+        vlm=vlm,
+    )
+
+    describe_image_tool = DescribeImageTool(
+        connector=connector,
+        vlm=vlm,
+    )
+
     warehouse_context = WarehouseContext(scene_manager=scene_manager)
     entities = scene_manager.get_entities(name_filter="box")
     if entities:
@@ -354,44 +399,46 @@ def main():
     scene_manager.assign_collections_to_item_types(collection_names, item_types)
 
     context = warehouse_context.get_context()
-    movement_system_prompt = f"""You are a movement specialist robot agent.
-    Your role is to handle moving objects from collection to collection, throwing out trash,
-    moving to inspection area or correcting placements.
-    using tools.
-    {context}
-    """
-
-    detection_system_prompt = """You are a detection specialist agent.
-    Your role is to do housekeeping and identify objects state using tools."""
-
-    megamind_system_prompt = """You are a mobile robot operating in a warehouse environment for pick-and-place operations.
-    You manage specialists to whom you will delegate tasks:
-    - Movement specialist can move object from a collection to collection (table, racks, bins, inspection areas),
-    throw out trash, correct boxes placement 
-    - Detection specialist can do housekeeping and identify the state of the package at current slot.
-
-    Specialist does not have access to exact positions so be sure to always pass exact pose when it is provided.
-    """
 
     executors = [
         Executor(
-            name="movement",
+            name="housekeep",
+            llm=llm,
+            tools=[
+                housekeep_tool,
+                sort_returned_package_tool,
+                correct_box_tool,
+            ],
+            system_prompt=HOUSEKEEP_EXECUTOR_SYSTEM_PROMPT,
+        ),
+        Executor(
+            name="package_movement",
             llm=llm,
             tools=[
                 move_from_coll_to_coll,
-                throw_trash_out_tool,
-                correct_box_tool,
                 move_to_inspection_are_tool,
+                throw_trash_out_tool,
             ],
-            system_prompt=movement_system_prompt,
+            system_prompt=MOVEMENT_EXECUTOR_SYSTEM_PROMPT.format(context=context),
         ),
         Executor(
-            name="detection",
+            name="image_analysis",
             llm=llm,
-            tools=[vlm_tool, housekeep_tool],
-            system_prompt=detection_system_prompt,
+            tools=[is_package_damaged_tool, describe_image_tool],
+            system_prompt=IMAGE_ANALYSIS_EXECUTOR_SYSTEM_PROMPT,
         ),
     ]
+
+    executor_overview = ""
+    for executor in executors:
+        executor_overview += (
+            f"- {executor.name} specialist can use the following tools: \n"
+        )
+        for tool in executor.tools:
+            executor_overview += f"    -{tool.name}: {tool.description}\n"
+    megamind_system_prompt = MEGAMIND_SYSTEM_PROMPT_TEMPLATE.format(
+        executor_overview=executor_overview
+    )
 
     # TODO create megamind has to return not compiled StateGraph
     # because checkpointing has to be added before compiling
