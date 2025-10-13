@@ -176,7 +176,7 @@ class VlmWarehouseInspector(BaseAgent):
                 continue
             img_stamp = rclpy.time.Time.from_msg(msg.header.stamp)
             image = CvBridge().imgmsg_to_cv2(  # type: ignore
-                msg, desired_encoding="bgr8"
+                msg, desired_encoding="rgb8"
             )
             robot_location = self.get_robot_location()
             robot_location_stamp = rclpy.time.Time.from_msg(robot_location.header.stamp)
