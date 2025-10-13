@@ -50,6 +50,201 @@
         }
     },
     "Entities": {
+        "Entity_[14649921296911]": {
+            "Id": "Entity_[14649921296911]",
+            "Name": "EndPoint5",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15851377247950876879
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 4992151415091144273
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 574421056362549037
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8754916516242032504
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2161901119003646918
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 16696941559891731742
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 17342435645255577637
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5157935162719425672
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 5550501824040579152,
+                    "Parent Entity": "Entity_[211644708021952]",
+                    "Transform Data": {
+                        "Translate": [
+                            4.642993927001953,
+                            10.666259765625,
+                            0.0
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    },
+                    "IsStatic": true
+                },
+                "WaypointComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 14016442834981124201,
+                    "m_template": {
+                        "$type": "WaypointComponent",
+                        "Waypoint Configuration": {
+                            "Idle time": 1.0
+                        }
+                    }
+                }
+            }
+        },
+        "Entity_[14662806198799]": {
+            "Id": "Entity_[14662806198799]",
+            "Name": "EndPoint6",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15851377247950876879
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 4992151415091144273
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 574421056362549037
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8754916516242032504
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2161901119003646918
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 16696941559891731742
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 17342435645255577637
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5157935162719425672
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 5550501824040579152,
+                    "Parent Entity": "Entity_[211644708021952]",
+                    "Transform Data": {
+                        "Translate": [
+                            -3.85256290435791,
+                            9.853473663330078,
+                            0.0
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    },
+                    "IsStatic": true
+                },
+                "WaypointComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 14016442834981124201,
+                    "m_template": {
+                        "$type": "WaypointComponent",
+                        "Waypoint Configuration": {
+                            "Idle time": 2.0
+                        }
+                    }
+                }
+            }
+        },
+        "Entity_[14675691100687]": {
+            "Id": "Entity_[14675691100687]",
+            "Name": "EndPoint7",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15851377247950876879
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 4992151415091144273
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 574421056362549037
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8754916516242032504
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2161901119003646918
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 16696941559891731742
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 17342435645255577637
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5157935162719425672
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 5550501824040579152,
+                    "Parent Entity": "Entity_[211644708021952]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.12732219696044922,
+                            5.803897857666016,
+                            0.0
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    },
+                    "IsStatic": true
+                },
+                "WaypointComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 14016442834981124201,
+                    "m_template": {
+                        "$type": "WaypointComponent"
+                    }
+                }
+            }
+        },
         "Entity_[211610348283584]": {
             "Id": "Entity_[211610348283584]",
             "Name": "NavigationMesh",
@@ -71,13 +266,13 @@
                                 0.11667048186063766
                             ],
                             "Dimensions": [
-                                10.0,
-                                10.0,
+                                32.60874557495117,
+                                32.938262939453125,
                                 4.0
                             ],
                             "TranslationOffset": [
-                                -2.0,
-                                -2.0,
+                                0.8240604400634766,
+                                -0.9007134437561035,
                                 0.0
                             ]
                         }
@@ -216,8 +411,8 @@
                     "Parent Entity": "Entity_[211644708021952]",
                     "Transform Data": {
                         "Translate": [
-                            6.036109924316406,
-                            -2.5870532989501953,
+                            0.6954259872436523,
+                            -8.335983276367188,
                             0.0
                         ]
                     },
@@ -227,7 +422,10 @@
                     "$type": "GenericComponentWrapper",
                     "Id": 14016442834981124201,
                     "m_template": {
-                        "$type": "WaypointComponent"
+                        "$type": "WaypointComponent",
+                        "Waypoint Configuration": {
+                            "Idle time": 1.0
+                        }
                     }
                 }
             }
@@ -274,8 +472,8 @@
                     "Parent Entity": "Entity_[211644708021952]",
                     "Transform Data": {
                         "Translate": [
-                            13.197628021240234,
-                            -7.940320014953613,
+                            14.466705322265625,
+                            -8.144292831420898,
                             0.0
                         ],
                         "Rotate": [
@@ -292,7 +490,6 @@
                     "m_template": {
                         "$type": "WaypointComponent",
                         "Waypoint Configuration": {
-                            "Orientation captured": true,
                             "Idle time": 2.0
                         }
                     }
@@ -572,7 +769,10 @@
                         "Entity_[211649002989248]",
                         "Entity_[211614643250880]",
                         "Entity_[211618938218176]",
-                        "Entity_[211653297956544]"
+                        "Entity_[211653297956544]",
+                        "Entity_[14649921296911]",
+                        "Entity_[14662806198799]",
+                        "Entity_[14675691100687]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -651,8 +851,8 @@
                     "Parent Entity": "Entity_[211644708021952]",
                     "Transform Data": {
                         "Translate": [
-                            0.8405838012695313,
-                            0.0,
+                            1.4428949356079102,
+                            -2.0633325576782227,
                             0.0
                         ]
                     },
@@ -662,11 +862,7 @@
                     "$type": "GenericComponentWrapper",
                     "Id": 17785696878765016758,
                     "m_template": {
-                        "$type": "WaypointComponent",
-                        "Waypoint Configuration": {
-                            "Orientation captured": true,
-                            "Idle time": 4.0
-                        }
+                        "$type": "WaypointComponent"
                     }
                 }
             }
@@ -713,8 +909,8 @@
                     "Parent Entity": "Entity_[211644708021952]",
                     "Transform Data": {
                         "Translate": [
-                            11.951337814331055,
-                            -2.504776954650879,
+                            10.314144134521484,
+                            -0.7523813247680664,
                             0.0
                         ],
                         "Rotate": [
@@ -836,6 +1032,21 @@
                     "op": "add",
                     "path": "/Entities/Entity_[66011467218485]/Components/NpcWaypointNavigatorComponent/m_template/Waypoints/3",
                     "value": "../Entity_[211653297956544]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[66011467218485]/Components/NpcWaypointNavigatorComponent/m_template/Waypoints/4",
+                    "value": "../Entity_[14649921296911]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[66011467218485]/Components/NpcWaypointNavigatorComponent/m_template/Waypoints/5",
+                    "value": "../Entity_[14662806198799]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[66011467218485]/Components/NpcWaypointNavigatorComponent/m_template/Waypoints/6",
+                    "value": "../Entity_[14675691100687]"
                 }
             ]
         }
