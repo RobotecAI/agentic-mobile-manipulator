@@ -15,7 +15,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 5323620646963992004,
                 "Child Entity Order": [
-                    "Entity_[1237733141034848]"
+                    "Entity_[1237733141034848]",
+                    "Instance_[12859734501526]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -135,6 +136,36 @@
         }
     },
     "Instances": {
+        "Instance_[12859734501526]": {
+            "Source": "Assets/Payload/Stickers/QRCode_Url01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.10305023193359375
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.10100507736206055
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.09559768438339233
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": -0.6334811449050903
+                }
+            ]
+        },
         "Instance_[146339001448288]": {
             "Source": "CardboardBoxes/CardboardBox05_v01.prefab",
             "Patches": [
@@ -671,7 +702,7 @@
                                 "Transform Data": {
                                     "Translate": [
                                         0.0016053712461143732,
-                                        0.24326708912849426,
+                                        0.24326708912849423,
                                         0.13162460923194885
                                     ],
                                     "Rotate": [
@@ -799,7 +830,7 @@
                                     "Translate": [
                                         -0.14275497198104858,
                                         -0.00013605866115540266,
-                                        0.13309523463249207
+                                        0.1330952346324921
                                     ],
                                     "Rotate": [
                                         179.84783935546875,

@@ -15,7 +15,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 338288751142404772,
                 "Child Entity Order": [
-                    "Entity_[1238287191816032]"
+                    "Entity_[1238287191816032]",
+                    "Instance_[26130357734395]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -823,12 +824,12 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
-                    "value": 5.163926530826757e-8
+                    "value": 5.1639265308267575e-8
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
-                    "value": -6.32810071010681e-9
+                    "value": -6.328100710106811e-9
                 },
                 {
                     "op": "replace",
@@ -838,7 +839,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.11295565962791443
+                    "value": 0.11295565962791444
                 },
                 {
                     "op": "replace",
@@ -860,6 +861,31 @@
                             "Grippable"
                         ]
                     }
+                }
+            ]
+        },
+        "Instance_[26130357734395]": {
+            "Source": "Assets/Payload/Stickers/QRCode_Url01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.056734323501586914
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.11710166931152344
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.11122871190309525
                 }
             ]
         }

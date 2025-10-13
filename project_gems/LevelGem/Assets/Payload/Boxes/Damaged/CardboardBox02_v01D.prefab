@@ -15,7 +15,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 9299601989362759511,
                 "Child Entity Order": [
-                    "Entity_[1236994406659936]"
+                    "Entity_[1236994406659936]",
+                    "Instance_[17471703665659]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -1401,6 +1402,41 @@
                         },
                         "IsRuntimeActive": true
                     }
+                }
+            ]
+        },
+        "Instance_[17471703665659]": {
+            "Source": "Assets/Payload/Stickers/QRCode_Url01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.14408659934997559
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.039653778076171875
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.18191398680210114
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
+                    "value": 0.25
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2891115407510]/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 0.013270139694213867
                 }
             ]
         }
