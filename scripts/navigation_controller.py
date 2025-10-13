@@ -261,10 +261,12 @@ class NavigationController:
         Returns:
             bool: True if succeeded, False if not
         """
-        logger = self.navigator.get_logger()
-        if not self.is_position_available(position=position):
-            logger.info(f"Position {position} not available")
-            return
+        # TODO: Fails on sort task. Robot puts the package on the floot near the table instead of rack
+        # Some places may be wrongly represented on the global costmap
+        # logger = self.navigator.get_logger()
+        # if not self.is_position_available(position=position):
+        #    logger.error(f"Position {position} not available")
+        #    return
         poseWithTimestamp = PoseStamped()
         poseWithTimestamp.pose = Pose(
             position=position,
