@@ -112,13 +112,13 @@ python3 build_vector_db.py --source processed_regulations --out regulations_db -
 Run the image analysis agent with the pre-built vector database:
 
 ```bash
-python3 rag.py --vector-db regulations_db --image images/image_17.png
+python3 rag.py --vector-db regulations_db --images-dir images
 ```
 
 Options:
 
 - `--vector-db, -d`: Path to the FAISS vector database directory (required)
-- `--image, -i`: Path to the image to analyze (default: images/image_17.png)
+- `--images-dir`: Path to the images dir to analyze (required)
 - `--vision-model, -m`: Vision (multimodal) model used to inspect the image and list potential safety issues (default: qwen2.5vl:7b)
 - `--final-output-model, -f`: (Optional) Alternative LLM for the final text assessment. If omitted, the vision model is reused.
 
@@ -143,5 +143,5 @@ python3 process_regulations.py --source regulations --dest processed_regulations
 python3 build_vector_db.py --source processed_regulations --out regulations_db
 
 # Step 3: Run the safety analysis agent
-python3 rag.py --vector-db regulations_db --image images/warehouse_scene.png --vision-model qwen2.5vl:7b --final-output-model qwen3:30b-a3b-instruct-2507-q8_0
+python3 rag.py --vector-db regulations_db --images-dir images --vision-model LFM2-VL-3B-preview-251009-0235-2258
 ```

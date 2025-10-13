@@ -15,3 +15,5 @@ sim/imgui.ini
 .vscode/
 uv.lock
 *.egg-info
+safety_agent_images/
+safety_violations.json
