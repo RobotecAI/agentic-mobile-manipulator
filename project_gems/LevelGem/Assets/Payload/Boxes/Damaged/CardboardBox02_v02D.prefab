@@ -15,7 +15,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 4723965925588926752,
                 "Child Entity Order": [
-                    "Entity_[1237179090253664]"
+                    "Entity_[1237179090253664]",
+                    "Instance_[18536855555067]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -556,7 +557,7 @@
                                 "Transform Data": {
                                     "Translate": [
                                         0.0,
-                                        0.21513240039348602,
+                                        0.215132400393486,
                                         0.2982616722583771
                                     ],
                                     "Rotate": [
@@ -770,7 +771,7 @@
                                     "Translate": [
                                         0.230213925242424,
                                         0.0,
-                                        0.21345917880535126
+                                        0.21345917880535129
                                     ],
                                     "Rotate": [
                                         0.0,
@@ -1024,7 +1025,7 @@
                                     "Translate": [
                                         -0.2499459832906723,
                                         -6.428975407590798e-11,
-                                        0.23040862381458282
+                                        0.2304086238145828
                                     ],
                                     "Rotate": [
                                         179.84783935546875,
@@ -1149,7 +1150,7 @@
                                 "Parent Entity": "Entity_[2339193454525]",
                                 "Transform Data": {
                                     "Translate": [
-                                        -1.1139119626690785e-9,
+                                        -1.1139119626690783e-9,
                                         -0.29853513836860657,
                                         0.2197454869747162
                                     ],
@@ -1174,6 +1175,36 @@
                         },
                         "IsRuntimeActive": true
                     }
+                }
+            ]
+        },
+        "Instance_[18536855555067]": {
+            "Source": "Assets/Payload/Stickers/QRCode_Url01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.14951705932617188
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.04421281814575195
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.17678150534629822
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 3.8536338806152344
                 }
             ]
         }

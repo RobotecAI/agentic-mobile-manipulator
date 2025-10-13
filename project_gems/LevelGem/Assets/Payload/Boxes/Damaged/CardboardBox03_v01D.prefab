@@ -15,7 +15,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 4750105101511726465,
                 "Child Entity Order": [
-                    "Entity_[1237363773847392]"
+                    "Entity_[1237363773847392]",
+                    "Instance_[19610597379067]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -964,6 +965,36 @@
                             "Grippable"
                         ]
                     }
+                }
+            ]
+        },
+        "Instance_[19610597379067]": {
+            "Source": "Assets/Payload/Stickers/QRCode_Url01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.1525799036026001
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.07025814056396484
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.1992989182472229
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
+                    "value": 0.20000000298023224
                 }
             ]
         }

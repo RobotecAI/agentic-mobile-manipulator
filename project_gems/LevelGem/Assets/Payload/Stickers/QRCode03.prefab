@@ -1,0 +1,123 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "QRCode03",
+        "Components": {
+            "EditorDisabledCompositionComponent": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 12491746512982417450
+            },
+            "EditorEntityIconComponent": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 1056906254305027042
+            },
+            "EditorEntitySortComponent": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 6753210647538976239,
+                "Child Entity Order": [
+                    "Entity_[1422853758345]"
+                ]
+            },
+            "EditorInspectorComponent": {
+                "$type": "EditorInspectorComponent",
+                "Id": 11706405190950796813
+            },
+            "EditorLockComponent": {
+                "$type": "EditorLockComponent",
+                "Id": 7094578912423671695
+            },
+            "EditorOnlyEntityComponent": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 8670830566586998054
+            },
+            "EditorPendingCompositionComponent": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 17486281827065762142
+            },
+            "EditorPrefabComponent": {
+                "$type": "EditorPrefabComponent",
+                "Id": 12745063894407489122
+            },
+            "EditorVisibilityComponent": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 5805928670080997454
+            },
+            "TransformComponent": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 13997037988789741649,
+                "Parent Entity": ""
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[1422853758345]": {
+            "Id": "Entity_[1422853758345]",
+            "Name": "QRCode03",
+            "Components": {
+                "AZ::Render::EditorDecalComponent": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 4319072458704737489,
+                    "Controller": {
+                        "Configuration": {
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{E78EBD8E-6484-504A-AC3D-EB45288D26B2}"
+                                },
+                                "assetHint": "assets/payload/stickers/materials/qrcode03.azmaterial"
+                            }
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10239311898705644034
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 9278330191142909979
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 15433718892547031342
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12850549679811439373
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7011819128138245064
+                },
+                "EditorNonUniformScaleComponent": {
+                    "$type": "EditorNonUniformScaleComponent",
+                    "Id": 3757678708079395640,
+                    "NonUniformScale": [
+                        1.0,
+                        1.0,
+                        0.10000000149011612
+                    ]
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 12872913302108314548
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 4548532886807455081
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14000586041914059450
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 7669029343200550683,
+                    "Parent Entity": "ContainerEntity",
+                    "Transform Data": {
+                        "UniformScale": 0.05000000074505806
+                    }
+                }
+            }
+        }
+    }
+}

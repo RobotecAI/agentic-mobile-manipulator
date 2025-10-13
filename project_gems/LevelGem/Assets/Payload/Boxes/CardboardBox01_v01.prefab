@@ -15,7 +15,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 10938447566938074270,
                 "Child Entity Order": [
-                    "Entity_[1236440355878752]"
+                    "Entity_[1236440355878752]",
+                    "Instance_[2878230505622]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -136,6 +137,31 @@
         }
     },
     "Instances": {
+        "Instance_[2878230505622]": {
+            "Source": "Assets/Payload/Stickers/QRCode_Url01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.1280345916748047
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.11244916915893555
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.151168555021286
+                }
+            ]
+        },
         "Instance_[75162803418976]": {
             "Source": "CardboardBoxes/CardboardBox01_v01.prefab",
             "Patches": [
@@ -222,7 +248,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[1995596070845]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.09259374439716339
+                    "value": 0.0925937443971634
                 },
                 {
                     "op": "replace",
@@ -307,7 +333,7 @@
                                     "Translate": [
                                         0.0,
                                         0.0,
-                                        0.49640464782714844
+                                        0.4964046478271485
                                     ],
                                     "Rotate": [
                                         0.0,
