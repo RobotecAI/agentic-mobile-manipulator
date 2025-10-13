@@ -15,7 +15,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 4750105101511726465,
                 "Child Entity Order": [
-                    "Entity_[1237363773847392]"
+                    "Entity_[1237363773847392]",
+                    "Instance_[9921976871062]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -798,8 +799,8 @@
                                 "Transform Data": {
                                     "Translate": [
                                         -0.2510843575000763,
-                                        -8.77962980094793e-11,
-                                        0.21268489956855774
+                                        -8.779629800947929e-11,
+                                        0.21268489956855777
                                     ],
                                     "Rotate": [
                                         179.84783935546875,
@@ -924,9 +925,9 @@
                                 "Parent Entity": "Entity_[2425092800445]",
                                 "Transform Data": {
                                     "Translate": [
-                                        -1.7488184234082382e-9,
+                                        -1.748818423408238e-9,
                                         -0.25139135122299194,
-                                        0.20284196734428406
+                                        0.20284196734428409
                                     ],
                                     "Rotate": [
                                         89.99994659423828,
@@ -949,6 +950,31 @@
                         },
                         "IsRuntimeActive": true
                     }
+                }
+            ]
+        },
+        "Instance_[9921976871062]": {
+            "Source": "Assets/Payload/Stickers/QRCode_Url01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.16252338886260986
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.08198428153991699
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.18363399803638458
                 }
             ]
         }

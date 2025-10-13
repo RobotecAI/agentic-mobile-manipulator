@@ -15,7 +15,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 338288751142404772,
                 "Child Entity Order": [
-                    "Entity_[1238287191816032]"
+                    "Entity_[1238287191816032]",
+                    "Instance_[26560680175766]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -214,12 +215,12 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
-                    "value": 5.163926530826757e-8
+                    "value": 5.1639265308267575e-8
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
-                    "value": -6.32810071010681e-9
+                    "value": -6.3281007101068115e-9
                 },
                 {
                     "op": "replace",
@@ -229,7 +230,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.11295565962791443
+                    "value": 0.11295565962791444
                 },
                 {
                     "op": "replace",
@@ -693,7 +694,7 @@
                                 "Parent Entity": "Entity_[3026388221885]",
                                 "Transform Data": {
                                     "Translate": [
-                                        -0.09693441540002823,
+                                        -0.09693441540002824,
                                         -0.00016774272080510855,
                                         0.07508313655853271
                                     ],
@@ -845,6 +846,31 @@
                         },
                         "IsRuntimeActive": true
                     }
+                }
+            ]
+        },
+        "Instance_[26560680175766]": {
+            "Source": "Assets/Payload/Stickers/QRCode_Url01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.09584450721740723
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.17186474800109863
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.07256349921226501
                 }
             ]
         }

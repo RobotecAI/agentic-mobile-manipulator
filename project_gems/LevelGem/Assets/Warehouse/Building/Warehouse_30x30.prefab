@@ -297,7 +297,8 @@
                         "Entity_[14041944459838]",
                         "Entity_[9622876767459]",
                         "Entity_[5629387770908]",
-                        "Entity_[18719542054573]"
+                        "Entity_[18719542054573]",
+                        "Entity_[43299295917262]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -2852,6 +2853,58 @@
                         ],
                         "UniformScale": 1.0199999809265137
                     }
+                }
+            }
+        },
+        "Entity_[43299295917262]": {
+            "Id": "Entity_[43299295917262]",
+            "Name": "Aruco",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 18328674593444583572
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 6063782069149190599
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 121791475365601367,
+                    "Child Entity Order": [
+                        "Instance_[46481866683598]/ContainerEntity",
+                        "Instance_[49677322351822]/ContainerEntity",
+                        "Instance_[117984482227406]/ContainerEntity",
+                        "Instance_[121205707699406]/ContainerEntity",
+                        "Instance_[124435523105998]/ContainerEntity",
+                        "Instance_[127665338512590]/ContainerEntity",
+                        "Instance_[130903743853774]/ContainerEntity"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 14172842927487831578
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 10693630647685057480
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9992666733228747346
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14819429025478689785
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 12597683086855005737
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 2057302696457526503,
+                    "Parent Entity": "Entity_[11487185474694]"
                 }
             }
         },
@@ -20713,6 +20766,31 @@
                 }
             ]
         },
+        "Instance_[117984482227406]": {
+            "Source": "Assets/Payload/Stickers/Aruco02.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[43299295917262]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.044448018074035645
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.7296085357666016
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 1.2607121467590332
+                }
+            ]
+        },
         "Instance_[1189465910403788]": {
             "Source": "Lines/LineYelowStraight2_2m.prefab",
             "Patches": [
@@ -20835,6 +20913,116 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[1050592437854924]/Components/AZ::Render::EditorDecalComponent/Controller/Configuration/Decal Color/2",
                     "value": 1.0
+                }
+            ]
+        },
+        "Instance_[121205707699406]": {
+            "Source": "Assets/Payload/Stickers/Aruco09.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[43299295917262]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 3.5844473838806152
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": -0.14137566089630127
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 1.1382920742034912
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 89.99994659423828
+                }
+            ]
+        },
+        "Instance_[124435523105998]": {
+            "Source": "Assets/Payload/Stickers/Aruco06.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[43299295917262]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.05154883861541748
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 3.7276856899261475
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.4169509708881378
+                }
+            ]
+        },
+        "Instance_[127665338512590]": {
+            "Source": "Assets/Payload/Stickers/Aruco04.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[43299295917262]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.05039912462234497
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 6.006065845489502
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.8240097761154175
+                }
+            ]
+        },
+        "Instance_[130903743853774]": {
+            "Source": "Assets/Payload/Stickers/Aruco06.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[43299295917262]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 1.4069669246673584
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": -0.14228253066539764
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.47944656014442444
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 89.99994659423828
                 }
             ]
         },
@@ -25136,6 +25324,36 @@
                 }
             ]
         },
+        "Instance_[46481866683598]": {
+            "Source": "Assets/Payload/Stickers/Aruco00.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[43299295917262]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 4.396277904510498
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": -0.14126735925674438
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.5802754163742065
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": 89.99995422363281
+                }
+            ]
+        },
         "Instance_[4659587827836]": {
             "Source": "Assets/Warehouse/Assets/Tables/PackingTable.prefab",
             "Patches": [
@@ -25289,6 +25507,31 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
                     "value": 0.000002980231556648505
+                }
+            ]
+        },
+        "Instance_[49677322351822]": {
+            "Source": "Assets/Payload/Stickers/Aruco01.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[43299295917262]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -0.051268547773361206
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 5.27775239944458
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 1.3823655843734741
                 }
             ]
         },
