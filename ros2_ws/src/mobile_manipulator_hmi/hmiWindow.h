@@ -47,6 +47,15 @@ namespace HardcodedConfig {
     const static char TaskTopic[] = "/predefined_task";
     const static char UserPromptTopic[] = "/user_prompt";
 
+    const static char OrchestratorHeartbeat[] = "/orchestrator/heartbeat"; // TODO: Get actual topic names
+    const static char InspectionTopic[] = "/inspection/tasks";
+    const static char SafetyTopic[] = "/safety";
+
+    // Frequencies are given in Hertz
+    constexpr static float OrchestratorHeartbeatFrequency = 0.2f;
+    constexpr static float InpsectionFrequency = 0.2f;
+    constexpr static float SafetyFrequency = 0.2f;
+
 
     const static char MapTopic[] = "/global_costmap/static_layer";
     const static char GoalTopic[] = "/goal_pose";
@@ -99,7 +108,12 @@ private:
     Ui::HMIWindow *ui;
     rclcpp::Node::SharedPtr node_;
     QTimer *ros_timer_;
-    QTimer *agent_fill_timer_;
+    // QTimer *agent_fill_timer_;
+
+    QTimer *orchestrator_timer_;
+    QTimer *inspection_timer_;
+    QTimer *safety_timer_;
+
     int agent_fill_percent_ = 0;
     std::map<std::string, QPushButton*> camera_buttons_;
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_;
@@ -111,6 +125,7 @@ private:
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr task_pub_;
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr user_prompt_pub_;
 
+    rclcpp::Subscription<std_msgs::msg::Header>::SharedPtr orchestrator_sub_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr currenttask_sub_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr donetasks_sub_;
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr emergency_stop_srv_;
