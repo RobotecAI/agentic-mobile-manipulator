@@ -100,7 +100,7 @@
                         "ClipNear": 15.0
                     },
                     "SensorConfig": {
-                        "Frequency (HZ)": 15.0,
+                        "Frequency (HZ)": 4.0,
                         "Publishers": {
                             "Color Camera Info": {
                                 "Type": "sensor_msgs::msg::CameraInfo",
