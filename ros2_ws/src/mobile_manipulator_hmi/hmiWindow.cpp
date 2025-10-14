@@ -224,42 +224,44 @@ HMIWindow::HMIWindow(QWidget *parent)
     // Make window fullscreen
     showFullScreen();
 
+
+    orchestrator_timer_ = new QTimer(this);
+    inspection_timer_ = new QTimer(this);
+    safety_timer_ = new QTimer(this);
+
+    connect(orchestrator_timer_, &QTimer::timeout, [this]() {
+          setFrameBinaryState(ui->agentFrame, false);
+        });
+
+    setFrameBinaryState(ui->agentFrame, false);
+    setFrameBinaryState(ui->inspectionFrame, false);
+    setFrameBinaryState(ui->safetyFrame, false);
+
+    orchestrator_sub_ = node_->create_subscription<std_msgs::msg::Header>(HardcodedConfig::OrchestratorHeartbeat, 10,
+        [this](const std_msgs::msg::Header msg) {
+          orchestrator_timer_->stop();
+          setFrameBinaryState(ui->agentFrame, true);
+          orchestrator_timer_->start(1000 / HardcodedConfig::OrchestratorHeartbeatFrequency);
+        });
+    
+
     // Agent vertical fill animation for system tiles (excluding CPU/GPU/NPU/RAM which are driven by /utilization)
-    agent_fill_timer_ = new QTimer(this);
-    connect(agent_fill_timer_, &QTimer::timeout, [this]() {
-        agent_fill_percent_ += 5; // step 5%
-        if (agent_fill_percent_ > 100) agent_fill_percent_ = 0; // wrap
-        const int p = agent_fill_percent_;
-        // Frames to update sequentially each tick
-        const QList<QFrame*> frames = {
-            ui->agentFrame,
-            // cpu/gpu/npu/ram/nav2/moveit2 updated by /utilization subscriber
-            ui->inspectionFrame,
-            ui->safetyFrame
-        };
-        for (QFrame* frame : frames) {
-            if (!frame) continue;
-            // pick color by threshold: <50% green, 50-79% yellow, 80-100% red
-            const QString fillColor = (p >= 80)
-                ? "rgba(255,0,0,255)"          // red
-                : (p >= 50)
-                    ? "rgba(255,193,7,255)"   // yellow (amber)
-                    : "rgba(76,175,80,255)";  // green
-            // Build vertical gradient: green from bottom to p%, transparent above
-            const QString style = QString(
-                "QFrame#%1 { background: qlineargradient(x1:0, y1:1, x2:0, y2:0, "
-                "stop:0 %2, "
-                "stop:%3 %2, "
-                "stop:%4 rgba(0,0,0,0), "
-                "stop:1 rgba(0,0,0,0)); }")
-                .arg(frame->objectName())
-                .arg(fillColor)
-                .arg(QString::number(p / 100.0, 'f', 2))
-                .arg(QString::number(std::min(1.0, p / 100.0 + 0.001), 'f', 2));
-            frame->setStyleSheet(style);
-        }
-    });
-    agent_fill_timer_->start(1000); // 1 Hz -> 1% per second
+    // agent_fill_timer_ = new QTimer(this);
+    // connect(agent_fill_timer_, &QTimer::timeout, [this]() {
+    //     agent_fill_percent_ += 5; // step 5%
+    //     if (agent_fill_percent_ > 100) agent_fill_percent_ = 0; // wrap
+    //     const int p = agent_fill_percent_;
+    //     // Frames to update sequentially each tick
+    //     const QList<QFrame*> frames = {
+    //         ui->agentFrame,
+    //         // cpu/gpu/npu/ram/nav2/moveit2 updated by /utilization subscriber
+    //         ui->inspectionFrame,
+    //         ui->safetyFrame
+    //     };
+    //     for (QFrame* frame : frames) {
+    //     }
+    // });
+    // agent_fill_timer_->start(1000); // 1 Hz -> 1% per second
 }
 
 void HMIWindow::cameraButtonCallback(const std::string& cameraName) {
