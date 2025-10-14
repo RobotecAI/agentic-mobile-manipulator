@@ -996,7 +996,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.06923067569732666
+                    "value": 0.1200181245803833
                 },
                 {
                     "op": "replace",
@@ -1006,7 +1006,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.162789449095726
+                    "value": 0.1627894639968872
                 }
             ]
         }

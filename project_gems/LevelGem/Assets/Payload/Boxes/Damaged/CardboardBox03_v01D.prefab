@@ -1063,13 +1063,18 @@
             "Patches": [
                 {
                     "op": "replace",
+                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
+                    "value": 0.20000000298023224
+                },
+                {
+                    "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../ContainerEntity"
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.1525799036026001
+                    "value": 0.18085378408432007
                 },
                 {
                     "op": "replace",
@@ -1080,11 +1085,6 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
                     "value": 0.1992989182472229
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
-                    "value": 0.20000000298023224
                 }
             ]
         }

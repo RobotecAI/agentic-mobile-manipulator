@@ -142,26 +142,6 @@
             "Patches": [
                 {
                     "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../ContainerEntity"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.11621332168579102
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 0.10021495819091795
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.14619863033294678
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
                     "value": 0.30000001192092896
                 },
@@ -169,6 +149,26 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[2891115407510]/Components/TransformComponent/Transform Data/Translate/0",
                     "value": 0.007249355316162109
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 0.13421356678009033
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 0.10021495819091797
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.14619863033294678
                 }
             ]
         },
@@ -930,7 +930,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.09245041757822037
+                    "value": 0.09245041757822035
                 },
                 {
                     "op": "add",
