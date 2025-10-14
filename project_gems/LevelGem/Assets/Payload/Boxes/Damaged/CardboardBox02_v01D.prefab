@@ -1492,13 +1492,23 @@
             "Patches": [
                 {
                     "op": "replace",
+                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
+                    "value": 0.25
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2891115407510]/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": 0.013270139694213867
+                },
+                {
+                    "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../ContainerEntity"
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.1440865993499756
+                    "value": 0.148190438747406
                 },
                 {
                     "op": "replace",
@@ -1508,17 +1518,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.1819139868021011
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
-                    "value": 0.25
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2891115407510]/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": 0.013270139694213867
+                    "value": 0.18191397190093994
                 }
             ]
         }

@@ -147,7 +147,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.0972716584801674
+                    "value": 0.08568796515464783
                 },
                 {
                     "op": "replace",
@@ -164,16 +164,6 @@
         "Instance_[146321821579104]": {
             "Source": "CardboardBoxes/CardboardBox04_v01.prefab",
             "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1237548457441120]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
-                    "value": 0.7200000286102295
-                },
                 {
                     "op": "add",
                     "path": "/Entities/Entity_[714507340134240]",
@@ -389,133 +379,6 @@
                 },
                 {
                     "op": "add",
-                    "path": "/Entities/Entity_[153557941337391]",
-                    "value": {
-                        "Id": "Entity_[153557941337391]",
-                        "Name": "SideGrippingPoint2",
-                        "Components": {
-                            "EditorDisabledCompositionComponent": {
-                                "$type": "EditorDisabledCompositionComponent",
-                                "Id": 11907008699181918131,
-                                "DisabledComponents": []
-                            },
-                            "EditorEntityIconComponent": {
-                                "$type": "EditorEntityIconComponent",
-                                "Id": 6183678106542553714,
-                                "EntityIconAssetId": {
-                                    "guid": "{00000000-0000-0000-0000-000000000000}",
-                                    "subId": 0
-                                }
-                            },
-                            "EditorEntitySortComponent": {
-                                "$type": "EditorEntitySortComponent",
-                                "Id": 4184092102057107603,
-                                "Child Entity Order": []
-                            },
-                            "EditorInspectorComponent": {
-                                "$type": "EditorInspectorComponent",
-                                "Id": 12092097778893547498,
-                                "ComponentOrderEntryArray": [
-                                    {
-                                        "ComponentId": 16887783145853527059,
-                                        "SortIndex": 0
-                                    },
-                                    {
-                                        "ComponentId": 2877440488552614134,
-                                        "SortIndex": 1
-                                    },
-                                    {
-                                        "ComponentId": 12092097778893547498,
-                                        "SortIndex": 2
-                                    },
-                                    {
-                                        "ComponentId": 4184092102057107603,
-                                        "SortIndex": 3
-                                    },
-                                    {
-                                        "ComponentId": 490047678279621643,
-                                        "SortIndex": 4
-                                    },
-                                    {
-                                        "ComponentId": 13572412673913961834,
-                                        "SortIndex": 5
-                                    },
-                                    {
-                                        "ComponentId": 6597445214226068225,
-                                        "SortIndex": 6
-                                    },
-                                    {
-                                        "ComponentId": 6183678106542553714,
-                                        "SortIndex": 7
-                                    },
-                                    {
-                                        "ComponentId": 11907008699181918131,
-                                        "SortIndex": 8
-                                    },
-                                    {
-                                        "ComponentId": 2277136892529159347,
-                                        "SortIndex": 9
-                                    }
-                                ]
-                            },
-                            "EditorLockComponent": {
-                                "$type": "EditorLockComponent",
-                                "Id": 13572412673913961834,
-                                "Locked": false
-                            },
-                            "EditorOnlyEntityComponent": {
-                                "$type": "EditorOnlyEntityComponent",
-                                "Id": 2877440488552614134,
-                                "IsEditorOnly": false
-                            },
-                            "EditorPendingCompositionComponent": {
-                                "$type": "EditorPendingCompositionComponent",
-                                "Id": 6597445214226068225,
-                                "PendingComponents": []
-                            },
-                            "EditorStaticRigidBodyComponent": {
-                                "$type": "EditorStaticRigidBodyComponent",
-                                "Id": 2277136892529159347
-                            },
-                            "EditorVisibilityComponent": {
-                                "$type": "EditorVisibilityComponent",
-                                "Id": 490047678279621643,
-                                "VisibilityFlag": true
-                            },
-                            "TransformComponent": {
-                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                                "Id": 16887783145853527059,
-                                "Parent Entity": "Entity_[2682790838205]",
-                                "Transform Data": {
-                                    "Translate": [
-                                        0.001672223559580743,
-                                        0.22738029062747955,
-                                        0.18044792115688324
-                                    ],
-                                    "Rotate": [
-                                        -89.9998779296875,
-                                        -0.000001707547198748216,
-                                        89.99994659423828
-                                    ],
-                                    "Scale": [
-                                        1.0,
-                                        1.0,
-                                        1.0
-                                    ],
-                                    "Locked": false,
-                                    "UniformScale": 0.6944444179534912
-                                },
-                                "Parent Activation Transform Mode": 0,
-                                "IsStatic": false,
-                                "InterpolatePosition": 0,
-                                "InterpolateRotation": 0
-                            }
-                        },
-                        "IsRuntimeActive": true
-                    }
-                },
-                {
-                    "op": "add",
                     "path": "/Entities/Entity_[153562236304687]",
                     "value": {
                         "Id": "Entity_[153562236304687]",
@@ -643,6 +506,133 @@
                 },
                 {
                     "op": "add",
+                    "path": "/Entities/Entity_[153557941337391]",
+                    "value": {
+                        "Id": "Entity_[153557941337391]",
+                        "Name": "SideGrippingPoint2",
+                        "Components": {
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 11907008699181918131,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 6183678106542553714,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 4184092102057107603,
+                                "Child Entity Order": []
+                            },
+                            "EditorInspectorComponent": {
+                                "$type": "EditorInspectorComponent",
+                                "Id": 12092097778893547498,
+                                "ComponentOrderEntryArray": [
+                                    {
+                                        "ComponentId": 16887783145853527059,
+                                        "SortIndex": 0
+                                    },
+                                    {
+                                        "ComponentId": 2877440488552614134,
+                                        "SortIndex": 1
+                                    },
+                                    {
+                                        "ComponentId": 12092097778893547498,
+                                        "SortIndex": 2
+                                    },
+                                    {
+                                        "ComponentId": 4184092102057107603,
+                                        "SortIndex": 3
+                                    },
+                                    {
+                                        "ComponentId": 490047678279621643,
+                                        "SortIndex": 4
+                                    },
+                                    {
+                                        "ComponentId": 13572412673913961834,
+                                        "SortIndex": 5
+                                    },
+                                    {
+                                        "ComponentId": 6597445214226068225,
+                                        "SortIndex": 6
+                                    },
+                                    {
+                                        "ComponentId": 6183678106542553714,
+                                        "SortIndex": 7
+                                    },
+                                    {
+                                        "ComponentId": 11907008699181918131,
+                                        "SortIndex": 8
+                                    },
+                                    {
+                                        "ComponentId": 2277136892529159347,
+                                        "SortIndex": 9
+                                    }
+                                ]
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 13572412673913961834,
+                                "Locked": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 2877440488552614134,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 6597445214226068225,
+                                "PendingComponents": []
+                            },
+                            "EditorStaticRigidBodyComponent": {
+                                "$type": "EditorStaticRigidBodyComponent",
+                                "Id": 2277136892529159347
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 490047678279621643,
+                                "VisibilityFlag": true
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 16887783145853527059,
+                                "Parent Entity": "Entity_[2682790838205]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.0016722235595807433,
+                                        0.22738029062747955,
+                                        0.18044792115688324
+                                    ],
+                                    "Rotate": [
+                                        -89.9998779296875,
+                                        -0.000001707547198748216,
+                                        89.99994659423828
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 0.6944444179534912
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
+                },
+                {
+                    "op": "add",
                     "path": "/Entities/Entity_[153566531271983]",
                     "value": {
                         "Id": "Entity_[153566531271983]",
@@ -742,8 +732,8 @@
                                 "Parent Entity": "Entity_[2682790838205]",
                                 "Transform Data": {
                                     "Translate": [
-                                        -1.4922111324366934e-9,
-                                        -0.22985582053661344,
+                                        -1.4922111324366938e-9,
+                                        -0.22985582053661346,
                                         0.1831212043762207
                                     ],
                                     "Rotate": [
@@ -921,17 +911,17 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
-                    "value": 0.7200000286102295
+                    "value": 0.6200000047683716
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/1",
-                    "value": 0.7200000286102295
+                    "value": 0.6200000047683716
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/2",
-                    "value": 0.7200000286102295
+                    "value": 0.6200000047683716
                 },
                 {
                     "op": "replace",
@@ -946,32 +936,32 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
-                    "value": 0.0005182942841202021
+                    "value": 0.0004463089571800083
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
-                    "value": -0.000008163616257661488
+                    "value": -0.0000070297801357810386
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/2",
-                    "value": 0.17959469556808472
+                    "value": 0.1546509861946106
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.10075448453426361
+                    "value": 0.07471068203449249
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/4",
-                    "value": 0.07108236104249954
+                    "value": 0.0527084544301033
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2682790838205]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.06432180851697922
+                    "value": 0.04769541695713997
                 },
                 {
                     "op": "add",
@@ -1065,6 +1055,16 @@
                             "Grippable"
                         ]
                     }
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1237548457441120]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
+                    "value": 0.6200000047683716
                 }
             ]
         }

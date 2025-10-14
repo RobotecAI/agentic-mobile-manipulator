@@ -140,16 +140,6 @@
             "Source": "CardboardBoxes/CardboardBox06_v01.prefab",
             "Patches": [
                 {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1237917824628576]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
-                    "value": 0.8100000023841858
-                },
-                {
                     "op": "add",
                     "path": "/Entities/Entity_[962661960562528]",
                     "value": {
@@ -911,17 +901,17 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2854589530045]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
-                    "value": 0.8100000023841858
+                    "value": 0.75
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2854589530045]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/1",
-                    "value": 0.8100000023841858
+                    "value": 0.75
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2854589530045]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/2",
-                    "value": 0.8100000023841858
+                    "value": 0.75
                 },
                 {
                     "op": "replace",
@@ -1055,6 +1045,16 @@
                             "Grippable"
                         ]
                     }
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[1237917824628576]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
+                    "value": 0.75
                 }
             ]
         },
@@ -1063,28 +1063,28 @@
             "Patches": [
                 {
                     "op": "replace",
+                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
+                    "value": 0.20000000298023224
+                },
+                {
+                    "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../ContainerEntity"
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.0680537223815918
+                    "value": 0.10970509052276611
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 0.10256195068359376
+                    "value": 0.10256195068359375
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.1752261221408844
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
-                    "value": 0.20000000298023224
+                    "value": 0.1752261519432068
                 }
             ]
         }

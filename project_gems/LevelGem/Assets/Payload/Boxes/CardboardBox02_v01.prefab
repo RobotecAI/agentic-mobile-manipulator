@@ -971,7 +971,7 @@
                             "InSceneQueries": true,
                             "Exclusive": true,
                             "Position": [
-                                0.0009696483612060547,
+                                0.0009696483612060548,
                                 0.0024805068969726563,
                                 0.25552597641944885
                             ],
@@ -1019,7 +1019,7 @@
                                 ],
                                 "Configuration": [
                                     0.4911155104637146,
-                                    0.49246490001678467,
+                                    0.4924649000167846,
                                     0.48615509271621704
                                 ]
                             },
@@ -1498,7 +1498,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.1467418670654297
+                    "value": 0.14988845586776733
                 },
                 {
                     "op": "replace",

@@ -148,12 +148,12 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.1280345916748047
+                    "value": 0.12381106615066528
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 0.11244916915893556
+                    "value": 0.11244916915893555
                 },
                 {
                     "op": "replace",
@@ -921,7 +921,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[1995596070845]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.09259374439716339
+                    "value": 0.0925937443971634
                 },
                 {
                     "op": "replace",

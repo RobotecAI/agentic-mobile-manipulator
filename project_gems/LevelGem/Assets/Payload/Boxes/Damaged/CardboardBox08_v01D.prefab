@@ -832,12 +832,12 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
-                    "value": 5.163926530826757e-8
+                    "value": 5.1639265308267575e-8
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
-                    "value": -6.32810071010681e-9
+                    "value": -6.328100710106811e-9
                 },
                 {
                     "op": "replace",
@@ -847,7 +847,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.11295565962791443
+                    "value": 0.11295565962791444
                 },
                 {
                     "op": "replace",
@@ -965,7 +965,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.056734323501586914
+                    "value": 0.12369424104690552
                 },
                 {
                     "op": "replace",
@@ -975,7 +975,12 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.11122871190309525
+                    "value": 0.09186756610870361
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2891115407510]/Components/EditorNonUniformScaleComponent/NonUniformScale/2",
+                    "value": 0.20000000298023224
                 }
             ]
         }
