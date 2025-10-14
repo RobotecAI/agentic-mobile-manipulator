@@ -44,6 +44,30 @@ class Slot:
 
         return height_match and distance <= 0.15
 
+    def is_manipulation_feasible(self) -> bool:
+        """Check if the slot is reachable for manipulation (some racks are facing wall and are not reachable)"""
+        RACKS_OPPOSING_WALL = [f"L{str(i).zfill(0)}" for i in range(1, 10)]
+        SLOTS_FACING_BACKWARD = ["RackSlot" + str(i) for i in range(1, 13)]
+
+        RACKS_FACING_WALL = (
+            [f"F{str(i).zfill(0)}" for i in range(1, 10)]
+            + [f"A{str(i).zfill(0)}" for i in range(1, 7)]
+            + [f"G{str(i).zfill(0)}" for i in range(1, 7)]
+        )
+        SLOTS_FACING_FORWARD = ["RackSlot" + str(i) for i in range(13, 25)]
+
+        ret = True
+        if self.tag.startswith(tuple(RACKS_OPPOSING_WALL)) and self.tag.endswith(
+            tuple(SLOTS_FACING_BACKWARD)
+        ):
+            ret = False
+        if self.tag.startswith(tuple(RACKS_FACING_WALL)) and self.tag.endswith(
+            tuple(SLOTS_FACING_FORWARD)
+        ):
+            ret = False
+
+        return ret
+
     def assign_entity_to_slot(self, name: str):
         self._entity_name = name
 
@@ -104,7 +128,7 @@ class SlotsCollection:
         """Find all empty slots in this collection"""
         empty_slots = []
         for _, slot in self.slots.items():
-            if not slot.is_obj_present():
+            if not slot.is_obj_present() and slot.is_manipulation_feasible():
                 empty_slots.append(slot)
         return empty_slots
 
@@ -112,7 +136,7 @@ class SlotsCollection:
         """Find all used slots in this collection"""
         used_slots = []
         for _, slot in self.slots.items():
-            if slot.is_obj_present():
+            if slot.is_obj_present() and slot.is_manipulation_feasible():
                 used_slots.append(slot)
         return used_slots
 

@@ -1,6 +1,7 @@
 {
     "SimulationInterfaces": {
         "SimulatorFrame": "odom",
-        "StartInStoppedState": false
+        "StartInStoppedState": false,
+        "PrintStateNameInGui": false
     }
 }
