@@ -17,6 +17,7 @@ from scripts.tools import (
 )
 
 LOW_GRASP_Z_THRESHOLD = 0.6
+MID_HIGH_PLACEMENT_Z_THRESHOLD_LOW = 0.9
 HIGH_GRASP_Z_THRESHOLD = 1.4
 
 NAV_GRIPPING_POSE_DISTANCE = 0.90
@@ -39,6 +40,16 @@ class ManipulationStrategy(ABC):
     @abstractmethod
     def move_arm_to_base_pose(self, mani_ctrl: ManipulatorController):
         pass
+
+    def execute_placement(
+        self,
+        kairos_ctrl: "KairosController",
+        placing_point: Pose,
+    ):
+        approach_distance = self.get_approach_distance()
+        self.move_arm_to_base_pose(mani_ctrl=kairos_ctrl.mani_ctrl)
+        kairos_ctrl.nav_ctrl.move_back(-approach_distance)
+        kairos_ctrl.place_object(placing_point=placing_point)
 
     def get_approach_distance(self) -> float:
         return self.get_staging_distance() - self.get_gripping_distance()
@@ -66,7 +77,7 @@ class HighManipulationStrategy(ManipulationStrategy):
         mani_ctrl.move_arm_to_high_pose()
 
 
-class NormalManipulationStrategy(ManipulationStrategy):
+class MidLowManipulationStrategy(ManipulationStrategy):
     def get_staging_distance(self) -> float:
         return NAV_STAGING_POSE_DISTANCE
 
@@ -77,13 +88,43 @@ class NormalManipulationStrategy(ManipulationStrategy):
         mani_ctrl.move_arm_to_base_pose()
 
 
+class MidHighManipulationStrategy(ManipulationStrategy):
+    def get_staging_distance(self) -> float:
+        return NAV_STAGING_POSE_DISTANCE
+
+    def get_gripping_distance(self) -> float:
+        return NAV_GRIPPING_POSE_DISTANCE
+
+    def move_arm_to_base_pose(self, mani_ctrl: ManipulatorController):
+        mani_ctrl.move_arm_to_base_pose()
+
+    def execute_placement(
+        self,
+        kairos_ctrl: "KairosController",
+        placing_point: Pose,
+    ):
+        approach_distance = self.get_approach_distance()
+        staging_placing_point = apply_relative_transform(
+            placing_point, Pose(position=Point(x=0.4 + approach_distance, z=0.1))
+        )
+        kairos_ctrl.mani_ctrl.move_arm_to_staging_pose(staging_placing_point)
+        kairos_ctrl.nav_ctrl.move_back(-approach_distance)
+
+        kairos_ctrl.place_object(placing_point=placing_point)
+
+    def get_approach_distance(self) -> float:
+        return self.get_staging_distance() - self.get_gripping_distance()
+
+
 def determine_strategy(pose: Pose, safe_low: bool) -> ManipulationStrategy:
     if safe_low and pose.position.z < LOW_GRASP_Z_THRESHOLD:
         return LowManipulationStrategy()
-    elif pose.position.z > HIGH_GRASP_Z_THRESHOLD:
+    elif pose.position.z >= HIGH_GRASP_Z_THRESHOLD:
         return HighManipulationStrategy()
+    elif pose.position.z >= MID_HIGH_PLACEMENT_Z_THRESHOLD_LOW:
+        return MidHighManipulationStrategy()
     else:
-        return NormalManipulationStrategy()
+        return MidLowManipulationStrategy()
 
 
 class KairosController:
@@ -348,31 +389,7 @@ class KairosController:
         self.nav_ctrl.approach_target_along_orientation(
             target_slot_pose, strategy.get_staging_distance()
         )
-        strategy.move_arm_to_base_pose(mani_ctrl=self.mani_ctrl)
-
-        self.nav_ctrl.move_back(-approach_distance)
-
-        self.place_object(placing_point=placing_point)
-
-        self.nav_ctrl.move_back(approach_distance)
-        self.mani_ctrl.move_arm_to_base_pose()
-
-    def place_on_the_table(self, target_slot_pose: Pose, placing_point: Pose):
-        strategy = determine_strategy(target_slot_pose, self.safe_low_approach)
-        approach_distance = strategy.get_approach_distance()
-
-        self.nav_ctrl.approach_target_along_orientation(
-            target_slot_pose, strategy.get_staging_distance()
-        )
-        staging_placing_point = apply_relative_transform(
-            placing_point, Pose(position=Point(x=0.4 + approach_distance, z=0.1))
-        )
-
-        self.mani_ctrl.move_arm_to_staging_pose(staging_placing_point)
-
-        self.nav_ctrl.move_back(-approach_distance)
-
-        self.place_object(placing_point=placing_point)
+        strategy.execute_placement(kairos_ctrl=self, placing_point=placing_point)
 
         self.nav_ctrl.move_back(approach_distance)
         self.mani_ctrl.move_arm_to_base_pose()
