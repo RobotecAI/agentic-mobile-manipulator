@@ -146,115 +146,6 @@
                 },
                 {
                     "op": "add",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/0",
-                    "value": "Entity_[1161699334993760]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/1",
-                    "value": "Entity_[16198950031821]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/2",
-                    "value": "Entity_[162461408541999]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/3",
-                    "value": "Entity_[162465703509295]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/4",
-                    "value": "Entity_[162469998476591]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/9/ComponentId",
-                    "value": 14432917846379608351
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/10/ComponentId",
-                    "value": 9934101207645973922
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/11/ComponentId",
-                    "value": 12056153662894140576
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/12/ComponentId",
-                    "value": 11592972382930279061
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/13",
-                    "value": {
-                        "ComponentId": 4836606314119920416,
-                        "SortIndex": 13
-                    }
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorMeshColliderComponent/ColliderConfiguration/CollisionLayer/Index",
-                    "value": 1
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Compute Mass",
-                    "value": false
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Mass",
-                    "value": 5.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
-                    "value": 5.1639265308267575e-8
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
-                    "value": -6.3281007101068115e-9
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/2",
-                    "value": 0.07264275848865509
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.11295565962791444
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/4",
-                    "value": 0.024105265736579895
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.11947103589773178
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[3026388221885]/Components/EditorTagComponent",
-                    "value": {
-                        "$type": "EditorTagComponent",
-                        "Id": 14432917846379608351,
-                        "Tags": [
-                            "Grippable"
-                        ]
-                    }
-                },
-                {
-                    "op": "add",
                     "path": "/Entities/Entity_[1161699334993760]",
                     "value": {
                         "Id": "Entity_[1161699334993760]",
@@ -846,6 +737,205 @@
                         },
                         "IsRuntimeActive": true
                     }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/0",
+                    "value": "Entity_[1161699334993760]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/1",
+                    "value": "Entity_[16198950031821]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Entity_[162461408541999]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/3",
+                    "value": "Entity_[162465703509295]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorEntitySortComponent/Child Entity Order/4",
+                    "value": "Entity_[162469998476591]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/9/ComponentId",
+                    "value": 14432917846379608351
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/10/ComponentId",
+                    "value": 9934101207645973922
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/11/ComponentId",
+                    "value": 12056153662894140576
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/12/ComponentId",
+                    "value": 11592972382930279061
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/13",
+                    "value": {
+                        "ComponentId": 926485324957653234,
+                        "SortIndex": 13
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorInspectorComponent/ComponentOrderEntryArray/14",
+                    "value": {
+                        "ComponentId": 4836606314119920416,
+                        "SortIndex": 14
+                    }
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorMeshColliderComponent/ColliderConfiguration/CollisionLayer/Index",
+                    "value": 1
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Compute Mass",
+                    "value": false
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Mass",
+                    "value": 5.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
+                    "value": 5.163926530826757e-8
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
+                    "value": -6.32810071010681e-9
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/2",
+                    "value": 0.07264275848865509
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
+                    "value": 0.11295565962791443
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/4",
+                    "value": 0.024105265736579895
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
+                    "value": 0.11947103589773178
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorScriptCanvasComponent",
+                    "value": {
+                        "$type": "EditorScriptCanvasComponent",
+                        "Id": 926485324957653234,
+                        "configuration": {
+                            "sourceHandle": {
+                                "id": "{F9E202FC-F3D2-5276-B78C-39F7069AA6F5}",
+                                "path": "Assets/Scripts/Remoteparent.scriptcanvas"
+                            },
+                            "sourceName": "Remoteparent.scriptcanvas",
+                            "propertyOverrides": {
+                                "source": {
+                                    "id": "{F9E202FC-F3D2-5276-B78C-39F7069AA6F5}",
+                                    "path": "Assets/Scripts/Remoteparent.scriptcanvas"
+                                },
+                                "variables": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 1,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "EntityId",
+                                            "value": "",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 2755429085
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{578512DB-9620-4477-BA99-86265D84945F}"
+                                        },
+                                        "VariableName": "Child",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "entityId": [],
+                                "overrides": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 1,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "EntityId",
+                                            "value": "../Instance_[26560680175766]/Entity_[3148731904589]",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 850104567
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{578512DB-9620-4477-BA99-86265D84945F}"
+                                        },
+                                        "VariableName": "Child",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "overridesUnused": [],
+                                "dependencies": []
+                            }
+                        }
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[3026388221885]/Components/EditorTagComponent",
+                    "value": {
+                        "$type": "EditorTagComponent",
+                        "Id": 14432917846379608351,
+                        "Tags": [
+                            "Grippable"
+                        ]
+                    }
                 }
             ]
         },
@@ -860,7 +950,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.09584450721740723
+                    "value": -0.09584450721740724
                 },
                 {
                     "op": "replace",

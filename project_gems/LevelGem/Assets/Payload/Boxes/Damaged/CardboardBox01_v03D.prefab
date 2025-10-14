@@ -153,7 +153,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 0.10021495819091797
+                    "value": 0.10021495819091795
                 },
                 {
                     "op": "replace",
@@ -1044,7 +1044,7 @@
                     "op": "add",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorInspectorComponent/ComponentOrderEntryArray/10",
                     "value": {
-                        "ComponentId": 17758742502516665313,
+                        "ComponentId": 14388266560467161210,
                         "SortIndex": 10
                     }
                 },
@@ -1052,7 +1052,7 @@
                     "op": "add",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorInspectorComponent/ComponentOrderEntryArray/11",
                     "value": {
-                        "ComponentId": 16727418879083277165,
+                        "ComponentId": 8945255618834301300,
                         "SortIndex": 11
                     }
                 },
@@ -1060,37 +1060,14 @@
                     "op": "add",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorInspectorComponent/ComponentOrderEntryArray/12",
                     "value": {
-                        "ComponentId": 14388266560467161210,
-                        "SortIndex": 12
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2167394762685]/Components/EditorInspectorComponent/ComponentOrderEntryArray/13",
-                    "value": {
                         "ComponentId": 8077537847942719260,
-                        "SortIndex": 13
+                        "SortIndex": 12
                     }
                 },
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorMeshColliderComponent/ColliderConfiguration/CollisionLayer/Index",
                     "value": 1
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2167394762685]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
-                    "value": 0.5
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2167394762685]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/1",
-                    "value": 0.5
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2167394762685]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/2",
-                    "value": 0.5
                 },
                 {
                     "op": "replace",
@@ -1101,21 +1078,6 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Mass",
                     "value": 5.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
-                    "value": 0.00005267377127893269
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
-                    "value": 0.0027737352065742016
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/2",
-                    "value": 0.12340547144412994
                 },
                 {
                     "op": "replace",
@@ -1131,6 +1093,88 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
                     "value": 0.09245041757822037
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2167394762685]/Components/EditorScriptCanvasComponent",
+                    "value": {
+                        "$type": "EditorScriptCanvasComponent",
+                        "Id": 8945255618834301300,
+                        "configuration": {
+                            "sourceHandle": {
+                                "id": "{F9E202FC-F3D2-5276-B78C-39F7069AA6F5}",
+                                "path": "Assets/Scripts/Remoteparent.scriptcanvas"
+                            },
+                            "sourceName": "Remoteparent.scriptcanvas",
+                            "propertyOverrides": {
+                                "source": {
+                                    "id": "{F9E202FC-F3D2-5276-B78C-39F7069AA6F5}",
+                                    "path": "Assets/Scripts/Remoteparent.scriptcanvas"
+                                },
+                                "variables": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 1,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "EntityId",
+                                            "value": "",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 2755429085
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{578512DB-9620-4477-BA99-86265D84945F}"
+                                        },
+                                        "VariableName": "Child",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "entityId": [],
+                                "overrides": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 1,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "EntityId",
+                                            "value": "../Instance_[15629162695675]/Entity_[3148731904589]",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 850104567
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{578512DB-9620-4477-BA99-86265D84945F}"
+                                        },
+                                        "VariableName": "Child",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "overridesUnused": [],
+                                "dependencies": []
+                            }
+                        }
+                    }
                 },
                 {
                     "op": "add",
