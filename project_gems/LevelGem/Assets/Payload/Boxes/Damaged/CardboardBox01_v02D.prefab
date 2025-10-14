@@ -152,12 +152,12 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 0.11468315124511719
+                    "value": 0.1146831512451172
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.12345002591609955
+                    "value": 0.12345002591609956
                 }
             ]
         },
@@ -173,214 +173,6 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/UniformScale",
                     "value": 0.5
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/0",
-                    "value": "Entity_[122557767530336]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/1",
-                    "value": "Entity_[14261919781325]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/2",
-                    "value": "Entity_[28769385727022]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/3",
-                    "value": "Entity_[28773680694318]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/4",
-                    "value": "Entity_[28782270628910]"
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/0",
-                    "value": {
-                        "ComponentId": 17118134790934668569,
-                        "SortIndex": 0
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/1",
-                    "value": {
-                        "ComponentId": 1267558320918254948,
-                        "SortIndex": 1
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/2",
-                    "value": {
-                        "ComponentId": 12278938185926352687,
-                        "SortIndex": 2
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/3",
-                    "value": {
-                        "ComponentId": 12699656066858849414,
-                        "SortIndex": 3
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/4",
-                    "value": {
-                        "ComponentId": 9754719543737067210,
-                        "SortIndex": 4
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/5",
-                    "value": {
-                        "ComponentId": 12593033524770378410,
-                        "SortIndex": 5
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/6",
-                    "value": {
-                        "ComponentId": 18188393957999906053,
-                        "SortIndex": 6
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/7",
-                    "value": {
-                        "ComponentId": 15538017519213930973,
-                        "SortIndex": 7
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/8",
-                    "value": {
-                        "ComponentId": 7387200545805127248,
-                        "SortIndex": 8
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/9",
-                    "value": {
-                        "ComponentId": 14485572632215985449,
-                        "SortIndex": 9
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/10",
-                    "value": {
-                        "ComponentId": 13080759890746455199,
-                        "SortIndex": 10
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/11",
-                    "value": {
-                        "ComponentId": 15361283989138516603,
-                        "SortIndex": 11
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/12",
-                    "value": {
-                        "ComponentId": 17649559569754413960,
-                        "SortIndex": 12
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/13",
-                    "value": {
-                        "ComponentId": 13396097316840152699,
-                        "SortIndex": 13
-                    }
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorMeshColliderComponent/ColliderConfiguration/CollisionLayer/Index",
-                    "value": 1
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
-                    "value": 0.5
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/1",
-                    "value": 0.5
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/2",
-                    "value": 0.5
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Compute Mass",
-                    "value": false
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Mass",
-                    "value": 5.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
-                    "value": 0.002180518116801977
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
-                    "value": 0.0023169536143541336
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/2",
-                    "value": 0.11494112014770508
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
-                    "value": 0.08935100585222244
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/4",
-                    "value": 0.04682370647788048
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.09131991863250732
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[2081495416765]/Components/EditorTagComponent",
-                    "value": {
-                        "$type": "EditorTagComponent",
-                        "Id": 14485572632215985449,
-                        "Tags": [
-                            "Grippable"
-                        ]
-                    }
                 },
                 {
                     "op": "add",
@@ -933,6 +725,304 @@
                             }
                         },
                         "IsRuntimeActive": true
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/0",
+                    "value": "Entity_[122557767530336]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/1",
+                    "value": "Entity_[14261919781325]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/2",
+                    "value": "Entity_[28769385727022]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/3",
+                    "value": "Entity_[28773680694318]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorEntitySortComponent/Child Entity Order/4",
+                    "value": "Entity_[28782270628910]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/0",
+                    "value": {
+                        "ComponentId": 17118134790934668569,
+                        "SortIndex": 0
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/1",
+                    "value": {
+                        "ComponentId": 1267558320918254948,
+                        "SortIndex": 1
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/2",
+                    "value": {
+                        "ComponentId": 12278938185926352687,
+                        "SortIndex": 2
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/3",
+                    "value": {
+                        "ComponentId": 12699656066858849414,
+                        "SortIndex": 3
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/4",
+                    "value": {
+                        "ComponentId": 9754719543737067210,
+                        "SortIndex": 4
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/5",
+                    "value": {
+                        "ComponentId": 12593033524770378410,
+                        "SortIndex": 5
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/6",
+                    "value": {
+                        "ComponentId": 18188393957999906053,
+                        "SortIndex": 6
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/7",
+                    "value": {
+                        "ComponentId": 15538017519213930973,
+                        "SortIndex": 7
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/8",
+                    "value": {
+                        "ComponentId": 7387200545805127248,
+                        "SortIndex": 8
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/9",
+                    "value": {
+                        "ComponentId": 14485572632215985449,
+                        "SortIndex": 9
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/10",
+                    "value": {
+                        "ComponentId": 13080759890746455199,
+                        "SortIndex": 10
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/11",
+                    "value": {
+                        "ComponentId": 15361283989138516603,
+                        "SortIndex": 11
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/12",
+                    "value": {
+                        "ComponentId": 17649559569754413960,
+                        "SortIndex": 12
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/13",
+                    "value": {
+                        "ComponentId": 18088049035756225887,
+                        "SortIndex": 13
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorInspectorComponent/ComponentOrderEntryArray/14",
+                    "value": {
+                        "ComponentId": 13396097316840152699,
+                        "SortIndex": 14
+                    }
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorMeshColliderComponent/ColliderConfiguration/CollisionLayer/Index",
+                    "value": 1
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/0",
+                    "value": 0.5
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/1",
+                    "value": 0.5
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/Scale/2",
+                    "value": 0.5
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Compute Mass",
+                    "value": false
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Mass",
+                    "value": 5.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
+                    "value": 0.002180518116801977
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/1",
+                    "value": 0.0023169536143541336
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/2",
+                    "value": 0.11494112014770508
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
+                    "value": 0.08935100585222244
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/4",
+                    "value": 0.04682370647788048
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
+                    "value": 0.09131991863250732
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorScriptCanvasComponent",
+                    "value": {
+                        "$type": "EditorScriptCanvasComponent",
+                        "Id": 18088049035756225887,
+                        "configuration": {
+                            "sourceHandle": {
+                                "id": "{F9E202FC-F3D2-5276-B78C-39F7069AA6F5}",
+                                "path": "Assets/Scripts/Remoteparent.scriptcanvas"
+                            },
+                            "sourceName": "Remoteparent.scriptcanvas",
+                            "propertyOverrides": {
+                                "source": {
+                                    "id": "{F9E202FC-F3D2-5276-B78C-39F7069AA6F5}",
+                                    "path": "Assets/Scripts/Remoteparent.scriptcanvas"
+                                },
+                                "variables": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 1,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "EntityId",
+                                            "value": "",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 2755429085
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{578512DB-9620-4477-BA99-86265D84945F}"
+                                        },
+                                        "VariableName": "Child",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "entityId": [],
+                                "overrides": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 1,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "EntityId",
+                                            "value": "../Instance_[14598370544635]/Entity_[3148731904589]",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 850104567
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{578512DB-9620-4477-BA99-86265D84945F}"
+                                        },
+                                        "VariableName": "Child",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "overridesUnused": [],
+                                "dependencies": []
+                            }
+                        }
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2081495416765]/Components/EditorTagComponent",
+                    "value": {
+                        "$type": "EditorTagComponent",
+                        "Id": 14485572632215985449,
+                        "Tags": [
+                            "Grippable"
+                        ]
                     }
                 }
             ]

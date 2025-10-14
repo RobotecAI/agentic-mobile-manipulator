@@ -891,8 +891,16 @@
                     "op": "add",
                     "path": "/Entities/Entity_[2425092800445]/Components/EditorInspectorComponent/ComponentOrderEntryArray/13",
                     "value": {
-                        "ComponentId": 15499205096386896969,
+                        "ComponentId": 9993462965450003032,
                         "SortIndex": 13
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2425092800445]/Components/EditorInspectorComponent/ComponentOrderEntryArray/14",
+                    "value": {
+                        "ComponentId": 15499205096386896969,
+                        "SortIndex": 14
                     }
                 },
                 {
@@ -954,6 +962,88 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[2425092800445]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
                     "value": 0.08804620057344437
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[2425092800445]/Components/EditorScriptCanvasComponent",
+                    "value": {
+                        "$type": "EditorScriptCanvasComponent",
+                        "Id": 9993462965450003032,
+                        "configuration": {
+                            "sourceHandle": {
+                                "id": "{F9E202FC-F3D2-5276-B78C-39F7069AA6F5}",
+                                "path": "Assets/Scripts/Remoteparent.scriptcanvas"
+                            },
+                            "sourceName": "Remoteparent.scriptcanvas",
+                            "propertyOverrides": {
+                                "source": {
+                                    "id": "{F9E202FC-F3D2-5276-B78C-39F7069AA6F5}",
+                                    "path": "Assets/Scripts/Remoteparent.scriptcanvas"
+                                },
+                                "variables": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 1,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "EntityId",
+                                            "value": "",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 2755429085
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{578512DB-9620-4477-BA99-86265D84945F}"
+                                        },
+                                        "VariableName": "Child",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "entityId": [],
+                                "overrides": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 1,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "EntityId",
+                                            "value": "../Instance_[19610597379067]/Entity_[3148731904589]",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 850104567
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{578512DB-9620-4477-BA99-86265D84945F}"
+                                        },
+                                        "VariableName": "Child",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "overridesUnused": [],
+                                "dependencies": []
+                            }
+                        }
+                    }
                 },
                 {
                     "op": "add",
