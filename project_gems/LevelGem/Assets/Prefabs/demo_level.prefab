@@ -18,7 +18,8 @@
                     "Entity_[1920403796348]",
                     "Entity_[1916108829052]",
                     "Instance_[1233183000480]/ContainerEntity",
-                    "Instance_[729293419369]/ContainerEntity"
+                    "Instance_[729293419369]/ContainerEntity",
+                    "Instance_[18714674614607]/ContainerEntity"
                 ]
             },
             "EditorInspectorComponent": {
@@ -222,6 +223,16 @@
     "Instances": {
         "Instance_[1233183000480]": {
             "Source": "Assets/Environment/Environment.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../ContainerEntity"
+                }
+            ]
+        },
+        "Instance_[18714674614607]": {
+            "Source": "Assets/Prefabs/Cameras.prefab",
             "Patches": [
                 {
                     "op": "replace",
