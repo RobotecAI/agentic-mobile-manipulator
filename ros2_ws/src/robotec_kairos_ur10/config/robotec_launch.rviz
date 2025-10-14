@@ -1016,7 +1016,7 @@ Visualization Manager:
           Use Fixed Frame: true
           Use rainbow: true
           Value: true
-      Enabled: true
+      Enabled: false
       Name: Pointclouds
     - Class: rviz_default_plugins/InteractiveMarkers
       Enable Transparency: true
@@ -1217,9 +1217,9 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 16.735458374023438
-        Y: 8.610001564025879
-        Z: -0.09465843439102173
+        X: 15.290091514587402
+        Y: 7.792455673217773
+        Z: 0.9293488264083862
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false

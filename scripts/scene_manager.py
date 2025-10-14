@@ -116,11 +116,16 @@ class SceneManager:
             msg_type="simulation_interfaces/srv/GetEntityState",
             timeout_sec=3.0,
         ).payload
-        entity_state = cast(GetEntityState.Response, entity_state).state
-        return do_transform_pose(
-            entity_state.pose,
-            self.connector.get_transform(frame, "odom"),
-        )
+        for _ in range(3):
+            try:
+                entity_state = cast(GetEntityState.Response, entity_state).state
+                return do_transform_pose(
+                    entity_state.pose,
+                    self.connector.get_transform(frame, "odom"),
+                )
+            except Exception as e:
+                self.logger.error(f"Failed to get pose for {entity_name}: {e}")
+                continue
 
     def get_slot_pose(self, slot_name: str, frame: str = "odom"):
         if frame != "odom":

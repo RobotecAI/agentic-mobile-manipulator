@@ -150,6 +150,7 @@ class KairosController:
 
     def determine_grasp_type_and_point(
         self,
+        ego_pose: Pose,
         object_pose: Pose,
         entity_name: str,
         target_slot_pose: Pose,
@@ -159,7 +160,7 @@ class KairosController:
             or target_slot_pose.position.z > HIGH_GRASP_Z_THRESHOLD
         ):
             side_gripping_point = self.scene_manager.find_closest_side_gripping_point(
-                entity_name, self.nav_ctrl.get_current_pose()
+                entity_name, ego_pose
             )
             return "side", side_gripping_point
         else:
@@ -178,11 +179,24 @@ class KairosController:
             target_slot_name (str): name of the slot where the object should be placed
             scene_manager (SceneManager): instance of SceneManager to get poses
         """
+        self.logger.info(f"Moving object {entity_name} to slot {target_slot_name}")
+
+        initial_slot = self.scene_manager.find_entity_slot(entity_name).tag
+        if initial_slot is None:
+            # Object is not in any slot, getting its pose directly.
+            object_pose = self.scene_manager.get_pose(entity_name)
+        else:
+            # Object is in slot {initial_slot}, getting its pose from the slot.
+            object_pose = self.scene_manager.get_slot_pose(initial_slot)
+
         object_pose = self.scene_manager.find_entity_pose(entity_name)
         target_slot_pose = self.scene_manager.get_slot_pose(target_slot_name)
 
         grasp_type, gripping_point = self.determine_grasp_type_and_point(
-            object_pose, entity_name, target_slot_pose
+            self.get_staging_pose_for_object(object_pose),
+            object_pose,
+            entity_name,
+            target_slot_pose,
         )
         self.mani_ctrl.set_grasp_type(grasp_type)
 
@@ -199,6 +213,9 @@ class KairosController:
         yaw_diff = get_yaw_difference(obj_pose, slot_pose)
         self.enable_safe_low_approach()
         self.rotate_object(entity_name=entity_name, angle=yaw_diff)
+
+    def get_staging_pose_for_object(self, object_pose: Pose) -> Pose:
+        return get_global_pose_from_origin(Pose(position=Point(x=1.0)), object_pose)
 
     def rotate_object(
         self,
@@ -351,6 +368,7 @@ class KairosController:
 
     def navigate_to_and_pick(self, object_pose: Pose, gripping_point: Pose):
         """Pick an object from the specified pose."""
+        self.logger.info(f"Navigating to and picking object from pose {object_pose}")
 
         strategy = determine_strategy(object_pose, self.safe_low_approach)
         approach_distance = strategy.get_approach_distance()
@@ -383,6 +401,7 @@ class KairosController:
 
     def navigate_to_and_place(self, target_slot_pose: Pose, placing_point: Pose):
         """Place an object in the specified pose."""
+        self.logger.info(f"Navigating to and placing object in pose {target_slot_pose}")
         strategy = determine_strategy(target_slot_pose, self.safe_low_approach)
         approach_distance = strategy.get_approach_distance()
 

@@ -66,7 +66,10 @@ class WarehouseTool(BaseROS2Tool):
         return filitered_slots
 
     def check_the_origin_collection(
-        self, collection_name: str, item_type: Optional[str] = None
+        self,
+        collection_name: str,
+        item_type: Optional[str] = None,
+        approach_distance: float = 2.0,
     ) -> List[Slot]:
         """Check if there is any object to move from given collection.
 
@@ -94,7 +97,7 @@ class WarehouseTool(BaseROS2Tool):
             raise ValueError(f"No collection named {collection_name}")
 
         self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-            coll.middle, 1.2
+            coll.middle, approach_distance
         )
 
         # sleep to mock the visual effect of 'scanning'
@@ -922,9 +925,13 @@ class SortReturnedPackageTool(WarehouseTool):
         return free_slot
 
     def _run(self):
+        self.connector.logger.info(f"----- Starting {self.__class__.__name__} -----")
         try:
+            self.connector.logger.info(
+                "Checking for packages in returned packages table"
+            )
             used_slots = self.check_the_origin_collection(
-                Collection.RETURNED_PACKAGES_TABLE.value
+                Collection.RETURNED_PACKAGES_TABLE.value, approach_distance=1.5
             )
         except RuntimeError as e:
             if "There is no objects in the collection" in str(e):
@@ -940,6 +947,7 @@ class SortReturnedPackageTool(WarehouseTool):
                 f"There is no object at the slot {package_slot.tag}. This should not happen."
             )
 
+        self.connector.logger.info("Checking if package is damaged")
         is_damaged = self._check_if_damaged(package_slot)
         self.connector.logger.info(f"Is damaged: {is_damaged}")
         target_slot: Slot | None = None
@@ -961,5 +969,7 @@ class SortReturnedPackageTool(WarehouseTool):
         return_text = "Moved "
         return_text += "damaged" if is_damaged else " non-damaged "
         return_text += "package to "
-        return_text += "Inspection table" if is_damaged else "respective rack."
+        return_text += "Inspection table" if is_damaged else "respective rack. "
+        return_text += f"There are {len(used_slots) - 1} packages left to sort."
+        self.connector.logger.info(f"----- Finished {self.__class__.__name__} -----")
         return return_text
