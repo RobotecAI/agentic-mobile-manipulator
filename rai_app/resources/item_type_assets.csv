@@ -1,0 +1,7 @@
+item_type,asset_names
+cpu,cardboardbox01_v01;cardboardbox01_v01;cardboardbox02_v01
+gpu,cardboardbox04_v01;cardboardbox05_v01;cardboardbox06_v01
+pipes,cardboardbox07_v01;cardboardbox08_v01;cardboardbox01_v01
+hammers,cardboardbox01_v01;cardboardbox01_v01;cardboardbox07_v01
+nails,cardboardbox01_v01;cardboardbox01_v01;cardboardbox07_v01
+motherboard,cardboardbox01_v01;cardboardbox01_v01;cardboardbox02_v01
