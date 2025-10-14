@@ -421,8 +421,9 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
                 target_slot_pose, relative_transform
             )
 
-            self.kairos_controller.approach_and_pick(object_pose, top_gripping_point)
-            self.kairos_controller.place_on_the_table(target_slot_pose, placing_point)
+            self.kairos_controller.navigate_to_and_place(
+                target_slot_pose, placing_point
+            )
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")
             return (
