@@ -46,13 +46,13 @@ class Slot:
 
     def is_manipulation_feasible(self) -> bool:
         """Check if the slot is reachable for manipulation (some racks are facing wall and are not reachable)"""
-        RACKS_OPPOSING_WALL = [f"L{str(i).zfill(0)}" for i in range(1, 10)]
+        RACKS_OPPOSING_WALL = [f"L{str(i).zfill(2)}" for i in range(1, 10)]
         SLOTS_FACING_BACKWARD = ["RackSlot" + str(i) for i in range(1, 13)]
 
         RACKS_FACING_WALL = (
-            [f"F{str(i).zfill(0)}" for i in range(1, 10)]
-            + [f"A{str(i).zfill(0)}" for i in range(1, 7)]
-            + [f"G{str(i).zfill(0)}" for i in range(1, 7)]
+            [f"F{str(i).zfill(2)}" for i in range(1, 10)]
+            + [f"A{str(i).zfill(2)}" for i in range(1, 7)]
+            + [f"G{str(i).zfill(2)}" for i in range(1, 7)]
         )
         SLOTS_FACING_FORWARD = ["RackSlot" + str(i) for i in range(13, 25)]
 
