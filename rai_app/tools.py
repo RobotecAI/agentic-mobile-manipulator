@@ -94,7 +94,7 @@ class WarehouseTool(BaseROS2Tool):
             raise ValueError(f"No collection named {collection_name}")
 
         self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-            coll.middle, 2.0
+            coll.middle, 1.2
         )
 
         # sleep to mock the visual effect of 'scanning'
