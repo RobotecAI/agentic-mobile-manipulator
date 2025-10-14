@@ -876,7 +876,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[2167394762685]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
-                    "value": 0.09245041757822037
+                    "value": 0.09245041757822035
                 },
                 {
                     "op": "add",
@@ -984,7 +984,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -0.12498664855957033
+                    "value": 0.11882436275482178
                 },
                 {
                     "op": "replace",
