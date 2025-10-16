@@ -29,6 +29,15 @@ def load_spawn_config(spawn_config_file):
     return spawn_slot_names, spawn_entity_types, items_stored
 
 
+def load_rack_assignment(rack_assignment_file: str):
+    rack_assignment = pd.read_csv(rack_assignment_file, delimiter=",")
+    collection_names, item_types = (
+        rack_assignment["collection_name"].tolist(),
+        rack_assignment["item_type"].tolist(),
+    )
+    return collection_names, item_types
+
+
 @ROS2Context()
 def main():
     parser = argparse.ArgumentParser()
@@ -60,8 +69,8 @@ def main():
     if args.clear:
         scene_manager.clear_scene()
     if args.spawn:
-        rack_config = pd.read_csv(
-            "rai_app/resources/rack_assignment.csv", delimiter=","
+        collection_names, item_types = load_rack_assignment(
+            "rai_app/resources/rack_assignment.csv"
         )
         item_type_assets = pd.read_csv(
             "rai_app/resources/item_type_assets.csv", delimiter=","
@@ -71,9 +80,7 @@ def main():
         spawn_slot_names = []
         spawn_entity_types = []
         items_stored = []
-        for rack, item_type in zip(
-            rack_config["collection_name"].tolist(), rack_config["item_type"].tolist()
-        ):
+        for rack, item_type in zip(collection_names, item_types):
             slots_of_rack = scene_manager.get_collection(rack).get_all_slots().values()
             for slot in slots_of_rack:
                 if random.random() > args.rack_fill:

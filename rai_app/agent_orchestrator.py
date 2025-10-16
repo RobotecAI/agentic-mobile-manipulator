@@ -47,7 +47,7 @@ from rai_app.prompts import (
     MOVEMENT_EXECUTOR_SYSTEM_PROMPT,
 )
 from scripts.kairos_controller import KairosController
-from scripts.populate_scene import load_item_type_assignment_file
+from scripts.populate_scene import load_rack_assignment
 from scripts.scene_manager import SceneManager
 
 TOPICS_TO_WAIT_FOR: list[str] = ["/wrist_camera/camera_image_color"]
@@ -392,7 +392,7 @@ def main():
     entities = scene_manager.get_entities(name_filter="box")
     if entities:
         scene_manager.assign_entities_to_slots(entities)
-    collection_names, item_types = load_item_type_assignment_file(
+    collection_names, item_types = load_rack_assignment(
         "rai_app/resources/rack_assignment.csv"
     )
 
