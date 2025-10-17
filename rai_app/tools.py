@@ -1,3 +1,4 @@
+import base64
 import logging
 import math
 import random
@@ -5,7 +6,10 @@ import re
 import time
 from typing import Dict, List, Optional, Tuple, Type, cast
 
+import cv2
+import numpy as np
 import pandas as pd
+from cv_bridge import CvBridge
 from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
 from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel, Field
@@ -13,10 +17,12 @@ from rai.communication.ros2 import ROS2Message
 from rai.messages import HumanMultimodalMessage, MultimodalArtifact, SystemMessage
 from rai.tools.ros2.base import BaseROS2Tool
 from rai.tools.ros2.simple import GetROS2ImageConfiguredTool
+from sensor_msgs.msg import Image
 from std_msgs.msg import Header
 from tf_transformations import euler_from_quaternion
 
 from rai_app.knowledge import Collection, get_object_type_to_racks
+from rai_app.vlm_transport import publish_vlm_description
 from scripts.kairos_controller import KairosController
 from scripts.scene_manager import SceneManager
 from scripts.slots import Slot, SlotsCollection
@@ -202,6 +208,14 @@ class IsPackageDamagedTool(BaseROS2Tool):
     namespace_value: str
     vlm: BaseChatModel
 
+    def _build_ros2_image(self, b64_img: str) -> Image:
+        cv2_image = cv2.imdecode(
+            np.frombuffer(base64.b64decode(b64_img), np.uint8), cv2.IMREAD_COLOR
+        )
+        ros2_image = CvBridge().cv2_to_imgmsg(cv2_image, encoding="passthrough")
+        ros2_image.encoding = "rgb8"
+        return ros2_image
+
     def _run(self) -> bool:
         SYSTEM_PROMPT = "You are an expert in image analysis and your speciality is the description of images"
         logging.info("Getting image")
@@ -217,6 +231,9 @@ class IsPackageDamagedTool(BaseROS2Tool):
             is_package_damaged: bool = Field(
                 ..., description="Whether the package is damaged or not"
             )
+            description: str = Field(
+                ..., description="Short description of the package"
+            )
 
         task = [
             SystemMessage(content=SYSTEM_PROMPT),
@@ -228,6 +245,13 @@ class IsPackageDamagedTool(BaseROS2Tool):
         vlm = self.vlm.with_structured_output(ROS2ImgDescription)
         response = cast(ROS2ImgDescription, vlm.invoke(task))
         logging.info(f"Package damaged = {response.is_package_damaged}")
+        ros2_image = self._build_ros2_image(b64_img)
+        publish_vlm_description(
+            self.connector,
+            ros2_image,
+            f"Package damaged: {response.is_package_damaged}. \nDescription: {response.description}",
+            "is_package_damaged_tool",
+        )
         return response.is_package_damaged
 
 
