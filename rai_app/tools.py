@@ -151,7 +151,7 @@ class WarehouseTool(BaseROS2Tool):
             List[Slot]: List of empty slots
         """
         self.refresh_data()
-        logging.info(
+        logging.debug(
             f"Checking for empty slots in target collection {collection_name}..."
         )
         coll = self.scene_manager.get_collection(tag=collection_name)
@@ -172,7 +172,7 @@ class WarehouseTool(BaseROS2Tool):
                 f"There is no empty slots in the collection {collection_name}"
             )
         else:
-            logging.info(
+            logging.debug(
                 f"Target collection {collection_name} has {len(empty_slots)} empty slots"
             )
             return empty_slots

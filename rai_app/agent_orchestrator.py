@@ -1,13 +1,18 @@
 import asyncio
 import logging
 import threading
+import time
 import uuid
 from collections import deque
 from dataclasses import field
-from typing import Callable, Deque, List, Optional
+from typing import Callable, Deque, List, Literal, Optional
 
 import rclpy
-from agent_callbacks import AgentActionsCallback, AgentProgessCallback
+from agent_callbacks import (
+    AgentActionsCallback,
+    AgentProgessCallback,
+    OrchestratorTasksNotifier,
+)
 from context_providers import WarehouseContext
 from langchain_core.callbacks.base import BaseCallbackHandler
 from langfuse.callback import CallbackHandler
@@ -68,6 +73,7 @@ class TaskExecution(BaseModel):
     prompt: str = ""
     thread_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     is_paused: bool = False
+    priority: Literal["low", "high"] = "low"
 
 
 class TaskSubscriber(Node):
@@ -129,7 +135,13 @@ class AgentOrchestrator:
         langchain_callbacks: List[BaseCallbackHandler],
     ):
         # low priority queue of tasks to execute
-        self.task_queue: asyncio.Queue[TaskExecution] = asyncio.Queue(maxsize=50)
+        self.low_prio_task_queue: asyncio.Queue[TaskExecution] = asyncio.Queue(
+            maxsize=50
+        )
+        # high prio tasks will be executed first
+        self.high_prio_task_queue: asyncio.Queue[TaskExecution] = asyncio.Queue(
+            maxsize=50
+        )
         # when task is interrupted mid execution,
         # the checkpoint is saved and stored. The task is
         # put onto paused task lifo queue and will be resumed
@@ -154,7 +166,6 @@ class AgentOrchestrator:
         # to shutdown orchestrator gracefully
         self.running = True
         self.current_task: Optional[TaskExecution] = None
-        self.high_prio_task: Optional[TaskExecution] = None
         self.current_task_future = None
         self.stop: bool = False
         self.task_count = 0
@@ -163,8 +174,39 @@ class AgentOrchestrator:
         self.action_callback = AgentActionsCallback(
             connector=connector, topic=action_topic
         )
+        self.notifier = OrchestratorTasksNotifier(
+            connector=connector,
+            current_task_topic="/orchestrator/current_task",
+            tasks_queue_topic="/orchestrator/tasks_queue",
+            paused_tasks_topic="/orchestrator/paused_tasks",
+        )
+
+    def notify_about_tasks(self):
+        if self.current_task:
+            self.notifier.send_main_task(self.current_task.prompt)
+        else:
+            self.notifier.send_main_task("No task currently...")
+
+        # NOTE high prio tasks will be first in the message
+        queue_tasks = []
+        if not self.high_prio_task_queue.empty():
+            for task in list(self.high_prio_task_queue._queue):
+                queue_tasks.append(task.prompt)
+
+        if not self.low_prio_task_queue.empty():
+            for task in list(self.low_prio_task_queue._queue):
+                queue_tasks.append(task.prompt)
+
+        self.notifier.send_tasks_queue(queue_tasks)
+        paused_tasks = []
+        if self.pasued_tasks_queue:
+            for task in self.pasued_tasks_queue:
+                paused_tasks.append(task.prompt)
+
+        self.notifier.send_paused_tasks_queue(paused_tasks)
 
     def add_inspection_task(self, msg: ROS2Message):
+        # NOTE: All inspection tasks will be high prio
         anomaly: Anomaly = msg.payload
         pose = anomaly.pose
         # TODO  (jmatejcz) for now we classify box on the floor as trash
@@ -176,11 +218,11 @@ class AgentOrchestrator:
         if anomaly.obstacle_type == "box":
             prompt = "box" + pose_prompt
             prompt += "Move it to the inspection area."
-            task_exe = TaskExecution(prompt=prompt)
+            task_exe = TaskExecution(prompt=prompt, priority="high")
         elif anomaly.obstacle_type == "trash":
             prompt = "trash" + pose_prompt
             prompt += "Throw it out to the garbage bin."
-            task_exe = TaskExecution(prompt=prompt)
+            task_exe = TaskExecution(prompt=prompt, priority="high")
         else:
             logging.warning(
                 f"Anomaly type {anomaly.obstacle_type} not valid for any action"
@@ -188,19 +230,18 @@ class AgentOrchestrator:
             return
         with self.lock:
             try:
-                self.task_queue.put_nowait(task_exe)
-                logging.info(f"Added inspection task {task_exe.prompt}")
+                self.high_prio_task_queue.put_nowait(task_exe)
+                logging.info(f"Added high priority inspection task {task_exe.prompt}")
             except asyncio.QueueFull:
                 logging.warning("Task queue is full, dropping task")
 
     def add_task(self, msg: ROS2Message):
-        """Add a new task to the queue"""
-        # TODO (jmatejcz) when new msg type drops prio will be extracted from msg
-        # for now no high prio tasks
+        """Add a new task with String interface to the low prio queue"""
+        # NOTE lower prio tasks
         task_exe = TaskExecution(prompt=msg.payload.data)
         with self.lock:
             try:
-                self.task_queue.put_nowait(task_exe)
+                self.low_prio_task_queue.put_nowait(task_exe)
                 logging.info(f"Added task {task_exe.prompt}")
             except asyncio.QueueFull:
                 logging.warning("Task queue is full, dropping task")
@@ -214,14 +255,18 @@ class AgentOrchestrator:
             return
         if self.current_task_future and not self.current_task_future.done():
             logging.warning("Interrupting current task")
-            await asyncio.wait_for(self.current_task_future, timeout=3.0)
-            try:
-                self.current_task.is_paused = True
-                self.pasued_tasks_queue.appendleft(self.current_task)
-            except asyncio.QueueFull:
-                logging.warning("Limit of pasued tasks reached. removing the oldest")
-                self.pasued_tasks_queue.pop()
-                self.pasued_tasks_queue.appendleft(self.current_task)
+            self.current_task_future.cancel()
+            with self.lock:
+                try:
+                    self.current_task.is_paused = True
+                    self.pasued_tasks_queue.appendleft(self.current_task)
+                    logging.info(f"Task: {self.current_task.prompt} was paused")
+                except asyncio.QueueFull:
+                    logging.warning(
+                        "Limit of pasued tasks reached. removing the oldest"
+                    )
+                    self.pasued_tasks_queue.pop()
+                    self.pasued_tasks_queue.appendleft(self.current_task)
         self.current_task = None
 
     def add_checkpointing_to_agent(
@@ -266,60 +311,76 @@ class AgentOrchestrator:
     def spin_task_subscriber(self):
         rclpy.spin(self.task_subscriber)
 
+    def task_notifier(self):
+        """Run notification loop in separate thread"""
+        while self.running:
+            with self.lock:
+                self.notify_about_tasks()
+            time.sleep(1)
+
+    async def begin_high_prio_task(self):
+        with self.lock:
+            self.current_task = self.high_prio_task_queue.get_nowait()
+            self.current_task_future = asyncio.create_task(
+                self.run_agent(self.current_task)
+            )
+
+    async def begin_low_prio_task(self):
+        with self.lock:
+            self.current_task = self.low_prio_task_queue.get_nowait()
+            self.current_task_future = asyncio.create_task(
+                self.run_agent(self.current_task)
+            )
+
+    async def begin_paused_task(self):
+        with self.lock:
+            self.current_task = self.pasued_tasks_queue.popleft()
+            self.current_task_future = asyncio.create_task(
+                self.run_agent(self.current_task)
+            )
+            logging.info(f"Resuming task {self.current_task.prompt}")
+
     async def orchestrator_loop(self):
         """Main orchestrator loop"""
 
         sub_thread = threading.Thread(target=self.spin_task_subscriber, daemon=True)
         sub_thread.start()
 
-        current_task_future = None
+        notification_thread = threading.Thread(target=self.task_notifier, daemon=True)
+        notification_thread.start()
 
         while self.running:
-            # check for high prio task with mutex
-            high_prio_task = None
-            with self.lock:
-                if self.high_prio_task:
-                    high_prio_task = self.high_prio_task
-                    self.high_prio_task = None
-
-            # if there is high prio task, interruct current one
-            # adn run high prio
-            if high_prio_task:
-                if current_task_future:
+            if self.current_task:
+                # check for interrupt conditions
+                # NOTE new high prio task will only interrupt low prio tasks
+                # if there is high prio running do not interrupt it
+                if (
+                    not self.high_prio_task_queue.empty()
+                    and self.current_task.priority == "low"
+                ):
                     await self.interrupt_current_task()
+                    await self.begin_high_prio_task()
 
-                self.current_task = high_prio_task
-                current_task_future = asyncio.create_task(
-                    self.run_agent(self.current_task)
-                )
-            elif current_task_future is None:
-                # if there is no high prio
-                # and no task running
-                # first check for paused tasks to resume
-                if self.pasued_tasks_queue:
-                    self.current_task = self.pasued_tasks_queue.popleft()
-                    current_task_future = asyncio.create_task(
-                        self.run_agent(self.current_task)
-                    )
-                # if no paused get the next from queue
-                else:
-                    try:
-                        self.current_task = await asyncio.wait_for(
-                            self.task_queue.get(), timeout=1.0
-                        )
-                        current_task_future = asyncio.create_task(
-                            self.run_agent(self.current_task)
-                        )
-                    except TimeoutError:
-                        await asyncio.sleep(1)
-                        continue
+            else:
+                # No task running
+                # First check for high prio tasks
+                if not self.high_prio_task_queue.empty():
+                    await self.begin_high_prio_task()
 
-            if current_task_future.done():
-                current_task_future = None
-                self.current_task = None
-                ...
-                # TODO (jmatejcz) send message or somth
-            await asyncio.sleep(0.01)
+                # then for paused tasks
+                elif self.pasued_tasks_queue:
+                    await self.begin_paused_task()
+                # then for low prio tasks
+                elif not self.low_prio_task_queue.empty():
+                    await self.begin_low_prio_task()
+
+            if self.current_task_future and self.current_task:
+                if self.current_task_future.done():
+                    logging.info(f"Finished task: {self.current_task.prompt}")
+                    self.current_task_future = None
+                    self.current_task = None
+
+            await asyncio.sleep(0.1)
 
 
 def main():
@@ -341,7 +402,8 @@ def main():
         connector=connector, scene_manager=scene_manager
     )
 
-    llm = get_model(model="qwen3:14b", vendor="ollama", reasoning=True)
+    # llm = get_model(model="gpt-oss:20b", vendor="ollama", reasoning=False)
+    llm = get_model(model="qwen3:8b", vendor="ollama", reasoning=False)
     vlm = get_model(model="gemma3:12b", vendor="ollama", reasoning=False)
 
     move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
