@@ -260,9 +260,13 @@ class VlmWarehouseInspector(BaseAgent):
                 target=self.anomalies_topic,
                 msg_type="robotec_kairos_ur10/msg/Anomaly",
             )
+            from cv_bridge import CvBridge
+
+            cv2_image = CvBridge().cv2_to_imgmsg(task.image, encoding="passthrough")
+            cv2_image.encoding = "rgb8"
             publish_vlm_description(
                 self.connector,
-                task.image,
+                cv2_image,
                 result.anomaly_description,
                 "inspection_agent",
             )
