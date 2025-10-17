@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import time
 from pathlib import Path
@@ -19,9 +20,11 @@ from rai.communication.ros2 import (
     wait_for_ros2_topics,
 )
 from rai.messages import HumanMultimodalMessage, preprocess_image
+from sensor_msgs.msg import Image
 from skimage.metrics import structural_similarity as ssim
 
 from rai_app.violation_storage import ViolationStorage
+from rai_app.vlm_transport import publish_vlm_description
 
 # Reuse vector store loader and regulation agent factory from the warehouse regulations module
 from rai_app.warehouse_regulations_agent.rag import load_vector_store  # type: ignore
@@ -154,6 +157,14 @@ class SafetyAgent:
             self.last_processed = now
             self._process_image(b64_img)
 
+    def _build_ros2_image(self, b64_img: str) -> Image:
+        cv2_image = cv2.imdecode(
+            np.frombuffer(base64.b64decode(b64_img), np.uint8), cv2.IMREAD_COLOR
+        )
+        ros2_image = CvBridge().cv2_to_imgmsg(cv2_image, encoding="passthrough")
+        ros2_image.encoding = "rgb8"
+        return ros2_image
+
     def _process_image(self, b64_img: str) -> None:
         ts = time.perf_counter()
         state = self.agent.invoke(
@@ -196,6 +207,8 @@ class SafetyAgent:
             target=self.safety_topic,
             msg_type="std_msgs/msg/String",
         )
+        ros2_image = self._build_ros2_image(b64_img)
+        publish_vlm_description(self.connector, ros2_image, payload, "safety_agent")
         self.get_logger().info(
             f"Published {len(violations)} safety violation(s) to {self.safety_topic} and stored in history"
         )
