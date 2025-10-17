@@ -101,7 +101,7 @@ def are_anomalies_close(
     anomaly1: Anomaly, anomaly2: Anomaly, distance: float, rot_degrees: float
 ) -> bool:
     # NOTE (jmatejcz) model can detect same thing as different types so I think
-    # commecting this amtch out is a good idea
+    # connecting this match out is a good idea
     # obstacle_type_match = anomaly1.obstacle_type == anomaly2.obstacle_type
     poses_match = are_poses_close(anomaly1.pose, anomaly2.pose, distance, rot_degrees)
     return poses_match
