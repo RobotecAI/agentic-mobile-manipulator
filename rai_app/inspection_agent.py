@@ -33,6 +33,7 @@ from rai.messages import (
     HumanMultimodalMessage,
     preprocess_image,
 )
+from rclpy.qos import QoSDurabilityPolicy, QoSProfile
 from robotec_kairos_ur10.msg import Anomaly
 from rosidl_runtime_py import message_to_ordereddict
 from sensor_msgs.msg import Image
@@ -138,6 +139,10 @@ class VlmWarehouseInspector(BaseAgent):
         self.ego_source_frame = ego_source_frame
         self.anomaly_images_dir = anomaly_images_dir
         self.anomalies_topic = anomalies_topic
+        self.anomalies_type = "robotec_kairos_ur10/msg/Anomaly"
+        self.qos_profile = QoSProfile(
+            depth=1, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL
+        )
         self.prompt = prompt
         self.system_prompt = system_prompt
         self.match_anomaly_max_distance = match_anomaly_max_distance
@@ -255,12 +260,13 @@ class VlmWarehouseInspector(BaseAgent):
 
             if self.debug:
                 self._publish_marker(message)
+
             self.connector.send_message(
                 ROS2Message(payload=message_to_ordereddict(message)),
                 target=self.anomalies_topic,
-                msg_type="robotec_kairos_ur10/msg/Anomaly",
+                msg_type=self.anomalies_type,
+                qos_profile=self.qos_profile,
             )
-            from cv_bridge import CvBridge
 
             cv2_image = CvBridge().cv2_to_imgmsg(task.image, encoding="passthrough")
             cv2_image.encoding = "rgb8"
@@ -347,8 +353,8 @@ def main():
     parser.add_argument(
         "--spawnables-file", type=str, default="scripts/resources/spawnables.csv"
     )
-    parser.add_argument("--vlm-vendor", type=str, default="ollama")
-    parser.add_argument("--vlm-model", type=str, default="gemma3:27b")
+    parser.add_argument("--vlm-vendor", type=str, default="openai")
+    parser.add_argument("--vlm-model", type=str, default="LFM2-VL")
     parser.add_argument(
         "--vlm-base_url",
         type=str,
