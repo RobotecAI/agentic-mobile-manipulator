@@ -250,7 +250,7 @@ class IsPackageDamagedTool(BaseROS2Tool):
             self.connector,
             ros2_image,
             f"Package damaged: {response.is_package_damaged}. \nDescription: {response.description}",
-            "is_package_damaged_tool",
+            "Box",
         )
         return response.is_package_damaged
 

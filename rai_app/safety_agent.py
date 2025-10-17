@@ -206,7 +206,7 @@ class SafetyAgent:
             msg_type="std_msgs/msg/String",
         )
         ros2_image = self._build_ros2_image(b64_img)
-        publish_vlm_description(self.connector, ros2_image, payload, "safety_agent")
+        publish_vlm_description(self.connector, ros2_image, payload, "Safety")
         self.get_logger().info(
             f"Published {len(violations)} safety violation(s) to {self.safety_topic} and stored in history"
         )
