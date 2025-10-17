@@ -2,7 +2,7 @@ import argparse
 
 from rai.communication.ros2 import ROS2Connector, ROS2Context
 
-from rai_app.llms import get_model
+from rai_app.llms import get_vlm_model
 from rai_app.tools import SortReturnedPackageTool
 from scripts.kairos_controller import KairosController
 from scripts.scene_manager import SceneManager
@@ -10,7 +10,7 @@ from scripts.scene_manager import SceneManager
 
 def sort_returned_packages():
     connector = ROS2Connector()
-    vlm = get_model(model="gemma3:12b", vendor="ollama", reasoning=False)
+    vlm = get_vlm_model(config_name="general")
     scene_manager = SceneManager(
         slots_file="scripts/resources/slots.csv",
         spawnables_file="scripts/resources/spawnables.csv",
