@@ -10,7 +10,6 @@ def get_model(
     if vendor == "openai":
         return ChatOpenAI(model=model, base_url="http://localhost:8084")
     elif vendor == "ollama":
-        raise RuntimeError("WTF")
         return ChatOllama(
             model=model,
             base_url="http://via-ip-robo-srv-004.robotec.tm.pl:11434",
