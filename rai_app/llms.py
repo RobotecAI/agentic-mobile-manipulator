@@ -12,7 +12,6 @@ def get_model(
     elif vendor == "ollama":
         return ChatOllama(
             model=model,
-            base_url="http://via-ip-robo-srv-004.robotec.tm.pl:11434",
             reasoning=reasoning,
         )
     else:
