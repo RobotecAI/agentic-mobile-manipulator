@@ -1,0 +1,34 @@
+[general]
+llm_model = "gpt-oss-20b"
+llm_base_url = "http://127.0.0.1:8080/v1"
+llm_reasoning = false
+vlm_model = "gemma3:4b"
+vlm_base_url = "http://127.0.0.1:8081/v1"
+vlm_reasoning = false
+
+# megamind agent utilizes llm for task delegation
+# to agents using both llm and vlm for task execution
+[megamind_agent]
+llm_model = "qwen3:14b"
+llm_base_url = "http://127.0.0.1:8080/v1"
+vlm_model = "gemma3:4b"
+vlm_base_url = "http://127.0.0.1:8081/v1"
+llm_reasoning = false
+vlm_reasoning = false
+
+# inspection agent uses vlm to determine anomalies in the image
+[inspection_agent]
+vlm_model = "gemma3:4b"
+vlm_base_url = "http://127.0.0.1:8081/v1"
+vlm_reasoning = false
+
+# safety agent uses vlm to determine anomalies in the image
+# and embeddings to determine OSHA safety violations
+[safety_agent]
+vlm_model = "gemma3:4b"
+vlm_base_url = "http://127.0.0.1:8081/v1"
+vlm_reasoning = false
+
+embeddings_model = "qwen3-embedding:0.6b"
+embeddings_base_url = "http://127.0.0.1:8082/v1"
+reranker_base_url = "http://127.0.0.1:8082/v1/reranking"

@@ -18,7 +18,6 @@ from langchain_core.callbacks.base import BaseCallbackHandler
 from langfuse.callback import CallbackHandler
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph.state import CompiledStateGraph
-from llms import get_model
 from pydantic import BaseModel
 from rai.agents.langchain.core import (
     Executor,
@@ -45,6 +44,7 @@ from tools import (
     ThrowTrashOutTool,
 )
 
+from rai_app.llms import get_llm_model, get_vlm_model
 from rai_app.prompts import (
     HOUSEKEEP_EXECUTOR_SYSTEM_PROMPT,
     IMAGE_ANALYSIS_EXECUTOR_SYSTEM_PROMPT,
@@ -402,9 +402,8 @@ def main():
         connector=connector, scene_manager=scene_manager
     )
 
-    # llm = get_model(model="gpt-oss:20b", vendor="ollama", reasoning=False)
-    llm = get_model(model="qwen3:8b", vendor="ollama", reasoning=False)
-    vlm = get_model(model="gemma3:12b", vendor="ollama", reasoning=False)
+    llm = get_llm_model(config_name="megamind_agent")
+    vlm = get_vlm_model(config_name="megamind_agent")
 
     move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
         connector=connector,

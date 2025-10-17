@@ -11,8 +11,8 @@ repos:
       - id: ruff
         args: [--extend-select, "I,RUF022", --fix, --ignore, E731]
         types_or: [python]
-        files: ^(rai_app/|scripts/)
+        files: ^(rai_app/|scripts/|tests/)
 
       - id: ruff-format
         types_or: [python]
-        files: ^(rai_app/|scripts/)
+        files: ^(rai_app/|scripts/|tests/)
