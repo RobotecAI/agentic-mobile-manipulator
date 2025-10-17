@@ -24,12 +24,12 @@ class ManipulatorController:
     }
 
     SIDE_GRASP_BASE_JOINT_VALUES = {
-        "egoarm_wrist_1_joint": 0.025957927107810974,
-        "egoarm_wrist_2_joint": 0.8452260494232178,
-        "egoarm_wrist_3_joint": -1.607147121429443,
-        "egoarm_shoulder_lift_joint": -2.3126919269561768,
-        "egoarm_elbow_joint": 2.3471269607543945,
-        "egoarm_shoulder_pan_joint": -0.745831310749054,
+        "egoarm_wrist_1_joint": 0.35376831889152527,
+        "egoarm_wrist_2_joint": 1.9237881898880005,
+        "egoarm_wrist_3_joint": -1.5593433380126953,
+        "egoarm_shoulder_lift_joint": -2.2522737979888916,
+        "egoarm_elbow_joint": 1.9098111391067505,
+        "egoarm_shoulder_pan_joint": 0.2729571461677551,
     }
 
     TOP_GRASP_LOW_JOINT_VALUES = {
