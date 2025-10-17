@@ -9,6 +9,7 @@
 #include <rclcpp/qos.hpp>
 #include <QTransform>
 #include <QTime>
+#include "LogView.h"
 
 void CallService(QWidget *parent, rclcpp::Node::SharedPtr &node, rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr& client)
 {
@@ -26,6 +27,42 @@ void CallService(QWidget *parent, rclcpp::Node::SharedPtr &node, rclcpp::Client<
         QMessageBox::warning(parent, "Service Call Failed", "Failed to call service.");
         return;
     }
+}
+
+const std::unordered_map<std::string, int> EncodingMap = {
+    {"mono8", QImage::Format_Grayscale8},
+    {"rgb8", QImage::Format_RGB888},
+    {"rgba8", QImage::Format_RGBA8888},
+    {"bgra8", QImage::Format_RGBA8888}, // Will need to swap channels
+    // Add more mappings as needed
+};
+
+QStringList parsePythonList(QString list){
+  QStringList done;
+  QString listStr = list.trimmed();
+  
+  // Remove brackets [ ]
+  if (listStr.startsWith('[') && listStr.endsWith(']')) {
+      listStr = listStr.mid(1, listStr.length() - 2);
+  }
+  
+  // Split by comma and clean up each item
+  if (!listStr.isEmpty()) {
+      QStringList rawItems = listStr.split(',');
+      for (const QString& item : rawItems) {
+          QString cleanItem = item.trimmed();
+          // Remove quotes if present
+          if (cleanItem.startsWith('"') && cleanItem.endsWith('"')) {
+              cleanItem = cleanItem.mid(1, cleanItem.length() - 2);
+          } else if (cleanItem.startsWith('\'') && cleanItem.endsWith('\'')) {
+              cleanItem = cleanItem.mid(1, cleanItem.length() - 2);
+          }
+          if (!cleanItem.isEmpty()) {
+              done.append(cleanItem);
+          }
+      }
+  }
+  return done;
 }
 
 HMIWindow::HMIWindow(QWidget *parent)
@@ -64,7 +101,7 @@ HMIWindow::HMIWindow(QWidget *parent)
         });
     goal_pub_ = node_->create_publisher<geometry_msgs::msg::PoseStamped>(HardcodedConfig::GoalTopic, 10);
 
-    task_pub_ = node_->create_publisher<std_msgs::msg::String>(HardcodedConfig::TaskTopic, 10);
+    stop_pub_ = node_->create_publisher<std_msgs::msg::String>(HardcodedConfig::EmergencyStopTopic, 10);
 
     user_prompt_pub_ = node_->create_publisher<std_msgs::msg::String>(HardcodedConfig::UserPromptTopic, 10);
 
@@ -139,82 +176,149 @@ HMIWindow::HMIWindow(QWidget *parent)
         goal_pub_->publish(goal_msg);
     });
 
+    connect(ui->taskAButton, &QPushButton::pressed, [this](){
+        std_msgs::msg::String msg;
+        msg.data = HardcodedConfig::taskAPrompt;
+        user_prompt_pub_->publish(msg);
+        });
+
+    connect(ui->taskBButton, &QPushButton::pressed, [this](){
+        std_msgs::msg::String msg;
+        msg.data = HardcodedConfig::taskBPrompt;
+        user_prompt_pub_->publish(msg);
+        });
+
+    connect(ui->taskCButton, &QPushButton::pressed, [this](){
+        std_msgs::msg::String msg;
+        std::string data = HardcodedConfig::taskCPrompt;
+        if (ui->cpu_checkbox->isChecked()){
+          data = data + "one CPU, ";
+        }
+        if (ui->gpu_checkbox->isChecked()){
+          data = data + "one GPU, ";
+        }
+        if (ui->pipes_checkbox->isChecked()){
+          data = data + "pipes, ";
+        }
+        if (ui->hammers_checkbox->isChecked()){
+          data = data + "hammers, ";
+        }
+        if (ui->nails_checkbox->isChecked()){
+          data = data + "nails, ";
+        }
+        if (ui->motherboard_checkbox->isChecked()){
+          data = data + "motherboard, ";
+        }
+        msg.data = data;
+        user_prompt_pub_->publish(msg);
+        });
+
+    connect(ui->StopButton, &QPushButton::pressed, [this](){ stop_pub_->publish(std_msgs::msg::String()); });
+
     // connect teleop buttons
     for (auto button : {ui->pushButtonTeleopFw, ui->pushButtonTeleopBk, ui->pushButtonTeleopLeft, ui->pushButtonTeleopRight}) {
         connect(button, &QPushButton::released, [this]() { publishCmdVel(0.0, 0.0); });
     }
 
-    // create task buttons
-    // for (const auto& [name, task] : HardcodedConfig::Tasks) {
-    //     auto button = new QPushButton(name.c_str(), this);
-    //     ui->groupBoxPredefinedTasks->layout()->addWidget(button);
-    //     button->connect(button, &QPushButton::clicked, [this, task]() {
-    //         RCLCPP_INFO(node_->get_logger(), "Publishing task: %s", task.c_str());
-    //         std_msgs::msg::String msg;
-    //         msg.data = task;
-    //         task_pub_->publish(msg);
-    //     });
-    // }
 
     // connect custom task button from UI
-    connect(ui->taskCustomButton, &QPushButton::clicked, this, &HMIWindow::openCustomTaskDialog);
+    // connect(ui->taskCustomButton, &QPushButton::clicked, this, &HMIWindow::openCustomTaskDialog);
 
     // Enable zooming on graphics views
     ui->graphicsViewMap->setDragMode(QGraphicsView::RubberBandDrag);
     ui->graphicsViewMap->setRenderHint(QPainter::Antialiasing);
     ui->graphicsViewMap->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
+    logView_  = new LogView(this);
+    queueView_  = new LogView(this);
+    currentAction_ = new LogItemWidget(QColor("green"), this);
+    currentAction_->setFixedHeight(50);
+    currentAction_->setText("No current action.");
+
+    currentTask_ = new LogItemWidget(QColor("yellow"), this);
+    currentTask_->setFixedHeight(50);
+    currentTask_->setText("No current task.");
+
+    //connect(logQueue_, &LogQueue::logEnqueued, logView, &LogView::onLogEnqueued);
+
+    ui->vlm_layout->addWidget(logView_);
+    ui->listTask->addWidget(currentAction_);
+    ui->listTask->addWidget(currentTask_);
+    ui->listTask->addWidget(queueView_);
+
+
+    vlm_topic_sub_ = node_->create_subscription<demo_msgs::msg::VlmDescription>(
+        HardcodedConfig::VLMTopic, 10,
+        [this](const demo_msgs::msg::VlmDescription::SharedPtr msg){
+          RCLCPP_INFO(node_->get_logger(), "Data from (%s)", msg->source.c_str());
+          LogItemWidget* l1 = new LogItemWidget(QColor(HardcodedConfig::Colors.at(msg->source).c_str()), this);
+          if (auto encoding = EncodingMap.find(msg->image.encoding); encoding != EncodingMap.end()) {
+              QImage image(msg->image.data.data(), static_cast<int>(msg->image.width), static_cast<int>(msg->image.height), static_cast<QImage::Format>(EncodingMap.at(msg->image.encoding)));
+              l1->setImage(QPixmap::fromImage(image));
+
+          }
+          l1->setText(msg->description.c_str());
+          logView_->addItem(l1);
+        });
+
+
     // clients for services
-    emergency_stop_srv_ = node_->create_client<std_srvs::srv::Trigger>(HardcodedConfig::EmergencyStopService);
     restart_srv_ = node_->create_client<std_srvs::srv::Trigger>(HardcodedConfig::Restart);
 
     // buttons
-    connect(ui->StopButton, &QPushButton::clicked, [this]() {
-        CallService(this, node_, emergency_stop_srv_);
-    });
     connect(ui->RestartButton, &QPushButton::clicked, [this]() {
         CallService(this, node_, restart_srv_);
     });
 
     // done tasks and current task subscribers
-    currenttask_sub_ = node_->create_subscription<std_msgs::msg::String>(
-        HardcodedConfig::AgentCurrentStep, 10,
-        [this](const std_msgs::msg::String::SharedPtr msg) {
-            setCurrentTaskName(msg->data.c_str());
-        });
-    donetasks_sub_ = node_->create_subscription<std_msgs::msg::String>(
-        HardcodedConfig::AgentTotalSteps, 10,
-        [this](const std_msgs::msg::String::SharedPtr msg) {
-            // list is Python list style : [ "task1", "task2", ...]
-            // we convert to QStringList by removing brackets and splitting by comma
-            QStringList done;
+    // currenttask_sub_ = node_->create_subscription<std_msgs::msg::String>(
+    //     HardcodedConfig::AgentCurrentStep, 10,
+    //     [this](const std_msgs::msg::String::SharedPtr msg) {
+    //         setCurrentTaskName(msg->data.c_str());
+    //     });
+    //
+    current_action_sub_ = node_->create_subscription<rai_interfaces::msg::HRIMessage>(
+          HardcodedConfig::AgentCurrentAction, 10,
+          [this](const rai_interfaces::msg::HRIMessage::SharedPtr msg) {
+            currentAction_->setText(msg->text.c_str());
+          }
+        );
 
-            QString listStr = QString::fromStdString(msg->data);
-            listStr = listStr.trimmed();
+    orchestrator_current_task_ = node_->create_subscription<std_msgs::msg::String>(
+          HardcodedConfig::OrchestratorCurrentTask, 10,
+          [this](const  std_msgs::msg::String::SharedPtr msg) {
+            currentAction_->setText(msg->data.c_str());
+          }
+        );
 
-            // Remove brackets [ ]
-            if (listStr.startsWith('[') && listStr.endsWith(']')) {
-                listStr = listStr.mid(1, listStr.length() - 2);
-            }
 
-            // Split by comma and clean up each item
-            if (!listStr.isEmpty()) {
-                QStringList rawItems = listStr.split(',');
-                for (const QString& item : rawItems) {
-                    QString cleanItem = item.trimmed();
-                    // Remove quotes if present
-                    if (cleanItem.startsWith('"') && cleanItem.endsWith('"')) {
-                        cleanItem = cleanItem.mid(1, cleanItem.length() - 2);
-                    } else if (cleanItem.startsWith('\'') && cleanItem.endsWith('\'')) {
-                        cleanItem = cleanItem.mid(1, cleanItem.length() - 2);
-                    }
-                    if (!cleanItem.isEmpty()) {
-                        done.append(cleanItem);
-                    }
-                }
-            }
-            setDoneTasks(done);
-        });
+    agent_past_steps_sub_ = node_->create_subscription<std_msgs::msg::String>(
+        HardcodedConfig::AgentPastSteps, 10,
+         [this](const std_msgs::msg::String::SharedPtr msg) {
+             QString listStr = QString::fromStdString(msg->data);
+             past_steps_ = parsePythonList(listStr);
+             buildListTask();
+         }
+        );
+
+
+    orchestrator_task_queue_ = node_->create_subscription<std_msgs::msg::String>(
+        HardcodedConfig::OrchestratorTaskQueue, 10,
+         [this](const std_msgs::msg::String::SharedPtr msg) {
+             QString listStr = QString::fromStdString(msg->data);
+             task_queue_ = parsePythonList(listStr);
+             buildListTask();
+         }
+        );
+
+     orchestrator_paused_task_ = node_->create_subscription<std_msgs::msg::String>(
+        HardcodedConfig::OrchestratorPausedTask, 10,
+         [this](const std_msgs::msg::String::SharedPtr msg) {
+             QString listStr = QString::fromStdString(msg->data);
+             paused_tasks_ = parsePythonList(listStr);
+             buildListTask();
+         }
+        );
 
     // Setup ROS spinning timer
     ros_timer_ = new QTimer(this);
@@ -316,13 +420,28 @@ void HMIWindow::spinROS()
     updateRobotPose();
 }
 
-const std::unordered_map<std::string, int> EncodingMap = {
-    {"mono8", QImage::Format_Grayscale8},
-    {"rgb8", QImage::Format_RGB888},
-    {"rgba8", QImage::Format_RGBA8888},
-    {"bgra8", QImage::Format_RGBA8888}, // Will need to swap channels
-    // Add more mappings as needed
-};
+void HMIWindow::buildListTask(){
+  queueView_->clear();
+  LogItemWidget* tmpItem;
+  for (const QString &item : past_steps_) {
+    tmpItem = new LogItemWidget(QColor("#00AAFF"));
+    tmpItem->setText(item);
+    queueView_->addItem(tmpItem);
+  }
+  for (const QString &item : task_queue_) {
+    tmpItem = new LogItemWidget(QColor("#AAFA00"));
+    tmpItem->setText(item);
+    queueView_->addItem(tmpItem);
+  }
+
+  for (const QString &item : paused_tasks_) {
+    tmpItem = new LogItemWidget(QColor("#AAAAAA"));
+    tmpItem->setText(item);
+    queueView_->addItem(tmpItem);
+  }
+
+
+}
 
 void HMIWindow::imageCallback(const sensor_msgs::msg::Image::SharedPtr msg, QGraphicsView* view) {
     Q_ASSERT(view); // "GraphicsView is null";
@@ -505,46 +624,36 @@ void HMIWindow::openCustomTaskDialog()
     }
 }
 
-void HMIWindow::setCurrentTaskName(const QString& name)
-{
-    // Remove existing current task (index 0)
-    // if (ui->listTask->count() > 0)
-    // {
-    //     auto ptr = ui->listTask->item(0);
-    //     if (ptr)
-    //     {
-    //         delete ptr;
-    //     }
-    // }
-    // Add current task with appropriate icon
-    if (!name.isEmpty()) {
-        const QString timestamp = QTime::currentTime().toString("HH:mm:ss");
-        const QString display = QString("%1: %2").arg(timestamp, name);
-        auto listItem = new QListWidgetItem(display);
-        listItem->setIcon(QIcon(":/icons/CurrentTask.svg")); // Use robot icon for current task
-        ui->listTask->insertItem(0, listItem);
-        ui->listTask->setCurrentItem(listItem);
-    }
-}
-
-void HMIWindow::setDoneTasks(const QStringList& done)
-{
-    // Remove existing completed tasks (keep only current task at index 0)
-    while (ui->listTask->count() > 1) {
-        auto ptr = ui->listTask->takeItem(1);
-        if (ptr)
-        {
-            delete ptr;
-        }
-    }
-
-    // Add completed tasks to the list (after current task)
-    for (const QString& taskName : done) {
-        auto listItem = new QListWidgetItem(taskName);
-        listItem->setIcon(QIcon(":/icons/DoneTask.svg")); // Use done icon for completed tasks
-        listItem->setForeground(QColor("#808080")); // Gray out completed tasks
-        ui->listTask->addItem(listItem);
-    }
-}
+// void HMIWindow::setCurrentTaskName(const QString& name)
+// {
+//     if (!name.isEmpty()) {
+//         const QString timestamp = QTime::currentTime().toString("HH:mm:ss");
+//         const QString display = QString("%1: %2").arg(timestamp, name);
+//         auto listItem = new QListWidgetItem(display);
+//         listItem->setIcon(QIcon(":/icons/CurrentTask.svg")); // Use robot icon for current task
+//         ui->listTask->insertItem(0, listItem);
+//         ui->listTask->setCurrentItem(listItem);
+//     }
+// }
+// 
+// void HMIWindow::setDoneTasks(const QStringList& done)
+// {
+//     // Remove existing completed tasks (keep only current task at index 0)
+//     while (ui->listTask->count() > 1) {
+//         auto ptr = ui->listTask->takeItem(1);
+//         if (ptr)
+//         {
+//             delete ptr;
+//         }
+//     }
+// 
+//     // Add completed tasks to the list (after current task)
+//     for (const QString& taskName : done) {
+//         auto listItem = new QListWidgetItem(taskName);
+//         listItem->setIcon(QIcon(":/icons/DoneTask.svg")); // Use done icon for completed tasks
+//         listItem->setForeground(QColor("#808080")); // Gray out completed tasks
+//         ui->listTask->addItem(listItem);
+//     }
+// }
 
 

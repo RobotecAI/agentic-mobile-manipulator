@@ -274,7 +274,7 @@ class VlmWarehouseInspector(BaseAgent):
                 self.connector,
                 cv2_image,
                 result.anomaly_description,
-                "inspection_agent",
+                "Inspection",
             )
 
     def _publish_marker(self, message: Anomaly):

@@ -64,6 +64,7 @@ find_package(std_srvs REQUIRED)                        # for using standard ROS 
 find_package(cv_bridge REQUIRED)                     # conversion between ROS images and OpenCV
 find_package(OpenCV REQUIRED)
 find_package(demo_msgs REQUIRED)               # custom Utilization message
+find_package(rai_interfaces REQUIRED)               # custom Utilization message
 
 # add source directoty to include path
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -72,6 +73,13 @@ set(PROJECT_SOURCES
         main.cpp
         ZoomableGraphicsView.h
         ZoomableGraphicsView.cpp
+        Config.h
+        LogItemWidget.h
+        LogItemWidget.cpp
+        LogView.h
+        LogView.cpp
+        LogQueue.h
+        LogQueue.cpp
         hmiWindow.cpp
         hmiWindow.h
         hmiWindow.ui
@@ -101,6 +109,7 @@ target_link_libraries(MobileManipulatorHMI PRIVATE
         rcl_interfaces::rcl_interfaces__rosidl_typesupport_cpp
         std_srvs::std_srvs__rosidl_typesupport_cpp
         demo_msgs::demo_msgs__rosidl_typesupport_cpp
+        rai_interfaces::rai_interfaces__rosidl_typesupport_cpp
         tf2_ros::tf2_ros
         tf2::tf2
         image_transport::image_transport

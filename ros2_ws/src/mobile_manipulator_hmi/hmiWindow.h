@@ -20,7 +20,13 @@
 #include <std_msgs/msg/string.hpp>
 #include <std_srvs/srv/trigger.hpp>
 #include <demo_msgs/msg/utilization.hpp>
+#include <demo_msgs/msg/vlm_description.hpp>
+#include <rai_interfaces/msg/hri_message.hpp>
 #include "TaskDialog.h"
+#include "LogItemWidget.h"
+#include "Config.h"
+#include "LogQueue.h"
+#include "LogView.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class HMIWindow;
@@ -30,54 +36,6 @@ QT_END_NAMESPACE
 class QFrame;
 
 
-namespace HardcodedConfig {
-
-    // Camera display names and their corresponding ROS topics
-    const static std::map<std::string, std::string> CameraTopics = {
-        {"Camera 1", "/rgbd_camera/camera_image_color"},
-        {"Camera 2", "/wrist_camera/camera_image_color"}
-    };
-
-    // Task display names and their system names
-    const static std::map<std::string, std::string> Tasks = {
-        {"Task 1", "task1"},
-        {"Task 2", "task2"},
-        {"Task 3", "task3"},
-    };
-    const static char TaskTopic[] = "/predefined_task";
-    const static char UserPromptTopic[] = "/user_prompt";
-
-    const static char OrchestratorHeartbeat[] = "/orchestrator/heartbeat"; // TODO: Get actual topic names
-    const static char InspectionTopic[] = "/inspection/tasks";
-    const static char SafetyTopic[] = "/safety";
-
-    // Frequencies are given in Hertz
-    constexpr static float OrchestratorHeartbeatFrequency = 0.2f;
-    constexpr static float InpsectionFrequency = 0.2f;
-    constexpr static float SafetyFrequency = 0.2f;
-
-
-    const static char MapTopic[] = "/global_costmap/static_layer";
-    const static char GoalTopic[] = "/goal_pose";
-    const static char PathTopic[] = "/plan";
-    const static char CmdVelTopic[] = "/cmd_vel";
-
-    const static char RobotBaseFrame[] = "egobase_link";
-    const static char ResourceTopics[] = "/resource_monitor";
-
-    const static std::unordered_set<std::string> LogFilter = {
-        "rcl", "rcl_lifecycle", "rclcpp", "rmw_fastrtps_cpp", "nav2_costmap_2d", "nav2_util",
-        "nav2_controller", "nav2_planner", "nav2_recoveries", "nav2_bt_navigator", "nav2_amcl", "hmi_window_node"
-    };
-    const static int MinLogLevel = 20; // only show WARN and above
-    const static int MaxLogEntries = 10; // max log entries to keep in the list
-
-    const static char EmergencyStopService[] = "/emergency_stop";
-    const static char Restart[] = "/restart";
-
-    const static char AgentCurrentStep[] = "/agent/current_step";
-    const static char AgentTotalSteps[] = "/agent/past_steps";
-}
 
 class HMIWindow : public QMainWindow
 {
@@ -97,22 +55,34 @@ private:
     void mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg);
     void logCallback(const rcl_interfaces::msg::Log::SharedPtr msg);
     void publishCmdVel(double linear_x, double angular_z);
-    void setCurrentTaskName(const QString& name);
-    void setDoneTasks(const QStringList& done);
+    // void setCurrentTaskName(const QString& name);
+    // void setDoneTasks(const QStringList& done);
 
     void updateRobotPose();
     void setFrameUtilization(QFrame* frame, float percent);
     void setFrameBinaryState(QFrame* frame, bool ok);
     void setFrameDisabled(QFrame* frame);
+
+    void buildListTask();
     
     Ui::HMIWindow *ui;
     rclcpp::Node::SharedPtr node_;
     QTimer *ros_timer_;
-    // QTimer *agent_fill_timer_;
 
     QTimer *orchestrator_timer_;
     QTimer *inspection_timer_;
     QTimer *safety_timer_;
+
+    LogQueue *logQueue_;
+    LogView *logView_;
+    LogView *queueView_;
+
+    LogItemWidget *currentAction_;
+    LogItemWidget *currentTask_;
+
+    QStringList past_steps_;
+    QStringList task_queue_;
+    QStringList paused_tasks_;
 
     int agent_fill_percent_ = 0;
     std::map<std::string, QPushButton*> camera_buttons_;
@@ -122,17 +92,24 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pub_;
     rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr path_sub_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr task_pub_;
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr user_prompt_pub_;
+    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr stop_pub_;
 
     rclcpp::Subscription<std_msgs::msg::Header>::SharedPtr orchestrator_sub_;
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr currenttask_sub_;
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr donetasks_sub_;
-    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr emergency_stop_srv_;
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr restart_srv_;
 
     rclcpp::Subscription<rcl_interfaces::msg::Log>::SharedPtr log_sub_;
     rclcpp::Subscription<demo_msgs::msg::Utilization>::SharedPtr utilization_sub_;
+
+    rclcpp::Subscription<demo_msgs::msg::VlmDescription>::SharedPtr vlm_topic_sub_;
+
+
+    rclcpp::Subscription<rai_interfaces::msg::HRIMessage>::SharedPtr current_action_sub_;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr agent_past_steps_sub_;
+
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr orchestrator_current_task_;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr orchestrator_task_queue_;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr orchestrator_paused_task_;
 
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
