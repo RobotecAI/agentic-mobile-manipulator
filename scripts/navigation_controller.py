@@ -228,7 +228,7 @@ class NavigationController:
     ) -> bool:
         """
         Approach an object pose keeping distance.
-        Try aproaching from up to 4 directions if previous not available
+        Try approaching from up to 4 directions if previous not available
         """
         if self.approach_target_keeping_distance(
             target_pose, Pose(position=Point(x=target_pose_distance))

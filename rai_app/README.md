@@ -60,7 +60,7 @@ Main orchestration engine with:
 
 ## Megamind Agent System
 
-Megamind is a hierarchical planning agent that delegates tasks splitted into steps to executor agents.
+Megamind is a hierarchical planning agent that delegates tasks splits them into steps to executor agents.
 
 ### Architecture
 
@@ -105,7 +105,7 @@ The system uses `MegamindState` to track:
    - Results are analyzed
 
 3. **Evaluation Phase**
-   - Success analyzer evaluates completion and explains what happend
+   - Success analyzer evaluates completion and explains what happened
    - State is updated with these results
    - These results are available during planning phase as additional information
 

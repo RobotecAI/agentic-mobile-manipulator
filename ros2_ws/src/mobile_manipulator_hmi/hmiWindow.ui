@@ -195,7 +195,7 @@ QGroupBox::title {
          </size>
         </property>
         <property name="title">
-         <string>Operation Contol</string>
+         <string>Operation Control</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <property name="topMargin">
