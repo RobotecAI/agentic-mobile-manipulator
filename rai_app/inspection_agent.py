@@ -39,6 +39,7 @@ from sensor_msgs.msg import Image
 from tf2_ros import PoseStamped
 from visualization_msgs.msg import Marker, MarkerArray
 
+from rai_app.vlm_transport import publish_vlm_description
 from scripts.scene_manager import SceneManager
 from scripts.tools import get_yaw_difference
 
@@ -226,6 +227,9 @@ class VlmWarehouseInspector(BaseAgent):
             self.last_processed = time.time()
             self.get_logger().info(f"VLM analysis took: {time.perf_counter() - ts}")
 
+    def _prepare_description(self, anomaly: Anomaly) -> str:
+        return f"Anomaly detected: {anomaly.obstacle_type} at ({anomaly.pose.position.x}, {anomaly.pose.position.y}, {anomaly.pose.position.z}). Description: {anomaly.anomaly_description}"
+
     def vlm_process(self, task: InspectionTask):
         result: AnomalyDescription = self.detect_obstacle(task.b64_img)
         print("#############")
@@ -255,6 +259,12 @@ class VlmWarehouseInspector(BaseAgent):
                 ROS2Message(payload=message_to_ordereddict(message)),
                 target=self.anomalies_topic,
                 msg_type="robotec_kairos_ur10/msg/Anomaly",
+            )
+            publish_vlm_description(
+                self.connector,
+                task.image,
+                result.anomaly_description,
+                "inspection_agent",
             )
 
     def _publish_marker(self, message: Anomaly):
