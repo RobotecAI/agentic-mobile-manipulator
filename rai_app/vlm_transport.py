@@ -12,6 +12,6 @@ def publish_vlm_description(
     )
     connector.send_message(
         ROS2Message(payload=message_to_ordereddict(vlm_description)),
-        target="/vlm_description",
+        target="/vlm_topic",
         msg_type="demo_msgs/msg/VlmDescription",
     )
