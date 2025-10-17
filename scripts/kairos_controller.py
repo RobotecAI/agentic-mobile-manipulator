@@ -45,6 +45,7 @@ class ManipulationStrategy(ABC):
         self,
         kairos_ctrl: "KairosController",
         placing_point: Pose,
+        grasp_type: Literal["top", "side"],
     ):
         approach_distance = self.get_approach_distance()
         self.move_arm_to_base_pose(mani_ctrl=kairos_ctrl.mani_ctrl)
@@ -78,6 +79,8 @@ class HighManipulationStrategy(ManipulationStrategy):
 
 
 class MidLowManipulationStrategy(ManipulationStrategy):
+    """1st rack level"""
+
     def get_staging_distance(self) -> float:
         return NAV_STAGING_POSE_DISTANCE
 
@@ -89,6 +92,8 @@ class MidLowManipulationStrategy(ManipulationStrategy):
 
 
 class MidHighManipulationStrategy(ManipulationStrategy):
+    """Place to the table"""
+
     def get_staging_distance(self) -> float:
         return NAV_STAGING_POSE_DISTANCE
 
@@ -102,11 +107,22 @@ class MidHighManipulationStrategy(ManipulationStrategy):
         self,
         kairos_ctrl: "KairosController",
         placing_point: Pose,
+        grasp_type: Literal["top", "side"],
     ):
+        print(f"Placing to the table with grasp type: {grasp_type}")
         approach_distance = self.get_approach_distance()
-        staging_placing_point = apply_relative_transform(
-            placing_point, Pose(position=Point(x=0.4 + approach_distance, z=0.1))
-        )
+        if grasp_type == "top":
+            staging_placing_point = apply_relative_transform(
+                placing_point, Pose(position=Point(x=0.4 + approach_distance, z=0.1))
+            )
+            print("Placing to the table with top grasp")
+        elif grasp_type == "side":
+            staging_placing_point = apply_relative_transform(
+                placing_point, Pose(position=Point(x=0.4 + approach_distance, z=1.0))
+            )
+            print("Placing to the table with side grasp")
+        else:
+            raise ValueError(f"Invalid grasp type: {grasp_type}")
         kairos_ctrl.mani_ctrl.move_arm_to_staging_pose(staging_placing_point)
         kairos_ctrl.nav_ctrl.move_back(-approach_distance)
 
@@ -408,7 +424,12 @@ class KairosController:
         self.nav_ctrl.approach_target_along_orientation(
             target_slot_pose, strategy.get_staging_distance()
         )
-        strategy.execute_placement(kairos_ctrl=self, placing_point=placing_point)
+
+        strategy.execute_placement(
+            kairos_ctrl=self,
+            placing_point=placing_point,
+            grasp_type=self.mani_ctrl.grasp_type,
+        )
 
         self.nav_ctrl.move_back(approach_distance)
         self.mani_ctrl.move_arm_to_base_pose()
