@@ -150,7 +150,7 @@ class SlotsCollection:
     def find_slots_with_item_type(self, item_type: str) -> List[Slot]:
         """
         Find all slots in this collection that have
-        object with ceratin item type inside
+        object with certain item type inside
         """
         slots_with_item_type = []
         for _, slot in self.slots.items():
@@ -213,7 +213,7 @@ class SlotsCollection:
 
 def get_all_slots_from_file(filepath: str) -> Dict[str, SlotsCollection]:
     """Make call to simulation to retrieve all slots"""
-    # NOTE (jmatejcz) simulaiton publishes once all slots and their coords to ros topic
+    # NOTE (jmatejcz) simulation publishes once all slots and their coords to ros topic
     # so it is not possible to get it via python api
     # for now it is stored in file
 

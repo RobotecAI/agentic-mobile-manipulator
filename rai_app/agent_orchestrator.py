@@ -249,7 +249,7 @@ class AgentOrchestrator:
     async def interrupt_current_task(self):
         """
         Interrupt currently running task.
-        Interuppted task will be apped to deque as paused.
+        Interrupted task will be appended to deque as paused.
         """
         if not self.current_task:
             return

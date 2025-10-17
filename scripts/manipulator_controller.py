@@ -59,7 +59,7 @@ class ManipulatorController:
         "egoarm_shoulder_pan_joint": -0.3496033847332001,
     }
 
-    # so that wrist camera is slighty higher and can view whole racks
+    # so that wrist camera is slightly higher and can view whole racks
     HOUSEKEEP_JOINT_VALUES = {
         "egoarm_wrist_1_joint": -1.7678067684173584,
         "egoarm_wrist_2_joint": -1.570849895477295,

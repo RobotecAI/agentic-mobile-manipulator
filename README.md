@@ -1,6 +1,6 @@
 # Mobile Manipulator Demo
 
-![Small warehouse featuring Robotnik Kairos](docs/images/d2.jpg)
+![Small warehouse featuring Robotnik Kairos](docs/images/tables.jpg)
 
 This demo presents a mobile manipulator operating in a small warehouse environment. The system is powered by agentic AI, allowing the platform to understand instructions and perform tasks with greater autonomy.
 

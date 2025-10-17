@@ -309,7 +309,7 @@ class MoveFromCollectionToCollectionInput(BaseModel):
 class MoveFromCollectionToCollectionTool(WarehouseTool):
     name: str = "move_object_between_collections"
     description: str = (
-        "Move ONE object from origin collection to target colection. "
+        "Move ONE object from origin collection to target collection. "
         "A collection might be for example table or rack - like t5 (table) or X02 (rack). "
         "Use this tool when you want to move object from one collection to other. "
         "If you provide item type, the package with certain type of item will be moved."
@@ -927,14 +927,14 @@ class SortReturnedPackageTool(WarehouseTool):
 
     def _get_free_inspection_table_slot(self):
         # TODO: We should first drive to the inspection table in good faith that there are free slots
-        # This implementaion is hacky
+        # This implementation is hacky
 
         free_slot = self._get_free_collections_slot([Collection.INSPECTION_TABLE.value])
 
         return free_slot
 
     def _extract_item_stored(self, entity_name: str):
-        # get what's in the box based on visual ques e.g. qr code
+        # get what's in the box based on visual cues e.g. qr code
         # this would be usually done using dedicated camera software
         # we are taking the information directly from the object name
 

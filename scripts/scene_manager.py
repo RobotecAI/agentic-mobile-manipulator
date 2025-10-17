@@ -177,7 +177,7 @@ class SceneManager:
     ):
         wait_for_ros2_services(self.connector, ["/spawn_entity"])
         # NOTE (jmatejcz) item stored will be added to name of object
-        # and thats how it will be distinguished
+        # and that's how it will be distinguished
         if item_stored:
             name = object_name + f"__{item_stored}__" + str(uuid.uuid4())[:8]
         else:
@@ -730,7 +730,7 @@ class SceneManager:
         all_entities = self.get_entities(name_filter="cardboardbox")
         # we want gripping point entities, so filter rest
         if not all_entities:
-            raise ValueError("No entites in simulation")
+            raise ValueError("No entities in simulation")
 
         filtered_entities = self.filter_out_gripping_point_entites(
             entities=all_entities

@@ -126,7 +126,7 @@ Options:
 > You can use two different models: one vision-capable model to inspect the image and enumerate potential safety issues, and another (often stronger in pure text reasoning) text-only LLM to synthesize the final written analysis. This helps if the vision model is weaker at long context reasoning.
 
 > [!NOTE]
-> The docuements are retrieved separately for each potential anomaly in the loop to overcome the hallucinations of small LLMs in processing long context.
+> The documents are retrieved separately for each potential anomaly in the loop to overcome the hallucinations of small LLMs in processing long context.
 
 ## Example Usage
 

@@ -25,7 +25,7 @@ from rai import get_llm_model, get_tracing_callbacks
 from rai.agents.langchain import create_react_runnable
 from rai.messages import HumanMultimodalMessage, preprocess_image
 
-SYSTEM_PROMPT = """You are a warehouse safety expert. Your task is to inspect potential warehouse safety violations and identify violations in the provided image. Get neccessary context from the vector database using the vector_search tool before answering questions. Justify your answers with relevant passages from the database."""
+SYSTEM_PROMPT = """You are a warehouse safety expert. Your task is to inspect potential warehouse safety violations and identify violations in the provided image. Get necessary context from the vector database using the vector_search tool before answering questions. Justify your answers with relevant passages from the database."""
 
 
 class VectorSearchToolInput(BaseModel):
