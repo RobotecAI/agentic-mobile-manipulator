@@ -12,7 +12,6 @@ import numpy as np
 import rclpy
 from cv_bridge import CvBridge
 from langchain_core.language_models import BaseChatModel
-from langchain_openai import ChatOpenAI
 from rai.communication.ros2 import (
     ROS2Connector,
     ROS2Context,
@@ -23,6 +22,7 @@ from rai.messages import HumanMultimodalMessage, preprocess_image
 from sensor_msgs.msg import Image
 from skimage.metrics import structural_similarity as ssim
 
+from rai_app.llms import get_vlm_model
 from rai_app.violation_storage import ViolationStorage
 from rai_app.vlm_transport import publish_vlm_description
 
@@ -66,8 +66,6 @@ class SafetyAgent:
     def __init__(
         self,
         vector_db: str,
-        vlm_model: str = "LFM2-VL-3B-preview-251009-0235-2258",
-        vlm_base_url: str = "http://localhost:8084",
         camera_topic: str = "/rgbd_camera/camera_image_color",
         safety_topic: str = "/safety",
         k: int = 3,
@@ -89,7 +87,7 @@ class SafetyAgent:
         self.vector_store = load_vector_store(vector_db)
 
         # Vision-language model (served via REST compatible with ChatOpenAI client)
-        self.vlm: BaseChatModel = ChatOpenAI(model=vlm_model, base_url=vlm_base_url)
+        self.vlm: BaseChatModel = get_vlm_model(config_name="safety_agent")
 
         # Use same model as LLM for final assessment
         self.llm: BaseChatModel = self.vlm

@@ -4,7 +4,6 @@ from typing import Any, List, Optional, cast
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
 from nav2_msgs.action import DriveOnHeading as Nav2DriveOnHeading
 from nav2_msgs.action import FollowWaypoints as Nav2FollowWaypoints
 from nav2_msgs.action import NavigateToPose as Nav2NavigateToPose
@@ -19,6 +18,8 @@ from rai.communication.ros2 import (
 from rai_interfaces.action import DriveOnHeading, FollowWaypoints, NavigateToPose, Spin
 from rclpy.action.server import ServerGoalHandle
 from tf_transformations import euler_from_quaternion
+
+from rai_app.llms import get_llm_model
 
 
 def decode_error_code(
@@ -312,7 +313,7 @@ class Nav2Agent(BaseAgent):
 
 @ROS2Context()
 def main():
-    llm = ChatOpenAI()
+    llm = get_llm_model(config_name="general")
     agent = Nav2Agent(llm=llm, robot_frame="egobase_link")
     agent.run()
 

@@ -7,7 +7,6 @@ from ament_index_python import get_package_share_directory
 from control_msgs.action import GripperCommand
 from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_openai import ChatOpenAI
 from launch_param_builder import load_yaml
 from moveit.core.kinematic_constraints import construct_joint_constraint
 from moveit.core.planning_interface import MotionPlanResponse
@@ -26,6 +25,7 @@ from rclpy.action.client import ActionClient
 from rclpy.node import Node
 from tf2_geometry_msgs import do_transform_pose
 
+from rai_app.llms import get_llm_model
 from scripts.moveit_utils import decode_error_code
 
 GRIPPER_HEIGHT = 0.07
@@ -489,7 +489,7 @@ class MoveIt2Agent(BaseAgent):
 
 @ROS2Context()
 def main():
-    llm = ChatOpenAI()
+    llm = get_llm_model(config_name="general")
     agent = MoveIt2Agent(llm=llm)
     agent.run()
 

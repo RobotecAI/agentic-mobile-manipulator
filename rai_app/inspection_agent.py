@@ -20,7 +20,6 @@ from langchain_core.exceptions import OutputParserException
 from langchain_core.messages import SystemMessage
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
-from llms import get_model
 from pydantic import BaseModel, Field
 from rai.agents import BaseAgent
 from rai.communication.ros2 import (
@@ -40,6 +39,7 @@ from sensor_msgs.msg import Image
 from tf2_ros import PoseStamped
 from visualization_msgs.msg import Marker, MarkerArray
 
+from rai_app.llms import get_vlm_model
 from rai_app.vlm_transport import publish_vlm_description
 from scripts.scene_manager import SceneManager
 from scripts.tools import get_yaw_difference
@@ -353,12 +353,6 @@ def main():
     parser.add_argument(
         "--spawnables-file", type=str, default="scripts/resources/spawnables.csv"
     )
-    parser.add_argument("--vlm-vendor", type=str, default="openai")
-    parser.add_argument("--vlm-model", type=str, default="LFM2-VL")
-    parser.add_argument(
-        "--vlm-base_url",
-        type=str,
-    )
     parser.add_argument(
         "--camera-topic", type=str, default="/rgbd_camera/camera_image_color"
     )
@@ -369,9 +363,7 @@ def main():
     parser.add_argument("--anomalies-topic", type=str, default="/inspection_result")
     parser.add_argument("--n-seconds", type=int, default=5)
     args = parser.parse_args()
-    vlm = get_model(
-        model=args.vlm_model, vendor=args.vlm_vendor, base_url=args.vlm_base_url
-    )
+    vlm = get_vlm_model(config_name="inspection_agent")
 
     inspector = VlmWarehouseInspector(
         vlm=vlm,
