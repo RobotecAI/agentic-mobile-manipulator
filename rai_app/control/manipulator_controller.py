@@ -94,6 +94,10 @@ class ManipulatorController:
             target="/rai/moveit2/move_arm",
             msg_type="rai_interfaces/srv/MoveArm",
         )
+        if response.payload is None:
+            raise RuntimeError("Failed to open gripper: no response from the service")
+        if not response.payload.success:
+            raise RuntimeError(f"Failed to open gripper: {response.payload.report}")
         return response
 
     def close_gripper(self):
@@ -102,6 +106,10 @@ class ManipulatorController:
             target="/rai/moveit2/move_arm",
             msg_type="rai_interfaces/srv/MoveArm",
         )
+        if response.payload is None:
+            raise RuntimeError("Failed to close gripper: no response from the service")
+        if not response.payload.success:
+            raise RuntimeError(f"Failed to close gripper: {response.payload.report}")
         return response
 
     def move_arm(self, pose: PoseStamped):
@@ -110,6 +118,10 @@ class ManipulatorController:
             target="/rai/moveit2/move_arm",
             msg_type="rai_interfaces/srv/MoveArm",
         )
+        if response.payload is None:
+            raise RuntimeError("Failed to move arm: no response from the service")
+        if not response.payload.success:
+            raise RuntimeError(f"Failed to move arm: {response.payload.report}")
         return response
 
     def set_arm_joints(self, joints: Dict[str, float]):
@@ -122,6 +134,10 @@ class ManipulatorController:
             target="/rai/moveit2/set_arm_joints",
             msg_type="rai_interfaces/srv/SetArmJoints",
         )
+        if response.payload is None:
+            raise RuntimeError("Failed to set arm joints: no response from the service")
+        if not response.payload.success:
+            raise RuntimeError(f"Failed to set arm joints: {response.payload.report}")
         return response
 
     def move_arm_to_base_pose(self):
