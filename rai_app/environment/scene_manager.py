@@ -264,8 +264,14 @@ class SceneManager:
             timeout_sec=3.0,
         )
         entities = cast(GetEntities.Response, response.payload)
+
+        filtered_entities: list[str] = [
+            entity
+            for entity in cast(list[str], entities.entities)
+            if "grippingpoint" not in entity.lower()
+        ]
         for entity in tqdm(
-            entities.entities, desc="Deleting entities", total=len(entities.entities)
+            filtered_entities, desc="Deleting entities", total=len(filtered_entities)
         ):
             self.logger.debug(f"Deleting {entity}")
             self.connector.call_service(
