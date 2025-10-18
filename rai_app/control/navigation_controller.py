@@ -82,6 +82,10 @@ class Navigator:
 
         if self.result is None:
             raise RuntimeError("Result should not be None")
+        if not self.result.result().result.success:
+            raise RuntimeError(
+                f"Failed to drive on heading: {self.result.result().result.report}"
+            )
         return self.result
 
     def navigate_to_pose(self, pose: PoseStamped):
@@ -99,7 +103,10 @@ class Navigator:
 
         if self.result is None:
             raise RuntimeError("Result should not be None")
-
+        if not self.result.result().result.success:
+            raise RuntimeError(
+                f"Failed to navigate to pose: {self.result.result().result.report}"
+            )
         return self.result
 
     def follow_waypoints(self, poses: List[PoseStamped]):
@@ -141,6 +148,8 @@ class Navigator:
 
         if self.result is None:
             raise RuntimeError("Result should not be None")
+        if not self.result.result().result.success:
+            raise RuntimeError(f"Failed to spin: {self.result.result().result.report}")
         return self.result
 
     def get_logger(self):
@@ -323,12 +332,8 @@ class NavigationController:
         bool
             ``True`` if navigation succeeded, ``False`` otherwise.
         """
-        # TODO: Fails on sort task. Robot puts the package on the floot near the table instead of rack
-        # Some places may be wrongly represented on the global costmap
-        # logger = self.navigator.get_logger()
-        # if not self.is_position_available(position=position):
-        #    logger.error(f"Position {position} not available")
-        #    return
+        if not self.is_position_available(position=position):
+            raise RuntimeError(f"Position {position} not available")
         poseWithTimestamp = PoseStamped()
         poseWithTimestamp.pose = Pose(
             position=position,
