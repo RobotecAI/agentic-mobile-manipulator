@@ -16,7 +16,23 @@ from rai_app.warehouse_regulations_agent.warehouse_safety_agent import (
 
 
 def load_vector_store(db_path: str) -> FAISS:
-    """Load an existing FAISS vector store from the specified path."""
+    """Load a persisted FAISS vector store for regulation retrieval.
+
+    Parameters
+    ----------
+    db_path : str
+        Path to the directory containing the serialized FAISS index.
+
+    Returns
+    -------
+    FAISS
+        Vector store instance ready for similarity search.
+
+    Raises
+    ------
+    FileNotFoundError
+        If ``db_path`` does not exist.
+    """
     if not Path(db_path).exists():
         raise FileNotFoundError(f"Vector database not found at: {db_path}")
 
@@ -36,7 +52,26 @@ def run_agent(
     vlm: BaseChatModel,
     k: int = 3,
 ):
-    """Run the image regulation agent with the given vector store and image."""
+    """Generate a warehouse regulation assessment for an image.
+
+    Parameters
+    ----------
+    vector_store : FAISS
+        Vector store used for retrieving relevant regulations.
+    image_path : str
+        Path to the image subject to inspection.
+    llm : BaseChatModel
+        Language model handling regulatory reasoning.
+    vlm : BaseChatModel
+        Vision-language model providing image understanding.
+    k : int, optional
+        Number of nearest neighbors to retrieve from ``vector_store``.
+
+    Returns
+    -------
+    dict[str, Any]
+        Agent state containing vision description and potential violations.
+    """
     agent = create_image_regulation_agent(
         vlm=vlm,
         llm=llm,

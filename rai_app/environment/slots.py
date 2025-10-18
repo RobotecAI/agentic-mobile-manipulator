@@ -10,15 +10,14 @@ from simulation_interfaces.srv import GetEntitiesStates
 
 class Slot:
     def __init__(self, tag: str, origin_pose: Pose):
-        """Slot is a place when an object can be placed or picked up from.
-        It is always in the same spot.
+        """Represent a location where an object can be placed or retrieved.
 
-        Args:
-            tag (str): tag of a slot, example: slot1
-            origin_pose (Pose): this is const pose that represents an origin point of a slot
-            used to check if entity is in this slot
-            nav2_pose (Nav2Pose): this is const pose that represents a place from which
-            manipulation can be performed on the object in the slot.
+        Parameters
+        ----------
+        tag : str
+            Slot identifier, e.g. ``"J01/RackSlot1"``.
+        origin_pose : Pose
+            Pose describing the slot origin used for reachability checks.
         """
 
         self.tag = tag
@@ -45,7 +44,7 @@ class Slot:
         return height_match and distance <= 0.15
 
     def is_manipulation_feasible(self) -> bool:
-        """Check if the slot is reachable for manipulation (some racks are facing wall and are not reachable)"""
+        """Return ``True`` when the slot can be manipulated by the arm."""
         RACKS_OPPOSING_WALL = [f"L{str(i).zfill(2)}" for i in range(1, 10)]
         SLOTS_FACING_BACKWARD = ["RackSlot" + str(i) for i in range(1, 13)]
 
@@ -75,7 +74,7 @@ class Slot:
         self._entity_name = None
 
     def is_obj_present(self) -> bool:
-        """Check if the slot is currently in use"""
+        """Return ``True`` if an object is currently assigned to the slot."""
         if self._entity_name:
             return True
         else:
@@ -85,10 +84,7 @@ class Slot:
         return self._entity_name
 
     def get_item_stored(self) -> Optional[str]:
-        """
-        Return item stored in object, based on name.
-        If no object stored, return None
-        """
+        """Return stored item type extracted from the object name, if available."""
         if self._entity_name:
             # NOTE (jmatejcz) assuming '__' is only present in name when item stored
             # in this object
@@ -98,13 +94,17 @@ class Slot:
 
 
 class SlotsCollection:
-    """Represents a collection of slots like a table or rack"""
+    """Logical grouping of related slots (for example tables or racks)."""
 
     def __init__(self, tag: str, collection_type: str = ""):
-        """
-        Args:
-            tag (str): Identifier for this collection, example:  "table1", "rack1"
-            collection_type (str): Type of collection, example:  "table", "rack"
+        """Initialize a collection of slots.
+
+        Parameters
+        ----------
+        tag : str
+            Identifier for this collection, e.g. ``"table1"``.
+        collection_type : str, optional
+            Collection type (``"table"``, ``"rack"``, etc.). Defaults to ``""``.
         """
         self.tag = tag
         self.collection_type = collection_type
@@ -113,19 +113,19 @@ class SlotsCollection:
         self.item_type: Optional[str] = None
 
     def add_slot(self, slot: Slot) -> None:
-        """Add a slot to this collection"""
+        """Insert a slot into the collection."""
         self.slots[slot.tag] = slot
 
     def get_slot(self, tag: str) -> Optional[Slot]:
-        """Get a specific slot by tag"""
+        """Return a slot by tag when present."""
         return self.slots.get(tag)
 
     def get_all_slots(self) -> Dict[str, Slot]:
-        """Get all slots in this collection"""
+        """Return a shallow copy of all slots in the collection."""
         return self.slots.copy()
 
     def find_empty_slots(self) -> List[Slot]:
-        """Find all empty slots in this collection"""
+        """Return slots that are empty and reachable for manipulation."""
         empty_slots = []
         for _, slot in self.slots.items():
             if not slot.is_obj_present() and slot.is_manipulation_feasible():
@@ -133,7 +133,7 @@ class SlotsCollection:
         return empty_slots
 
     def find_used_slots(self) -> List[Slot]:
-        """Find all used slots in this collection"""
+        """Return occupied slots that remain reachable for manipulation."""
         used_slots = []
         for _, slot in self.slots.items():
             if slot.is_obj_present() and slot.is_manipulation_feasible():
@@ -141,17 +141,14 @@ class SlotsCollection:
         return used_slots
 
     def get_slot_with_object(self, obj_name: str) -> Optional[Slot]:
-        """Find the slot containing a specific object"""
+        """Return the slot containing the specified object name, if any."""
         for slot in self.slots.values():
             if slot.get_obj_name() == obj_name:
                 return slot
         return None
 
     def find_slots_with_item_type(self, item_type: str) -> List[Slot]:
-        """
-        Find all slots in this collection that have
-        object with certain item type inside
-        """
+        """Return slots containing packages with the requested item type."""
         slots_with_item_type = []
         for _, slot in self.slots.items():
             if item_type.lower() == slot.get_item_stored():
@@ -159,7 +156,7 @@ class SlotsCollection:
         return slots_with_item_type
 
     def get_usage_summary(self) -> Dict[str, int]:
-        """Get usage summary for this collection"""
+        """Return counts of total, used, and free slots in the collection."""
         total_count = len(self.slots)
         used_count = sum(1 for slot in self.slots.values() if slot.is_obj_present())
         free_count = total_count - used_count
@@ -172,7 +169,7 @@ class SlotsCollection:
 
     @property
     def middle(self) -> Pose:
-        """Calculate and return the average pose of all slots in this collection"""
+        """Return the centroid pose of the slots in this collection."""
         if not self.slots:
             return Pose()
 
@@ -212,7 +209,7 @@ class SlotsCollection:
 
 
 def get_all_slots_from_file(filepath: str) -> Dict[str, SlotsCollection]:
-    """Make call to simulation to retrieve all slots"""
+    """Load slot definitions from a CSV file produced by the simulation."""
     # NOTE (jmatejcz) simulation publishes once all slots and their coords to ros topic
     # so it is not possible to get it via python api
     # for now it is stored in file

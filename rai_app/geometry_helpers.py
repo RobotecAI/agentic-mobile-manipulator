@@ -26,7 +26,20 @@ from tf_transformations import euler_from_quaternion
 
 
 def get_global_pose_from_origin(local_pose: Pose, origin: Pose):
-    """Given a local pose and an origin pose, return the global pose"""
+    """Compute a global pose from a local pose and origin transform.
+
+    Parameters
+    ----------
+    local_pose : Pose
+        Pose expressed in the local frame that should be transformed.
+    origin : Pose
+        Reference pose that defines the transform to the global frame.
+
+    Returns
+    -------
+    Pose
+        Pose expressed in the global coordinate frame.
+    """
     transform = TransformStamped()
     transform.header.frame_id = "odom"
     transform.transform.translation.x = origin.position.x
@@ -37,14 +50,19 @@ def get_global_pose_from_origin(local_pose: Pose, origin: Pose):
 
 
 def calculate_relative_transform(from_pose: Pose, to_pose: Pose) -> Pose:
-    """Calculate the relative transform from one pose to another.
+    """Compute the relative transform between two poses.
 
-    Args:
-        from_pose: The source pose
-        to_pose: The target pose
+    Parameters
+    ----------
+    from_pose : Pose
+        Source pose expressed in the reference frame.
+    to_pose : Pose
+        Target pose expressed in the same frame as ``from_pose``.
 
-    Returns:
-        A Pose representing the transform needed to go from from_pose to to_pose
+    Returns
+    -------
+    Pose
+        Relative transform that maps ``from_pose`` to ``to_pose``.
     """
 
     # Convert quaternions to transformation matrices
@@ -94,17 +112,24 @@ def calculate_relative_transform(from_pose: Pose, to_pose: Pose) -> Pose:
 
 
 def rotate_pose(pose: Pose, angle, direction, point=None):
-    """
-    Rotate a pose around an arbitrary axis and point using tf_transformations.rotation_matrix().
+    """Rotate a pose around an arbitrary axis and reference point.
 
-    Args:
-        pose: The Pose to rotate
-        angle: The rotation angle in radians
-        direction: The axis of rotation (3-element iterable)
-        point: The point to rotate about (3-element iterable)
+    Parameters
+    ----------
+    pose : Pose
+        Pose to be rotated.
+    angle : float
+        Rotation angle in radians.
+    direction : Sequence[float]
+        Three-element iterable describing the rotation axis.
+    point : Sequence[float], optional
+        Three-element iterable describing the rotation origin. Defaults to
+        the pose position when ``None``.
 
-    Returns:
-        Pose: The rotated pose
+    Returns
+    -------
+    Pose
+        Rotated pose in the original frame.
     """
     # If no point specified, rotate around the pose's own position
     if point is None:
@@ -154,12 +179,17 @@ def get_yaw_difference(pose1: Pose, pose2: Pose):
 def apply_relative_transform(base_pose: Pose, relative_transform: Pose) -> Pose:
     """Apply a relative transform to a base pose.
 
-    Args:
-        base_pose: The base pose to transform
-        relative_transform: The relative transform to apply
+    Parameters
+    ----------
+    base_pose : Pose
+        Pose expressed in a reference frame.
+    relative_transform : Pose
+        Relative transform to apply to ``base_pose``.
 
-    Returns:
-        The resulting pose after applying the transform
+    Returns
+    -------
+    Pose
+        Resulting pose after applying the relative transform.
     """
     # Convert poses to transformation matrices
     base_quat = [

@@ -5,13 +5,13 @@ import tf_transformations
 from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
 from rai.communication.ros2 import ROS2Connector, ROS2Message
 
-from scripts.tools import get_global_pose_from_origin
+from rai_app.geometry_helpers import get_global_pose_from_origin
 
 GRIPPER_HEIGHT = 0.07
 
 
 class ManipulatorController:
-    """Passthrough class for the MoveIt2 agent"""
+    """High-level interface wrapping MoveIt-related arm and gripper actions."""
 
     ARM_STAGING_POSE_DISTANCE = 0.10
     TOP_GRASP_BASE_JOINT_VALUES = {

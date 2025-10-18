@@ -18,7 +18,7 @@ from simulation_interfaces.srv import GetEntityState
 from std_msgs.msg import ColorRGBA, Header
 from visualization_msgs.msg import Marker, MarkerArray
 
-from scripts.scene_manager import SceneManager
+from rai_app.environment import SceneManager
 
 
 class EntitiesAndSlotsPublisher(Node):

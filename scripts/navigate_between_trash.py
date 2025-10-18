@@ -4,8 +4,11 @@ import csv
 from geometry_msgs.msg import Point, Pose
 from rai.communication.ros2 import ROS2Connector, ROS2Context
 
-from scripts.kairos_controller import NAV_GRIPPING_POSE_DISTANCE
-from scripts.scene_manager import SceneManager
+from rai_app.control.kairos_controller import (
+    NAV_GRIPPING_POSE_DISTANCE,
+    KairosController,
+)
+from rai_app.environment import SceneManager
 
 
 def load_spawn_config(spawn_config_file):
@@ -66,8 +69,6 @@ def main():
     ]
     for pose in trash_poses:
         scene_manager.spawn_object(pose=pose, object_name="cardboardbox03_v02O")
-
-    from kairos_controller import KairosController
 
     connector = ROS2Connector(
         executor_type="single_threaded", node_name="navigate_between_trash"

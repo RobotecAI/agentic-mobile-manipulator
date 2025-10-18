@@ -8,12 +8,6 @@ from dataclasses import field
 from typing import Callable, Deque, List, Literal, Optional
 
 import rclpy
-from agent_callbacks import (
-    AgentActionsCallback,
-    AgentProgessCallback,
-    OrchestratorTasksNotifier,
-)
-from context_providers import WarehouseContext
 from langchain_core.callbacks.base import BaseCallbackHandler
 from langfuse.callback import CallbackHandler
 from langgraph.checkpoint.memory import InMemorySaver
@@ -33,7 +27,14 @@ from rai.communication.ros2 import (
 )
 from rclpy.node import Node
 from robotec_kairos_ur10.msg import Anomaly
-from tools import (
+
+from rai_app.agents.agent_callbacks import (
+    AgentActionsCallback,
+    AgentProgessCallback,
+    OrchestratorTasksNotifier,
+)
+from rai_app.agents.context_providers import WarehouseContext
+from rai_app.agents.tools import (
     CorrectBoxPositionTool,
     DescribeImageTool,
     HouseKeepTool,
@@ -43,17 +44,16 @@ from tools import (
     SortReturnedPackageTool,
     ThrowTrashOutTool,
 )
-
-from rai_app.llms import get_llm_model, get_vlm_model
-from rai_app.prompts import (
+from rai_app.config.prompts import (
     HOUSEKEEP_EXECUTOR_SYSTEM_PROMPT,
     IMAGE_ANALYSIS_EXECUTOR_SYSTEM_PROMPT,
     MEGAMIND_SYSTEM_PROMPT_TEMPLATE,
     MOVEMENT_EXECUTOR_SYSTEM_PROMPT,
 )
+from rai_app.environment import SceneManager
+from rai_app.initialization.llms import get_llm_model, get_vlm_model
 from scripts.kairos_controller import KairosController
 from scripts.populate_scene import load_rack_assignment
-from scripts.scene_manager import SceneManager
 
 TOPICS_TO_WAIT_FOR: list[str] = ["/wrist_camera/camera_image_color"]
 SERVICES_TO_WAIT_FOR: list[str] = [
@@ -77,7 +77,30 @@ class TaskExecution(BaseModel):
 
 
 class TaskSubscriber(Node):
-    """ROS2 node that subscribes to multiple task topics"""
+    """ROS 2 subscriber node for orchestrator task intake.
+
+    Parameters
+    ----------
+    connector : ROS2Connector
+        Connector used to subscribe to ROS 2 topics.
+    task_topics : list[str]
+        Topics that publish user-initiated tasks.
+    new_task_callback : Callable
+        Callback executed when a task message is received.
+    inspection_topics : list[str]
+        Topics that publish inspection anomalies.
+    inspection_callback : Callable
+        Callback executed when an inspection anomaly arrives.
+
+    Attributes
+    ----------
+    connector : ROS2Connector
+        Connector instance used for topic subscriptions.
+    new_task_callback : Callable
+        Handler invoked for each new task message.
+    inspection_callback : Callable
+        Handler invoked for each inspection anomaly message.
+    """
 
     def __init__(
         self,
@@ -121,7 +144,42 @@ class TaskSubscriber(Node):
 
 
 class AgentOrchestrator:
-    """Main orchestrator for managing agents and tasks"""
+    """Coordinate task execution across specialist agents.
+
+    Parameters
+    ----------
+    connector : ROS2Connector
+        ROS 2 communication interface used by the orchestrator.
+    agent : CompiledStateGraph
+        Compiled LangGraph agent responsible for task execution.
+    task_topics : list[str]
+        ROS 2 topics providing low-priority tasks.
+    inspection_topics : list[str]
+        ROS 2 topics providing high-priority inspection tasks.
+    action_topic : str
+        Topic where agent actions are published.
+    initial_state_creator : Callable
+        Factory that builds the initial agent state from a prompt.
+    recurssion_limit : int
+        Maximum LangGraph recursion depth.
+    langchain_callbacks : list[BaseCallbackHandler]
+        Callback handlers attached to agent execution.
+
+    Attributes
+    ----------
+    current_task : TaskExecution | None
+        Task currently under execution.
+    current_task_future : asyncio.Task | None
+        Async task representing the running agent invocation.
+    high_prio_task_queue : asyncio.Queue
+        Queue storing high-priority task requests.
+    low_prio_task_queue : asyncio.Queue
+        Queue storing low-priority task requests.
+    pasued_tasks_queue : collections.deque
+        LIFO queue of paused tasks awaiting resumption.
+    running : bool
+        Flag indicating whether the orchestrator loop should continue.
+    """
 
     def __init__(
         self,
@@ -236,7 +294,18 @@ class AgentOrchestrator:
                 logging.warning("Task queue is full, dropping task")
 
     def add_task(self, msg: ROS2Message):
-        """Add a new task with String interface to the low prio queue"""
+        """Queue a new low-priority task from a ROS 2 message.
+
+        Parameters
+        ----------
+        msg : ROS2Message
+            ROS 2 message containing the task prompt in ``msg.payload.data``.
+
+        Returns
+        -------
+        None
+            The task is enqueued for later execution.
+        """
         # NOTE lower prio tasks
         task_exe = TaskExecution(prompt=msg.payload.data)
         with self.lock:
@@ -247,9 +316,15 @@ class AgentOrchestrator:
                 logging.warning("Task queue is full, dropping task")
 
     async def interrupt_current_task(self):
-        """
-        Interrupt currently running task.
-        Interrupted task will be appended to deque as paused.
+        """Pause the currently running task if one is active.
+
+        The task future is cancelled and the task metadata is pushed onto the
+        paused queue, making it eligible for resumption.
+
+        Returns
+        -------
+        None
+            The method updates orchestrator state in place.
         """
         if not self.current_task:
             return
@@ -312,7 +387,13 @@ class AgentOrchestrator:
         rclpy.spin(self.task_subscriber)
 
     def task_notifier(self):
-        """Run notification loop in separate thread"""
+        """Publish task queue status periodically in a background thread.
+
+        Returns
+        -------
+        None
+            The loop runs until ``self.running`` is set to ``False``.
+        """
         while self.running:
             with self.lock:
                 self.notify_about_tasks()
@@ -341,7 +422,14 @@ class AgentOrchestrator:
             logging.info(f"Resuming task {self.current_task.prompt}")
 
     async def orchestrator_loop(self):
-        """Main orchestrator loop"""
+        """Run the main scheduling loop until shutdown is requested.
+
+        Returns
+        -------
+        None
+            Executes indefinitely, orchestrating task sequencing and agent
+            invocation until ``self.running`` becomes ``False``.
+        """
 
         sub_thread = threading.Thread(target=self.spin_task_subscriber, daemon=True)
         sub_thread.start()
@@ -454,7 +542,7 @@ def main():
     if entities:
         scene_manager.assign_entities_to_slots(entities)
     collection_names, item_types = load_rack_assignment(
-        "rai_app/resources/rack_assignment.csv"
+        "scripts/resources/rack_assignment.csv"
     )
 
     scene_manager.assign_collections_to_item_types(collection_names, item_types)

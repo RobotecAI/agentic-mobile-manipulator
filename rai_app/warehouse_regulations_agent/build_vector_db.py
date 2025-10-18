@@ -25,7 +25,24 @@ SUPPORTED_CONTENT_FILES = ["text.txt", "content.md"]  # prefer plain text first
 def gather_local_regulations(
     source_dir: str = "filtered_regulations",
 ) -> List[Document]:
-    """Collect one Document per regulation directory (already a doc-level split)."""
+    """Collect candidate regulation documents from a directory structure.
+
+    Parameters
+    ----------
+    source_dir : str, optional
+        Directory containing regulation subdirectories. Defaults to
+        ``"filtered_regulations"``.
+
+    Returns
+    -------
+    list[Document]
+        One document per regulation directory.
+
+    Raises
+    ------
+    FileNotFoundError
+        If ``source_dir`` does not exist.
+    """
     base = Path(source_dir)
     if not base.exists():
         raise FileNotFoundError(
@@ -64,12 +81,30 @@ def split_documents(
     chunk_size: int = 1000,
     chunk_overlap: int = 200,
 ) -> List[Document]:
-    """Return list of Documents according to chosen strategy.
+    """Split documents according to the requested strategy.
 
-    Strategies:
-      per_regulation: one chunk per regulation (no further splitting).
-      recursive: standard RecursiveCharacterTextSplitter.
-      markdown_headers: split by markdown headers (#, ##, etc.) then optionally merge small pieces.
+    Parameters
+    ----------
+    base_docs : list[Document]
+        Source documents to split.
+    strategy : str, optional
+        Splitting strategy. Supported values are ``"per_regulation"``,
+        ``"recursive"``, and ``"markdown_headers"``. Defaults to
+        ``"per_regulation"``.
+    chunk_size : int, optional
+        Chunk size passed to text splitters. Defaults to ``1000``.
+    chunk_overlap : int, optional
+        Chunk overlap for recursive splitting. Defaults to ``200``.
+
+    Returns
+    -------
+    list[Document]
+        Resulting list of documents after splitting.
+
+    Raises
+    ------
+    ValueError
+        If ``strategy`` is not recognized.
     """
     if strategy == "per_regulation":
         return base_docs
@@ -110,7 +145,27 @@ def build_local_index(
     chunk_overlap: int = 200,
     embedding_model: str = "mxbai-embed-large",
 ) -> FAISS:
-    """Build FAISS vector store from local regulation documents."""
+    """Construct a FAISS vector store from local regulation documents.
+
+    Parameters
+    ----------
+    source_dir : str, optional
+        Directory containing regulation documents. Defaults to
+        ``"filtered_regulations"``.
+    strategy : str, optional
+        Document splitting strategy. Defaults to ``"per_regulation"``.
+    chunk_size : int, optional
+        Chunk size for recursive splitting. Defaults to ``1000``.
+    chunk_overlap : int, optional
+        Chunk overlap for recursive splitting. Defaults to ``200``.
+    embedding_model : str, optional
+        Ollama embedding model name. Defaults to ``"mxbai-embed-large"``.
+
+    Returns
+    -------
+    FAISS
+        In-memory FAISS vector store populated with embeddings.
+    """
     print(
         f"Loading regulation documents from '{source_dir}' using '{strategy}' strategy ..."
     )
@@ -135,7 +190,15 @@ def build_local_index(
 
 
 def save_vector_store(vector_store: FAISS, output_path: str):
-    """Save the FAISS vector store to disk."""
+    """Persist a FAISS vector store to disk.
+
+    Parameters
+    ----------
+    vector_store : FAISS
+        Vector store to serialize.
+    output_path : str
+        Destination directory for the serialized data.
+    """
     output_dir = Path(output_path)
     output_dir.mkdir(parents=True, exist_ok=True)
     vector_store.save_local(str(output_dir))

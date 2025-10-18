@@ -39,10 +39,10 @@ from sensor_msgs.msg import Image
 from tf2_ros import PoseStamped
 from visualization_msgs.msg import Marker, MarkerArray
 
-from rai_app.llms import get_vlm_model
-from rai_app.vlm_transport import publish_vlm_description
-from scripts.scene_manager import SceneManager
-from scripts.tools import get_yaw_difference
+from rai_app.agents.vlm_transport import publish_vlm_description
+from rai_app.environment import SceneManager
+from rai_app.geometry_helpers import get_yaw_difference
+from rai_app.initialization.llms import get_vlm_model
 
 SYSTEM_PROMPT = "You are an expert in warehouse environment based on AMR camera. You are tested in simulation. You follow strict OSHA regulation: there should be no objects on the warehouse floor. Boxes directly under racks can be on the floor. Bins can be on the floor. Safety equipment can be on the floor. The OSHA guideline is for there to be no tripping hazard."
 # PROMPT = "Verify if there is an obstacle on a robot's path. Please don't report typical warehouse envirionemt as obstacles. To be an obstacle a object should be places in an unusual place and obstruct the clear navigation path of the robot. For example a package laying in the pathway might be an obstance and standing rack visible in the image is not."
@@ -94,7 +94,7 @@ def are_poses_close(
     yaw_diff = get_yaw_difference(pose1, pose2)
     orientation_ok = yaw_diff < rot_degrees
 
-    return position_ok and orientation_ok
+    return bool(position_ok and orientation_ok)
 
 
 def are_anomalies_close(

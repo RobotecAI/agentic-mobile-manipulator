@@ -27,8 +27,8 @@ from tf2_geometry_msgs import do_transform_pose
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
 
-from rai_app.knowledge import get_object_type_to_racks_all
-from scripts.slots import Slot, SlotsCollection
+from rai_app.config.knowledge import get_object_type_to_racks_all
+from rai_app.environment.slots import Slot, SlotsCollection
 
 
 class ObjectWithDistance(NamedTuple):
@@ -109,7 +109,21 @@ class SceneManager:
             self.spawnable_to_uri[name] = uri
 
     def get_pose(self, entity_name, frame="odom"):
-        """Retrieve the pose of an entity in a specified frame"""
+        """Retrieve an entity pose expressed in the requested frame.
+
+        Parameters
+        ----------
+        entity_name : str
+            Name of the simulated entity.
+        frame : str, optional
+            Target coordinate frame for the pose. Defaults to ``"odom"``.
+
+        Returns
+        -------
+        Pose | None
+            Pose transformed into ``frame`` if available, otherwise ``None`` when
+            repeated transform requests fail.
+        """
         entity_state = self.connector.call_service(
             ROS2Message(payload={"entity": entity_name}),
             target="/get_entity_state",
@@ -324,7 +338,18 @@ class SceneManager:
             raise RuntimeError(f"Failed to move {entity_name}. Error: {response}")
 
     def get_object_height(self, object_name: str):
-        """Calculate the height of an object's gripping point based on its base"""
+        """Compute the vertical offset between the object base and gripping point.
+
+        Parameters
+        ----------
+        object_name : str
+            Identifier of the object whose gripping point height is required.
+
+        Returns
+        -------
+        float
+            Absolute height difference in meters.
+        """
         object_pose = self.get_pose(object_name)
         # gripping_point_pose = self.get_pose(f"{object_name}_GrippingPoint")
         gripping_point_pose = self.get_top_gripping_point(object_name)
@@ -354,7 +379,19 @@ class SceneManager:
         return filtered_entities
 
     def find_entity_slot(self, entity_name: str) -> Optional[Slot]:
-        """Find the slot that contains the given entity"""
+        """Locate the slot that currently contains a given entity.
+
+        Parameters
+        ----------
+        entity_name : str
+            Name of the entity to search for.
+
+        Returns
+        -------
+        Slot | None
+            Slot containing the entity, or ``None`` if the entity is not inside
+            any registered slot.
+        """
         entity_pose = self.get_pose(entity_name)
         for _, collection in self.slots_collections.items():
             for slot_name, slot in collection.slots.items():
@@ -362,9 +399,18 @@ class SceneManager:
                     return slot
 
     def find_entity_pose(self, entity_name: str) -> Pose:
-        """
-        Find the slot that contains the given entity based on its position
-        If entity is in slot return slot pose else return entity pose
+        """Return the slot pose if the entity resides in a slot, otherwise entity pose.
+
+        Parameters
+        ----------
+        entity_name : str
+            Name of the entity whose pose is required.
+
+        Returns
+        -------
+        Pose
+            Slot origin pose when the entity occupies a slot, or the raw entity
+            pose if not.
         """
         entity_pose = self.get_pose(entity_name)
         for _, collection in self.slots_collections.items():
@@ -375,7 +421,13 @@ class SceneManager:
         return entity_pose
 
     def assign_entities_to_slots(self, entities: Dict[str, EntityState]):
-        """Assign entities to their corresponding slots based on position"""
+        """Assign simulated entities to slots based on spatial inclusion.
+
+        Parameters
+        ----------
+        entities : dict[str, EntityState]
+            Mapping between entity names and their simulation states.
+        """
         assigned_slots = set()
 
         filtered_entities = self.filter_out_gripping_point_entites(entities=entities)
@@ -401,15 +453,38 @@ class SceneManager:
             self.slots_collections[coll_name].item_type = item_type
 
     def add_collection(self, collection: SlotsCollection) -> None:
-        """Add a slots collection to the warehouse"""
+        """Register a slots collection within the warehouse scene graph.
+
+        Parameters
+        ----------
+        collection : SlotsCollection
+            Collection instance to insert.
+        """
         self.slots_collections[collection.tag] = collection
 
     def get_collection(self, tag: str) -> Optional[SlotsCollection]:
-        """Get a specific collection by tag"""
+        """Retrieve a collection by its identifier.
+
+        Parameters
+        ----------
+        tag : str
+            Collection identifier.
+
+        Returns
+        -------
+        SlotsCollection | None
+            Collection instance when present, otherwise ``None``.
+        """
         return self.slots_collections.get(tag)
 
     def find_empty_racks(self) -> List[str]:
-        """Find all racks that have any empty slots"""
+        """Return rack identifiers containing at least one empty slot.
+
+        Returns
+        -------
+        list[str]
+            Sorted list of rack identifiers with available capacity.
+        """
         empty_racks = []
         for tag, collection in self.slots_collections.items():
             if collection.collection_type == "rack" and collection.find_empty_slots():
@@ -417,7 +492,13 @@ class SceneManager:
         return sorted(empty_racks)
 
     def find_empty_tables(self) -> List[str]:
-        """Find all tables that have any empty slots"""
+        """Return table identifiers containing at least one empty slot.
+
+        Returns
+        -------
+        list[str]
+            Sorted list of table identifiers with available capacity.
+        """
         empty_tables = []
         for tag, collection in self.slots_collections.items():
             if collection.collection_type == "table" and collection.find_empty_slots():
@@ -425,7 +506,13 @@ class SceneManager:
         return sorted(empty_tables)
 
     def find_empty_slots_on_racks(self) -> Dict[str, List[str]]:
-        """Find all empty slots on any rack"""
+        """List empty slots grouped by rack identifier.
+
+        Returns
+        -------
+        dict[str, list[str]]
+            Mapping of rack identifiers to lists of empty slot tags.
+        """
         empty_slots_by_rack = {}
         for tag, collection in self.slots_collections.items():
             if collection.collection_type == "rack":
@@ -435,7 +522,13 @@ class SceneManager:
         return empty_slots_by_rack
 
     def find_empty_slots_on_tables(self) -> Dict[str, List[str]]:
-        """Find all empty slots on any table"""
+        """List empty slots grouped by table identifier.
+
+        Returns
+        -------
+        dict[str, list[str]]
+            Mapping of table identifiers to lists of empty slot tags.
+        """
         empty_slots_by_table = {}
         for tag, collection in self.slots_collections.items():
             if collection.collection_type == "table":
@@ -445,21 +538,49 @@ class SceneManager:
         return empty_slots_by_table
 
     def find_empty_slots_on_rack(self, rack_tag: str) -> List[str]:
-        """Find all empty slots on a specific rack"""
+        """Return empty slot tags for a specific rack.
+
+        Parameters
+        ----------
+        rack_tag : str
+            Rack identifier.
+
+        Returns
+        -------
+        list[str]
+            Empty slot tags; empty list when no slots are free.
+        """
         collection = self.get_collection(rack_tag)
         if collection and collection.collection_type == "rack":
             return collection.find_empty_slots()
         return []
 
     def find_empty_slots_on_table(self, table_tag: str) -> List[str]:
-        """Find all empty slots on a specific table"""
+        """Return empty slot tags for a specific table.
+
+        Parameters
+        ----------
+        table_tag : str
+            Table identifier.
+
+        Returns
+        -------
+        list[str]
+            Empty slot tags; empty list when no slots are free.
+        """
         collection = self.get_collection(table_tag)
         if collection and collection.collection_type == "table":
             return collection.find_empty_slots()
         return []
 
     def get_all_empty_slots(self) -> Dict[str, List[str]]:
-        """Get all empty slots across all collections"""
+        """Return a mapping of all collections to their empty slots.
+
+        Returns
+        -------
+        dict[str, list[str]]
+            Collections keyed by identifier with lists of empty slot tags.
+        """
         all_empty_slots = {}
         for tag, collection in self.slots_collections.items():
             empty_slots = collection.find_empty_slots()
@@ -470,7 +591,18 @@ class SceneManager:
     def get_collections_by_type(
         self, collection_type: str
     ) -> Dict[str, SlotsCollection]:
-        """Get all collections of a specific type"""
+        """Retrieve all collections matching a specific type.
+
+        Parameters
+        ----------
+        collection_type : str
+            Collection type label (for example ``"rack"`` or ``"table"``).
+
+        Returns
+        -------
+        dict[str, SlotsCollection]
+            Collections filtered by type.
+        """
         filtered_collections = {}
         for tag, collection in self.slots_collections.items():
             if collection.collection_type == collection_type.lower():
@@ -478,14 +610,26 @@ class SceneManager:
         return filtered_collections
 
     def get_warehouse_summary(self) -> Dict[str, Dict[str, int]]:
-        """Get usage summary for all collections"""
+        """Summarize slot usage metrics per collection.
+
+        Returns
+        -------
+        dict[str, dict[str, int]]
+            Mapping of collection tags to usage counts (total, used, free).
+        """
         summary = {}
         for tag, collection in self.slots_collections.items():
             summary[tag] = collection.get_usage_summary()
         return summary
 
     def get_type_summary(self) -> Dict[str, Dict[str, int]]:
-        """Get usage summary grouped by collection type"""
+        """Summarize slot usage metrics grouped by collection type.
+
+        Returns
+        -------
+        dict[str, dict[str, int]]
+            Usage counts aggregated by collection type.
+        """
         type_summary = {}
 
         for collection in self.slots_collections.values():
@@ -511,14 +655,26 @@ class SceneManager:
         return collections_by_type
 
     def get_all_slots(self) -> Dict[str, Slot]:
-        """Get all slots from all collections in a flat dictionary (similar to flat_slots)"""
+        """Return a flat dictionary of all slots across collections.
+
+        Returns
+        -------
+        dict[str, Slot]
+            Mapping of slot tag to slot instance.
+        """
         all_slots = {}
         for collection in self.slots_collections.values():
             all_slots.update(collection.slots)
         return all_slots
 
     def get_warehouse_layout_description(self) -> str:
-        """Return a formatted description of the warehouse layout with coordinates"""
+        """Build a human-readable description of the warehouse layout.
+
+        Returns
+        -------
+        str
+            Multi-line string containing collection and slot occupancy details.
+        """
         lines = ["CURRENT WAREHOUSE LAYOUT:\n"]
         collections_by_type = self.get_collections_sorted_by_type()
         # Sort types for consistent output
@@ -548,7 +704,13 @@ class SceneManager:
         return "\n".join(lines)
 
     def get_warehouse_collections_description(self) -> str:
-        """Return a formatted description of the warehouse collections names (tables and racks)"""
+        """Summarize the default storage collections by object type.
+
+        Returns
+        -------
+        str
+            Multi-line string describing which collections store each object type.
+        """
 
         object_type_to_racks = get_object_type_to_racks_all()
         lines = ["The following objects are stored in the warehouse:\n"]
@@ -561,11 +723,20 @@ class SceneManager:
     def quaternion_to_forward_vector(
         self, q: Quaternion, forward_axis="x"
     ) -> np.ndarray:
-        """Convert quaternion to forward vector.
+        """Convert a quaternion orientation to a forward vector.
 
-        Args:
-            q: Quaternion orientation
-            forward_axis: Which axis is forward ('x', 'y', or 'z')
+        Parameters
+        ----------
+        q : Quaternion
+            Orientation to convert.
+        forward_axis : str, optional
+            Axis treated as the forward direction (``"x"``, ``"y"``, or ``"z"``).
+            Defaults to ``"x"``.
+
+        Returns
+        -------
+        numpy.ndarray
+            Unit vector representing the forward direction.
         """
         x, y, z, w = q.x, q.y, q.z, q.w
 
@@ -594,33 +765,24 @@ class SceneManager:
         fov_angle_degrees: float = 60.0,
         forward_axis: str = "x",
     ) -> Optional[list[ObjectWithDistance]]:
-        """
-        Identify all entities within the camera's field of view (FOV) and compute their distances.
+        """Return objects inside the field of view annotated with distance.
 
         Parameters
         ----------
         camera_pose : Pose
-            The pose of the camera in the world frame (position and orientation).
+            Camera pose expressed in the world frame.
         entities_states : dict[str, EntityState]
-            A mapping from entity names to their corresponding states (positions, orientations, etc.).
+            Mapping of entity names to simulation states.
         fov_angle_degrees : float, optional
-            The camera’s horizontal field of view angle in degrees. Defaults to 60.0.
+            Field of view angle in degrees. Defaults to ``60.0``.
         forward_axis : str, optional
-            The axis representing the camera’s forward direction (e.g., "x", "y", or "z").
-            Defaults to "x".
+            Axis describing the camera forward direction. Defaults to ``"x"``.
 
         Returns
         -------
-        list[ObjectWithDistance] or None
-            A list of objects that are within the camera’s FOV, each annotated with its
-            distance from the camera. Returns None if no entities are within the FOV.
-
-        Notes
-        -----
-        - This method filters entities based on angular position relative to the camera's
-          forward direction and computes Euclidean distances.
-        - It assumes that the entities' positions are expressed in the same coordinate frame
-          as the `camera_pose`.
+        list[ObjectWithDistance] | None
+            Objects within the FOV sorted by distance, or ``None`` when no
+            entities are visible.
         """
         if not entities_states:
             return None
@@ -671,6 +833,26 @@ class SceneManager:
         forward_axis: str = "x",
         filter_poses: Optional[list[Pose]] = None,
     ) -> Optional[Tuple[str, EntityState]]:
+        """Return the closest object outside a slot within the camera FOV.
+
+        Parameters
+        ----------
+        camera_pose : Pose
+            Camera pose in the world frame.
+        entities_states : dict[str, EntityState]
+            Mapping of entity names to states.
+        fov_angle_degrees : float, optional
+            Field of view angle in degrees. Defaults to ``60.0``.
+        forward_axis : str, optional
+            Camera forward axis. Defaults to ``"x"``.
+        filter_poses : list[Pose], optional
+            Poses to exclude from consideration.
+
+        Returns
+        -------
+        tuple[str, EntityState] | None
+            Entity name and state when a candidate is found; otherwise ``None``.
+        """
         objects_in_fov = self._get_objects_in_fov_with_distances(
             camera_pose, entities_states, fov_angle_degrees, forward_axis
         )
@@ -698,17 +880,23 @@ class SceneManager:
         fov_angle_degrees: float = 60.0,
         forward_axis: str = "x",
     ) -> Optional[tuple]:
-        """
-        Find the nearest object within the camera's field of view.
+        """Return the nearest object within the camera field of view.
 
-        Args:
-            camera_pose: The pose of the camera
-            all_entities_states: Dict of entity name to EntityState objects
-            fov_angle_degrees: Field of view cone half-angle in degrees (default 60°)
-            forward_axis: Which axis is forward in camera frame ('x', 'y', or 'z')
+        Parameters
+        ----------
+        camera_pose : Pose
+            Camera pose expressed in the world frame.
+        entities_states : dict[str, EntityState]
+            Mapping of entity names to states.
+        fov_angle_degrees : float, optional
+            Field of view angle. Defaults to ``60.0``.
+        forward_axis : str, optional
+            Axis treated as camera forward direction. Defaults to ``"x"``.
 
-        Returns:
-            Tuple of (object_name, object_pose) for nearest object in FOV, or None
+        Returns
+        -------
+        tuple[str, Pose] | None
+            Nearest object name and pose, or ``None`` when no object is visible.
         """
         objects_in_fov = self._get_objects_in_fov_with_distances(
             camera_pose, entities_states, fov_angle_degrees, forward_axis
@@ -723,9 +911,24 @@ class SceneManager:
     def get_anomaly_box_pose(
         self, trash_notice_pose: Pose, filter_poses: Optional[list[Pose]] = None
     ) -> Tuple[str, Pose]:
-        """
-        Returns the nearest object (name , pose) in the fov of the robot
-        that is a box not within slot
+        """Find the closest box anomaly visible to the robot.
+
+        Parameters
+        ----------
+        trash_notice_pose : Pose
+            Current robot pose used for visibility computation.
+        filter_poses : list[Pose], optional
+            List of poses to ignore to avoid duplicate anomalies.
+
+        Returns
+        -------
+        tuple[str, Pose]
+            Entity name and gripping point pose.
+
+        Raises
+        ------
+        ValueError
+            If no box anomalies are detected within the field of view.
         """
         all_entities = self.get_entities(name_filter="cardboardbox")
         # we want gripping point entities, so filter rest
