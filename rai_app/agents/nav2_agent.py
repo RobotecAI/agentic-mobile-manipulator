@@ -1,8 +1,10 @@
+import argparse
 import time
 from math import pi
 from typing import Any, List, Optional, cast
 
 from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.language_models.fake_chat_models import FakeChatModel
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from nav2_msgs.action import DriveOnHeading as Nav2DriveOnHeading
 from nav2_msgs.action import FollowWaypoints as Nav2FollowWaypoints
@@ -64,11 +66,16 @@ class Nav2Agent(BaseAgent):
     The distance is in meters. The time allowance is in seconds. The angle is in radians.
     """
 
-    def __init__(self, llm: BaseChatModel, robot_frame: str):
+    def __init__(
+        self, llm: BaseChatModel | None = None, robot_frame: str = "egobase_link"
+    ):
         super().__init__()
         self.navigator = BasicNavigator()
         self.connector = ROS2Connector()
-        self.llm = llm
+        if llm is None:
+            self.llm = FakeChatModel()
+        else:
+            self.llm = llm
         self.robot_frame = robot_frame
 
         self.connector.create_action(
@@ -313,7 +320,13 @@ class Nav2Agent(BaseAgent):
 
 @ROS2Context()
 def main():
-    llm = get_llm_model(config_name="general")
+    parser = argparse.ArgumentParser(description="Run Nav2 agent")
+    parser.add_argument("--test-mode", action="store_true", help="Run in test mode")
+    args = parser.parse_args()
+    if args.test_mode:
+        llm = FakeChatModel()
+    else:
+        llm = get_llm_model(config_name="general")
     agent = Nav2Agent(llm=llm, robot_frame="egobase_link")
     agent.run()
 

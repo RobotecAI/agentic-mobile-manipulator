@@ -214,7 +214,7 @@ class NavigateToSlotSyncTool(WarehouseTool):
             return f"Slot {slot_name} does not exist. Available slot names: {'\n'.join(slot_names)}"
 
         self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-            target_pose=slot.origin_pose
+            target_pose=slot.origin_pose, target_pose_distance=1.0
         )
         return f"Successfully navigated to slot {slot_name}"
 
