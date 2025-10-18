@@ -2,7 +2,7 @@ import random
 
 from rai.communication.ros2 import ROS2Connector
 
-from scripts.scene_manager import SceneManager
+from rai_app.environment import SceneManager
 
 
 def main(

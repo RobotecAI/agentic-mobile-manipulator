@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import Literal
 
 import tomli
-from langchain_ollama import OllamaEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 
@@ -176,7 +175,7 @@ def get_vlm_model(
         raise ValueError(f"Invalid config name: {config_name}")
 
 
-def get_embeddings_model(config_name: Literal["safety_agent"]) -> OllamaEmbeddings:
+def get_embeddings_model(config_name: Literal["safety_agent"]) -> OpenAIEmbeddings:
     config = load_config()
     openai_api_key = os.getenv("OPENAI_API_KEY")
     if openai_api_key is None:

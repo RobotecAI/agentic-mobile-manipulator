@@ -7,7 +7,7 @@ from geometry_msgs.msg import Point, Pose
 from rai.communication.ros2 import ROS2Context
 from tqdm import tqdm
 
-from scripts.scene_manager import SceneManager
+from rai_app.environment import SceneManager
 
 
 def load_spawn_config(spawn_config_file):
@@ -70,10 +70,10 @@ def main():
         scene_manager.clear_scene()
     if args.spawn:
         collection_names, item_types = load_rack_assignment(
-            "rai_app/resources/rack_assignment.csv"
+            "scripts/resources/rack_assignment.csv"
         )
         item_type_assets = pd.read_csv(
-            "rai_app/resources/item_type_assets.csv", delimiter=","
+            "scripts/resources/item_type_assets.csv", delimiter=","
         )
         item_type_assets["asset_names"] = item_type_assets["asset_names"].str.split(";")
 
@@ -99,7 +99,7 @@ def main():
             spawn_slot_names, spawn_entity_types, items_stored, std_yaw=0.0
         )
         spawn_slot_names, spawn_entity_types, items_stored = load_spawn_config(
-            "rai_app/resources/spawn_config_table.csv"
+            "scripts/resources/spawn_config_table.csv"
         )
 
         scene_manager.populate_scene(

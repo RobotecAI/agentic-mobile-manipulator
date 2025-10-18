@@ -108,7 +108,21 @@ class AgentActionsCallback:
         )
 
     async def process_stream_chunk(self, chunk):
-        """Process streaming messages (both text tokens and tool calls)."""
+        """Handle streaming messages emitted by LangChain subgraphs.
+
+        Parameters
+        ----------
+        chunk : tuple
+            Tuple emitted by ``agent.astream`` containing subgraph metadata,
+            message mode, and message payload. Expected structure:
+            ``((subgraph, node_run_id), mode, data)``.
+
+        Returns
+        -------
+        None
+            The method forwards messages through ROS 2 topics and does not
+            return a value.
+        """
 
         subgraph_tuple, mode, data = chunk
 

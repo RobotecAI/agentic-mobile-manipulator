@@ -25,8 +25,8 @@ from rclpy.action.client import ActionClient
 from rclpy.node import Node
 from tf2_geometry_msgs import do_transform_pose
 
-from rai_app.llms import get_llm_model
-from scripts.moveit_utils import decode_error_code
+from rai_app.control.moveit_utils import decode_error_code
+from rai_app.initialization.llms import get_llm_model
 
 GRIPPER_HEIGHT = 0.07
 
@@ -191,9 +191,18 @@ class GripperController(Node):
         pass
 
     def gripper_command(self, position):
-        """
-        position = 0.0 - close the gripper
-        position = 1.0 - open the gripper
+        """Send a command to open or close the gripper.
+
+        Parameters
+        ----------
+        position : float
+            Target gripper position where ``0.0`` closes the gripper and ``1.0``
+            opens it.
+
+        Raises
+        ------
+        RuntimeError
+            If the action server fails to execute the goal.
         """
         goal = GripperCommand.Goal()
         goal.command.position = position

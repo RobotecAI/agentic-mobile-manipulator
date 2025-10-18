@@ -17,7 +17,7 @@ from rai.communication.ros2 import ROS2Context
 from rclpy.node import Node
 from std_srvs.srv import Trigger
 
-from rai_app.violation_storage import ViolationStorage
+from rai_app.warehouse_regulations_agent.violation_storage import ViolationStorage
 
 
 class SafetySummaryNode(Node):

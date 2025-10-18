@@ -29,8 +29,8 @@ class ListOverfilledBins(BaseROS2Tool):
 
 **Hook it up**
 
-- Register the tool in `rai_app/tools.py` (group it with other warehouse helpers).
-- Add it to the relevant executor list in `rai_app/agent_orchestrator.py`.
+- Register the tool in `rai_app/agents/tools.py` (group it with other warehouse helpers).
+- Add it to the relevant executor list in `rai_app/agents/agent_orchestrator.py`.
 - Optionally expose it to other agents (inspection, safety) if they also need bin status.
 
 ## Adding an Executor to Megamind
@@ -39,9 +39,9 @@ Executors encapsulate a set of tools plus a tailored prompt so Megamind knows wh
 
 ```python
 from rai.agents.langchain.core import Executor
-from rai_app.prompts import INVENTORY_AUDIT_PROMPT
-from rai_app.tools import ListOverfilledBins
-from rai_app.llms import get_llm_model
+from rai_app.config.prompts import INVENTORY_AUDIT_PROMPT
+from rai_app.agents.tools import ListOverfilledBins
+from rai_app.initialization.llms import get_llm_model
 
 
 def build_inventory_executor(connector, scene_manager):

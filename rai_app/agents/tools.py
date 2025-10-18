@@ -21,12 +21,11 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Header
 from tf_transformations import euler_from_quaternion
 
-from rai_app.knowledge import Collection, get_object_type_to_racks
-from rai_app.vlm_transport import publish_vlm_description
-from scripts.kairos_controller import KairosController
-from scripts.scene_manager import SceneManager
-from scripts.slots import Slot, SlotsCollection
-from scripts.tools import (
+from rai_app.agents.vlm_transport import publish_vlm_description
+from rai_app.config.knowledge import Collection, get_object_type_to_racks
+from rai_app.control.kairos_controller import KairosController
+from rai_app.environment import SceneManager, Slot, SlotsCollection
+from rai_app.geometry_helpers import (
     apply_relative_transform,
     calculate_relative_transform,
     get_global_pose_from_origin,
@@ -77,21 +76,31 @@ class WarehouseTool(BaseROS2Tool):
         item_type: Optional[str] = None,
         approach_distance: float = 2.0,
     ) -> List[Slot]:
-        """Check if there is any object to move from given collection.
+        """Retrieve candidate slots containing objects for relocation.
 
-        Args:
-            item_type (Optional[str], optional): When passed, only take into
-            consideration packages with certain item type inside. Defaults to None.
+        Parameters
+        ----------
+        collection_name : str
+            Identifier of the source collection (for example ``t5`` or ``K01``).
+        item_type : str, optional
+            Required item type stored in the package. When provided, only slots
+            containing packages with matching metadata are returned.
+        approach_distance : float, optional
+            Distance in meters to stop the robot before inspecting the
+            collection. Defaults to ``2.0``.
 
-        Raises:
-            ValueError: raises when there is no such collection
-            RuntimeError: raises when there are no objects in slots
-            or when there are no packages containing given item type
+        Returns
+        -------
+        list[Slot]
+            Slots that currently contain objects within reachable arm range.
 
-        Returns:
-            List[Slot]: Returns all slots that have objects to move.
-            If item type passed, returns only slots where a package that
-            has this item type is located.
+        Raises
+        ------
+        ValueError
+            If the requested collection does not exist in the scene manager.
+        RuntimeError
+            If no suitable slots are available or no package matches the
+            specified ``item_type``.
         """
         self.refresh_data()
         logging.info(
@@ -139,16 +148,24 @@ class WarehouseTool(BaseROS2Tool):
             return used_slots
 
     def check_the_target_collection(self, collection_name: str) -> List[Slot]:
-        """Check if there are any empty slots in the collection
+        """Return empty slots in the target collection.
 
+        Parameters
+        ----------
+        collection_name : str
+            Identifier of the destination collection to inspect.
 
+        Returns
+        -------
+        list[Slot]
+            Empty slots that are reachable by the manipulator.
 
-        Raises:
-            ValueError: raises when there is no such collection
-            RuntimeError: raises when there are no empty slots in the collection
-
-        Returns:
-            List[Slot]: List of empty slots
+        Raises
+        ------
+        ValueError
+            If the requested collection does not exist.
+        RuntimeError
+            If no empty slots are available in the collection.
         """
         self.refresh_data()
         logging.debug(
@@ -189,6 +206,7 @@ class NavigateToSlotSyncTool(WarehouseTool):
     args_schema: Type[NavigateToSloToolInput] = NavigateToSloToolInput
 
     def _run(self, slot_name: str) -> str:
+        """Navigate the mobile base to the pose associated with ``slot_name``."""
         try:
             slot = self.scene_manager.slots[slot_name]
         except KeyError:
@@ -209,6 +227,7 @@ class IsPackageDamagedTool(BaseROS2Tool):
     vlm: BaseChatModel
 
     def _build_ros2_image(self, b64_img: str) -> Image:
+        """Decode a base64-encoded RGB image and convert it to a ROS 2 ``Image``."""
         cv2_image = cv2.imdecode(
             np.frombuffer(base64.b64decode(b64_img), np.uint8), cv2.IMREAD_COLOR
         )
@@ -228,6 +247,8 @@ class IsPackageDamagedTool(BaseROS2Tool):
         b64_img = artifact["images"][0]
 
         class ROS2ImgDescription(BaseModel):
+            """Structured output describing package damage assessment."""
+
             is_package_damaged: bool = Field(
                 ..., description="Whether the package is damaged or not"
             )
@@ -325,7 +346,23 @@ class MoveFromCollectionToCollectionTool(WarehouseTool):
         target_collection_name: str,
         item_type: Optional[str] = None,
     ):
-        """Execute complete pick and place operation between slots"""
+        """Move one package between collections.
+
+        Parameters
+        ----------
+        origin_collection_name : str
+            Collection containing the source package.
+        target_collection_name : str
+            Collection expected to receive the package.
+        item_type : str, optional
+            Specific item type to filter packages before moving.
+
+        Returns
+        -------
+        str
+            Human-readable status describing the performed action or failure
+            reason.
+        """
         try:
             target_empty_slots = self.check_the_target_collection(
                 target_collection_name
@@ -402,7 +439,21 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
         qz: float,
         qw: float,
     ):
-        """Execute complete pick and place operation from pose to inspection area"""
+        """Move a package from a free-form pose to the inspection area.
+
+        Parameters
+        ----------
+        x, y, z : float
+            Cartesian coordinates of the object pose in meters.
+        qx, qy, qz, qw : float
+            Components of the quaternion describing the object orientation.
+
+        Returns
+        -------
+        str
+            Human-readable description of the outcome, including the target
+            inspection slot or an error message.
+        """
         top_gripping_point = Pose(
             position=Point(x=x, y=y, z=z),
             orientation=Quaternion(
@@ -495,7 +546,20 @@ class ThrowTrashOutTool(WarehouseTool):
         qz: float,
         qw: float,
     ):
-        """Execute throwing out"""
+        """Dispose trash identified at the specified pose.
+
+        Parameters
+        ----------
+        x, y, z : float
+            Cartesian coordinates of the trash pose in meters.
+        qx, qy, qz, qw : float
+            Components of the trash orientation quaternion.
+
+        Returns
+        -------
+        str
+            Human-readable status of the disposal action.
+        """
 
         trash_gripping_point = Pose(
             position=Point(x=x, y=y, z=z),
@@ -543,18 +607,23 @@ class HouseKeepTool(WarehouseTool):
     approach_distance: float = 2.6
 
     def view_of_racks_pose(self, racks: List[str]) -> Tuple[Pose, Pose]:
-        """
-        Calculate view poses for one or more racks placed next to each other.
+        """Compute approach poses for inspecting adjacent racks.
 
-        Args:
-            racks: List of rack identifiers (e.g., ["A01"] or ["A01", "A02", "A03"])
+        Parameters
+        ----------
+        racks : list[str]
+            Rack identifiers such as ``["A01"]`` or ``["A01", "A02", "A03"]``.
 
-        Returns:
-            Tuple[Pose, Pose]: Two view poses facing opposite directions
+        Returns
+        -------
+        tuple[Pose, Pose]
+            Two poses placed at the rack center with orientations facing opposite
+            directions to inspect both sides.
 
-        Raises:
-            ValueError: If racks list is empty, racks don't have the same orientation,
-                        or have invalid orientation
+        Raises
+        ------
+        ValueError
+            If ``racks`` is empty or the racks do not share a valid orientation.
         """
         if len(racks) == 0:
             raise ValueError("At least 1 rack is required")
@@ -645,10 +714,21 @@ class HouseKeepTool(WarehouseTool):
     def _filter_slots_by_proximity(
         self, slots: Dict[str, Slot], view_pose: Pose
     ) -> Dict[str, Slot]:
-        """
-        Filter slots to only include the closer half based on distance along orientation axis.
-        In case of racks there are 2 rows and we want to return only 1st, closer to approach pose.
-        In case of table where there is only 1 row return all slots
+        """Return slots closest to the approach pose along the orientation axis.
+
+        Parameters
+        ----------
+        slots : dict[str, Slot]
+            Mapping of slot identifiers to slot instances.
+        view_pose : Pose
+            Approach pose from which distance along the rack orientation is
+            computed.
+
+        Returns
+        -------
+        dict[str, Slot]
+            Subset containing roughly half of the slots that are closest to the
+            approach pose, ensuring only the accessible row is inspected.
         """
         if not slots:
             return {}
@@ -687,6 +767,21 @@ class HouseKeepTool(WarehouseTool):
     def check_collection_boxes_for_misallignment(
         self, collection: SlotsCollection, view_pose: Pose
     ):
+        """Identify misaligned boxes in a collection and raise follow-up tasks.
+
+        Parameters
+        ----------
+        collection : SlotsCollection
+            Collection of slots to inspect.
+        view_pose : Pose
+            Approach pose representing the robot viewpoint.
+
+        Returns
+        -------
+        None
+            The method enqueues tasks for misaligned boxes using the ROS 2 task
+            topic.
+        """
         slots = collection.get_all_slots()
         closer_slots = self._filter_slots_by_proximity(slots, view_pose)
         closer_slots_within_reach = self.filter_for_slots_in_arm_range(
@@ -716,6 +811,17 @@ class HouseKeepTool(WarehouseTool):
         collections_names: List[str],
         approach_distance: Optional[float] = None,
     ):
+        """Inspect rack collections for misaligned boxes.
+
+        Parameters
+        ----------
+        approach_pose : Pose
+            Base pose the robot should approach before inspection.
+        collections_names : list[str]
+            Collection identifiers to inspect from the given pose.
+        approach_distance : float, optional
+            Override distance from which to approach the racks.
+        """
         if not approach_distance:
             approach_distance = self.approach_distance
 
@@ -731,6 +837,14 @@ class HouseKeepTool(WarehouseTool):
             self.check_collection_boxes_for_misallignment(coll, view_pose)
 
     def housekeep_route(self):
+        """Execute housekeeping route that scans rack collections for issues.
+
+        Returns
+        -------
+        None
+            The method navigates the robot along a pre-defined waypoint path and
+            enqueues corrective tasks when misaligned boxes are detected.
+        """
         # TODO what about slots that cannot be accessed - top and behind the wall racks
         self.refresh_data()
         df = pd.read_csv("scripts/resources/housekeeping_waypoints.csv")
@@ -869,6 +983,18 @@ class CorrectBoxPositionTool(WarehouseTool):
     args_schema: Type[CorrectBoxPositionToolInput] = CorrectBoxPositionToolInput
 
     def _run(self, slot_name: str):
+        """Align the box in a specified slot with the rack orientation.
+
+        Parameters
+        ----------
+        slot_name : str
+            Identifier of the slot containing the box to rotate.
+
+        Returns
+        -------
+        None
+            Raises exceptions on failure; otherwise completes silently.
+        """
         slots = self.scene_manager.get_all_slots()
         target_slot = slots[slot_name]
         self.kairos_controller.nav_ctrl.approach_target_along_orientation(
@@ -949,6 +1075,18 @@ class SortReturnedPackageTool(WarehouseTool):
         return free_slot
 
     def _run(self):
+        """Sort a returned package by inspecting damage status and metadata.
+
+        Returns
+        -------
+        str
+            Status message indicating the destination and remaining packages.
+
+        Raises
+        ------
+        RuntimeError
+            If expected packages or slots cannot be retrieved.
+        """
         self.connector.logger.info(f"----- Starting {self.__class__.__name__} -----")
         try:
             self.connector.logger.info(

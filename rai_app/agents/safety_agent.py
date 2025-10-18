@@ -22,12 +22,12 @@ from rai.messages import HumanMultimodalMessage, preprocess_image
 from sensor_msgs.msg import Image
 from skimage.metrics import structural_similarity as ssim
 
-from rai_app.llms import get_vlm_model
-from rai_app.violation_storage import ViolationStorage
-from rai_app.vlm_transport import publish_vlm_description
+from rai_app.agents.vlm_transport import publish_vlm_description
+from rai_app.initialization.llms import get_vlm_model
 
 # Reuse vector store loader and regulation agent factory from the warehouse regulations module
 from rai_app.warehouse_regulations_agent.rag import load_vector_store  # type: ignore
+from rai_app.warehouse_regulations_agent.violation_storage import ViolationStorage
 from rai_app.warehouse_regulations_agent.warehouse_safety_agent import (
     create_image_regulation_agent,  # type: ignore
 )
@@ -107,19 +107,19 @@ class SafetyAgent:
         self.prev_image = None
 
     def get_violations_summary(self):
-        """Get a summary of all stored violations"""
+        """Return a textual summary of all stored violations."""
         return self.violation_storage.get_violations_summary()
 
     def get_violations_by_type(self, violation_type: str):
-        """Get all violations of a specific type"""
+        """Return violations filtered by type."""
         return self.violation_storage.get_violations_by_type(violation_type)
 
     def get_recent_violations(self, n: int = 10):
-        """Get the n most recent violations"""
+        """Return the ``n`` most recent violations."""
         return self.violation_storage.get_recent_violations(n)
 
     def clear_violations(self) -> None:
-        """Clear all stored violations"""
+        """Delete all stored violations and emit a log entry."""
         self.violation_storage.clear_violations()
         self.get_logger().info("All violations cleared")
 

@@ -19,7 +19,7 @@ from rai_interfaces.action import DriveOnHeading, FollowWaypoints, NavigateToPos
 from rclpy.action.server import ServerGoalHandle
 from tf_transformations import euler_from_quaternion
 
-from rai_app.llms import get_llm_model
+from rai_app.initialization.llms import get_llm_model
 
 
 def decode_error_code(

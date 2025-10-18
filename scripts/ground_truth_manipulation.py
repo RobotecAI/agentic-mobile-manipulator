@@ -3,12 +3,12 @@
 import itertools
 import random
 
-from kairos_controller import KairosController
 from rai.communication.ros2 import ROS2Connector, ROS2Context
 from rclpy.impl.logging_severity import LoggingSeverity
 from tqdm import tqdm
 
-from scripts.scene_manager import SceneManager
+from rai_app.control.kairos_controller import KairosController
+from rai_app.environment import SceneManager
 
 
 @ROS2Context()

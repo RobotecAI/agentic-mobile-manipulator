@@ -14,7 +14,7 @@ from rosidl_runtime_py.convert import message_to_ordereddict
 from std_msgs.msg import Header
 from tf_transformations import euler_from_quaternion
 
-from scripts.tools import get_global_pose_from_origin, get_lookat_yaw
+from rai_app.geometry_helpers import get_global_pose_from_origin, get_lookat_yaw
 
 
 class Navigator:
@@ -155,7 +155,13 @@ class NavigationController:
         self.costmap_metadata = None
 
     def _fetch_costmap(self):
-        """Fetch and cache costmap as numpy array"""
+        """Fetch and cache the global costmap as a numpy array.
+
+        Returns
+        -------
+        tuple[numpy.ndarray | None, nav2_msgs.msg.CostmapMetaData | None]
+            Costmap array and metadata when available; otherwise ``(None, None)``.
+        """
         msg = ROS2Message(payload={})
 
         response = self.connector.call_service(
@@ -176,9 +182,20 @@ class NavigationController:
         return None, None
 
     def is_position_available(self, position: Point, threshold: int = 253) -> bool:
-        """
-        Check if world position is available in costmap.
-        Everything below threshold is considered available.
+        """Check whether a world position is free according to the costmap.
+
+        Parameters
+        ----------
+        position : Point
+            Pose position to inspect in the map frame.
+        threshold : int, optional
+            Costmap threshold; values strictly below are considered traversable.
+
+        Returns
+        -------
+        bool
+            ``True`` when the costmap is accessible or the cell value is below
+            ``threshold``; ``False`` otherwise.
         """
         if self.costmap_cache is None:
             self._fetch_costmap()
@@ -198,7 +215,18 @@ class NavigationController:
         return False
 
     def move_back(self, dist=0.2):
-        """Move the robot backward by a specified distance using driveOnHeading"""
+        """Drive the robot backward by a specified distance.
+
+        Parameters
+        ----------
+        dist : float, optional
+            Distance in meters to move backwards. Defaults to ``0.2``.
+
+        Returns
+        -------
+        Any
+            Action result returned by the Nav2 ``driveOnHeading`` action.
+        """
         return self.navigator.drive_on_heading(
             -dist, -0.4 * np.sign(dist), time_allowance=10
         ).result
@@ -214,7 +242,20 @@ class NavigationController:
     def approach_target_along_orientation(
         self, target_pose: Pose, target_pose_distance: float = 0.0
     ) -> bool:
-        """Approach an object pose keeping distance along its orientation"""
+        """Approach a pose along its orientation while keeping a distance.
+
+        Parameters
+        ----------
+        target_pose : Pose
+            Pose of the object to approach.
+        target_pose_distance : float, optional
+            Offset distance along the pose orientation. Defaults to ``0.0``.
+
+        Returns
+        -------
+        bool
+            ``True`` if navigation succeeded, ``False`` otherwise.
+        """
         result = self.approach_target_keeping_distance(
             target_pose, Pose(position=Point(x=target_pose_distance))
         )
@@ -226,9 +267,19 @@ class NavigationController:
     def approach_target(
         self, target_pose: Pose, target_pose_distance: float = 0.0
     ) -> bool:
-        """
-        Approach an object pose keeping distance.
-        Try approaching from up to 4 directions if previous not available
+        """Approach a target pose, attempting alternative directions if needed.
+
+        Parameters
+        ----------
+        target_pose : Pose
+            Pose to approach.
+        target_pose_distance : float, optional
+            Offset distance maintained from the pose. Defaults to ``0.0``.
+
+        Returns
+        -------
+        bool
+            ``True`` if any attempt succeeds, otherwise ``False``.
         """
         if self.approach_target_keeping_distance(
             target_pose, Pose(position=Point(x=target_pose_distance))
@@ -256,10 +307,21 @@ class NavigationController:
         yaw: float = 0.0,
         frame: str = "map",
     ):
-        """Navigate to certain pose
+        """Navigate the robot base to a pose.
 
-        Returns:
-            bool: True if succeeded, False if not
+        Parameters
+        ----------
+        position : Point
+            Target position expressed in ``frame``.
+        yaw : float, optional
+            Target yaw angle in radians. Defaults to ``0.0``.
+        frame : str, optional
+            Reference frame of ``position``. Defaults to ``"map"``.
+
+        Returns
+        -------
+        bool
+            ``True`` if navigation succeeded, ``False`` otherwise.
         """
         # TODO: Fails on sort task. Robot puts the package on the floot near the table instead of rack
         # Some places may be wrongly represented on the global costmap
