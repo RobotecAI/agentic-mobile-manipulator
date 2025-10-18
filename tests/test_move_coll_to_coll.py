@@ -25,17 +25,13 @@ def get_rack_pairs():
 
 @pytest.mark.coll_to_coll
 @pytest.mark.parametrize("from_coll,to_coll", get_rack_pairs())
-def test_move_tool(from_coll: str, to_coll: str):
-    connector = ROS2Connector(executor_type="single_threaded")
-    scene_manager = SceneManager(
-        slots_file="scripts/resources/slots.csv",
-        spawnables_file="scripts/resources/spawnables.csv",
-        connector=connector,
-    )
-    kairos_controller = KairosController(
-        connector=connector, scene_manager=scene_manager
-    )
-
+def test_move_tool(
+    from_coll: str,
+    to_coll: str,
+    connector: ROS2Connector,
+    scene_manager: SceneManager,
+    kairos_controller: KairosController,
+):
     entities = scene_manager.get_entities(name_filter="box")
     if entities:
         scene_manager.assign_entities_to_slots(entities)

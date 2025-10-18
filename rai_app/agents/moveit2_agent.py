@@ -1,12 +1,15 @@
+import argparse
 import logging
 from pathlib import Path
 
-# generic ros libraries
 import rclpy
 from ament_index_python import get_package_share_directory
 from control_msgs.action import GripperCommand
 from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
 from langchain_core.language_models.chat_models import BaseChatModel
+
+# generic ros libraries
+from langchain_core.language_models.fake_chat_models import FakeChatModel
 from launch_param_builder import load_yaml
 from moveit.core.kinematic_constraints import construct_joint_constraint
 from moveit.core.planning_interface import MotionPlanResponse
@@ -374,7 +377,7 @@ class MoveIt2Agent(BaseAgent):
     When asked to debug, check the logs and provide short and actionable summary for the other agents.
     """
 
-    def __init__(self, llm: BaseChatModel):
+    def __init__(self, llm: BaseChatModel | None = None):
         super().__init__()
         self.connector = ROS2Connector(executor_type="single_threaded")
         self.manipulator_controller = ManipulatorController(
@@ -382,7 +385,11 @@ class MoveIt2Agent(BaseAgent):
             namespace="",
             ros_package_name="robotec_kairos_ur10",
         )
-        self.llm = llm
+
+        if llm is None:
+            self.llm = FakeChatModel()
+        else:
+            self.llm = llm
 
         self.connector.create_service(
             service_name="/rai/moveit2/move_arm",
@@ -498,7 +505,13 @@ class MoveIt2Agent(BaseAgent):
 
 @ROS2Context()
 def main():
-    llm = get_llm_model(config_name="general")
+    parser = argparse.ArgumentParser(description="Run MoveIt2 agent")
+    parser.add_argument("--test-mode", action="store_true", help="Run in test mode")
+    args = parser.parse_args()
+    if args.test_mode:
+        llm = FakeChatModel()
+    else:
+        llm = get_llm_model(config_name="general")
     agent = MoveIt2Agent(llm=llm)
     agent.run()
 
