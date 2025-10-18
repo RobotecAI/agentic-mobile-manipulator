@@ -5,10 +5,10 @@ import numpy as np
 from geometry_msgs.msg import Point, Pose
 from rai.communication.ros2 import ROS2Connector
 
-from scripts.manipulator_controller import ManipulatorController
-from scripts.navigation_controller import NavigationController
-from scripts.scene_manager import SceneManager
-from scripts.tools import (
+from rai_app.control.manipulator_controller import ManipulatorController
+from rai_app.control.navigation_controller import NavigationController
+from rai_app.environment import SceneManager
+from rai_app.geometry_helpers import (
     apply_relative_transform,
     calculate_relative_transform,
     get_global_pose_from_origin,
@@ -79,7 +79,7 @@ class HighManipulationStrategy(ManipulationStrategy):
 
 
 class MidLowManipulationStrategy(ManipulationStrategy):
-    """1st rack level"""
+    """Manipulation strategy for objects on the first rack level."""
 
     def get_staging_distance(self) -> float:
         return NAV_STAGING_POSE_DISTANCE
@@ -92,7 +92,7 @@ class MidLowManipulationStrategy(ManipulationStrategy):
 
 
 class MidHighManipulationStrategy(ManipulationStrategy):
-    """Place to the table"""
+    """Manipulation strategy tailored for table placements."""
 
     def get_staging_distance(self) -> float:
         return NAV_STAGING_POSE_DISTANCE
@@ -188,12 +188,14 @@ class KairosController:
         entity_name: str,
         target_slot_name: str,
     ):
-        """Move object to target slot.
+        """Move an object from its current pose to the target slot.
 
-        Args:
-            entity_name (str): name of the object to be moved
-            target_slot_name (str): name of the slot where the object should be placed
-            scene_manager (SceneManager): instance of SceneManager to get poses
+        Parameters
+        ----------
+        entity_name : str
+            Name of the object to relocate.
+        target_slot_name : str
+            Slot identifier where the object should be placed.
         """
         self.logger.info(f"Moving object {entity_name} to slot {target_slot_name}")
 
@@ -401,7 +403,7 @@ class KairosController:
         self.mani_ctrl.move_arm_to_base_pose()
 
     def approach_and_pick(self, object_pose: Pose, gripping_point: Pose):
-        """Try approaching object from 4 directions and pick it from the specified pose."""
+        """Approach an object from multiple directions before attempting a pick."""
 
         strategy = determine_strategy(object_pose, self.safe_low_approach)
         approach_distance = strategy.get_approach_distance()
@@ -416,7 +418,7 @@ class KairosController:
         self.mani_ctrl.move_arm_to_base_pose()
 
     def navigate_to_and_place(self, target_slot_pose: Pose, placing_point: Pose):
-        """Place an object in the specified pose."""
+        """Place an object into the desired pose using the current strategy."""
         self.logger.info(f"Navigating to and placing object in pose {target_slot_pose}")
         strategy = determine_strategy(target_slot_pose, self.safe_low_approach)
         approach_distance = strategy.get_approach_distance()
@@ -435,7 +437,7 @@ class KairosController:
         self.mani_ctrl.move_arm_to_base_pose()
 
     def navigate_to_and_throw_to_bin(self, bin_slot_pose: Pose, placing_point: Pose):
-        """Place an object in the specified pose."""
+        """Execute a disposal motion that throws the object into the bin."""
         strategy = determine_strategy(bin_slot_pose, self.safe_low_approach)
         approach_distance = strategy.get_approach_distance()
 

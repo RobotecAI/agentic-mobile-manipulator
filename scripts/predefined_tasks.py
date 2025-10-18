@@ -2,10 +2,10 @@ import argparse
 
 from rai.communication.ros2 import ROS2Connector, ROS2Context
 
-from rai_app.llms import get_vlm_model
-from rai_app.tools import SortReturnedPackageTool
-from scripts.kairos_controller import KairosController
-from scripts.scene_manager import SceneManager
+from rai_app.agents.tools import SortReturnedPackageTool
+from rai_app.control.kairos_controller import KairosController
+from rai_app.environment import SceneManager
+from rai_app.initialization.llms import get_vlm_model
 
 
 def sort_returned_packages():

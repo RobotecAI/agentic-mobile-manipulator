@@ -10,12 +10,8 @@ It continuously monitors camera feed to identify objects that are not probable i
 ## Usage
 
 ```bash
-uv run rai_app/inspection_agent.py --base-url http://localhost:8081 --vlm-model LFM-V2 --vlm-vendor openai
+uv run python rai_app/agents/inspection_agent.py
 ```
-
-> [!NOTE]
->
-> If models are hosted using `llama.cpp` `openai` vendor should be used and model name is not parsed
 
 ## Architecture
 
@@ -45,9 +41,6 @@ The main agent class that orchestrates the inspection process.
 | ---------------------- | ---------------------------------- | --------------------------------------- |
 | `--slots-file`         | `scripts/resources/slots.csv`      | Path to warehouse slots configuration   |
 | `--spawnables-file`    | `scripts/resources/spawnables.csv` | Path to spawnable objects configuration |
-| `--vlm-vendor`         | `ollama`                           | VLM provider (ollama/openai)            |
-| `--vlm-model`          | `LFM-2`                            | VLM model to use                        |
-| `--vlm-base_url`       | -                                  | VLM server URL                          |
 | `--camera-topic`       | `/rgbd_camera/camera_image_color`  | ROS2 camera topic                       |
 | `--ego-source-frame`   | `egobase_footprint`                | Robot base frame                        |
 | `--ego-target-frame`   | `odom`                             | Target coordinate frame                 |

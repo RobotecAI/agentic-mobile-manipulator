@@ -4,7 +4,7 @@ from typing import Literal
 import pytest
 from rai.messages import HumanMultimodalMessage
 
-from rai_app.llms import (
+from rai_app.initialization.llms import (
     get_embeddings_model,
     get_llm_model,
     get_vlm_model,

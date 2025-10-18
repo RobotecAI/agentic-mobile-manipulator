@@ -10,7 +10,7 @@ from rai.communication.ros2 import (
 )
 from tqdm import tqdm
 
-from scripts.scene_manager import SceneManager
+from rai_app.environment import SceneManager
 
 spawning_points = [
     (7.20, 7.44, 0.01, 0.0, 0.0, 0.0, 1.0),
