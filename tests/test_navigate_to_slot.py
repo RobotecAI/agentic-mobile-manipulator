@@ -9,6 +9,48 @@ from rai_app.agents.tools import (
 from rai_app.control.kairos_controller import KairosController
 from rai_app.environment.scene_manager import SceneManager
 
+# Slots excluded due to racks orientation - one side is near the wall
+PARTIALLY_UNAVAILABLE_RACKS = {"L": [1, 10], "G": [1, 6], "A": [1, 6], "F": [1, 10]}
+RACK_TO_UNAVAILABLE_SLOTS = {
+    "L": [1, 12],
+    "G": [13, 24],
+    "A": [13, 24],
+    "F": [13, 24],
+}
+
+# Slots excluded due to warehouse layout
+EXCLUDED_SLOT_NAMES = {
+    "A01/RackSlot1",
+    "A01/RackSlot4",
+    "A01/RackSlot7",
+    "G06/RackSlot3",
+    "G06/RackSlot6",
+    "G06/RackSlot9",
+}
+
+
+def get_partially_unavailable_slots():
+    unavailable_slots: list[str] = []
+    for rack_letter in PARTIALLY_UNAVAILABLE_RACKS:
+        rack_range = list(
+            range(
+                PARTIALLY_UNAVAILABLE_RACKS[rack_letter][0],
+                PARTIALLY_UNAVAILABLE_RACKS[rack_letter][1] + 1,
+            )
+        )
+        rack_range = list(map(lambda x: str(x).zfill(2), rack_range))
+        rack_names = [f"{rack_letter}{x}" for x in rack_range]
+        for rack_name in rack_names:
+            rack_slots = [
+                f"{rack_name}/RackSlot{x}"
+                for x in range(
+                    RACK_TO_UNAVAILABLE_SLOTS[rack_letter][0],
+                    RACK_TO_UNAVAILABLE_SLOTS[rack_letter][1] + 1,
+                )
+            ]
+            unavailable_slots.extend(rack_slots)
+    return sorted(unavailable_slots + EXCLUDED_SLOT_NAMES)
+
 
 def get_all_slots():
     connector = ROS2Connector(executor_type="single_threaded")
@@ -37,6 +79,12 @@ def get_all_slots():
         if not any(
             excluded_slot_name in slot_tag for excluded_slot_name in excluded_slot_names
         )
+    ]
+    unavailable_slots = get_partially_unavailable_slots()
+    filtered_slots_tags = [
+        slot_tag
+        for slot_tag in filtered_slots_tags
+        if slot_tag not in unavailable_slots
     ]
     return sorted(filtered_slots_tags)
 
