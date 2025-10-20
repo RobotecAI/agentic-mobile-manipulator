@@ -50,9 +50,9 @@ from rai_app.config.prompts import (
     MEGAMIND_SYSTEM_PROMPT_TEMPLATE,
     MOVEMENT_EXECUTOR_SYSTEM_PROMPT,
 )
+from rai_app.control.kairos_controller import KairosController
 from rai_app.environment import SceneManager
 from rai_app.initialization.llms import get_llm_model, get_vlm_model
-from scripts.kairos_controller import KairosController
 from scripts.populate_scene import load_rack_assignment
 
 TOPICS_TO_WAIT_FOR: list[str] = ["/wrist_camera/camera_image_color"]
