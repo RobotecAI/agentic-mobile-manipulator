@@ -555,6 +555,7 @@ class MoveFromCollectionToCollectionTool(WarehouseTool):
                 target_slot_name=target_slot.tag,
                 entity_name=origin_object_name,
             )
+            self.kairos_controller.mani_ctrl.move_arm_to_base_pose()
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")
             return f"Failed to move object from {origin_slot.tag} to {target_slot.tag}: {str(e)}"
