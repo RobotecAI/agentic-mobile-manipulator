@@ -1,6 +1,6 @@
 import csv
 import math
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import rclpy
 from geometry_msgs.msg import Point, Pose, Quaternion
@@ -45,7 +45,7 @@ class Slot:
 
     def is_manipulation_feasible(self) -> bool:
         """Return ``True`` when the slot can be manipulated by the arm."""
-        RACKS_OPPOSING_WALL = [f"L{str(i).zfill(2)}" for i in range(1, 10)]
+        RACKS_OPPOSING_WALL = [f"L{str(i)}" for i in range(1, 10)]
         SLOTS_FACING_BACKWARD = ["RackSlot" + str(i) for i in range(1, 13)]
 
         RACKS_FACING_WALL = (
@@ -168,10 +168,10 @@ class SlotsCollection:
         }
 
     @property
-    def middle(self) -> Pose:
-        """Return the centroid pose of the slots in this collection."""
+    def middle_position(self) -> Point:
+        """Calculate and return the average position of all slots in this collection"""
         if not self.slots:
-            return Pose()
+            return Point()
 
         total_x = 0.0
         total_y = 0.0
@@ -183,22 +183,68 @@ class SlotsCollection:
             total_y += slot.origin_pose.position.y
             total_z += slot.origin_pose.position.z
 
-        # Calculate averages
-        avg_pose = Pose()
-        avg_pose.position = Point(
-            x=total_x / count, y=total_y / count, z=total_z / count
-        )
+        return Point(x=total_x / count, y=total_y / count, z=total_z / count)
 
-        # For orientation, use the first slot's orientation
-        first_slot = next(iter(self.slots.values()))
-        avg_pose.orientation = Quaternion(
-            x=first_slot.origin_pose.orientation.x,
-            y=first_slot.origin_pose.orientation.y,
-            z=first_slot.origin_pose.orientation.z,
-            w=first_slot.origin_pose.orientation.w,
-        )
+    def _get_unique_orientations(self) -> List[Quaternion]:
+        """
+        Extract all unique orientations from slots in the collection.
+        """
+        if not self.slots:
+            return set()
 
-        return avg_pose
+        orientations = set()
+        orientations_list: List[Quaternion] = []
+        for slot in self.slots.values():
+            orient = slot.origin_pose.orientation
+            # quaterion is unhasable so use a tuple here
+            orient_tuple = (orient.x, orient.y, orient.z, orient.w)
+            if orient_tuple not in orientations:
+                orientations.add(orient_tuple)
+                orientations_list.append(orient)
+
+        return orientations_list
+
+    @property
+    def middle_poses(self) -> Tuple[Pose, Pose]:
+        """
+        Calculate and return two view poses at the middle position facing opposite directions.
+
+        This follows the same logic as view_of_racks_pose for a single rack collection.
+
+        Returns:
+            Tuple[Pose, Pose]: Two view poses with the same position but opposite orientations
+
+        Raises:
+            ValueError: If slots collection is empty or has invalid orientation
+        """
+        if not self.slots:
+            raise ValueError("Slots collection is empty")
+
+        unique_orientations = self._get_unique_orientations()
+
+        if len(unique_orientations) != 2:
+            raise ValueError(
+                f"Collection must have exactly 2 unique orientations, found {len(unique_orientations)}"
+            )
+
+        avg_position = self.middle_position
+        orientations_list = list(unique_orientations)
+
+        # Create first pose with first orientation
+        view_pose1 = Pose()
+        view_pose1.position = Point(
+            x=avg_position.x, y=avg_position.y, z=avg_position.z
+        )
+        view_pose1.orientation = orientations_list[0]
+
+        # Create second pose with second orientation
+        view_pose2 = Pose()
+        view_pose2.position = Point(
+            x=avg_position.x, y=avg_position.y, z=avg_position.z
+        )
+        view_pose2.orientation = orientations_list[1]
+
+        return view_pose1, view_pose2
 
     def __repr__(self) -> str:
         return self.__str__()

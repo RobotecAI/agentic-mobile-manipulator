@@ -1,4 +1,4 @@
-from .scene_manager import SceneManager
+from .scene_manager import Collection, SceneManager
 from .slots import Slot, SlotsCollection
 
-__all__ = ["SceneManager", "Slot", "SlotsCollection"]
+__all__ = ["Collection", "SceneManager", "Slot", "SlotsCollection"]

@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 from typing import Literal, Tuple
 
@@ -109,18 +110,18 @@ class MidHighManipulationStrategy(ManipulationStrategy):
         placing_point: Pose,
         grasp_type: Literal["top", "side"],
     ):
-        print(f"Placing to the table with grasp type: {grasp_type}")
+        logging.debug(f"Placing to the table with grasp type: {grasp_type}")
         approach_distance = self.get_approach_distance()
         if grasp_type == "top":
             staging_placing_point = apply_relative_transform(
                 placing_point, Pose(position=Point(x=0.4 + approach_distance, z=0.1))
             )
-            print("Placing to the table with top grasp")
+            logging.debug("Placing to the table with top grasp")
         elif grasp_type == "side":
             staging_placing_point = apply_relative_transform(
                 placing_point, Pose(position=Point(x=0.4 + approach_distance, z=1.0))
             )
-            print("Placing to the table with side grasp")
+            logging.debug("Placing to the table with side grasp")
         else:
             raise ValueError(f"Invalid grasp type: {grasp_type}")
         kairos_ctrl.mani_ctrl.move_arm_to_staging_pose(staging_placing_point)
