@@ -176,7 +176,7 @@ uv run scripts/populate_scene.py
 5. Run orchestrator:
 
 ```bash
-uv run rai_app/agent_orchestrator.py
+uv run rai_app/agents/agent_orchestrator.py
 ```
 
 6. Send tasks via topcis:
