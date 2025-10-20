@@ -4,7 +4,7 @@ import math
 import random
 import re
 import time
-from typing import Dict, List, Optional, Tuple, Type, cast
+from typing import List, Optional, Tuple, Type, cast
 
 import cv2
 import numpy as np
@@ -22,9 +22,8 @@ from std_msgs.msg import Header
 from tf_transformations import euler_from_quaternion
 
 from rai_app.agents.vlm_transport import publish_vlm_description
-from rai_app.config.knowledge import Collection, get_object_type_to_racks
 from rai_app.control.kairos_controller import KairosController
-from rai_app.environment import SceneManager, Slot, SlotsCollection
+from rai_app.environment import Collection, SceneManager, Slot, SlotsCollection
 from rai_app.geometry_helpers import (
     apply_relative_transform,
     calculate_relative_transform,
@@ -70,11 +69,179 @@ class WarehouseTool(BaseROS2Tool):
                 filitered_slots.append(slot)
         return filitered_slots
 
+    def view_of_racks_poses(self, racks: List[str]) -> Tuple[Pose, Pose]:
+        """
+        Calculate view poses for one or more racks placed next to each other.
+
+        Args:
+            racks: List of rack identifiers (e.g., ["A01"] or ["A01", "A02", "A03"])
+
+        Returns:
+            Tuple[Pose, Pose]: Two view poses facing opposite directions
+
+        Raises:
+            ValueError: If racks list is empty, racks don't have the same orientation,
+                        or have invalid orientation
+        """
+        if len(racks) == 0:
+            raise ValueError("At least 1 rack is required")
+
+        rack_collections = [
+            self.scene_manager.slots_collections[rack] for rack in racks
+        ]
+
+        if len(racks) == 1:
+            return rack_collections[0].middle_poses
+
+        # Multiple racks: get middle_poses for each and validate orientation consistency
+        rack_middle_poses = [rack_coll.middle_poses for rack_coll in rack_collections]
+
+        # Use first pose of first rack for orientation reference
+        first_qz = rack_middle_poses[0][0].orientation.z
+        first_qw = rack_middle_poses[0][0].orientation.w
+
+        # Validate all racks have the same orientation
+        for i, (pose1, pose2) in enumerate(rack_middle_poses[1:], start=1):
+            rack_qz = pose1.orientation.z
+            rack_qw = pose1.orientation.w
+
+            if rack_qz != first_qz or rack_qw != first_qw:
+                raise ValueError(
+                    f"Rack '{racks[i]}' orientation ({rack_qz}, {rack_qw}) "
+                    f"differs from first rack '{racks[0]}' orientation ({first_qz}, {first_qw})"
+                )
+
+        # Calculate average position across all racks using middle_poses positions
+        total_x = sum(poses[0].position.x for poses in rack_middle_poses)
+        total_y = sum(poses[0].position.y for poses in rack_middle_poses)
+        total_z = sum(poses[0].position.z for poses in rack_middle_poses)
+        count = len(rack_middle_poses)
+
+        avg_position = Point(x=total_x / count, y=total_y / count, z=total_z / count)
+
+        # Get orientation from first rack's middle_poses
+        pose1_template, pose2_template = rack_middle_poses[0]
+
+        # Create view poses with averaged position and orientations from middle_poses
+        view_pose1 = Pose()
+        view_pose1.position = avg_position
+        view_pose1.orientation = Quaternion(
+            x=pose1_template.orientation.x,
+            y=pose1_template.orientation.y,
+            z=pose1_template.orientation.z,
+            w=pose1_template.orientation.w,
+        )
+
+        view_pose2 = Pose()
+        view_pose2.position = avg_position
+        view_pose2.orientation = Quaternion(
+            x=pose2_template.orientation.x,
+            y=pose2_template.orientation.y,
+            z=pose2_template.orientation.z,
+            w=pose2_template.orientation.w,
+        )
+
+        return view_pose1, view_pose2
+
+    def approach_and_filter_collection(
+        self, collection, slots: List[Slot], approach_distance: float = 1.8
+    ) -> List[Slot]:
+        """Approaching a collection and filtering slots that are in arms range and in proximity.
+        Proximity means that in the row closer to the robot.
+
+        Parameters
+        ----------
+        collection : Collection
+            The collection to approach.
+        slots : List[Slot]
+            Initial slots to filter.
+        approach_distance : float
+            Distance in meters to stop before the collection.
+
+        Returns
+        -------
+        List[Slot]
+            Filtered slots based on proximity and arm range.
+        """
+        filtered_slots = self.filter_for_slots_in_arm_range(slots)
+
+        if collection.collection_type != "rack":
+            # If not rack, approach only from 1 side
+            for pose in collection.middle_poses:
+                try:
+                    self.kairos_controller.nav_ctrl.approach_target_along_orientation(
+                        collection.middle_poses[-1], approach_distance
+                    )
+                    break
+                except RuntimeError as e:
+                    logging.warning(e)
+        else:
+            # Approach collection from both viewing angles
+            for pose in collection.middle_poses:
+                try:
+                    self.kairos_controller.nav_ctrl.approach_target_along_orientation(
+                        pose, approach_distance
+                    )
+                    # Add only closer slots
+                    view_pose = get_global_pose_from_origin(
+                        Pose(position=Point(x=approach_distance)), pose
+                    )
+                    filtered_slots = self._filter_slots_by_proximity(
+                        slots=filtered_slots, view_pose=view_pose
+                    )
+                except RuntimeError as e:
+                    logging.warning(e)
+
+        # Scanning
+        time.sleep(1)
+
+        return filtered_slots
+
+    def _filter_slots_by_proximity(
+        self, slots: List[Slot], view_pose: Pose
+    ) -> List[Slot]:
+        """
+        Filter slots to only include the closer half based on distance along orientation axis.
+        In case of racks there are 2 rows and we want to return only 1st, closer to approach pose.
+        In case of table where there is only 1 row return all slots
+        """
+        if not slots:
+            return []
+
+        q = view_pose.orientation
+        roll, pitch, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+
+        # Forward direction based on yaw
+        forward_x = math.cos(yaw)
+        forward_y = math.sin(yaw)
+
+        # Calculate signed distance from approach pose to each slot along orientation axis
+        slot_distances = {}
+        for slot in slots:
+            # Vector from approach pose to slot
+            dx = abs(slot.origin_pose.position.x - view_pose.position.x)
+            dy = abs(slot.origin_pose.position.y - view_pose.position.y)
+
+            # Project onto forward direction (dot product)
+            distance_along_orientation = abs(dx * forward_x + dy * forward_y)
+            slot_distances[slot.tag] = distance_along_orientation
+
+        # Find the median distance
+        sorted_distances = sorted(slot_distances.values())
+        median_distance = sorted_distances[(len(sorted_distances) - 1) // 2]
+
+        # Return only slots that are closer than or equal to the median
+        filtered_slots = [
+            slot for slot in slots if slot_distances[slot.tag] <= median_distance
+        ]
+
+        return filtered_slots
+
     def check_the_origin_collection(
         self,
         collection_name: str,
         item_type: Optional[str] = None,
-        approach_distance: float = 2.0,
+        approach_distance: float = 1.8,
     ) -> List[Slot]:
         """Retrieve candidate slots containing objects for relocation.
 
@@ -108,46 +275,44 @@ class WarehouseTool(BaseROS2Tool):
         )
         coll = self.scene_manager.get_collection(tag=collection_name)
         if not coll:
-            # return f"No collection named {collection_name}"
             raise ValueError(f"No collection named {collection_name}")
 
-        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-            coll.middle, approach_distance
+        used_slots = coll.find_used_slots()
+        used_slots = self.approach_and_filter_collection(
+            collection=coll, slots=used_slots, approach_distance=approach_distance
         )
 
-        # sleep to mock the visual effect of 'scanning'
-        time.sleep(1)
-        used_slots = coll.find_used_slots()
-        used_slots = self.filter_for_slots_in_arm_range(used_slots)
         if not used_slots:
             raise RuntimeError(
                 f"There is no objects in the collection {collection_name}"
             )
+
         if item_type:
             slots_with_item = coll.find_slots_with_item_type(item_type=item_type)
             slots_with_item = self.filter_for_slots_in_arm_range(slots_with_item)
+
             if not slots_with_item:
                 raise RuntimeError(
-                    (
-                        f"There is no packages with given item type: {item_type} "
-                        f"in the collection {collection_name}"
-                    )
+                    f"There is no packages with given item type: {item_type} "
+                    f"in the collection {collection_name}"
                 )
-            else:
-                logging.info(
-                    (
-                        f"Origin Collection {collection_name} has {len(slots_with_item)} "
-                        f"appropriate packages with item '{item_type}' in robot's arm range"
-                    )
-                )
-                return slots_with_item
+
+            slots = list(set(used_slots).intersection(slots_with_item))
+            logging.info(
+                f"Origin Collection {collection_name} has {len(slots_with_item)} "
+                f"appropriate packages with item '{item_type}' in robot's arm range"
+            )
+            return slots
         else:
             logging.info(
-                f"Origin Collection {collection_name} has {len(used_slots)} appropriate packages in robot's arm range"
+                f"Origin Collection {collection_name} has {len(used_slots)} "
+                f"appropriate packages in robot's arm range"
             )
             return used_slots
 
-    def check_the_target_collection(self, collection_name: str) -> List[Slot]:
+    def check_the_target_collection(
+        self, collection_name: str, approach_distance: float = 1.8
+    ) -> List[Slot]:
         """Return empty slots in the target collection.
 
         Parameters
@@ -171,19 +336,16 @@ class WarehouseTool(BaseROS2Tool):
         logging.debug(
             f"Checking for empty slots in target collection {collection_name}..."
         )
+
         coll = self.scene_manager.get_collection(tag=collection_name)
         if not coll:
             raise ValueError(f"No collection named {collection_name}")
 
-        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-            coll.middle, 2.0
+        empty_slots = coll.find_empty_slots()
+        empty_slots = self.approach_and_filter_collection(
+            collection=coll, slots=empty_slots, approach_distance=approach_distance
         )
 
-        # sleep to mock the visual effect of 'scanning'
-        time.sleep(1)
-
-        empty_slots = coll.find_empty_slots()
-        empty_slots = self.filter_for_slots_in_arm_range(empty_slots)
         if not empty_slots:
             raise RuntimeError(
                 f"There is no empty slots in the collection {collection_name}"
@@ -319,7 +481,7 @@ class MoveFromCollectionToCollectionInput(BaseModel):
         default=None,
         description=(
             "Provide this field if you want to move package with certain type of item inside."
-            " If not leave it with default value."
+            " If item type is not specified not leave it with default None value."
         ),
     )
     target_collection_name: str = Field(
@@ -434,10 +596,10 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
         x: float,
         y: float,
         z: float,
-        qx: float,
-        qy: float,
-        qz: float,
-        qw: float,
+        qx: float = 0.0,
+        qy: float = 0.0,
+        qz: float = 0.0,
+        qw: float = 1.0,
     ):
         """Move a package from a free-form pose to the inspection area.
 
@@ -499,6 +661,7 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
                 target_slot_pose, relative_transform
             )
 
+            self.kairos_controller.approach_and_pick(object_pose, top_gripping_point)
             self.kairos_controller.navigate_to_and_place(
                 target_slot_pose, placing_point
             )
@@ -541,10 +704,10 @@ class ThrowTrashOutTool(WarehouseTool):
         x: float,
         y: float,
         z: float,
-        qx: float,
-        qy: float,
-        qz: float,
-        qw: float,
+        qx: float = 0.0,
+        qy: float = 0.0,
+        qz: float = 0.0,
+        qw: float = 1.0,
     ):
         """Dispose trash identified at the specified pose.
 
@@ -598,195 +761,27 @@ class ThrowTrashOutTool(WarehouseTool):
             return f"Failed to throw out garbage from {trash_pose} to garbage bin: {str(e)}"
 
 
+class HouseKeepToolInput(BaseModel):
+    racks: List[str] = Field(..., description="1 or 2 rack names to do housekeep on.")
+
+
 class HouseKeepTool(WarehouseTool):
     name: str = "do_housekeeping"
     description: str = (
-        "drives around warehouse checking for misalligned boxes on the racks"
+        "Do housekeeping on given racks. Check for wrongly placed boxes."
+        " You can provide AT MOST 2 racks that are next to each other "
+        "like [X01, X02] or just one collection like [X01]. Some racks like D03 or D04 must be approached 1 at a time. "
+        "You can't provide more than 2 racks at the same time."
     )
     task_topic: str
     approach_distance: float = 2.6
 
-    def view_of_racks_pose(self, racks: List[str]) -> Tuple[Pose, Pose]:
-        """Compute approach poses for inspecting adjacent racks.
-
-        Parameters
-        ----------
-        racks : list[str]
-            Rack identifiers such as ``["A01"]`` or ``["A01", "A02", "A03"]``.
-
-        Returns
-        -------
-        tuple[Pose, Pose]
-            Two poses placed at the rack center with orientations facing opposite
-            directions to inspect both sides.
-
-        Raises
-        ------
-        ValueError
-            If ``racks`` is empty or the racks do not share a valid orientation.
-        """
-        if len(racks) == 0:
-            raise ValueError("At least 1 rack is required")
-
-        rack_collections = [
-            self.scene_manager.slots_collections[rack] for rack in racks
-        ]
-
-        first_qz = rack_collections[0].middle.orientation.z
-        first_qw = rack_collections[0].middle.orientation.w
-
-        if len(rack_collections) > 1:
-            for i, rack_coll in enumerate(rack_collections[1:], start=1):
-                rack_qz = rack_coll.middle.orientation.z
-                rack_qw = rack_coll.middle.orientation.w
-
-                if rack_qz != first_qz or rack_qw != first_qw:
-                    raise ValueError(
-                        f"Rack '{racks[i]}' orientation ({rack_qz}, {rack_qw}) "
-                        f"differs from first rack '{racks[0]}' orientation ({first_qz}, {first_qw})"
-                    )
-
-        # Validate orientation values
-        if not (
-            (first_qz == 0.0 and first_qw == 1.0)
-            or (first_qz == 1.0 and first_qw == 0.0)
-            or (first_qz == 0.707)
-        ):
-            raise ValueError(
-                f"Invalid rack orientation: qz={first_qz}, qw={first_qw}. "
-                f"Expected (0.0, 1.0), (1.0, 0.0), or (0.707, *)"
-            )
-
-        # Calculate average position of all racks
-        if len(rack_collections) == 1:
-            avg_position = Point(
-                x=rack_collections[0].middle.position.x,
-                y=rack_collections[0].middle.position.y,
-                z=rack_collections[0].middle.position.z,
-            )
-        else:
-            total_x = sum(rack_coll.middle.position.x for rack_coll in rack_collections)
-            total_y = sum(rack_coll.middle.position.y for rack_coll in rack_collections)
-            total_z = sum(rack_coll.middle.position.z for rack_coll in rack_collections)
-            count = len(rack_collections)
-
-            avg_position = Point(
-                x=total_x / count, y=total_y / count, z=total_z / count
-            )
-
-        view_pose1 = Pose()
-        view_pose1.position = avg_position
-        view_pose1.orientation = Quaternion(
-            x=rack_collections[0].middle.orientation.x,
-            y=rack_collections[0].middle.orientation.y,
-            z=rack_collections[0].middle.orientation.z,
-            w=rack_collections[0].middle.orientation.w,
-        )
-
-        # Create second view pose (opposite direction)
-        view_pose2 = Pose()
-        view_pose2.position = avg_position
-
-        if first_qz == 0.0 and first_qw == 1.0:
-            view_pose2.orientation = Quaternion(
-                x=rack_collections[0].middle.orientation.x,
-                y=rack_collections[0].middle.orientation.y,
-                z=1.0,
-                w=0.0,
-            )
-        elif first_qz == 1.0 and first_qw == 0.0:
-            view_pose2.orientation = Quaternion(
-                x=rack_collections[0].middle.orientation.x,
-                y=rack_collections[0].middle.orientation.y,
-                z=0.0,
-                w=1.0,
-            )
-        elif first_qz == 0.707:
-            view_pose2.orientation = Quaternion(
-                x=rack_collections[0].middle.orientation.x,
-                y=rack_collections[0].middle.orientation.y,
-                z=rack_collections[0].middle.orientation.z,
-                w=-rack_collections[0].middle.orientation.w,
-            )
-
-        return view_pose1, view_pose2
-
-    def _filter_slots_by_proximity(
-        self, slots: Dict[str, Slot], view_pose: Pose
-    ) -> Dict[str, Slot]:
-        """Return slots closest to the approach pose along the orientation axis.
-
-        Parameters
-        ----------
-        slots : dict[str, Slot]
-            Mapping of slot identifiers to slot instances.
-        view_pose : Pose
-            Approach pose from which distance along the rack orientation is
-            computed.
-
-        Returns
-        -------
-        dict[str, Slot]
-            Subset containing roughly half of the slots that are closest to the
-            approach pose, ensuring only the accessible row is inspected.
-        """
-        if not slots:
-            return {}
-
-        q = view_pose.orientation
-        roll, pitch, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
-
-        # Forward direction based on yaw
-        forward_x = math.cos(yaw)
-        forward_y = math.sin(yaw)
-
-        # Calculate signed distance from approach pose to each slot along orientation axis
-        slot_distances = {}
-        for tag, slot in slots.items():
-            # Vector from approach pose to slot
-            dx = abs(slot.origin_pose.position.x - view_pose.position.x)
-            dy = abs(slot.origin_pose.position.y - view_pose.position.y)
-
-            # Project onto forward direction (dot product)
-            distance_along_orientation = abs(dx * forward_x + dy * forward_y)
-            slot_distances[tag] = distance_along_orientation
-
-        # Find the median distance
-        sorted_distances = sorted(slot_distances.values())
-        median_distance = sorted_distances[(len(sorted_distances) - 1) // 2]
-
-        # Return only slots that are closer than or equal to the median
-        filtered_slots = {
-            tag: slot
-            for tag, slot in slots.items()
-            if slot_distances[tag] <= median_distance
-        }
-
-        return filtered_slots
-
     def check_collection_boxes_for_misallignment(
-        self, collection: SlotsCollection, view_pose: Pose
-    ):
-        """Identify misaligned boxes in a collection and raise follow-up tasks.
-
-        Parameters
-        ----------
-        collection : SlotsCollection
-            Collection of slots to inspect.
-        view_pose : Pose
-            Approach pose representing the robot viewpoint.
-
-        Returns
-        -------
-        None
-            The method enqueues tasks for misaligned boxes using the ROS 2 task
-            topic.
-        """
-        slots = collection.get_all_slots()
+        self, collection: SlotsCollection, view_pose: Pose, send_task: bool = True
+    ) -> Optional[Slot]:
+        slots = list(collection.get_all_slots().values())
         closer_slots = self._filter_slots_by_proximity(slots, view_pose)
-        closer_slots_within_reach = self.filter_for_slots_in_arm_range(
-            list(closer_slots.values())
-        )
+        closer_slots_within_reach = self.filter_for_slots_in_arm_range(closer_slots)
         for slot in closer_slots_within_reach:
             obj = slot.get_obj_name()
             if obj:
@@ -795,15 +790,17 @@ class HouseKeepTool(WarehouseTool):
                 # around 20 degrees
                 if abs(yaw_diff) > 0.35:
                     # send new task
-                    self.connector.send_message(
-                        ROS2Message(
-                            payload={
-                                "data": f"Rotate box at slot {slot.tag} so that it is aligned with the rack."
-                            }
-                        ),
-                        target=self.task_topic,
-                        msg_type="std_msgs/msg/String",
-                    )
+                    if send_task:
+                        self.connector.send_message(
+                            ROS2Message(
+                                payload={
+                                    "data": f"Rotate box at slot {slot.tag} so that it is aligned with the rack."
+                                }
+                            ),
+                            target=self.task_topic,
+                            msg_type="std_msgs/msg/String",
+                        )
+                    return slot
 
     def check_collections(
         self,
@@ -860,39 +857,39 @@ class HouseKeepTool(WarehouseTool):
             )
             for _, row in df.iterrows()
         ]
-        Kpos1, Kpos2 = self.view_of_racks_pose(["K01", "K02"])
-        Jpos1, Jpos2 = self.view_of_racks_pose(["J01", "J02"])
-        Ipos1, Ipos2 = self.view_of_racks_pose(["I01", "I02"])
-        Hpos1, Hpos2 = self.view_of_racks_pose(["H01", "H02"])
+        Kpos1, Kpos2 = self.view_of_racks_poses(["K01", "K02"])
+        Jpos1, Jpos2 = self.view_of_racks_poses(["J01", "J02"])
+        Ipos1, Ipos2 = self.view_of_racks_poses(["I01", "I02"])
+        Hpos1, Hpos2 = self.view_of_racks_poses(["H01", "H02"])
 
-        L34pos1, L34pos2 = self.view_of_racks_pose(["L03", "L04"])
-        L12pos1, L12pos2 = self.view_of_racks_pose(["L01", "L02"])
-        L56pos1, L56pos2 = self.view_of_racks_pose(["L05", "L06"])
-        L67pos1, L67pos2 = self.view_of_racks_pose(["L06", "L07"])
-        L89pos1, L89pos2 = self.view_of_racks_pose(["L08", "L09"])
+        L34pos1, L34pos2 = self.view_of_racks_poses(["L03", "L04"])
+        L12pos1, L12pos2 = self.view_of_racks_poses(["L01", "L02"])
+        L56pos1, L56pos2 = self.view_of_racks_poses(["L05", "L06"])
+        L67pos1, L67pos2 = self.view_of_racks_poses(["L06", "L07"])
+        L89pos1, L89pos2 = self.view_of_racks_poses(["L08", "L09"])
 
-        G12pos1, G12pos2 = self.view_of_racks_pose(["G01", "G02"])
-        G34pos1, G34pos2 = self.view_of_racks_pose(["G03", "G04"])
-        G56pos1, G56pos2 = self.view_of_racks_pose(["G05", "G06"])
+        G12pos1, G12pos2 = self.view_of_racks_poses(["G01", "G02"])
+        G34pos1, G34pos2 = self.view_of_racks_poses(["G03", "G04"])
+        G56pos1, G56pos2 = self.view_of_racks_poses(["G05", "G06"])
 
-        A12pos1, A12pos2 = self.view_of_racks_pose(["A01", "A02"])
-        A34pos1, A34pos2 = self.view_of_racks_pose(["A03", "A04"])
-        A56pos1, A56pos2 = self.view_of_racks_pose(["A05", "A06"])
+        A12pos1, A12pos2 = self.view_of_racks_poses(["A01", "A02"])
+        A34pos1, A34pos2 = self.view_of_racks_poses(["A03", "A04"])
+        A56pos1, A56pos2 = self.view_of_racks_poses(["A05", "A06"])
 
-        F12pos1, F12pos2 = self.view_of_racks_pose(["F01", "F02"])
-        F34pos1, F34pos2 = self.view_of_racks_pose(["F03", "F04"])
-        F56pos1, F56pos2 = self.view_of_racks_pose(["F05", "F06"])
-        F78pos1, F78pos2 = self.view_of_racks_pose(["F07", "F08"])
-        F910pos1, F910pos2 = self.view_of_racks_pose(["F09", "F10"])
+        F12pos1, F12pos2 = self.view_of_racks_poses(["F01", "F02"])
+        F34pos1, F34pos2 = self.view_of_racks_poses(["F03", "F04"])
+        F56pos1, F56pos2 = self.view_of_racks_poses(["F05", "F06"])
+        F78pos1, F78pos2 = self.view_of_racks_poses(["F07", "F08"])
+        F910pos1, F910pos2 = self.view_of_racks_poses(["F09", "F10"])
 
-        B12pos1, B12pos2 = self.view_of_racks_pose(["B01", "B02"])
-        B34pos1, B34pos2 = self.view_of_racks_pose(["B03", "B04"])
+        B12pos1, B12pos2 = self.view_of_racks_poses(["B01", "B02"])
+        B34pos1, B34pos2 = self.view_of_racks_poses(["B03", "B04"])
 
-        C12pos1, C12pos2 = self.view_of_racks_pose(["C01", "C02"])
-        C34pos1, C34pos2 = self.view_of_racks_pose(["C03", "C04"])
+        C12pos1, C12pos2 = self.view_of_racks_poses(["C01", "C02"])
+        C34pos1, C34pos2 = self.view_of_racks_poses(["C03", "C04"])
 
-        D12pos1, D12pos2 = self.view_of_racks_pose(["D01", "D02"])
-        D34pos1, D34pos2 = self.view_of_racks_pose(["D03", "D04"])
+        D12pos1, D12pos2 = self.view_of_racks_poses(["D01", "D02"])
+        D34pos1, D34pos2 = self.view_of_racks_poses(["D03", "D04"])
 
         self.kairos_controller.nav_ctrl.navigator.navigate_to_pose(pose=waypoints[0])
         self.kairos_controller.mani_ctrl.move_arm_to_rack_view_pose()
@@ -919,7 +916,7 @@ class HouseKeepTool(WarehouseTool):
         self.kairos_controller.nav_ctrl.navigator.navigate_to_pose(pose=waypoints[3])
 
         self.check_collections(
-            self.scene_manager.slots_collections["L10"].middle,
+            self.scene_manager.slots_collections["L10"].middle_poses[0],
             collections_names=["L10"],
         )
         self.check_collections(Hpos1, collections_names=["H01", "H02"])
@@ -955,12 +952,12 @@ class HouseKeepTool(WarehouseTool):
         self.check_collections(D12pos2, collections_names=["D01", "D02"])
 
         # Special cases for D03 and D04 where 2.6 distance is to much
-        D3_pos = self.scene_manager.slots_collections["D03"].middle
+        D3_pos = self.scene_manager.slots_collections["D03"].middle_poses[0]
         D3_pos.orientation.y = 1.0
         D3_pos.orientation.w = 0.0
         self.kairos_controller.nav_ctrl.approach_target_along_orientation(D3_pos, 2.0)
 
-        D4_pos = self.scene_manager.slots_collections["D04"].middle
+        D4_pos = self.scene_manager.slots_collections["D04"].middle_poses[0]
         D4_pos.orientation.y = 1.0
         D4_pos.orientation.w = 0.0
         self.kairos_controller.nav_ctrl.approach_target_along_orientation(D4_pos, 2.0)
@@ -997,9 +994,6 @@ class CorrectBoxPositionTool(WarehouseTool):
         """
         slots = self.scene_manager.get_all_slots()
         target_slot = slots[slot_name]
-        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-            target_pose=target_slot.origin_pose
-        )
         obj_name = target_slot.get_obj_name()
         if not obj_name:
             raise RuntimeError(f"There is no object at the slot {target_slot.tag}")
@@ -1070,7 +1064,7 @@ class SortReturnedPackageTool(WarehouseTool):
         return item_stored
 
     def _get_target_collection(self, item_stored: str) -> Slot:
-        possible_racks = get_object_type_to_racks(item_stored)
+        possible_racks = self.scene_manager.get_object_type_to_racks(item_stored)
         free_slot = self._get_free_collections_slot(possible_racks)
         return free_slot
 

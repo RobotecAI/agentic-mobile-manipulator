@@ -290,23 +290,19 @@ class NavigationController:
         bool
             ``True`` if any attempt succeeds, otherwise ``False``.
         """
-        if self.approach_target_keeping_distance(
-            target_pose, Pose(position=Point(x=target_pose_distance))
-        ):
-            return True
+        approach_directions = [
+            Pose(position=Point(x=target_pose_distance)),
+            Pose(position=Point(x=-target_pose_distance)),
+            Pose(position=Point(y=target_pose_distance)),
+            Pose(position=Point(y=-target_pose_distance)),
+        ]
 
-        if self.approach_target_keeping_distance(
-            target_pose, Pose(position=Point(x=-target_pose_distance))
-        ):
-            return True
-        if self.approach_target_keeping_distance(
-            target_pose, Pose(position=Point(y=target_pose_distance))
-        ):
-            return True
-        if self.approach_target_keeping_distance(
-            target_pose, Pose(position=Point(y=-target_pose_distance))
-        ):
-            return True
+        for relative_pose in approach_directions:
+            try:
+                if self.approach_target_keeping_distance(target_pose, relative_pose):
+                    return True
+            except RuntimeError:
+                continue
 
         return False
 

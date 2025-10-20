@@ -3,6 +3,7 @@ import copy
 import math
 import random
 import uuid
+from enum import Enum
 from operator import attrgetter
 from typing import Dict, List, NamedTuple, Optional, Sequence, Tuple, cast
 
@@ -27,7 +28,6 @@ from tf2_geometry_msgs import do_transform_pose
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
 
-from rai_app.config.knowledge import get_object_type_to_racks_all
 from rai_app.environment.slots import Slot, SlotsCollection
 
 
@@ -35,6 +35,12 @@ class ObjectWithDistance(NamedTuple):
     obj_name: str
     entity_state: EntityState
     distance: float
+
+
+class Collection(Enum):
+    RETURNED_PACKAGES_TABLE = "t1"
+    OUTBOUND_SHIPMENT_TABLE = "t2"
+    INSPECTION_TABLE = "t4"
 
 
 class SceneManager:
@@ -458,6 +464,57 @@ class SceneManager:
         for coll_name, item_type in zip(collections_names, item_types):
             self.slots_collections[coll_name].item_type = item_type
 
+    def get_object_type_to_racks(self, object_type: str) -> List[str]:
+        """Get all racks that typically store a specific object type.
+
+        Parameters
+        ----------
+        object_type : str
+            Type of object to search for (e.g., "cpu", "gpu", "pipes")
+
+        Returns
+        -------
+        list[str]
+            List of rack identifiers that store this object type
+        """
+        object_type_to_racks: Dict[str, List[str]] = {}
+
+        # Build mapping from collections that are racks
+        for tag, collection in self.slots_collections.items():
+            if collection.collection_type == "rack":
+                # Check if this rack has an assigned item type
+                if hasattr(collection, "item_type") and collection.item_type:
+                    if collection.item_type not in object_type_to_racks:
+                        object_type_to_racks[collection.item_type] = []
+                    object_type_to_racks[collection.item_type].append(tag)
+
+        return object_type_to_racks.get(object_type, [])
+
+    def get_object_type_to_racks_all(self) -> Dict[str, List[str]]:
+        """Get complete mapping of all object types to their storage racks.
+
+        Returns
+        -------
+        dict[str, list[str]]
+            Mapping of object types to lists of rack identifiers
+        """
+        object_type_to_racks: Dict[str, List[str]] = {}
+
+        # Build complete mapping from rack collections
+        for tag, collection in self.slots_collections.items():
+            if collection.collection_type == "rack":
+                # Check if this rack has an assigned item type
+                if hasattr(collection, "item_type") and collection.item_type:
+                    if collection.item_type not in object_type_to_racks:
+                        object_type_to_racks[collection.item_type] = []
+                    object_type_to_racks[collection.item_type].append(tag)
+
+        # Sort rack lists for consistent output
+        for racks in object_type_to_racks.values():
+            racks.sort()
+
+        return object_type_to_racks
+
     def add_collection(self, collection: SlotsCollection) -> None:
         """Register a slots collection within the warehouse scene graph.
 
@@ -718,7 +775,7 @@ class SceneManager:
             Multi-line string describing which collections store each object type.
         """
 
-        object_type_to_racks = get_object_type_to_racks_all()
+        object_type_to_racks = self.get_object_type_to_racks_all()
         lines = ["The following objects are stored in the warehouse:\n"]
         for object_type, racks in object_type_to_racks.items():
             lines.append(

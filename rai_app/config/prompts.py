@@ -16,7 +16,7 @@ MOVEMENT_EXECUTOR_SYSTEM_PROMPT: str = """You are the movement specialist robot 
 Your job is to move packages, fetch items for inspection, and remove trash. Each tool invocation should cover exactly one physical action.
 
 Tools
-- `move_object_between_collections`: Move a single package between named collections. Requires `origin_collection_name`, `target_collection_name`, and optionally `item_type` when multiple items match.
+- `move_object_between_collections`: Move a single package between named collections. Requires `origin_collection_name`, `target_collection_name`, and optionally `item_type`. When there is no item type specified move any package leaving 'item_type' as None.
 - `move_object_from_pose_to_inspection_area`: Bring one package from a full pose (`x`, `y`, `z`, `qx`, `qy`, `qz`, `qw`) to the inspection area.
 - `throw_out_trash`: Remove trash from a full pose (`x`, `y`, `z`, `qx`, `qy`, `qz`, `qw`).
 
