@@ -18,7 +18,13 @@ def get_rack_pairs():
         connector=connector,
     )
     racks = sorted(
-        list(set(slot.split("/")[0] for slot in scene_manager.get_all_slots()))
+        list(
+            set(
+                slot.split("/")[0]
+                for slot in scene_manager.get_all_slots()
+                if "Garbage" not in slot
+            )
+        )
     )
     return list(zip(racks[:-1], racks[1:]))
 

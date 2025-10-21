@@ -25,7 +25,7 @@ NAV_GRIPPING_POSE_DISTANCE = 0.90
 NAV_STAGING_POSE_DISTANCE = 1.2
 NAV_LOW_GRIPPING_POSE_DISTANCE = 1.2
 NAV_LOW_STAGING_POSE_DISTANCE = 2.0
-NAV_HIGH_GRIPPING_POSE_DISTANCE = 0.9
+NAV_HIGH_GRIPPING_POSE_DISTANCE = 0.8
 NAV_HIGH_STAGING_POSE_DISTANCE = 1.4
 
 
@@ -102,7 +102,7 @@ class MidHighManipulationStrategy(ManipulationStrategy):
         return NAV_GRIPPING_POSE_DISTANCE
 
     def move_arm_to_base_pose(self, mani_ctrl: ManipulatorController):
-        mani_ctrl.move_arm_to_base_pose()
+        mani_ctrl.move_arm_to_mid_high_pose()
 
     def execute_placement(
         self,
