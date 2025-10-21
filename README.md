@@ -44,6 +44,7 @@ The demo is showcased at ROSCon 2025 in Singapore, presented jointly by Robotec.
 - [Demo overview](./docs/demo.md)
 - [Setup instructions](./docs/setup.md)
 - [Running instructions](./docs/running.md)
+- [Dependencies](./docs/dependencies.md)
 
 ## Contributing
 
@@ -56,3 +57,9 @@ This project is licensed under the [Apache 2.0 License](https://opensource.org/l
 ## Contact
 
 For questions about the demo or collaboration opportunities, please open an issue in this repository.
+
+---
+
+Developed by: <a href="https://robotec.ai/">Robotec.ai</a>
+
+<img src="https://robotec.ai/robotec.svg" alt="Robotec.ai Logo" width="200">
