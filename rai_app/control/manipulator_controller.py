@@ -23,13 +23,22 @@ class ManipulatorController:
         "egoarm_shoulder_pan_joint": 0.018249407410621643,
     }
 
-    SIDE_GRASP_BASE_JOINT_VALUES = {
+    SIDE_GRASP_MID_HIGH_JOINT_VALUES = {
         "egoarm_wrist_1_joint": 0.35376831889152527,
         "egoarm_wrist_2_joint": 1.9237881898880005,
         "egoarm_wrist_3_joint": -1.5593433380126953,
         "egoarm_shoulder_lift_joint": -2.2522737979888916,
         "egoarm_elbow_joint": 1.9098111391067505,
         "egoarm_shoulder_pan_joint": 0.2729571461677551,
+    }
+
+    SIDE_GRASP_BASE_JOINT_VALUES = {
+        "egoarm_wrist_1_joint": 0.025957927107810974,
+        "egoarm_wrist_2_joint": 0.8452260494232178,
+        "egoarm_wrist_3_joint": -1.607147121429443,
+        "egoarm_shoulder_lift_joint": -2.3126919269561768,
+        "egoarm_elbow_joint": 2.3471269607543945,
+        "egoarm_shoulder_pan_joint": -0.745831310749054,
     }
 
     TOP_GRASP_LOW_JOINT_VALUES = {
@@ -135,6 +144,12 @@ class ManipulatorController:
             return self.set_arm_joints(self.TOP_GRASP_BASE_JOINT_VALUES)
         elif self.grasp_type == "side":
             return self.set_arm_joints(self.SIDE_GRASP_BASE_JOINT_VALUES)
+
+    def move_arm_to_mid_high_pose(self):
+        if self.grasp_type == "top":
+            return self.set_arm_joints(self.TOP_GRASP_BASE_JOINT_VALUES)
+        elif self.grasp_type == "side":
+            return self.set_arm_joints(self.SIDE_GRASP_MID_HIGH_JOINT_VALUES)
 
     def move_arm_to_staging_pose(self, target_pose: Pose):
         calculated_pose = PoseStamped()
