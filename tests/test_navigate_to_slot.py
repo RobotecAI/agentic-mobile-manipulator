@@ -19,14 +19,14 @@ RACK_TO_UNAVAILABLE_SLOTS = {
 }
 
 # Slots excluded due to warehouse layout
-EXCLUDED_SLOT_NAMES = {
+EXCLUDED_SLOT_NAMES = [
     "A01/RackSlot1",
     "A01/RackSlot4",
     "A01/RackSlot7",
     "G06/RackSlot3",
     "G06/RackSlot6",
     "G06/RackSlot9",
-}
+]
 
 
 def get_partially_unavailable_slots():
