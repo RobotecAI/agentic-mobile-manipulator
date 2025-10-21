@@ -41,6 +41,7 @@ class Collection(Enum):
     RETURNED_PACKAGES_TABLE = "t1"
     OUTBOUND_SHIPMENT_TABLE = "t2"
     INSPECTION_TABLE = "t4"
+    FREE = "t3"
 
 
 class SceneManager:
@@ -165,6 +166,7 @@ class SceneManager:
         items_stored: Optional[Sequence[None | str]] = None,
         std_xy: float = 0.0,
         std_yaw: float = 0.0,
+        percent_of_rotated_objects: float = 0.0,
     ):
         if items_stored is None:
             items_stored = [None] * len(object_names)
@@ -182,8 +184,19 @@ class SceneManager:
             desc="Spawning entities",
             total=len(slots),
         ):
+            should_rotate = random.random() < percent_of_rotated_objects
+            if should_rotate:
+                # rotate additional 90 degrees
+                additional_rotation = 1.57
+            else:
+                additional_rotation = 0.0
             simulation_name = self.spawn_on_spot(
-                slot, object_name, item, std_xy, std_yaw
+                slot,
+                object_name,
+                item,
+                std_xy,
+                std_yaw,
+                additional_rotation=additional_rotation,
             )
             simulation_names.append(simulation_name)
         return simulation_names
@@ -234,6 +247,7 @@ class SceneManager:
         std_xy: float = 0.0,
         std_yaw: float = 0.0,
         frame: str = "odom",
+        additional_rotation: float = 0.0,
     ):
         wait_for_ros2_services(self.connector, ["/spawn_entity"])
         pose: Pose = copy.deepcopy(self.slots[slot_name].origin_pose)
@@ -247,6 +261,7 @@ class SceneManager:
 
         # Add Gaussian noise to yaw
         yaw += random.normalvariate(0, std_yaw)
+        yaw += additional_rotation
 
         # Convert back to quaternion
         q_new = quaternion_from_euler(roll, pitch, yaw)
@@ -776,11 +791,11 @@ class SceneManager:
         """
 
         object_type_to_racks = self.get_object_type_to_racks_all()
-        lines = ["The following objects are stored in the warehouse:\n"]
+        lines = [
+            "There are several racks in the in the warehouse and following objects are stored in them:"
+        ]
         for object_type, racks in object_type_to_racks.items():
-            lines.append(
-                f"{object_type} is usually stored in the following collections: {racks}"
-            )
+            lines.append(f"- racks: {racks} - they usually store {object_type}")
         return "\n".join(lines)
 
     def quaternion_to_forward_vector(
