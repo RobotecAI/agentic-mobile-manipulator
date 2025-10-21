@@ -59,16 +59,6 @@ class ManipulatorController:
         "egoarm_shoulder_pan_joint": -0.3496033847332001,
     }
 
-    # so that wrist camera is slightly higher and can view whole racks
-    HOUSEKEEP_JOINT_VALUES = {
-        "egoarm_wrist_1_joint": -1.7678067684173584,
-        "egoarm_wrist_2_joint": -1.570849895477295,
-        "egoarm_wrist_3_joint": 1.5707409381866455,
-        "egoarm_shoulder_lift_joint": -2.2628884315490723,
-        "egoarm_elbow_joint": 2.181567430496216,
-        "egoarm_shoulder_pan_joint": 0.01814597100019455,
-    }
-
     def __init__(
         self,
         connector: ROS2Connector | None = None,
@@ -145,9 +135,6 @@ class ManipulatorController:
             return self.set_arm_joints(self.TOP_GRASP_BASE_JOINT_VALUES)
         elif self.grasp_type == "side":
             return self.set_arm_joints(self.SIDE_GRASP_BASE_JOINT_VALUES)
-
-    def move_arm_to_rack_view_pose(self):
-        return self.set_arm_joints(self.HOUSEKEEP_JOINT_VALUES)
 
     def move_arm_to_staging_pose(self, target_pose: Pose):
         calculated_pose = PoseStamped()

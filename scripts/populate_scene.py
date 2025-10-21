@@ -96,14 +96,18 @@ def main():
                 items_stored.append(item_type)
 
         scene_manager.populate_scene(
-            spawn_slot_names, spawn_entity_types, items_stored, std_yaw=0.0
+            spawn_slot_names,
+            spawn_entity_types,
+            items_stored,
+            std_yaw=0.03,
+            percent_of_rotated_objects=0.1,
         )
         spawn_slot_names, spawn_entity_types, items_stored = load_spawn_config(
             "scripts/resources/spawn_config_table.csv"
         )
 
         scene_manager.populate_scene(
-            spawn_slot_names, spawn_entity_types, items_stored, std_yaw=0.0
+            spawn_slot_names, spawn_entity_types, items_stored, std_yaw=0.1
         )
 
     anomalies_poses = [
@@ -128,6 +132,7 @@ def main():
             zip(anomalies_poses, anomalies_types), desc="Spawning anomalies"
         ):
             scene_manager.spawn_object(pose=pose, object_name=anomaly_type)
+
     scene_manager.connector.shutdown()
 
 

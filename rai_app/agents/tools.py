@@ -8,9 +8,8 @@ from typing import List, Optional, Tuple, Type, cast
 
 import cv2
 import numpy as np
-import pandas as pd
 from cv_bridge import CvBridge
-from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
+from geometry_msgs.msg import Point, Pose, Quaternion
 from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel, Field
 from rai.communication.ros2 import ROS2Message
@@ -18,7 +17,6 @@ from rai.messages import HumanMultimodalMessage, MultimodalArtifact, SystemMessa
 from rai.tools.ros2.base import BaseROS2Tool
 from rai.tools.ros2.simple import GetROS2ImageConfiguredTool
 from sensor_msgs.msg import Image
-from std_msgs.msg import Header
 from tf_transformations import euler_from_quaternion
 
 from rai_app.agents.vlm_transport import publish_vlm_description
@@ -144,14 +142,17 @@ class WarehouseTool(BaseROS2Tool):
         return view_pose1, view_pose2
 
     def approach_and_filter_collection(
-        self, collection, slots: List[Slot], approach_distance: float = 1.8
+        self,
+        collection: SlotsCollection,
+        slots: List[Slot],
+        approach_distance: float = 1.8,
     ) -> List[Slot]:
         """Approaching a collection and filtering slots that are in arms range and in proximity.
         Proximity means that in the row closer to the robot.
 
         Parameters
         ----------
-        collection : Collection
+        collection : SlotsCollection
             The collection to approach.
         slots : List[Slot]
             Initial slots to filter.
@@ -567,16 +568,10 @@ class MoveFromCollectionToCollectionTool(WarehouseTool):
         return return_text
 
 
-class MoveFromPoseToInspectionAreaToolInput(BaseModel):
+class PointInput(BaseModel):
     x: float = Field(..., description="X coordinate of the object location in meters")
     y: float = Field(..., description="Y coordinate of the object location in meters")
     z: float = Field(..., description="Z coordinate of the object location in meters")
-    qx: float = Field(..., description="X component of orientation quaternion")
-    qy: float = Field(..., description="Y component of orientation quaternion")
-    qz: float = Field(..., description="Z component of orientation quaternion")
-    qw: float = Field(
-        ..., description="W component of orientation quaternion (scalar part)"
-    )
 
 
 class MoveFromPoseToInspectionAreaTool(WarehouseTool):
@@ -586,9 +581,7 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
         "Use this tool when you want to move an object from a specific location to the inspection area."
     )
 
-    args_schema: Type[MoveFromPoseToInspectionAreaToolInput] = (
-        MoveFromPoseToInspectionAreaToolInput
-    )
+    args_schema: Type[PointInput] = PointInput
 
     inspection_area_collections: List[str] = ["t4"]
 
@@ -597,10 +590,6 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
         x: float,
         y: float,
         z: float,
-        qx: float = 0.0,
-        qy: float = 0.0,
-        qz: float = 0.0,
-        qw: float = 1.0,
     ):
         """Move a package from a free-form pose to the inspection area.
 
@@ -608,8 +597,7 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
         ----------
         x, y, z : float
             Cartesian coordinates of the object pose in meters.
-        qx, qy, qz, qw : float
-            Components of the quaternion describing the object orientation.
+
 
         Returns
         -------
@@ -619,22 +607,10 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
         """
         top_gripping_point = Pose(
             position=Point(x=x, y=y, z=z),
-            orientation=Quaternion(
-                x=float(qx),
-                y=float(qy),
-                z=float(qz),
-                w=float(qw),
-            ),
         )
         # NOTE setting z to 0.0 will only work when objeect is picked from the ground
         object_pose = Pose(
             position=Point(x=x, y=y, z=0.0),
-            orientation=Quaternion(
-                x=float(qx),
-                y=float(qy),
-                z=float(qz),
-                w=float(qw),
-            ),
         )
 
         all_empty_slots = []
@@ -682,33 +658,17 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
         )
 
 
-class ThrowTrashOutInput(BaseModel):
-    x: float = Field(..., description="X coordinate of the trash location in meters")
-    y: float = Field(..., description="Y coordinate of the trash location in meters")
-    z: float = Field(..., description="Z coordinate of the trash location in meters")
-    qx: float = Field(..., description="X component of orientation quaternion")
-    qy: float = Field(..., description="Y component of orientation quaternion")
-    qz: float = Field(..., description="Z component of orientation quaternion")
-    qw: float = Field(
-        ..., description="W component of orientation quaternion (scalar part)"
-    )
-
-
 class ThrowTrashOutTool(WarehouseTool):
     name: str = "throw_out_trash"
     description: str = "Throw out trash that is at certain location"
 
-    args_schema: Type[ThrowTrashOutInput] = ThrowTrashOutInput
+    args_schema: Type[PointInput] = PointInput
 
     def _run(
         self,
         x: float,
         y: float,
         z: float,
-        qx: float = 0.0,
-        qy: float = 0.0,
-        qz: float = 0.0,
-        qw: float = 1.0,
     ):
         """Dispose trash identified at the specified pose.
 
@@ -716,8 +676,7 @@ class ThrowTrashOutTool(WarehouseTool):
         ----------
         x, y, z : float
             Cartesian coordinates of the trash pose in meters.
-        qx, qy, qz, qw : float
-            Components of the trash orientation quaternion.
+
 
         Returns
         -------
@@ -727,21 +686,9 @@ class ThrowTrashOutTool(WarehouseTool):
 
         trash_gripping_point = Pose(
             position=Point(x=x, y=y, z=z),
-            orientation=Quaternion(
-                x=float(qx),
-                y=float(qy),
-                z=float(qz),
-                w=float(qw),
-            ),
         )
         trash_pose = Pose(
             position=Point(x=x, y=y, z=z / 2),
-            orientation=Quaternion(
-                x=float(qx),
-                y=float(qy),
-                z=float(qz),
-                w=float(qw),
-            ),
         )
 
         # NOTE (jmatejcz) now we have 1 bin, but if we had multiple,
@@ -755,27 +702,25 @@ class ThrowTrashOutTool(WarehouseTool):
                 object_pose=trash_pose,
                 top_gripping_point=trash_gripping_point,
             )
-            return f"Successfully thrown out trash from {trash_pose} to garbage bin"
+            return f"Successfully thrown out trash from {trash_gripping_point} to garbage bin"
 
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")
-            return f"Failed to throw out garbage from {trash_pose} to garbage bin: {str(e)}"
+            return f"Failed to throw out garbage from {trash_gripping_point} to garbage bin: {str(e)}"
 
 
 class HouseKeepToolInput(BaseModel):
-    racks: List[str] = Field(..., description="1 or 2 rack names to do housekeep on.")
+    rack: str = Field(..., description="Rack name to do housekeeping on.")
 
 
 class HouseKeepTool(WarehouseTool):
     name: str = "do_housekeeping"
     description: str = (
-        "Do housekeeping on given racks. Check for wrongly placed boxes."
-        " You can provide AT MOST 2 racks that are next to each other "
-        "like [X01, X02] or just one collection like [X01]. Some racks like D03 or D04 must be approached 1 at a time. "
-        "You can't provide more than 2 racks at the same time."
+        "Do housekeeping on the given rack. Check for wrongly placed boxes. "
+        "You can only provide one rack at a time."
     )
     task_topic: str
-    approach_distance: float = 2.6
+    approach_distance: float = 2.0
 
     def check_collection_boxes_for_misallignment(
         self, collection: SlotsCollection, view_pose: Pose, send_task: bool = True
@@ -788,9 +733,7 @@ class HouseKeepTool(WarehouseTool):
             if obj:
                 obj_pose = self.scene_manager.get_pose(entity_name=obj)
                 yaw_diff = get_yaw_difference(obj_pose, slot.origin_pose)
-                # around 20 degrees
                 if abs(yaw_diff) > 0.35:
-                    # send new task
                     if send_task:
                         self.connector.send_message(
                             ROS2Message(
@@ -803,169 +746,47 @@ class HouseKeepTool(WarehouseTool):
                         )
                     return slot
 
-    def check_collections(
+    def check_collection(
         self,
         approach_pose: Pose,
-        collections_names: List[str],
+        collection_name: str,
         approach_distance: Optional[float] = None,
     ):
-        """Inspect rack collections for misaligned boxes.
+        """Inspect a rack collection for misaligned boxes."""
+        try:
+            if not approach_distance:
+                approach_distance = self.approach_distance
 
-        Parameters
-        ----------
-        approach_pose : Pose
-            Base pose the robot should approach before inspection.
-        collections_names : list[str]
-            Collection identifiers to inspect from the given pose.
-        approach_distance : float, optional
-            Override distance from which to approach the racks.
-        """
-        if not approach_distance:
-            approach_distance = self.approach_distance
+            self.kairos_controller.nav_ctrl.approach_target_along_orientation(
+                approach_pose, approach_distance
+            )
 
-        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-            approach_pose, approach_distance
-        )
-        for name in collections_names:
-            coll = self.scene_manager.slots_collections[name]
-
+            coll = self.scene_manager.slots_collections[collection_name]
             view_pose = get_global_pose_from_origin(
                 Pose(position=Point(x=approach_distance)), approach_pose
             )
             self.check_collection_boxes_for_misallignment(coll, view_pose)
+            time.sleep(1)
 
-    def housekeep_route(self):
-        """Execute housekeeping route that scans rack collections for issues.
-
-        Returns
-        -------
-        None
-            The method navigates the robot along a pre-defined waypoint path and
-            enqueues corrective tasks when misaligned boxes are detected.
-        """
-        # TODO what about slots that cannot be accessed - top and behind the wall racks
-        self.refresh_data()
-        df = pd.read_csv("scripts/resources/housekeeping_waypoints.csv")
-        waypoints = [
-            PoseStamped(
-                pose=Pose(
-                    position=Point(x=row["x"], y=row["y"], z=row["z"]),
-                    orientation=Quaternion(
-                        x=row["qx"], y=row["qy"], z=row["qz"], w=row["qw"]
-                    ),
-                ),
-                header=Header(frame_id="odom"),
+        except RuntimeError:
+            raise RuntimeError(
+                f"Due to robot's constrution limitations housekeeping on rack {collection_name} is not possible."
             )
-            for _, row in df.iterrows()
-        ]
-        Kpos1, Kpos2 = self.view_of_racks_poses(["K01", "K02"])
-        Jpos1, Jpos2 = self.view_of_racks_poses(["J01", "J02"])
-        Ipos1, Ipos2 = self.view_of_racks_poses(["I01", "I02"])
-        Hpos1, Hpos2 = self.view_of_racks_poses(["H01", "H02"])
 
-        L34pos1, L34pos2 = self.view_of_racks_poses(["L03", "L04"])
-        L12pos1, L12pos2 = self.view_of_racks_poses(["L01", "L02"])
-        L56pos1, L56pos2 = self.view_of_racks_poses(["L05", "L06"])
-        L67pos1, L67pos2 = self.view_of_racks_poses(["L06", "L07"])
-        L89pos1, L89pos2 = self.view_of_racks_poses(["L08", "L09"])
+    def housekeep(self, rack: str):
+        self.refresh_data()
 
-        G12pos1, G12pos2 = self.view_of_racks_poses(["G01", "G02"])
-        G34pos1, G34pos2 = self.view_of_racks_poses(["G03", "G04"])
-        G56pos1, G56pos2 = self.view_of_racks_poses(["G05", "G06"])
-
-        A12pos1, A12pos2 = self.view_of_racks_poses(["A01", "A02"])
-        A34pos1, A34pos2 = self.view_of_racks_poses(["A03", "A04"])
-        A56pos1, A56pos2 = self.view_of_racks_poses(["A05", "A06"])
-
-        F12pos1, F12pos2 = self.view_of_racks_poses(["F01", "F02"])
-        F34pos1, F34pos2 = self.view_of_racks_poses(["F03", "F04"])
-        F56pos1, F56pos2 = self.view_of_racks_poses(["F05", "F06"])
-        F78pos1, F78pos2 = self.view_of_racks_poses(["F07", "F08"])
-        F910pos1, F910pos2 = self.view_of_racks_poses(["F09", "F10"])
-
-        B12pos1, B12pos2 = self.view_of_racks_poses(["B01", "B02"])
-        B34pos1, B34pos2 = self.view_of_racks_poses(["B03", "B04"])
-
-        C12pos1, C12pos2 = self.view_of_racks_poses(["C01", "C02"])
-        C34pos1, C34pos2 = self.view_of_racks_poses(["C03", "C04"])
-
-        D12pos1, D12pos2 = self.view_of_racks_poses(["D01", "D02"])
-        D34pos1, D34pos2 = self.view_of_racks_poses(["D03", "D04"])
-
-        self.kairos_controller.nav_ctrl.navigator.navigate_to_pose(pose=waypoints[0])
-        self.kairos_controller.mani_ctrl.move_arm_to_rack_view_pose()
-
-        self.check_collections(Kpos1, collections_names=["K01", "K02"])
-        self.check_collections(Jpos2, collections_names=["J01", "J02"])
-        self.check_collections(Kpos2, collections_names=["K01", "K02"])
-        self.check_collections(L12pos1, collections_names=["L01", "L02"])
-        self.check_collections(L34pos1, collections_names=["L03", "L04"])
-
-        self.kairos_controller.nav_ctrl.navigator.navigate_to_pose(pose=waypoints[1])
-
-        self.check_collections(L56pos1, collections_names=["L05", "L06"])
-        self.check_collections(L67pos1, collections_names=["L06", "L07"])
-        self.check_collections(Jpos1, collections_names=["J01", "J02"])
-        self.check_collections(Ipos2, collections_names=["I01", "I02"])
-
-        self.kairos_controller.nav_ctrl.navigator.navigate_to_pose(pose=waypoints[2])
-
-        self.check_collections(Ipos1, collections_names=["I01", "I02"])
-        self.check_collections(Hpos2, collections_names=["H01", "H02"])
-        self.check_collections(L89pos1, collections_names=["L08", "L09"])
-
-        self.kairos_controller.nav_ctrl.navigator.navigate_to_pose(pose=waypoints[3])
-
-        self.check_collections(
-            self.scene_manager.slots_collections["L10"].middle_poses[0],
-            collections_names=["L10"],
+        pos1, pos2 = self.view_of_racks_poses([rack])
+        self.check_collection(
+            pos1, collection_name=rack, approach_distance=self.approach_distance
         )
-        self.check_collections(Hpos1, collections_names=["H01", "H02"])
-        self.check_collections(G56pos2, collections_names=["G05", "G06"])
-        self.check_collections(G34pos2, collections_names=["G03", "G04"])
-        self.check_collections(G12pos2, collections_names=["G01", "G02"])
+        self.check_collection(
+            pos2, collection_name=rack, approach_distance=self.approach_distance
+        )
 
-        self.check_collections(A56pos2, collections_names=["A05", "A06"])
-        self.check_collections(B34pos1, collections_names=["B03", "B04"])
-
-        self.check_collections(A34pos2, collections_names=["A03", "A04"])
-        self.check_collections(B12pos1, collections_names=["B01", "B02"])
-
-        self.check_collections(A12pos2, collections_names=["A01", "A02"])
-
-        self.check_collections(F910pos2, collections_names=["F09", "F10"])
-        self.check_collections(F78pos2, collections_names=["F07", "F08"])
-        self.check_collections(B12pos2, collections_names=["B01", "B02"])
-        self.check_collections(C12pos1, collections_names=["C01", "C02"])
-        self.check_collections(B34pos2, collections_names=["B03", "B04"])
-        self.check_collections(C34pos1, collections_names=["C03", "C04"])
-
-        self.check_collections(D34pos1, collections_names=["D03", "D04"])
-        self.check_collections(C34pos2, collections_names=["C03", "C04"])
-        self.check_collections(D12pos1, collections_names=["D01", "D02"])
-        self.check_collections(C12pos2, collections_names=["C01", "C02"])
-        self.check_collections(F56pos2, collections_names=["F05", "F06"])
-
-        self.check_collections(F34pos2, collections_names=["F03", "F04"])
-        # TODO (jmatejcz) add back this rack when the ladder is moved
-        # self.check_collections(F12pos2, collections_names=["F01", "F02"])
-
-        self.check_collections(D12pos2, collections_names=["D01", "D02"])
-
-        # Special cases for D03 and D04 where 2.6 distance is to much
-        D3_pos = self.scene_manager.slots_collections["D03"].middle_poses[0]
-        D3_pos.orientation.y = 1.0
-        D3_pos.orientation.w = 0.0
-        self.kairos_controller.nav_ctrl.approach_target_along_orientation(D3_pos, 2.0)
-
-        D4_pos = self.scene_manager.slots_collections["D04"].middle_poses[0]
-        D4_pos.orientation.y = 1.0
-        D4_pos.orientation.w = 0.0
-        self.kairos_controller.nav_ctrl.approach_target_along_orientation(D4_pos, 2.0)
-
-    def _run(self):
-        self.housekeep_route()
-        return "Housekeep route has been completed successfully"
+    def _run(self, rack: str):
+        self.housekeep(rack)
+        return f"Housekeep has been completed successfully on rack: {rack}"
 
 
 class CorrectBoxPositionToolInput(BaseModel):
@@ -999,9 +820,16 @@ class CorrectBoxPositionTool(WarehouseTool):
         if not obj_name:
             raise RuntimeError(f"There is no object at the slot {target_slot.tag}")
 
-        self.kairos_controller.allign_object_with_slot(
-            slot_pose=target_slot.origin_pose, entity_name=obj_name
-        )
+        try:
+            self.kairos_controller.allign_object_with_slot(
+                slot_pose=target_slot.origin_pose, entity_name=obj_name
+            )
+        except Exception as e:
+            logging.error(f"Error during move operation: {str(e)}")
+            return f"Failed to correct box position in slot {target_slot.tag}: {str(e)}"
+        finally:
+            self.refresh_data()
+        return f"Successfully corrected box position in slot {target_slot.tag}"
 
 
 class SortReturnedPackageToolInput(BaseModel):

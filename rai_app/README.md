@@ -32,7 +32,6 @@ Represents a single task to be executed:
 - `id`
 - `prompt`: Task description
 - `thread_id`: Checkpoint thread identifier for langchain
-- `is_paused`: Pause status flag
 
 #### TaskSubscriber
 
@@ -45,7 +44,7 @@ ROS2 node that subscribes to multiple topics:
 
 Main orchestration engine with:
 
-- Task queue management (normal and paused tasks)
+- Task queue management (low and high prio)
 - Agent execution control
 - Checkpointing support via LangGraph
 - Progress callbacks and action publishing
@@ -155,7 +154,6 @@ Agent actions topic-> /agent/current_action , rai_interfaces/msg/HRIMessage - Ca
 Steps already done during this task -> /agent/past_steps , std_msgs/msg/String
 current task topic -> /orchestrator/current_task, std_msgs/msg/String
 tasks queue topic-> /orchestrator/tasks_queue, std_msgs/msg/String
-paused tasks topic-> `/orchestrator/paused_tasks, std_msgs/msg/String
 
 ## Setup and Run
 
