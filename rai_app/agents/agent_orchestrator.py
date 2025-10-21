@@ -3,9 +3,8 @@ import logging
 import threading
 import time
 import uuid
-from collections import deque
 from dataclasses import field
-from typing import Callable, Deque, List, Literal, Optional
+from typing import Callable, List, Literal, Optional
 
 import rclpy
 from langchain_core.callbacks.base import BaseCallbackHandler
@@ -72,7 +71,6 @@ class TaskExecution(BaseModel):
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
     prompt: str = ""
     thread_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    is_paused: bool = False
     priority: Literal["low", "high"] = "low"
 
 
@@ -109,15 +107,20 @@ class TaskSubscriber(Node):
         new_task_callback,
         inspection_topics: List[str],
         inspection_callback,
+        housekeep_topics: List[str],
+        housekeep_callback,
     ):
         super().__init__("task_subscriber")
         self.connector = connector
         self.new_task_callback = new_task_callback
         self.inspection_callback = inspection_callback
+        self.housekeep_callback = housekeep_callback
         for topic in task_topics:
             self.add_task_topic(topic)
         for topic in inspection_topics:
             self.add_inspection_topic(topic=topic)
+        for topic in housekeep_topics:
+            self.add_housekeep_task_topic(topic=topic)
 
     def add_task_topic(self, topic: str):
         try:
@@ -138,6 +141,16 @@ class TaskSubscriber(Node):
             )
         except ValueError:
             logging.warning(f"Inspection topic: {topic} not found")
+
+    def add_housekeep_task_topic(self, topic: str):
+        try:
+            self.connector.register_callback(
+                topic,
+                self.housekeep_callback,
+                msg_type="std_msgs/msg/String",
+            )
+        except ValueError:
+            logging.warning(f"Housekeep task topic: {topic} not found")
 
     def remove_topic(self, topic: str):
         self.connector.registered_callbacks.pop(topic)
@@ -175,8 +188,7 @@ class AgentOrchestrator:
         Queue storing high-priority task requests.
     low_prio_task_queue : asyncio.Queue
         Queue storing low-priority task requests.
-    pasued_tasks_queue : collections.deque
-        LIFO queue of paused tasks awaiting resumption.
+
     running : bool
         Flag indicating whether the orchestrator loop should continue.
     """
@@ -187,6 +199,7 @@ class AgentOrchestrator:
         agent: CompiledStateGraph,
         task_topics: List[str],
         inspection_topics: List[str],
+        housekeep_topics: List[str],
         action_topic: str,
         initial_state_creator: Callable,
         recurssion_limit: int,
@@ -200,17 +213,14 @@ class AgentOrchestrator:
         self.high_prio_task_queue: asyncio.Queue[TaskExecution] = asyncio.Queue(
             maxsize=50
         )
-        # when task is interrupted mid execution,
-        # the checkpoint is saved and stored. The task is
-        # put onto paused task lifo queue and will be resumed
-        # when the interrupting task is done
-        self.pasued_tasks_queue: Deque[TaskExecution] = deque(maxlen=10)
         self.task_subscriber = TaskSubscriber(
             connector=connector,
             task_topics=task_topics,
             new_task_callback=self.add_task,
             inspection_topics=inspection_topics,
             inspection_callback=self.add_inspection_task,
+            housekeep_topics=housekeep_topics,
+            housekeep_callback=self.add_housekeep_task,
         )
 
         self.initial_state_creator = initial_state_creator
@@ -236,7 +246,6 @@ class AgentOrchestrator:
             connector=connector,
             current_task_topic="/orchestrator/current_task",
             tasks_queue_topic="/orchestrator/tasks_queue",
-            paused_tasks_topic="/orchestrator/paused_tasks",
         )
 
     def notify_about_tasks(self):
@@ -256,12 +265,6 @@ class AgentOrchestrator:
                 queue_tasks.append(task.prompt)
 
         self.notifier.send_tasks_queue(queue_tasks)
-        paused_tasks = []
-        if self.pasued_tasks_queue:
-            for task in self.pasued_tasks_queue:
-                paused_tasks.append(task.prompt)
-
-        self.notifier.send_paused_tasks_queue(paused_tasks)
 
     def add_inspection_task(self, msg: ROS2Message):
         # NOTE: All inspection tasks will be high prio
@@ -293,6 +296,16 @@ class AgentOrchestrator:
             except asyncio.QueueFull:
                 logging.warning("Task queue is full, dropping task")
 
+    def add_housekeep_task(self, msg: ROS2Message):
+        prompt = msg.payload.data
+        task_exe = TaskExecution(prompt=prompt, priority="high")
+        with self.lock:
+            try:
+                self.high_prio_task_queue.put_nowait(task_exe)
+                logging.info(f"Added high priority housekeep task {task_exe.prompt}")
+            except asyncio.QueueFull:
+                logging.warning("Task queue is full, dropping task")
+
     def add_task(self, msg: ROS2Message):
         """Queue a new low-priority task from a ROS 2 message.
 
@@ -315,35 +328,6 @@ class AgentOrchestrator:
             except asyncio.QueueFull:
                 logging.warning("Task queue is full, dropping task")
 
-    async def interrupt_current_task(self):
-        """Pause the currently running task if one is active.
-
-        The task future is cancelled and the task metadata is pushed onto the
-        paused queue, making it eligible for resumption.
-
-        Returns
-        -------
-        None
-            The method updates orchestrator state in place.
-        """
-        if not self.current_task:
-            return
-        if self.current_task_future and not self.current_task_future.done():
-            logging.warning("Interrupting current task")
-            self.current_task_future.cancel()
-            with self.lock:
-                try:
-                    self.current_task.is_paused = True
-                    self.pasued_tasks_queue.appendleft(self.current_task)
-                    logging.info(f"Task: {self.current_task.prompt} was paused")
-                except asyncio.QueueFull:
-                    logging.warning(
-                        "Limit of pasued tasks reached. removing the oldest"
-                    )
-                    self.pasued_tasks_queue.pop()
-                    self.pasued_tasks_queue.appendleft(self.current_task)
-        self.current_task = None
-
     def add_checkpointing_to_agent(
         self, agent: CompiledStateGraph
     ) -> CompiledStateGraph:
@@ -358,13 +342,8 @@ class AgentOrchestrator:
         self,
         task: TaskExecution,
     ):
-        if task.is_paused:
-            logging.info(f"Resuming task: {task.prompt}")
-            # no initial state when resuming
-            initial_state = None
-        else:
-            logging.info(f"Starting agent for task: {task.prompt}")
-            initial_state = self.initial_state_creator(task.prompt)
+        logging.info(f"Starting agent for task: {task.prompt}")
+        initial_state = self.initial_state_creator(task.prompt)
 
         async for chunk in self.agent.astream(
             initial_state,
@@ -381,7 +360,7 @@ class AgentOrchestrator:
                 logging.info("Stopping the agent")
                 break
 
-            await self.action_callback.process_stream_chunk(chunk)
+            # await self.action_callback.process_stream_chunk(chunk)
 
     def spin_task_subscriber(self):
         rclpy.spin(self.task_subscriber)
@@ -413,14 +392,6 @@ class AgentOrchestrator:
                 self.run_agent(self.current_task)
             )
 
-    async def begin_paused_task(self):
-        with self.lock:
-            self.current_task = self.pasued_tasks_queue.popleft()
-            self.current_task_future = asyncio.create_task(
-                self.run_agent(self.current_task)
-            )
-            logging.info(f"Resuming task {self.current_task.prompt}")
-
     async def orchestrator_loop(self):
         """Run the main scheduling loop until shutdown is requested.
 
@@ -438,42 +409,29 @@ class AgentOrchestrator:
         notification_thread.start()
 
         while self.running:
-            if self.current_task:
-                # check for interrupt conditions
-                # NOTE new high prio task will only interrupt low prio tasks
-                # if there is high prio running do not interrupt it
-                if (
-                    not self.high_prio_task_queue.empty()
-                    and self.current_task.priority == "low"
-                ):
-                    await self.interrupt_current_task()
-                    await self.begin_high_prio_task()
-
-            else:
+            if not self.current_task:
                 # No task running
                 # First check for high prio tasks
                 if not self.high_prio_task_queue.empty():
                     await self.begin_high_prio_task()
 
-                # then for paused tasks
-                elif self.pasued_tasks_queue:
-                    await self.begin_paused_task()
                 # then for low prio tasks
                 elif not self.low_prio_task_queue.empty():
                     await self.begin_low_prio_task()
-
-            if self.current_task_future and self.current_task:
-                if self.current_task_future.done():
-                    logging.info(f"Finished task: {self.current_task.prompt}")
-                    self.current_task_future = None
-                    self.current_task = None
+            else:
+                if self.current_task_future:
+                    if self.current_task_future.done():
+                        logging.info(f"Finished task: {self.current_task.prompt}")
+                        self.current_task_future = None
+                        self.current_task = None
 
             await asyncio.sleep(0.1)
 
 
 def main():
     logging.getLogger("rai_agent")
-    task_topics = ["/user_tasks", "/correct_boxes"]
+    task_topics = ["/user_tasks"]
+    housekeep_topics = ["/correct_boxes"]
     inspection_topics = ["/inspection_result"]
     connector = ROS2Connector()
 
@@ -512,7 +470,7 @@ def main():
         connector=connector,
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
-        task_topic=task_topics[0],
+        task_topic=housekeep_topics[0],
     )
     correct_box_tool = CorrectBoxPositionTool(
         connector=connector,
@@ -558,7 +516,7 @@ def main():
                 sort_returned_package_tool,
                 correct_box_tool,
             ],
-            system_prompt=HOUSEKEEP_EXECUTOR_SYSTEM_PROMPT,
+            system_prompt=HOUSEKEEP_EXECUTOR_SYSTEM_PROMPT.format(context=context),
         ),
         Executor(
             name="package_movement",
@@ -586,18 +544,13 @@ def main():
         for tool in executor.tools:
             executor_overview += f"    -{tool.name}: {tool.description}\n"
     megamind_system_prompt = MEGAMIND_SYSTEM_PROMPT_TEMPLATE.format(
-        executor_overview=executor_overview
+        executor_overview=executor_overview, context=context
     )
 
-    # TODO create megamind has to return not compiled StateGraph
-    # because checkpointing has to be added before compiling
-    # currently rai-core implements create_megamind which returns compiled graph
-    # so temporarly we have to  change installed package
     agent = create_megamind(
         megamind_system_prompt=megamind_system_prompt,
         megamind_llm=llm,
         executors=executors,
-        # context_providers=[warehouse_context],
     )
 
     langfuse_handler = CallbackHandler()
@@ -608,6 +561,7 @@ def main():
         agent=agent,
         task_topics=task_topics,
         inspection_topics=inspection_topics,
+        housekeep_topics=housekeep_topics,
         action_topic="/agent/current_action",
         initial_state_creator=get_initial_megamind_state,
         recurssion_limit=100,

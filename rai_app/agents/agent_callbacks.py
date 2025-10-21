@@ -173,12 +173,10 @@ class OrchestratorTasksNotifier:
         connector: ROS2Connector,
         current_task_topic: str,
         tasks_queue_topic: str,
-        paused_tasks_topic: str,
     ) -> None:
         self.connector = connector
         self.current_task_topic = current_task_topic
         self.tasks_queue_topic = tasks_queue_topic
-        self.paused_tasks_topic = paused_tasks_topic
 
     def send_main_task(self, task: str):
         self.connector.send_message(
@@ -192,11 +190,4 @@ class OrchestratorTasksNotifier:
             message=ROS2Message(payload={"data": tasks}),
             msg_type="std_msgs/msg/String",
             target=self.tasks_queue_topic,
-        )
-
-    def send_paused_tasks_queue(self, tasks: List[str]):
-        self.connector.send_message(
-            message=ROS2Message(payload={"data": tasks}),
-            msg_type="std_msgs/msg/String",
-            target=self.paused_tasks_topic,
         )
