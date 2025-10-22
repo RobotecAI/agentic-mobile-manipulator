@@ -201,8 +201,9 @@ class OrchestratorTasksNotifier:
         )
 
     def send_tasks_queue(self, tasks: List[str]):
+        msg = "|".join(tasks)
         self.connector.send_message(
-            message=ROS2Message(payload={"data": tasks}),
+            message=ROS2Message(payload={"data": msg}),
             msg_type="std_msgs/msg/String",
             target=self.tasks_queue_topic,
         )
