@@ -42,7 +42,7 @@ from rai.communication.ros2 import (
 from rclpy.node import Node
 from robotec_kairos_ur10.msg import Anomaly
 
-from rai_app.agents.agent_callbacks import (
+from rai_app.agents.callbacks import (
     AgentActionsCallback,
     AgentProgessCallback,
     OrchestratorTasksNotifier,
