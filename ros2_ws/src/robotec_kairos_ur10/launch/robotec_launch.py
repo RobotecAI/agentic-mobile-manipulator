@@ -185,6 +185,7 @@ def generate_launch_description():
     nodes_to_start = [
         OpaqueFunction(function=launch_setup),
         nav2_launch,
+
     ]
 
     return LaunchDescription(nodes_to_start)
