@@ -28,7 +28,10 @@ def generate_launch_description():
                 condition=EqualsSubstitution(robot_namespace, ''),
                 if_value='',
                 else_value=(robot_namespace, '/')
-            )
+            ),
+            "<package_share_config_directory>":PathJoinSubstitution([FindPackageShare("robotec_kairos_ur10"),
+                                                                "config"])
+
         }
     ),
 
@@ -64,11 +67,25 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
+    adjusment_node = Node(
+        package='custom_adjustment_nav2',
+        executable='adjustment_action_server_node',
+        name='adjustment_action_server',
+        output='screen',
+        parameters=[{'use_sim_time': True, 
+                     'robot_base_frame': 'egobase_link',
+                     'linear_kp': 1.0,
+                     'angular_kp': 2.0,
+                     'max_linear_speed': 0.25,
+                     'max_angular_speed': 1.0,
+                     'max_angular_error_to_stop_linear': 0.15}]
+    )
 
     return LaunchDescription([
         gt_map_pub, 
         map_pub,
         map_lifecycle,
+        adjusment_node,
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([str(pathlib.Path(
                 get_package_share_directory('robotec_kairos_ur10')).joinpath('launch', 'robotec_navigation.launch.py'))]),

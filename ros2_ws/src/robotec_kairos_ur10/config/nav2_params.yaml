@@ -13,6 +13,7 @@ bt_navigator:
       plugin: "nav2_bt_navigator::NavigateToPoseNavigator"
     navigate_through_poses:
       plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator"
+    default_nav_to_pose_bt_xml: "<package_share_config_directory>/robotec_navigate_to_pose_w_replanning_and_recovery.xml"
     # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
     # nav2_bt_navigator/navigate_to_pose_w_replanning_and_recovery.xml
     # nav2_bt_navigator/navigate_through_poses_w_replanning_and_recovery.xml
@@ -20,7 +21,7 @@ bt_navigator:
 
     # plugin_lib_names is used to add custom BT plugins to the executor (vector of strings).
     # Built-in plugins are added automatically
-    # plugin_lib_names: []
+    plugin_lib_names: [custom_adjustment_bt_plugin]
 
     error_code_names:
       - compute_path_error_code
@@ -42,8 +43,8 @@ controller_server:
       movement_time_allowance: 50.0
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.2
-      yaw_goal_tolerance: 0.2
+      xy_goal_tolerance: 0.5
+      yaw_goal_tolerance: 3.14
       stateful: True
     FollowPath:
       plugin: nav2_graceful_controller::GracefulController
