@@ -1,0 +1,244 @@
+import copy
+import csv
+import random
+from typing import Optional
+
+import numpy as np
+import pandas as pd
+from geometry_msgs.msg import Pose
+from rai.agents import BaseAgent, wait_for_shutdown
+from rai.communication.ros2 import (
+    ROS2Connector,
+    ROS2Context,
+    ROS2Message,
+    wait_for_ros2_services,
+)
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
+from std_srvs.srv import Trigger
+from tf_transformations import euler_from_quaternion, quaternion_from_euler
+from tqdm import tqdm
+
+from rai_app.environment.scene_manager import SceneManager
+
+
+def load_spawn_config(spawn_config_file):
+    """
+    Load spawn configuration from CSV file.
+    Expected CSV format with headers: slot_name, entity_type
+    """
+    spawn_slot_names = []
+    spawn_entity_types = []
+    items_stored = []
+
+    with open(spawn_config_file, "r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            spawn_slot_names.append(row["slot_name"])
+            spawn_entity_types.append(row["entity_type"])
+            items_stored.append(row["item"])
+
+    return spawn_slot_names, spawn_entity_types, items_stored
+
+
+def load_rack_assignment(rack_assignment_file: str):
+    rack_assignment = pd.read_csv(rack_assignment_file, delimiter=",")
+    collection_names, item_types = (
+        rack_assignment["collection_name"].tolist(),
+        rack_assignment["item_type"].tolist(),
+    )
+    return collection_names, item_types
+
+
+class SceneManagerState(SceneManager):
+    def __init__(
+        self,
+        slots_file: str,
+        spawnables_file: str,
+        connector: ROS2Connector | None = None,
+        rack_assignment_file: str = "scripts/resources/rack_assignment.csv",
+        item_type_assets_file: str = "scripts/resources/item_type_assets.csv",
+        rack_fill: float = 0.5,
+    ):
+        super().__init__(
+            slots_file=slots_file, spawnables_file=spawnables_file, connector=connector
+        )
+        self.slots_file = slots_file
+        self.spawnables_file = spawnables_file
+        self.rack_assignment_file = rack_assignment_file
+        self.rack_fill = rack_fill
+        self.item_type_assets_file = item_type_assets_file
+        wait_for_ros2_services(
+            self.connector, ["/spawn_entity", "/delete_entity", "/get_entities"]
+        )
+
+    def housekeep_scenario(self, request: Trigger.Request, response: Trigger.Response):
+        slots = pd.read_csv(self.slots_file, delimiter=",")
+        spawnables = pd.read_csv(self.spawnables_file, delimiter=",")
+        spawnables = spawnables[
+            ~spawnables["object_name"].isin(["ego", "oilspill1", "oilspill2"])
+        ]
+
+        # self.clear_scene()
+        collection_names, item_types = load_rack_assignment(self.rack_assignment_file)
+        item_type_assets = pd.read_csv(self.item_type_assets_file, delimiter=",")
+        item_type_assets["asset_names"] = item_type_assets["asset_names"].str.split(";")
+
+        spawn_slot_names = []
+        spawn_entity_types = []
+        items_stored = []
+        for rack, item_type in zip(collection_names, item_types):
+            slots_of_rack = self.get_collection(rack).get_all_slots().values()
+            for slot in slots_of_rack:
+                if random.random() > self.rack_fill:
+                    continue
+                spawn_slot_names.append(slot.tag)
+                spawn_entity_types.append(
+                    random.choice(
+                        item_type_assets.loc[
+                            item_type_assets["item_type"] == item_type, "asset_names"
+                        ].values[0]
+                    )
+                )
+                items_stored.append(item_type)
+
+        if items_stored is None:
+            items_stored = [None] * len(spawn_slot_names)
+
+        if len(slots) != len(spawn_slot_names) != len(items_stored):
+            raise ValueError(
+                "Slots and object names must have the same length and items stored"
+            )
+
+        for slot, entity_type, item in tqdm(
+            zip(spawn_slot_names, spawn_entity_types, items_stored),
+            desc="Spawning entities",
+            total=len(slots),
+        ):
+            self.spawn_on_spot(
+                slot_name=slot,
+                object_name=entity_type,
+                item_stored=item,
+                std_xy=0.05,
+                std_yaw=0.05,
+                rotate_90_degrees=True,
+                rotate_90_degrees_percentage=0.1,
+            )
+        return Trigger.Response(success=True)
+
+    def spawn_on_spot(
+        self,
+        slot_name: str,
+        object_name: str,
+        item_stored: Optional[str] = None,
+        std_xy: float = 0.0,
+        std_yaw: float = 0.0,
+        rotate_90_degrees: bool = False,
+        rotate_90_degrees_percentage: float = 0.1,
+        frame: str = "odom",
+    ):
+        pose: Pose = copy.deepcopy(self.slots[slot_name].origin_pose)
+        # Add Gaussian noise to x, y
+        pose.position.x += random.normalvariate(0, std_xy)
+        pose.position.y += random.normalvariate(0, std_xy)
+
+        # Convert quaternion -> Euler
+        q = pose.orientation
+        roll, pitch, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+
+        # Add Gaussian noise to yaw
+        yaw += random.normalvariate(0, std_yaw)
+        if rotate_90_degrees:
+            if random.random() < rotate_90_degrees_percentage:
+                yaw += random.choice([-np.pi / 2, np.pi / 2])
+
+        # Convert back to quaternion
+        q_new = quaternion_from_euler(roll, pitch, yaw)
+        pose.orientation.x = q_new[0]
+        pose.orientation.y = q_new[1]
+        pose.orientation.z = q_new[2]
+        pose.orientation.w = q_new[3]
+
+        return self.spawn_object(
+            pose=pose, object_name=object_name, item_stored=item_stored, frame=frame
+        )
+
+
+class SceneAgent(BaseAgent):
+    def __init__(self, connector: ROS2Connector, scene_manager: SceneManagerState):
+        super().__init__()
+        self.connector = connector
+        self.scene_manager_state = scene_manager
+        self.callback_group = MutuallyExclusiveCallbackGroup()
+
+        self.connector.create_service(
+            service_type="std_srvs/srv/Trigger",
+            service_name="rai/scene/housekeep",
+            on_request=self.housekeep,
+            callback_group=self.callback_group,
+        )
+        self.connector.create_service(
+            service_type="std_srvs/srv/Trigger",
+            service_name="rai/scene/anomalies",
+            on_request=self.anomalies,
+            callback_group=self.callback_group,
+        )
+        self.connector.create_service(
+            service_type="std_srvs/srv/Trigger",
+            service_name="rai/scene/standard",
+            on_request=self.standard,
+            callback_group=self.callback_group,
+        )
+        self.connector.create_service(
+            service_type="std_srvs/srv/Trigger",
+            service_name="rai/scene/cleanup",
+            on_request=self.cleanup,
+            callback_group=self.callback_group,
+        )
+        self.logger.info("Scene agent initialized")
+
+    def housekeep(self, request: Trigger.Request, response: Trigger.Response):
+        self.scene_manager_state.housekeep_scenario(request, response)
+        return Trigger.Response(success=True)
+
+    def anomalies(self, request: Trigger.Request, response: Trigger.Response):
+        self.scene_manager_state.housekeep_scenario(request, response)
+        return Trigger.Response(success=True)
+
+    def standard(self, request: Trigger.Request, response: Trigger.Response):
+        self.scene_manager_state.housekeep_scenario(request, response)
+        return Trigger.Response(success=True)
+
+    def cleanup(self, request: Trigger.Request, response: Trigger.Response):
+        self.connector.service_call(
+            ROS2Message(payload={}),
+            target="/reset_simulation",
+            msg_type="simulation_interfaces/srv/ResetSimulation",
+            timeout_sec=5.0,
+        )
+        return Trigger.Response(success=True)
+
+    def run(self):
+        pass
+
+    def stop(self):
+        self.connector.shutdown()
+
+
+@ROS2Context()
+def main():
+    connector = ROS2Connector(executor_type="single_threaded")
+    scene_manager_state = SceneManagerState(
+        connector=connector,
+        slots_file="scripts/resources/slots.csv",
+        spawnables_file="scripts/resources/spawnables.csv",
+        rack_assignment_file="scripts/resources/rack_assignment.csv",
+        item_type_assets_file="scripts/resources/item_type_assets.csv",
+    )
+    scene_agent_connector = ROS2Connector(executor_type="single_threaded")
+    scene_agent = SceneAgent(scene_agent_connector, scene_manager_state)
+    scene_agent.run()
+    wait_for_shutdown([scene_agent])
+
+
+if __name__ == "__main__":
+    main()
