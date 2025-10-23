@@ -128,18 +128,31 @@ class MidHighManipulationStrategy(ManipulationStrategy):
         logging.debug(f"Placing to the table with grasp type: {grasp_type}")
         approach_distance = self.get_approach_distance()
         if grasp_type == "top":
-            staging_placing_point = apply_relative_transform(
-                placing_point, Pose(position=Point(x=0.4 + approach_distance, z=0.1))
+            kairos_ctrl.mani_ctrl.set_arm_joints(
+                {
+                    "egoarm_wrist_1_joint": -1.1564879417419434,
+                    "egoarm_wrist_2_joint": -1.5708342790603638,
+                    "egoarm_wrist_3_joint": 1.247962236404419,
+                    "egoarm_shoulder_lift_joint": -1.764703631401062,
+                    "egoarm_elbow_joint": 1.3710062503814697,
+                    "egoarm_shoulder_pan_joint": -0.32283228635787964,
+                }
             )
             logging.debug("Placing to the table with top grasp")
         elif grasp_type == "side":
-            staging_placing_point = apply_relative_transform(
-                placing_point, Pose(position=Point(x=0.4 + approach_distance, z=1.0))
+            kairos_ctrl.mani_ctrl.set_arm_joints(
+                {
+                    "egoarm_wrist_1_joint": 0.5157767534255981,
+                    "egoarm_wrist_2_joint": 0.9093066453933716,
+                    "egoarm_wrist_3_joint": -1.567885160446167,
+                    "egoarm_shoulder_lift_joint": -2.126845121383667,
+                    "egoarm_elbow_joint": 1.6253776550292969,
+                    "egoarm_shoulder_pan_joint": -0.6887415051460266,
+                }
             )
             logging.debug("Placing to the table with side grasp")
         else:
             raise ValueError(f"Invalid grasp type: {grasp_type}")
-        kairos_ctrl.mani_ctrl.move_arm_to_staging_pose(staging_placing_point)
         kairos_ctrl.nav_ctrl.move_back(-approach_distance)
 
         kairos_ctrl.place_object(placing_point=placing_point)
