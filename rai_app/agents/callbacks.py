@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import logging
 import time
 from typing import Any, Dict, List
@@ -114,7 +115,10 @@ class AgentActionsCallback:
             "tool_args": tool_call_args,
         }
         msg = ROS2HRIMessage(
-            payload={"text": str(payload), "communication_id": f"{node_name}:{task_id}"}
+            payload={
+                "text": json.dumps(payload),
+                "communication_id": f"{node_name}:{task_id}",
+            }
         )
         self.connector.send_message(
             message=msg,
