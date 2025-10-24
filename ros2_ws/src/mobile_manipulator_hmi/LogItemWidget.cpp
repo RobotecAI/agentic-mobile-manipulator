@@ -74,7 +74,7 @@ void LogItemWidget::initUi()
     connect(showMoreBtn, &QPushButton::clicked, this, [this]() {
        QDialog dialog(this);
        dialog.setWindowTitle(tr("Full Log Text"));
-       dialog.resize(600, 400);
+       dialog.resize(1200, 800);
 
        // --- Layout setup ---
        auto* mainLayout = new QVBoxLayout(&dialog);
@@ -95,7 +95,7 @@ void LogItemWidget::initUi()
        // --- Optional image ---
        if (displayImage_ && m_imageLabel && !m_imageLabel->pixmap(Qt::ReturnByValue).isNull()) {
            auto* imgLabel = new QLabel();
-           imgLabel->setPixmap(m_imageLabel->pixmap(Qt::ReturnByValue).scaledToWidth(200, Qt::SmoothTransformation));
+           imgLabel->setPixmap(m_imageLabel->pixmap(Qt::ReturnByValue).scaledToWidth(480, Qt::SmoothTransformation));
            imgLabel->setAlignment(Qt::AlignTop | Qt::AlignRight);
            topLayout->addWidget(textEdit, /*stretch*/1);
            topLayout->addWidget(imgLabel);

@@ -35,12 +35,11 @@ void LogView::addItem(LogItemWidget* item)
 
 
     // Insert before the final stretch
-    int insertIndex = m_vbox->count() - 1;
-    m_vbox->insertWidget(insertIndex, item);
+    // int insertIndex = m_vbox->count() - 1;
+    m_vbox->insertWidget(0, item);
     m_items.emplace_back(item);
 
     evictIfNeeded();
-    if(!atBottom) scrollToBottom();
 }
 
 void LogView::addLog(const demo_msgs::msg::VlmDescription& msg, const QColor& bg)
@@ -83,8 +82,8 @@ void LogView::evictIfNeeded()
 {
     while (m_items.size() > HardcodedConfig::MaxVLMMessages) {
         // Oldest item is at front
-        QPointer<LogItemWidget> oldest = m_items.front();
-        m_items.pop_front();
+        QPointer<LogItemWidget> oldest = m_items.back();
+        m_items.pop_back();
         if (oldest) {
             oldest->deleteLater();
         }

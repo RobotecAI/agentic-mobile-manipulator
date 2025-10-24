@@ -22,7 +22,6 @@ QString HRIMessageToString(const ParseRaiData::HRIMessage& msg)
     QString paramsStr = paramList.isEmpty()
         ? "none"
         : paramList.join(", ");
-    printf("%s\n", paramsStr);
 
     return QString("Calling Tool %1 with params %2")
         .arg(msg.tool_name_, paramsStr);
@@ -277,7 +276,6 @@ HMIWindow::HMIWindow(QWidget *parent)
 
           }
           LogItemWidget* l1 = new LogItemWidget(label, QPixmap::fromImage(image), HardcodedConfig::Colors.at(msg->source), TextMode::Detail, true, this);
-          //l1->setMaximumCharacters(240);
           logView_->addItem(l1);
         });
 
