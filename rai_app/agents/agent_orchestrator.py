@@ -52,6 +52,7 @@ from rai_app.agents.tools import (
     CorrectBoxPositionTool,
     DescribeImageTool,
     HouseKeepTool,
+    InspectionWarehouseRouteTool,
     IsPackageDamagedTool,
     MoveFromCollectionToCollectionTool,
     MoveFromPoseToInspectionAreaTool,
@@ -285,8 +286,6 @@ class AgentOrchestrator:
         # NOTE: All inspection tasks will be high prio
         anomaly: Anomaly = msg.payload
         pose = anomaly.pose
-        # TODO  (jmatejcz) for now we classify box on the floor as trash
-        # in the future this might need adjustment as well as prompt in inspection agent
         pose_prompt = (
             f" was detected at pose (x={pose.position}, y={pose.position.y}, z={pose.position.z},"
             f" qx={pose.orientation.x}, qy={pose.orientation.y}, qz={pose.orientation.z}, qw={pose.orientation.w}. "
@@ -349,7 +348,7 @@ class AgentOrchestrator:
         # retrieve StateGraph
         agent_graph = agent.builder
         # Checkpointing
-        # TODO (jmatejcz) can be done via sqlite in the future
+        # NOTE (jmatejcz) can be done via sqlite in the future
         checkpointer = InMemorySaver()
         return agent_graph.compile(checkpointer=checkpointer)
 
@@ -504,7 +503,11 @@ def main():
         scene_manager=scene_manager,
         vlm=vlm,
     )
-
+    inspection_route_tool = InspectionWarehouseRouteTool(
+        connector=connector,
+        kairos_controller=kairos_controller,
+        scene_manager=scene_manager,
+    )
     describe_image_tool = DescribeImageTool(
         connector=connector,
         vlm=vlm,
@@ -530,6 +533,7 @@ def main():
                 housekeep_tool,
                 sort_returned_package_tool,
                 correct_box_tool,
+                inspection_route_tool,
             ],
             system_prompt=HOUSEKEEP_EXECUTOR_SYSTEM_PROMPT.format(context=context),
         ),

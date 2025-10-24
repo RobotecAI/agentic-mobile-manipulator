@@ -378,7 +378,7 @@ class NavigationController:
         return self.navigator.spin(angle).result
 
     def warehouse_route(self):
-        # TODO:
+        # NOTE:
         # warehouse route should use follow path action
         # however, nav2 server often rejects the goal
         # so we use follow waypoints action instead
@@ -396,16 +396,3 @@ class NavigationController:
             for _, row in df.iterrows()
         ]
         return self.navigator.follow_waypoints(poses)
-
-
-def main():
-    # run warehouse route by default
-    # TODO: remove when connected to other parts of the system
-    connector = ROS2Connector()
-    navigator = NavigationController(connector)
-    navigator.warehouse_route()
-    time.sleep(10000)
-
-
-if __name__ == "__main__":
-    main()

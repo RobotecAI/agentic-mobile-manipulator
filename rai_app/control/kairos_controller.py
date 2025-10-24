@@ -175,7 +175,8 @@ def determine_strategy(pose: Pose, safe_low: bool) -> ManipulationStrategy:
 class KairosController:
     def __init__(self, connector: ROS2Connector, scene_manager: SceneManager) -> None:
         self.connector = connector
-        # TODO (jmatejcz) replace it with VisionMock class
+        # NOTE (jmatejcz) this could be replaced  with VisionMock class
+        # if one will be implemented
         self.scene_manager = scene_manager
 
         self.node = self.connector.node

@@ -128,7 +128,6 @@ def main():
         slots_file="scripts/resources/slots.csv",
         spawnables_file=args.spawnables_file,
     )
-    # TODO: Reuse spawnables file from SceneManager class
     spawnables = pd.read_csv(args.spawnables_file)
     spawnables = spawnables[
         ~spawnables["object_name"].isin(["ego", "oilspill1", "oilspill2"])
