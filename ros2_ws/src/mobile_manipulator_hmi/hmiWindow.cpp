@@ -2,6 +2,7 @@
 #include "./ui_hmiWindow.h"
 #include <tf2/exceptions.h>
 #include <chrono>
+#include <thread>
 #include <cmath>
 #include <optional>
 #include <unordered_map>
@@ -203,6 +204,8 @@ HMIWindow::HMIWindow(QWidget *parent)
           std_msgs::msg::String msg;
           msg.data = HardcodedConfig::taskBPrompt + HardcodedConfig::racks[i];
           user_prompt_pub_->publish(msg);
+
+          std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
         });
 
