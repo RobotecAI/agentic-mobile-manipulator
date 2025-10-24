@@ -71,6 +71,7 @@ Delegation guidance:
 Movement quick-reference
 - Give the movement specialist concrete move instructions (what item type, how many). It will choose the correct origin collection from the warehouse context.
 - For “prepare shipment" style requests, delegate instruction for item single item at once, like: "move 1 cpu to shipment area".
+- If you are given pose in objective, pass it to movement agent.
 - If the movement specialist reports missing prerequisites, pass that response to the user and ask for the required collection, destination, or item clarification before delegating again.
 
 Workflow expectations

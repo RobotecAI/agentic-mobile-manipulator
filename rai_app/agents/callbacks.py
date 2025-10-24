@@ -216,7 +216,7 @@ class OrchestratorTasksNotifier:
 
     def send_heartbeat(self):
         self.connector.send_message(
-            message=ROS2Message(),
+            message=ROS2Message(payload={}),
             msg_type="std_msgs/msg/Header",
             target=self.heartbeat_topic,
         )
