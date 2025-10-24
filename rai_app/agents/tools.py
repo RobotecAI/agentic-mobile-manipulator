@@ -49,11 +49,6 @@ class WarehouseTool(BaseROS2Tool):
     kairos_controller: KairosController
     scene_manager: SceneManager
 
-    # TODO (jmatejcz) boxes will be distinguishable in the future
-    # for now mock it
-    # given rack should store a boxes of given type, but does not have to
-    # we should check type of boxes we have on the rack/table
-
     def refresh_data(self):
         # NOTE (jmatejcz) calling this only before checking collection
         # assumes that packages won't change their positions
@@ -62,8 +57,6 @@ class WarehouseTool(BaseROS2Tool):
         if entities:
             self.scene_manager.assign_entities_to_slots(entities)
 
-    # TODO (jmatejcz) Filtering by reach could be done on orchestrator side
-    # in case we want to include some info about it in raport?
     def filter_for_slots_in_arm_range(self, slots: List[Slot]) -> List[Slot]:
         # arm can't access top slots
         # on every rack they are named the same
@@ -973,3 +966,12 @@ class SortReturnedPackageTool(WarehouseTool):
         return_text += f"There are {len(used_slots) - 1} packages left to sort."
         self.connector.logger.info(f"----- Finished {self.__class__.__name__} -----")
         return return_text
+
+
+class InspectionWarehouseRouteTool(WarehouseTool):
+    name: str = "route_around_warehouse"
+    description: str = "Performs a route around the warehouse for inspection purpouses"
+
+    def _run(self):
+        self.kairos_controller.nav_ctrl.warehouse_route()
+        return "Done inspection route around warehouse successfully"
