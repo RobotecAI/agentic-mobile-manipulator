@@ -70,7 +70,7 @@ private:
     TextMode textMode_ {TextMode::None};
     bool displayImage_ {true};
     
-    int maxCharacters_ {80};
+    int maxCharacters_ {240};
     QString fullText_;
 };
 
