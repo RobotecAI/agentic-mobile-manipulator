@@ -10,6 +10,23 @@
 #include <QTransform>
 #include <QTime>
 #include "LogView.h"
+#include "ParseRaiData.h"
+
+QString HRIMessageToString(const ParseRaiData::HRIMessage& msg)
+{
+    QStringList paramList;
+    for (auto it = msg.parameters_.cbegin(); it != msg.parameters_.cend(); ++it) {
+        paramList << QString("%1: %2").arg(it.key(), it.value());
+    }
+
+    QString paramsStr = paramList.isEmpty()
+        ? "none"
+        : paramList.join(", ");
+    printf("%s\n", paramsStr);
+
+    return QString("Calling Tool %1 with params %2")
+        .arg(msg.tool_name_, paramsStr);
+}
 
 void CallService(QWidget *parent, rclcpp::Node::SharedPtr &node, rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr& client)
 {
@@ -48,7 +65,7 @@ QStringList parsePythonList(QString list){
   
   // Split by comma and clean up each item
   if (!listStr.isEmpty()) {
-      QStringList rawItems = listStr.split(',');
+      QStringList rawItems = listStr.split('|');
       for (const QString& item : rawItems) {
           QString cleanItem = item.trimmed();
           // Remove quotes if present
@@ -183,9 +200,11 @@ HMIWindow::HMIWindow(QWidget *parent)
         });
 
     connect(ui->taskBButton, &QPushButton::pressed, [this](){
-        std_msgs::msg::String msg;
-        msg.data = HardcodedConfig::taskBPrompt;
-        user_prompt_pub_->publish(msg);
+        for(int i=0; i<HardcodedConfig::racks.size(); i++){
+          std_msgs::msg::String msg;
+          msg.data = HardcodedConfig::taskBPrompt + HardcodedConfig::racks[i];
+          user_prompt_pub_->publish(msg);
+        }
         });
 
     connect(ui->taskCButton, &QPushButton::pressed, [this](){
@@ -231,12 +250,12 @@ HMIWindow::HMIWindow(QWidget *parent)
 
     logView_  = new LogView(this);
     queueView_  = new LogView(this);
-    currentAction_ = new LogItemWidget(QColor("green"), this);
-    currentAction_->setFixedHeight(50);
+    currentAction_ = new LogItemWidget(QString(), QPixmap(), QColor("green"), TextMode::Detail, false ,this);
+    currentAction_->setFixedHeight(100);
     currentAction_->setText("No current action.");
 
-    currentTask_ = new LogItemWidget(QColor("yellow"), this);
-    currentTask_->setFixedHeight(50);
+    currentTask_ = new LogItemWidget(QString(), QPixmap(), QColor("yellow"), TextMode::Wrap, false ,this);
+    currentTask_->setFixedHeight(100);
     currentTask_->setText("No current task.");
 
     //connect(logQueue_, &LogQueue::logEnqueued, logView, &LogView::onLogEnqueued);
@@ -251,25 +270,45 @@ HMIWindow::HMIWindow(QWidget *parent)
         HardcodedConfig::VLMTopic, 10,
         [this](const demo_msgs::msg::VlmDescription::SharedPtr msg){
           RCLCPP_INFO(node_->get_logger(), "Data from (%s)", msg->source.c_str());
-          LogItemWidget* l1 = new LogItemWidget(QColor(HardcodedConfig::Colors.at(msg->source).c_str()), this);
+          QString label = QString(msg->description.c_str());
+          QImage image = QImage();
           if (auto encoding = EncodingMap.find(msg->image.encoding); encoding != EncodingMap.end()) {
-              QImage image(msg->image.data.data(), static_cast<int>(msg->image.width), static_cast<int>(msg->image.height), static_cast<QImage::Format>(EncodingMap.at(msg->image.encoding)));
-              l1->setImage(QPixmap::fromImage(image));
+              image = QImage(msg->image.data.data(), static_cast<int>(msg->image.width), static_cast<int>(msg->image.height), static_cast<QImage::Format>(EncodingMap.at(msg->image.encoding)));
 
           }
-          l1->setText(msg->description.c_str());
+          LogItemWidget* l1 = new LogItemWidget(label, QPixmap::fromImage(image), HardcodedConfig::Colors.at(msg->source), TextMode::Detail, true, this);
+          //l1->setMaximumCharacters(240);
           logView_->addItem(l1);
         });
 
 
     // clients for services
     restart_srv_ = node_->create_client<std_srvs::srv::Trigger>(HardcodedConfig::Restart);
+    housekeep_srv_ = node_->create_client<std_srvs::srv::Trigger>(HardcodedConfig::HousekeepService);
+    anomalies_srv_ = node_->create_client<std_srvs::srv::Trigger>(HardcodedConfig::AnomaliesService);
+    standard_srv_ = node_->create_client<std_srvs::srv::Trigger>(HardcodedConfig::StandardService);
+    cleanup_srv_ = node_->create_client<std_srvs::srv::Trigger>(HardcodedConfig::CleanupService);
 
     // buttons
     connect(ui->RestartButton, &QPushButton::clicked, [this]() {
         CallService(this, node_, restart_srv_);
     });
 
+    connect(ui->housekeepButton, &QPushButton::clicked, [this]() {
+        CallService(this, node_, housekeep_srv_);
+    });
+
+    connect(ui->anomaliesButton, &QPushButton::clicked, [this]() {
+        CallService(this, node_, anomalies_srv_);
+    });
+
+    connect(ui->standardButton, &QPushButton::clicked, [this]() {
+        CallService(this, node_, standard_srv_);
+    });
+
+    connect(ui->cleanupButton, &QPushButton::clicked, [this]() {
+        CallService(this, node_, cleanup_srv_);
+    });
     // done tasks and current task subscribers
     // currenttask_sub_ = node_->create_subscription<std_msgs::msg::String>(
     //     HardcodedConfig::AgentCurrentStep, 10,
@@ -280,14 +319,27 @@ HMIWindow::HMIWindow(QWidget *parent)
     current_action_sub_ = node_->create_subscription<rai_interfaces::msg::HRIMessage>(
           HardcodedConfig::AgentCurrentAction, 10,
           [this](const rai_interfaces::msg::HRIMessage::SharedPtr msg) {
-            currentAction_->setText(msg->text.c_str());
+            QString new_id = QString(msg->communication_id.c_str());
+            if( currentActionCommId_ != new_id ){
+              
+              currentActionText_ = QString(msg->text.c_str());
+              std::optional<ParseRaiData::HRIMessage> parsed = ParseRaiData::parseHRIMessage(currentActionText_);
+              if(parsed.has_value()){
+                currentActionText_ = HRIMessageToString(parsed.value());
+              }
+              currentActionCommId_ = new_id;
+            }else{
+              currentActionText_ += QString(msg->text.c_str());
+            }
+            
+            currentAction_->setText(currentActionText_);
           }
         );
 
     orchestrator_current_task_ = node_->create_subscription<std_msgs::msg::String>(
           HardcodedConfig::OrchestratorCurrentTask, 10,
           [this](const  std_msgs::msg::String::SharedPtr msg) {
-            currentAction_->setText(msg->data.c_str());
+            currentTask_->setText(msg->data.c_str());
           }
         );
 
@@ -424,23 +476,17 @@ void HMIWindow::buildListTask(){
   queueView_->clear();
   LogItemWidget* tmpItem;
   for (const QString &item : past_steps_) {
-    tmpItem = new LogItemWidget(QColor("#00AAFF"));
+    tmpItem = new LogItemWidget(QString(), QPixmap(), QColor(HardcodedConfig::Colors.at("PastSteps")), TextMode::Wrap, false, this);
+
+    // currentTask_ = new LogItemWidget(QString(), QPixmap(), QColor("yellow"), TextMode::Wrap, false ,this);
     tmpItem->setText(item);
     queueView_->addItem(tmpItem);
   }
   for (const QString &item : task_queue_) {
-    tmpItem = new LogItemWidget(QColor("#AAFA00"));
+    tmpItem = new LogItemWidget(QString(), QPixmap(), QColor(HardcodedConfig::Colors.at("TaskQueue")), TextMode::Wrap, false, this);
     tmpItem->setText(item);
     queueView_->addItem(tmpItem);
   }
-
-  for (const QString &item : paused_tasks_) {
-    tmpItem = new LogItemWidget(QColor("#AAAAAA"));
-    tmpItem->setText(item);
-    queueView_->addItem(tmpItem);
-  }
-
-
 }
 
 void HMIWindow::imageCallback(const sensor_msgs::msg::Image::SharedPtr msg, QGraphicsView* view) {

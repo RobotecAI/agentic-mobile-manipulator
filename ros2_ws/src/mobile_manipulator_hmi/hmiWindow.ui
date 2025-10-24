@@ -27,11 +27,6 @@
   </property>
   <property name="styleSheet">
    <string notr="true">/* ---------- Global defaults ---------- */
-* {
-    /* slightly smaller default font to fit more content */
-    font-size: 12px;
-}
-
 /* Reduce spacing inside windows/frames */
 QWidget {
     /* this doesn't set layout spacing, but keeps base font/appearance compact */
@@ -58,7 +53,7 @@ QGroupBox::title {
     subcontrol-position: top left;
     left: 6px;                 /* shift a little from border */
     padding: 0 4px;
-    font-size: 12px;
+    font-size: 20px;
 }
 QPushButton {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -67,7 +62,7 @@ QPushButton {
     border-radius: 3px;        
     padding: 2px 8px;        
     min-height: 20px;      
-    font-size: 18px;   
+    font-size: 20px;   
 }
 
 QPushButton:hover {
@@ -81,7 +76,7 @@ QPushButton:pressed {
 QTableView, QTreeView, QListView {
     gridline-color: #e6e6e6;
     border: 1px solid #e0e0e0;
-    font-size: 12px;
+    font-size: 20px;
 }
 QTableView::item, QListView::item {
     padding: 4px 6px;
@@ -152,9 +147,7 @@ QGroupBox::title {
        </sizepolicy>
       </property>
       <property name="font">
-       <font>
-        <pointsize>-1</pointsize>
-       </font>
+       <font/>
       </property>
       <property name="cursor">
        <cursorShape>ArrowCursor</cursorShape>
@@ -254,6 +247,9 @@ QGroupBox::title {
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <property name="rightMargin">
+          <number>300</number>
+         </property>
          <item alignment="Qt::AlignmentFlag::AlignHCenter">
           <widget class="QGroupBox" name="groupBoxPredefinedTasks">
            <property name="sizePolicy">
@@ -273,6 +269,11 @@ QGroupBox::title {
              <width>16777215</width>
              <height>600</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
            </property>
            <property name="title">
             <string>On Demand prefined tasks</string>
@@ -497,9 +498,9 @@ QGroupBox::title {
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="housekeepButton">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="text">
                <string>Housekeeping</string>
@@ -507,9 +508,9 @@ QGroupBox::title {
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="anomaliesButton">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="text">
                <string>Anomalies</string>
@@ -517,120 +518,20 @@ QGroupBox::title {
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="standardButton">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="text">
                <string>Standard</string>
               </property>
              </widget>
             </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="modelSelectionBox">
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>300</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>Model selection</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <widget class="QLabel" name="label_4">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>30</height>
-               </size>
-              </property>
+             <widget class="QPushButton" name="cleanupButton">
               <property name="text">
-               <string>LLM Selection</string>
+               <string>Cleanup</string>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="comboBox">
-              <property name="minimumSize">
-               <size>
-                <width>150</width>
-                <height>0</height>
-               </size>
-              </property>
-              <item>
-               <property name="text">
-                <string>qwen3:4b</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>qwen3:8b</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>qwen3:30b-a3b</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>gpt-oss:20b</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_7">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>VLM selection</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="comboBox_2">
-              <property name="minimumSize">
-               <size>
-                <width>150</width>
-                <height>0</height>
-               </size>
-              </property>
-              <item>
-               <property name="text">
-                <string>LFM-VL:2.6B (Liquid AI)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>LFM-VL:1.6B (Liquid AI)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Qwen2.5vl-3b</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Qwen2.5vl-7b</string>
-               </property>
-              </item>
              </widget>
             </item>
            </layout>
@@ -667,7 +568,6 @@ QGroupBox::title {
         </property>
         <property name="font">
          <font>
-          <pointsize>-1</pointsize>
           <bold>true</bold>
           <underline>false</underline>
           <strikeout>false</strikeout>
@@ -760,8 +660,8 @@ QGroupBox::title {
          <rect>
           <x>30</x>
           <y>30</y>
-          <width>250</width>
-          <height>300</height>
+          <width>500</width>
+          <height>600</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -772,8 +672,8 @@ QGroupBox::title {
         </property>
         <property name="minimumSize">
          <size>
-          <width>250</width>
-          <height>300</height>
+          <width>500</width>
+          <height>600</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -812,156 +712,46 @@ QGroupBox::title {
            <property name="verticalSpacing">
             <number>20</number>
            </property>
-           <item row="2" column="1">
-            <widget class="QFrame" name="inspectionFrame">
-             <property name="maximumSize">
-              <size>
-               <width>60</width>
-               <height>60</height>
-              </size>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::Shape::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Shadow::Raised</enum>
-             </property>
-             <widget class="QLabel" name="label_14">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>61</width>
-                <height>61</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Inspection</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QFrame" name="nav2Frame">
-             <property name="maximumSize">
-              <size>
-               <width>60</width>
-               <height>60</height>
-              </size>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::Shape::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Shadow::Raised</enum>
-             </property>
-             <widget class="QLabel" name="label_10">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>61</width>
-                <height>61</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Nav2</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QFrame" name="moveit2Frame">
-             <property name="maximumSize">
-              <size>
-               <width>60</width>
-               <height>60</height>
-              </size>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::Shape::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Shadow::Raised</enum>
-             </property>
-             <widget class="QLabel" name="label_12">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>61</width>
-                <height>61</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>MoveIt2</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QFrame" name="cpuFrame">
-             <property name="maximumSize">
-              <size>
-               <width>60</width>
-               <height>60</height>
-              </size>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::Shape::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Shadow::Raised</enum>
-             </property>
-             <widget class="QLabel" name="label_16">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>61</width>
-                <height>61</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>CPU</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </widget>
-           </item>
            <item row="2" column="2">
             <widget class="QFrame" name="safetyFrame">
-             <property name="maximumSize">
-              <size>
-               <width>60</width>
-               <height>60</height>
-              </size>
-             </property>
              <property name="frameShape">
               <enum>QFrame::Shape::StyledPanel</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <property name="minimumsize" stdset="0">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="maximumsize" stdset="0">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
              </property>
              <widget class="QLabel" name="label_15">
               <property name="geometry">
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>61</width>
-                <height>61</height>
+                <width>100</width>
+                <height>100</height>
                </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
               </property>
               <property name="text">
                <string>Safety</string>
@@ -972,63 +762,49 @@ QGroupBox::title {
              </widget>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QFrame" name="npuFrame">
-             <property name="maximumSize">
-              <size>
-               <width>60</width>
-               <height>60</height>
-              </size>
-             </property>
+           <item row="2" column="1">
+            <widget class="QFrame" name="inspectionFrame">
              <property name="frameShape">
               <enum>QFrame::Shape::StyledPanel</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Shadow::Raised</enum>
              </property>
-             <widget class="QLabel" name="label_11">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>61</width>
-                <height>61</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>NPU</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QFrame" name="gpuFrame">
-             <property name="maximumSize">
+             <property name="minimumsize" stdset="0">
               <size>
-               <width>60</width>
-               <height>60</height>
+               <width>100</width>
+               <height>100</height>
               </size>
              </property>
-             <property name="frameShape">
-              <enum>QFrame::Shape::StyledPanel</enum>
+             <property name="maximumsize" stdset="0">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
              </property>
-             <property name="frameShadow">
-              <enum>QFrame::Shadow::Raised</enum>
-             </property>
-             <widget class="QLabel" name="label_5">
+             <widget class="QLabel" name="label_14">
               <property name="geometry">
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>61</width>
-                <height>61</height>
+                <width>100</width>
+                <height>100</height>
                </rect>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
               <property name="text">
-               <string>GPU</string>
+               <string>Inspection</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -1040,14 +816,14 @@ QGroupBox::title {
             <widget class="QFrame" name="ramFrame">
              <property name="minimumSize">
               <size>
-               <width>50</width>
-               <height>50</height>
+               <width>100</width>
+               <height>100</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>60</width>
-               <height>60</height>
+               <width>100</width>
+               <height>100</height>
               </size>
              </property>
              <property name="frameShape">
@@ -1061,9 +837,21 @@ QGroupBox::title {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>61</width>
-                <height>61</height>
+                <width>100</width>
+                <height>100</height>
                </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
               </property>
               <property name="text">
                <string>RAM</string>
@@ -1074,12 +862,118 @@ QGroupBox::title {
              </widget>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QFrame" name="agentFrame">
+           <item row="0" column="1">
+            <widget class="QFrame" name="gpuFrame">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
-               <width>60</width>
-               <height>60</height>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <widget class="QLabel" name="label_5">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>100</width>
+                <height>100</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>GPU</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QFrame" name="moveit2Frame">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <widget class="QLabel" name="label_12">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>100</width>
+                <height>100</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>MoveIt2</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QFrame" name="agentFrame">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
               </size>
              </property>
              <property name="frameShape">
@@ -1093,12 +987,174 @@ QGroupBox::title {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>61</width>
-                <height>61</height>
+                <width>100</width>
+                <height>100</height>
                </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
               </property>
               <property name="text">
                <string>Agent</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QFrame" name="npuFrame">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <widget class="QLabel" name="label_11">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>100</width>
+                <height>100</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>NPU</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QFrame" name="nav2Frame">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <widget class="QLabel" name="label_10">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>100</width>
+                <height>100</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Nav2</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QFrame" name="cpuFrame">
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <property name="minimumsize" stdset="0">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="maximumsize" stdset="0">
+              <size>
+               <width>100</width>
+               <height>100</height>
+              </size>
+             </property>
+             <widget class="QLabel" name="label_16">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>100</width>
+                <height>100</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>CPU</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -1113,9 +1169,9 @@ QGroupBox::title {
        <widget class="QGroupBox" name="groupBox_4">
         <property name="geometry">
          <rect>
-          <x>330</x>
+          <x>630</x>
           <y>10</y>
-          <width>1551</width>
+          <width>1251</width>
           <height>961</height>
          </rect>
         </property>
@@ -1458,40 +1514,157 @@ QGroupBox::title {
           </layout>
          </item>
          <item>
-          <widget class="QGroupBox" name="vlm_box">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>960</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>7000</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>VLM Output</string>
-           </property>
-           <widget class="QWidget" name="verticalLayoutWidget">
-            <property name="geometry">
-             <rect>
-              <x>9</x>
-              <y>19</y>
-              <width>941</width>
-              <height>861</height>
-             </rect>
-            </property>
-            <layout class="QVBoxLayout" name="vlm_layout"/>
-           </widget>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <widget class="QGroupBox" name="modelSelectionBox">
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>300</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="title">
+              <string>Model selection</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_6">
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>LLM Selection</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>qwen3:4b</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>qwen3:8b</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>qwen3:30b-a3b</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>gpt-oss:20b</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_7">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>VLM selection</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboBox_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>LFM-VL:2.6B (Liquid AI)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>LFM-VL:1.6B (Liquid AI)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Qwen2.5vl-3b</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Qwen2.5vl-7b</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="vlm_box">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>960</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>7000</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>VLM Output</string>
+             </property>
+             <widget class="QWidget" name="verticalLayoutWidget">
+              <property name="geometry">
+               <rect>
+                <x>9</x>
+                <y>19</y>
+                <width>941</width>
+                <height>861</height>
+               </rect>
+              </property>
+              <layout class="QVBoxLayout" name="vlm_layout"/>
+             </widget>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>

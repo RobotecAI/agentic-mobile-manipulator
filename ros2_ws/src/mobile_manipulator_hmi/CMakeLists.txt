@@ -69,6 +69,15 @@ find_package(rai_interfaces REQUIRED)               # custom Utilization message
 # add source directoty to include path
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+# --- nlohmann/json dependency ---
+include(FetchContent)
+FetchContent_Declare(
+        json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.11.3 # or latest
+)
+FetchContent_MakeAvailable(json)
+
 set(PROJECT_SOURCES
         main.cpp
         ZoomableGraphicsView.h
@@ -86,6 +95,8 @@ set(PROJECT_SOURCES
         TaskDialog.cpp
         TaskDialog.h
         resources.qrc
+        ParseRaiData.cpp
+        ParseRaiData.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -115,10 +126,31 @@ target_link_libraries(MobileManipulatorHMI PRIVATE
         image_transport::image_transport
         cv_bridge::cv_bridge
         ${OpenCV_LIBS}           # OpenCV provides targets like OpenCV::Core, but ${OpenCV_LIBS} is usually set
+        nlohmann_json::nlohmann_json
 )
 
 # Install targets
 install(TARGETS MobileManipulatorHMI
   DESTINATION lib/${PROJECT_NAME})
+
+# --- Testing ---
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+
+  # Test for ParseRaiData
+  ament_add_gtest(test_parse_rai_data
+    test/test_parse_rai_data.cpp
+    ParseRaiData.cpp
+  )
+
+  target_include_directories(test_parse_rai_data PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+  target_link_libraries(test_parse_rai_data
+    Qt${QT_VERSION_MAJOR}::Widgets
+    nlohmann_json::nlohmann_json
+  )
+endif()
 
 

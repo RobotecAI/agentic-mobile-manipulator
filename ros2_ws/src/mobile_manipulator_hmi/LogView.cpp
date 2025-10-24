@@ -10,12 +10,12 @@ LogView::LogView(QWidget* parent)
     m_scroll->setWidgetResizable(true);
     m_scroll->setFrameShape(QFrame::NoFrame);
     m_scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     m_container = new QWidget(m_scroll);
     m_vbox = new QVBoxLayout(m_container);
     m_vbox->setContentsMargins(0, 0, 0, 0);
-    m_vbox->setSpacing(0);
+    m_vbox->setSpacing(2);
 
     // A stretch at the end keeps items packed to the top cleanly
     m_vbox->addStretch(1);

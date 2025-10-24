@@ -64,6 +64,9 @@ private:
     void setFrameDisabled(QFrame* frame);
 
     void buildListTask();
+
+    QString currentActionText_;
+    QString currentActionCommId_;
     
     Ui::HMIWindow *ui;
     rclcpp::Node::SharedPtr node_;
@@ -97,6 +100,11 @@ private:
 
     rclcpp::Subscription<std_msgs::msg::Header>::SharedPtr orchestrator_sub_;
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr restart_srv_;
+
+    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr housekeep_srv_;
+    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr anomalies_srv_;
+    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr standard_srv_;
+    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr cleanup_srv_;
 
     rclcpp::Subscription<rcl_interfaces::msg::Log>::SharedPtr log_sub_;
     rclcpp::Subscription<demo_msgs::msg::Utilization>::SharedPtr utilization_sub_;
