@@ -287,7 +287,7 @@ class AgentOrchestrator:
         # NOTE: All inspection tasks will be high prio
         anomaly: Anomaly = msg.payload
         pose = anomaly.pose
-        pose_prompt = f" was detected at pose (x={pose.position.x}, y={pose.position.y}, z={pose.position.z} "
+        pose_prompt = f" was detected at pose (x={pose.position.x}, y={pose.position.y}, z={pose.position.z}). "
         if anomaly.obstacle_type == "box":
             prompt = "box" + pose_prompt
             prompt += "Move it to the inspection area."
