@@ -19,7 +19,7 @@ import math
 import random
 import re
 import time
-from typing import List, Optional, Tuple, Type, cast
+from typing import List, Literal, Optional, Tuple, Type, cast
 
 import cv2
 import numpy as np
@@ -182,8 +182,10 @@ class WarehouseTool(BaseROS2Tool):
                         collection.middle_poses[-1], approach_distance
                     )
                     break
-                except RuntimeError as e:
-                    logging.warning(e)
+                except RuntimeError:
+                    raise RuntimeError(
+                        f"Due to robot's constrution limitations approaching rack {collection.tag} is not possible."
+                    )
         else:
             # Approach collection from both viewing angles
             for pose in collection.middle_poses:
@@ -198,8 +200,10 @@ class WarehouseTool(BaseROS2Tool):
                     filtered_slots = self._filter_slots_by_proximity(
                         slots=filtered_slots, view_pose=view_pose
                     )
-                except RuntimeError as e:
-                    logging.warning(e)
+                except RuntimeError:
+                    raise RuntimeError(
+                        f"Due to robot's constrution limitations approaching rack {collection.tag} is not possible."
+                    )
 
         # Scanning
         time.sleep(1)
@@ -390,6 +394,11 @@ class NavigateToSlotSyncTool(WarehouseTool):
         return f"Successfully navigated to slot {slot_name}"
 
 
+class BoxConditionOutput(BaseModel):
+    box_condition: Literal["good", "bad"]
+    box_condition_reason: str
+
+
 class IsPackageDamagedTool(BaseROS2Tool):
     name: str = "is_package_damaged_tool"
     description: str = "Ask VLM if package in current slot is damaged."
@@ -407,7 +416,21 @@ class IsPackageDamagedTool(BaseROS2Tool):
         return ros2_image
 
     def _run(self) -> bool:
-        SYSTEM_PROMPT = "You are an expert in image analysis and your speciality is the description of images"
+        BOX_CONDITION_SYSTEM_PROMPT = """
+You are a packaging quality inspector.
+Focus on the most centered and prominent box in the image.
+
+First, describe the visible condition of the box (for example: whether it looks clean, dented, torn, or damaged).
+
+Then, provide a concise result in this format:
+- Condition: good or bad.
+- Reason: one short sentence describing the visible evidence (for example: crushed corner, torn seam, moisture stain, intact edges).
+
+Rules:
+- Base your judgment strictly on what is clearly visible.
+- If visibility or identification of the box is uncertain, decide the condition based on that level of clarity.
+- Do not speculate or add extra commentary.
+"""
         logging.info("Getting image")
         tool = GetROS2ImageConfiguredTool(
             connector=self.connector,
@@ -417,34 +440,25 @@ class IsPackageDamagedTool(BaseROS2Tool):
         artifact: MultimodalArtifact
         b64_img = artifact["images"][0]
 
-        class ROS2ImgDescription(BaseModel):
-            """Structured output describing package damage assessment."""
-
-            is_package_damaged: bool = Field(
-                ..., description="Whether the package is damaged or not"
-            )
-            description: str = Field(
-                ..., description="Short description of the package"
-            )
-
         task = [
-            SystemMessage(content=SYSTEM_PROMPT),
+            SystemMessage(content=BOX_CONDITION_SYSTEM_PROMPT),
             HumanMultimodalMessage(
                 content="Check if the box is damaged.",
                 images=[b64_img],
             ),
         ]
-        vlm = self.vlm.with_structured_output(ROS2ImgDescription)
-        response = cast(ROS2ImgDescription, vlm.invoke(task))
-        logging.info(f"Package damaged = {response.is_package_damaged}")
+        vlm = self.vlm.with_structured_output(BoxConditionOutput)
+        response = cast(BoxConditionOutput, vlm.invoke(task))
+        logging.info(f"Package damaged = {response.box_condition}")
         ros2_image = self._build_ros2_image(b64_img)
         publish_vlm_description(
             self.connector,
             ros2_image,
-            f"Package damaged: {response.is_package_damaged}. \nDescription: {response.description}",
+            f"Package damaged: {response.box_condition}. \nDescription: {response.box_condition_reason}",
             "Box",
         )
-        return response.is_package_damaged
+
+        return True if response.box_condition else False
 
 
 class DescribeImageToolInput(BaseModel):
@@ -565,12 +579,16 @@ class MoveFromCollectionToCollectionTool(WarehouseTool):
                 entity_name=origin_object_name,
             )
             self.kairos_controller.mani_ctrl.move_arm_to_base_pose()
+        except RuntimeError:
+            raise RuntimeError(
+                f"Due to robot's constrution limitations approaching entity {origin_object_name} is not possible."
+            )
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")
             return f"Failed to move object from {origin_slot.tag} to {target_slot.tag}: {str(e)}"
         finally:
             self.refresh_data()
-        return_text = "Successfully moved one"
+        return_text = "Successfully moved one "
         return_text += f"package with {str(item_type)}" if item_type else "package"
         return_text += f" from {origin_collection_name} to {target_collection_name}"
         return return_text
@@ -710,11 +728,11 @@ class ThrowTrashOutTool(WarehouseTool):
                 object_pose=trash_pose,
                 top_gripping_point=trash_gripping_point,
             )
-            return f"Successfully thrown out trash from {trash_gripping_point} to garbage bin"
+            return f"Successfully thrown out trash from {trash_gripping_point.position} to garbage bin"
 
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")
-            return f"Failed to throw out garbage from {trash_gripping_point} to garbage bin: {str(e)}"
+            return f"Failed to throw out garbage from {trash_gripping_point.position} to garbage bin: {str(e)}"
 
 
 class HouseKeepToolInput(BaseModel):
@@ -847,10 +865,10 @@ class SortReturnedPackageToolInput(BaseModel):
 class SortReturnedPackageTool(WarehouseTool):
     name: str = "sort_returned_package"
     description: str = (
-        "Moves returned package to inspection table or designated rack based on item's condition and content."
-        "Run this tool multiple times to move all the packages."
-        "When there are no more packages to sort, the tool will return 'No more packages to sort' message."
-        "This tool does not need parameters. The objects to be sorted are resolved automatically."
+        "Moves returned package to inspection table or designated rack based on item's condition and content. "
+        "Run this tool multiple times to move all the packages. "
+        "When there are no more packages to sort, the tool will return 'No more packages to sort' message. "
+        "This tool does not need parameters. The objects to be sorted are resolved automatically. "
     )
     vlm: BaseChatModel
 
@@ -960,9 +978,9 @@ class SortReturnedPackageTool(WarehouseTool):
             entity_name=entity_name,
         )
         return_text = "Moved "
-        return_text += "damaged" if is_damaged else " non-damaged "
+        return_text += "damaged " if is_damaged else " non-damaged "
         return_text += "package to "
-        return_text += "Inspection table" if is_damaged else "respective rack. "
+        return_text += "Inspection table " if is_damaged else "respective rack. "
         return_text += f"There are {len(used_slots) - 1} packages left to sort."
         self.connector.logger.info(f"----- Finished {self.__class__.__name__} -----")
         return return_text
