@@ -192,10 +192,12 @@ class OrchestratorTasksNotifier:
         connector: ROS2Connector,
         current_task_topic: str,
         tasks_queue_topic: str,
+        heartbeat_topic: str,
     ) -> None:
         self.connector = connector
         self.current_task_topic = current_task_topic
         self.tasks_queue_topic = tasks_queue_topic
+        self.heartbeat_topic = heartbeat_topic
 
     def send_main_task(self, task: str):
         self.connector.send_message(
@@ -210,4 +212,11 @@ class OrchestratorTasksNotifier:
             message=ROS2Message(payload={"data": msg}),
             msg_type="std_msgs/msg/String",
             target=self.tasks_queue_topic,
+        )
+
+    def send_heartbeat(self):
+        self.connector.send_message(
+            message=ROS2Message(),
+            msg_type="std_msgs/msg/Header",
+            target=self.heartbeat_topic,
         )

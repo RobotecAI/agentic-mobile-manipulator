@@ -262,6 +262,7 @@ class AgentOrchestrator:
             connector=connector,
             current_task_topic="/orchestrator/current_task",
             tasks_queue_topic="/orchestrator/tasks_queue",
+            heartbeat_topic="/orchestrator/heartbeat",
         )
 
     def notify_about_tasks(self):
@@ -389,6 +390,19 @@ class AgentOrchestrator:
                 self.notify_about_tasks()
             time.sleep(1)
 
+    def heartbeat_notifier(self):
+        """Publish heartbeat periodically in a background thread.
+
+        Returns
+        -------
+        None
+            The loop runs until ``self.running`` is set to ``False``.
+        """
+        while self.running:
+            with self.lock:
+                self.notifier.send_heartbeat()
+            time.sleep(5)
+
     async def begin_high_prio_task(self):
         with self.lock:
             self.current_task = self.high_prio_task_queue.get_nowait()
@@ -418,6 +432,9 @@ class AgentOrchestrator:
 
         notification_thread = threading.Thread(target=self.task_notifier, daemon=True)
         notification_thread.start()
+
+        heartbeat_thread = threading.Thread(target=self.heartbeat_notifier, daemon=True)
+        heartbeat_thread.start()
 
         while self.running:
             if not self.current_task:
