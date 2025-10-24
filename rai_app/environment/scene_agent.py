@@ -5,7 +5,7 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Point, Pose
 from rai.agents import BaseAgent, wait_for_shutdown
 from rai.communication.ros2 import (
     ROS2Connector,
@@ -124,6 +124,95 @@ class SceneManagerState(SceneManager):
             )
         return Trigger.Response(success=True)
 
+    def standard_scenario(self, request: Trigger.Request, response: Trigger.Response):
+        spawnables = pd.read_csv(self.spawnables_file, delimiter=",")
+        spawnables = spawnables[
+            ~spawnables["object_name"].isin(["ego", "oilspill1", "oilspill2"])
+        ]
+
+        # self.clear_scene()
+        collection_names, item_types = load_rack_assignment(self.rack_assignment_file)
+        item_type_assets = pd.read_csv(self.item_type_assets_file, delimiter=",")
+        item_type_assets["asset_names"] = item_type_assets["asset_names"].str.split(";")
+
+        spawn_slot_names = []
+        spawn_entity_types = []
+        items_stored = []
+        for rack, item_type in zip(collection_names, item_types):
+            slots_of_rack = self.get_collection(rack).get_all_slots().values()
+            for slot in slots_of_rack:
+                if random.random() > self.rack_fill:
+                    continue
+                spawn_slot_names.append(slot.tag)
+                spawn_entity_types.append(
+                    random.choice(
+                        item_type_assets.loc[
+                            item_type_assets["item_type"] == item_type, "asset_names"
+                        ].values[0]
+                    )
+                )
+                items_stored.append(item_type)
+
+        if items_stored is None:
+            items_stored = [None] * len(spawn_slot_names)
+
+        if len(spawn_slot_names) != len(items_stored):
+            raise ValueError(
+                "Slots and object names must have the same length and items stored"
+            )
+
+        for slot, entity_type, item in tqdm(
+            zip(spawn_slot_names, spawn_entity_types, items_stored),
+            desc="Spawning entities",
+            total=len(spawn_slot_names),
+        ):
+            self.spawn_on_spot(
+                slot_name=slot,
+                object_name=entity_type,
+                item_stored=item,
+                std_xy=0.05,
+                std_yaw=0.05,
+            )
+        return Trigger.Response(success=True)
+
+    def anomalies(self, request: Trigger.Request, response: Trigger.Response):
+        spawning_points = [
+            (7.20, 7.44, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (2.48, 2.70, 0.00, 0.0, 0.0, 0.0, 1.0),
+            (11.29, 3.14, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (17.76, 2.95, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (23.38, 7.06, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (24.48, 8.47, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (26.90, 11.55, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (24.50, 15.27, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (27.10, 21.35, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (27.05, 27.22, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (22.72, 25.47, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (17.94, 27.42, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (17.94, 20.61, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (17.71, 15.09, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (12.31, 26.86, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (8.64, 26.88, 0.01, 0.0, 0.0, 0.0, 1.0),
+            (3.97, 25.58, 0.01, 0.0, 0.0, 0.0, 1.0),
+        ]
+        anomalies_poses = [
+            Pose(position=Point(x=point[0], y=point[1], z=point[2]))
+            for point in random.sample(spawning_points, 3)
+        ]
+
+        available_types = [
+            "cardboardbox02_v01T",
+            "cardboardbox02_v01D",
+            "cardboardbox01_v01",
+        ]
+        anomalies_types = [random.choice(available_types) for _ in range(3)]
+
+        for pose, anomaly_type in tqdm(
+            zip(anomalies_poses, anomalies_types), desc="Spawning anomalies"
+        ):
+            self.spawn_object(pose=pose, object_name=anomaly_type)
+        return Trigger.Response(success=True)
+
     def spawn_on_spot(
         self,
         slot_name: str,
@@ -203,13 +292,13 @@ class SceneAgent(BaseAgent):
 
     def anomalies(self, request: Trigger.Request, response: Trigger.Response):
         self.logger.info("Request to populate the scene according to anomalies recipe")
-        self.scene_manager_state.housekeep_scenario(request, response)
+        self.scene_manager_state.anomalies(request, response)
         self.logger.info("Scene populated according to anomalies recipe")
         return Trigger.Response(success=True)
 
     def standard(self, request: Trigger.Request, response: Trigger.Response):
         self.logger.info("Request to populate the scene according to standard recipe")
-        self.scene_manager_state.housekeep_scenario(request, response)
+        self.scene_manager_state.standard_scenario(request, response)
         self.logger.info("Scene populated according to standard recipe")
         return Trigger.Response(success=True)
 
