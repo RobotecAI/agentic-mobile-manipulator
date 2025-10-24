@@ -72,7 +72,6 @@ class SceneManagerState(SceneManager):
         )
 
     def housekeep_scenario(self, request: Trigger.Request, response: Trigger.Response):
-        slots = pd.read_csv(self.slots_file, delimiter=",")
         spawnables = pd.read_csv(self.spawnables_file, delimiter=",")
         spawnables = spawnables[
             ~spawnables["object_name"].isin(["ego", "oilspill1", "oilspill2"])
@@ -104,7 +103,7 @@ class SceneManagerState(SceneManager):
         if items_stored is None:
             items_stored = [None] * len(spawn_slot_names)
 
-        if len(slots) != len(spawn_slot_names) != len(items_stored):
+        if len(spawn_slot_names) != len(items_stored):
             raise ValueError(
                 "Slots and object names must have the same length and items stored"
             )
@@ -112,7 +111,7 @@ class SceneManagerState(SceneManager):
         for slot, entity_type, item in tqdm(
             zip(spawn_slot_names, spawn_entity_types, items_stored),
             desc="Spawning entities",
-            total=len(slots),
+            total=len(spawn_slot_names),
         ):
             self.spawn_on_spot(
                 slot_name=slot,
@@ -197,15 +196,21 @@ class SceneAgent(BaseAgent):
         self.logger.info("Scene agent initialized")
 
     def housekeep(self, request: Trigger.Request, response: Trigger.Response):
+        self.logger.info("Request to populate the scene according to housekeep recipe")
         self.scene_manager_state.housekeep_scenario(request, response)
+        self.logger.info("Scene populated according to housekeep recipe")
         return Trigger.Response(success=True)
 
     def anomalies(self, request: Trigger.Request, response: Trigger.Response):
+        self.logger.info("Request to populate the scene according to anomalies recipe")
         self.scene_manager_state.housekeep_scenario(request, response)
+        self.logger.info("Scene populated according to anomalies recipe")
         return Trigger.Response(success=True)
 
     def standard(self, request: Trigger.Request, response: Trigger.Response):
+        self.logger.info("Request to populate the scene according to standard recipe")
         self.scene_manager_state.housekeep_scenario(request, response)
+        self.logger.info("Scene populated according to standard recipe")
         return Trigger.Response(success=True)
 
     def cleanup(self, request: Trigger.Request, response: Trigger.Response):
