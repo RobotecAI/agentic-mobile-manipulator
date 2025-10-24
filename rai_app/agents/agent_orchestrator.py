@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import asyncio
 import logging
+import sys
 import threading
 import time
 import uuid
@@ -251,7 +251,15 @@ class AgentOrchestrator:
         self.running = True
         self.current_task: Optional[TaskExecution] = None
         self.current_task_future = None
+
+        self.connector.register_callback(
+            "/emergency_stop",
+            self.emergency_stop_callback,
+            msg_type="std_msgs/msg/String",
+        )
         self.stop: bool = False
+        self._threads: list[threading.Thread] = []
+
         self.task_count = 0
         self.lock = threading.Lock()
 
@@ -264,6 +272,31 @@ class AgentOrchestrator:
             tasks_queue_topic="/orchestrator/tasks_queue",
             heartbeat_topic="/orchestrator/heartbeat",
         )
+
+    def emergency_stop_callback(self, msg: ROS2Message):
+        """Triggered when an emergency stop signal is received."""
+        logging.error("Emergency stop signal received!")
+        self.stop = True
+        self.running = False
+
+        # Cancel any running async task
+        if self.current_task_future and not self.current_task_future.done():
+            self.current_task_future.cancel()
+
+        # Gracefully join background threads
+        for t in self._threads:
+            if t.is_alive():
+                logging.info(f"Waiting for thread {t.name} to stop...")
+                t.join(timeout=2)
+
+        logging.info("All background threads stopped. Shutting down orchestrator...")
+
+        try:
+            rclpy.shutdown()
+        except Exception:
+            pass
+
+        sys.exit(0)
 
     def notify_about_tasks(self):
         if self.current_task:
@@ -369,8 +402,8 @@ class AgentOrchestrator:
             stream_mode=["messages"],
         ):
             if self.stop:
-                logging.info("Stopping the agent")
-                break
+                logging.error("Stopping the agent...")
+                return
 
             await self.action_callback.process_stream_chunk(chunk)
 
@@ -429,9 +462,11 @@ class AgentOrchestrator:
 
         sub_thread = threading.Thread(target=self.spin_task_subscriber, daemon=True)
         sub_thread.start()
+        self._threads.append(sub_thread)
 
         notification_thread = threading.Thread(target=self.task_notifier, daemon=True)
         notification_thread.start()
+        self._threads.append(notification_thread)
 
         heartbeat_thread = threading.Thread(target=self.heartbeat_notifier, daemon=True)
         heartbeat_thread.start()
