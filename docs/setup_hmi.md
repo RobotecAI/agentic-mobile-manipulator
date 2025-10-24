@@ -59,6 +59,10 @@ ros2 launch mobile_manipulator_hmi hmi_launch.py
 
 ### 🧠 Services
 
-| **Interface** | **Service Type**       | **Service Name** | **Description**                                                      |
-| ------------- | ---------------------- | ---------------- | -------------------------------------------------------------------- |
-| Client        | `std_srvs/srv/Trigger` | `/restart`       | Invokes a restart or reset of the orchestrator or system components. |
+| **Interface** | **Service Type**       | **Service Name**       | **Description**                                                      |
+| ------------- | ---------------------- | ---------------------- | -------------------------------------------------------------------- |
+| Client        | `std_srvs/srv/Trigger` | `/restart`             | Invokes a restart or reset of the orchestrator or system components. |
+| Client        | `std_srvs/srv/Trigger` | `/rai/scene/housekeep` | Setups the housekeeping task scene.                                  |
+| Client        | `std_srvs/srv/Trigger` | `/rai/scene/anomalies` | Setups the anomalies detection scene.                                |
+| Client        | `std_srvs/srv/Trigger` | `/rai/scene/standard`  | Setups the standard scene.                                           |
+| Client        | `std_srvs/srv/Trigger` | `/rai/scene/cleanup`   | Cleans the scene from all entities.                                  |
