@@ -160,7 +160,7 @@ QGroupBox::title {
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -1749,7 +1749,7 @@ QGroupBox::title {
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>7000</height>
+               <height>700</height>
               </size>
              </property>
              <property name="title">

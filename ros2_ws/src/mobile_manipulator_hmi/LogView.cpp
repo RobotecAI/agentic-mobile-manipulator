@@ -2,30 +2,63 @@
 #include "LogView.h"
 #include <QSpacerItem>
 #include <QLayoutItem>
+#include <QScroller>
+#include <QScrollerProperties>
+#include <QScrollArea>
+#include <QScrollBar>
 
 LogView::LogView(QWidget* parent)
     : QWidget(parent)
 {
     m_scroll = new QScrollArea(this);
+    m_scroll->setMaximumHeight(600);
+    m_scroll->setMinimumHeight(600);
     m_scroll->setWidgetResizable(true);
     m_scroll->setFrameShape(QFrame::NoFrame);
     m_scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    m_scroll->setStyleSheet(
+    "QScrollBar:vertical {"
+    "    width: 24px;"
+    "    background: transparent;"
+    "    margin: 0;"
+    "}"
+    "QScrollBar::handle:vertical {"
+    "    background: #888;"
+    "    min-height: 30px;"
+    "    border-radius: 6px;"
+    "}"
+    "QScrollBar::handle:vertical:hover {"
+    "    background: #666;"
+    "}"
+    "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {"
+    "    height: 0px;"               // hide arrow buttons
+    "}"
+    );
 
     m_container = new QWidget(m_scroll);
     m_vbox = new QVBoxLayout(m_container);
     m_vbox->setContentsMargins(0, 0, 0, 0);
     m_vbox->setSpacing(2);
-
-    // A stretch at the end keeps items packed to the top cleanly
     m_vbox->addStretch(1);
-
+    m_scroll->setMaximumHeight(800);
     m_scroll->setWidget(m_container);
 
     auto* outer = new QVBoxLayout(this);
     outer->setContentsMargins(0, 0, 0, 0);
     outer->addWidget(m_scroll);
+
+    // 🔑 Enable kinetic/touch scrolling
+    QScroller::grabGesture(m_scroll->viewport(), QScroller::LeftMouseButtonGesture);
+
+    // (Optional) Fine-tune scroll physics
+    QScroller* scroller = QScroller::scroller(m_scroll->viewport());
+    QScrollerProperties props = scroller->scrollerProperties();
+    props.setScrollMetric(QScrollerProperties::DecelerationFactor, 0.15);
+    props.setScrollMetric(QScrollerProperties::MaximumVelocity, 0.4);
+    scroller->setScrollerProperties(props);
 }
+
 
 void LogView::addItem(LogItemWidget* item)
 {
