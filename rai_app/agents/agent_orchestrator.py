@@ -286,10 +286,7 @@ class AgentOrchestrator:
         # NOTE: All inspection tasks will be high prio
         anomaly: Anomaly = msg.payload
         pose = anomaly.pose
-        pose_prompt = (
-            f" was detected at pose (x={pose.position}, y={pose.position.y}, z={pose.position.z},"
-            f" qx={pose.orientation.x}, qy={pose.orientation.y}, qz={pose.orientation.z}, qw={pose.orientation.w}. "
-        )
+        pose_prompt = f" was detected at pose (x={pose.position}, y={pose.position.y}, z={pose.position.z} "
         if anomaly.obstacle_type == "box":
             prompt = "box" + pose_prompt
             prompt += "Move it to the inspection area."
@@ -374,7 +371,7 @@ class AgentOrchestrator:
                 logging.info("Stopping the agent")
                 break
 
-            # await self.action_callback.process_stream_chunk(chunk)
+            await self.action_callback.process_stream_chunk(chunk)
 
     def spin_task_subscriber(self):
         rclpy.spin(self.task_subscriber)
@@ -561,7 +558,7 @@ def main():
             f"- {executor.name} specialist can use the following tools: \n"
         )
         for tool in executor.tools:
-            executor_overview += f"    -{tool.name}: {tool.description}\n"
+            executor_overview += f"-{tool.name}\n"
     megamind_system_prompt = MEGAMIND_SYSTEM_PROMPT_TEMPLATE.format(
         executor_overview=executor_overview, context=context
     )
