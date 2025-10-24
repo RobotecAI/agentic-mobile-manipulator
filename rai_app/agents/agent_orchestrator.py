@@ -286,7 +286,7 @@ class AgentOrchestrator:
         # NOTE: All inspection tasks will be high prio
         anomaly: Anomaly = msg.payload
         pose = anomaly.pose
-        pose_prompt = f" was detected at pose (x={pose.position}, y={pose.position.y}, z={pose.position.z} "
+        pose_prompt = f" was detected at pose (x={pose.position.x}, y={pose.position.y}, z={pose.position.z} "
         if anomaly.obstacle_type == "box":
             prompt = "box" + pose_prompt
             prompt += "Move it to the inspection area."
@@ -552,20 +552,16 @@ def main():
         ),
     ]
 
-    executor_overview = ""
-    for executor in executors:
-        executor_overview += (
-            f"- {executor.name} specialist can use the following tools: \n"
-        )
-        for tool in executor.tools:
-            executor_overview += f"-{tool.name}\n"
-    megamind_system_prompt = MEGAMIND_SYSTEM_PROMPT_TEMPLATE.format(
-        executor_overview=executor_overview, context=context
-    )
-
+    megamind_system_prompt = MEGAMIND_SYSTEM_PROMPT_TEMPLATE
+    PLANNING_PROMPT = """
+- Mark as SUCCESS if the specialist completed the core objective, even if the exact wording or approach differed
+- Focus on the tools results, not the process or minor discrepancies
+- Ignore semantic differences between task description and execution if the goal was achieved
+"""
     agent = create_megamind(
         megamind_system_prompt=megamind_system_prompt,
         megamind_llm=llm,
+        task_planning_prompt=PLANNING_PROMPT,
         executors=executors,
     )
 

@@ -174,7 +174,8 @@ class WarehouseTool(BaseROS2Tool):
         """
         filtered_slots = self.filter_for_slots_in_arm_range(slots)
 
-        if collection.collection_type != "rack":
+        if collection.collection_type == "rack":
+            sides_not_available = 0
             # If not rack, approach only from 1 side
             for pose in collection.middle_poses:
                 try:
@@ -183,9 +184,11 @@ class WarehouseTool(BaseROS2Tool):
                     )
                     break
                 except RuntimeError:
-                    raise RuntimeError(
-                        f"Due to robot's constrution limitations approaching rack {collection.tag} is not possible."
-                    )
+                    sides_not_available += 1
+            if sides_not_available == 2:
+                raise RuntimeError(
+                    f"Due to robot's constrution limitations approaching rack {collection.tag} is not possible."
+                )
         else:
             # Approach collection from both viewing angles
             for pose in collection.middle_poses:
@@ -202,7 +205,7 @@ class WarehouseTool(BaseROS2Tool):
                     )
                 except RuntimeError:
                     raise RuntimeError(
-                        f"Due to robot's constrution limitations approaching rack {collection.tag} is not possible."
+                        f"Due to robot's constrution limitations approaching table {collection.tag} is not possible."
                     )
 
         # Scanning
@@ -779,36 +782,37 @@ class HouseKeepTool(WarehouseTool):
         approach_distance: Optional[float] = None,
     ):
         """Inspect a rack collection for misaligned boxes."""
-        try:
-            if not approach_distance:
-                approach_distance = self.approach_distance
+        if not approach_distance:
+            approach_distance = self.approach_distance
 
-            self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-                approach_pose, approach_distance
-            )
+        self.kairos_controller.nav_ctrl.approach_target_along_orientation(
+            approach_pose, approach_distance
+        )
 
-            coll = self.scene_manager.slots_collections[collection_name]
-            view_pose = get_global_pose_from_origin(
-                Pose(position=Point(x=approach_distance)), approach_pose
-            )
-            self.check_collection_boxes_for_misallignment(coll, view_pose)
-            time.sleep(1)
-
-        except RuntimeError:
-            raise RuntimeError(
-                f"Due to robot's constrution limitations housekeeping on rack {collection_name} is not possible."
-            )
+        coll = self.scene_manager.slots_collections[collection_name]
+        view_pose = get_global_pose_from_origin(
+            Pose(position=Point(x=approach_distance)), approach_pose
+        )
+        self.check_collection_boxes_for_misallignment(coll, view_pose)
+        time.sleep(1)
 
     def housekeep(self, rack: str):
         self.refresh_data()
 
-        pos1, pos2 = self.view_of_racks_poses([rack])
-        self.check_collection(
-            pos1, collection_name=rack, approach_distance=self.approach_distance
-        )
-        self.check_collection(
-            pos2, collection_name=rack, approach_distance=self.approach_distance
-        )
+        poses = self.view_of_racks_poses([rack])
+        sides_not_available = 0
+        for pos in poses:
+            try:
+                self.check_collection(
+                    pos, collection_name=rack, approach_distance=self.approach_distance
+                )
+            except RuntimeError as e:
+                sides_not_available += 1
+                logging.warning(e)
+        if sides_not_available == 2:
+            raise RuntimeError(
+                f"Due to robot's constrution limitations housekeeping on rack {rack} is not possible."
+            )
 
     def _run(self, rack: str):
         self.housekeep(rack)
