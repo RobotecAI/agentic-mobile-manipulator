@@ -409,7 +409,7 @@ class IsPackageDamagedTool(BaseROS2Tool):
     def _build_ros2_image(self, b64_img: str) -> Image:
         """Decode a base64-encoded RGB image and convert it to a ROS 2 ``Image``."""
         cv2_image = cv2.imdecode(
-            np.frombuffer(base64.b64decode(b64_img), np.uint8), cv2.IMREAD_COLOR
+            np.frombuffer(base64.b64decode(b64_img), np.uint8), cv2.IMREAD_COLOR_RGB
         )
         ros2_image = CvBridge().cv2_to_imgmsg(cv2_image, encoding="passthrough")
         ros2_image.encoding = "rgb8"
