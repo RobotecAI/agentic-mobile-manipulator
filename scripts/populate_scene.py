@@ -66,6 +66,8 @@ def main():
     parser.add_argument("--rack_fill", type=float, default=0.7)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--spawn-anomalies", action="store_true")
+    parser.add_argument("--spawn-only-table", action="store_true")
+    parser.add_argument("--spawn-only-rack", action="store_true")
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -110,20 +112,26 @@ def main():
                 )
                 items_stored.append(item_type)
 
-        scene_manager.populate_scene(
-            spawn_slot_names,
-            spawn_entity_types,
-            items_stored,
-            std_yaw=0.03,
-            percent_of_rotated_objects=0.1,
-        )
-        spawn_slot_names, spawn_entity_types, items_stored = load_spawn_config(
-            "scripts/resources/spawn_config_table.csv"
-        )
+        if not args.spawn_only_table:
+            scene_manager.populate_scene(
+                spawn_slot_names,
+                spawn_entity_types,
+                items_stored,
+                std_yaw=0.03,
+                percent_of_rotated_objects=0.1,
+            )
+        if not args.spawn_only_rack:
+            spawn_slot_names, spawn_entity_types, items_stored = load_spawn_config(
+                "scripts/resources/spawn_config_table.csv"
+            )
 
-        scene_manager.populate_scene(
-            spawn_slot_names, spawn_entity_types, items_stored, std_yaw=0.1
-        )
+            scene_manager.populate_scene(
+                spawn_slot_names,
+                spawn_entity_types,
+                items_stored,
+                std_yaw=0.1,
+                offset_yaw=3.14,
+            )
 
     anomalies_poses = [
         Pose(

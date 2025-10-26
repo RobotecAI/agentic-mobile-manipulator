@@ -27,6 +27,7 @@ class VLMConfig:
     model: str
     base_url: str
     reasoning: bool = False
+    temperature: float = 0.1
 
 
 @dataclass
@@ -72,11 +73,17 @@ class SafetyAgentConfig:
 
 
 @dataclass
+class ConditionAgentConfig:
+    vlm: VLMConfig
+
+
+@dataclass
 class Config:
     general: GeneralConfig
     megamind_agent: MegamindConfig
     inspection_agent: InspectionAgentConfig
     safety_agent: SafetyAgentConfig
+    condition_agent: ConditionAgentConfig
 
 
 def load_config(config_path: str = "config.toml") -> Config:
@@ -126,6 +133,14 @@ def load_config(config_path: str = "config.toml") -> Config:
             ),
             reranker=config["safety_agent"]["reranker_base_url"],
         ),
+        condition_agent=ConditionAgentConfig(
+            vlm=VLMConfig(
+                model=config["condition_agent"]["vlm_model"],
+                base_url=config["condition_agent"]["vlm_base_url"],
+                reasoning=config["condition_agent"]["vlm_reasoning"],
+                temperature=config["condition_agent"]["vlm_temperature"],
+            )
+        ),
     )
 
 
@@ -152,7 +167,11 @@ def get_llm_model(config_name: Literal["megamind_agent", "general"]) -> ChatOpen
 
 def get_vlm_model(
     config_name: Literal[
-        "megamind_agent", "inspection_agent", "safety_agent", "general"
+        "megamind_agent",
+        "inspection_agent",
+        "safety_agent",
+        "general",
+        "condition_agent",
     ],
 ) -> ChatOpenAI:
     config = load_config()
@@ -184,6 +203,12 @@ def get_vlm_model(
         return ChatOpenAI(
             model=config.general.vlm.model,
             base_url=config.general.vlm.base_url,
+            api_key=openai_api_key,
+        )
+    elif config_name == "condition_agent":
+        return ChatOpenAI(
+            model=config.condition_agent.vlm.model,
+            base_url=config.condition_agent.vlm.base_url,
             api_key=openai_api_key,
         )
     else:
