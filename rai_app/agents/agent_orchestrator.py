@@ -513,6 +513,7 @@ def main():
 
     llm = get_llm_model(config_name="megamind_agent")
     vlm = get_vlm_model(config_name="megamind_agent")
+    condition_vlm = get_vlm_model(config_name="condition_agent")
 
     move_from_coll_to_coll = MoveFromCollectionToCollectionTool(
         connector=connector,
@@ -522,7 +523,7 @@ def main():
     is_package_damaged_tool = IsPackageDamagedTool(
         connector=connector,
         namespace_value="",
-        vlm=vlm,
+        vlm=condition_vlm,
     )
     throw_trash_out_tool = ThrowTrashOutTool(
         connector=connector,
@@ -540,7 +541,7 @@ def main():
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
     )
-    move_to_inspection_are_tool = MoveFromPoseToInspectionAreaTool(
+    move_to_inspection_area_tool = MoveFromPoseToInspectionAreaTool(
         connector=connector,
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
@@ -550,7 +551,7 @@ def main():
         connector=connector,
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
-        vlm=vlm,
+        vlm=condition_vlm,
     )
     inspection_route_tool = InspectionWarehouseRouteTool(
         connector=connector,
@@ -591,7 +592,7 @@ def main():
             llm=llm,
             tools=[
                 move_from_coll_to_coll,
-                move_to_inspection_are_tool,
+                move_to_inspection_area_tool,
                 throw_trash_out_tool,
             ],
             system_prompt=MOVEMENT_EXECUTOR_SYSTEM_PROMPT.format(context=context),

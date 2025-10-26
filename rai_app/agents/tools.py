@@ -19,22 +19,30 @@ import math
 import random
 import re
 import time
-from typing import List, Literal, Optional, Tuple, Type, cast
+from typing import List, Optional, Tuple, Type, cast
 
 import cv2
 import numpy as np
 from cv_bridge import CvBridge
 from geometry_msgs.msg import Point, Pose, Quaternion
 from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 from rai.communication.ros2 import ROS2Message
-from rai.messages import HumanMultimodalMessage, MultimodalArtifact, SystemMessage
+from rai.messages import HumanMultimodalMessage, MultimodalArtifact
 from rai.tools.ros2.base import BaseROS2Tool
 from rai.tools.ros2.simple import GetROS2ImageConfiguredTool
 from sensor_msgs.msg import Image
 from tf_transformations import euler_from_quaternion
 
 from rai_app.agents.vlm_transport import publish_vlm_description
+from rai_app.config.vlm_box_condition_prompts import (
+    BOX_CONDITION_JSON_SYSTEM_PROMPT,
+    BOX_CONDITION_JSON_USER_PROMPT,
+    BOX_CONDITION_SYSTEM_PROMPT,
+    BOX_CONDITION_TEXT_USER_PROMPT,
+    BoxConditionOutput,
+)
 from rai_app.control.kairos_controller import KairosController
 from rai_app.environment import Collection, SceneManager, Slot, SlotsCollection
 from rai_app.geometry_helpers import (
@@ -397,11 +405,6 @@ class NavigateToSlotSyncTool(WarehouseTool):
         return f"Successfully navigated to slot {slot_name}"
 
 
-class BoxConditionOutput(BaseModel):
-    box_condition: Literal["good", "bad"]
-    box_condition_reason: str
-
-
 class IsPackageDamagedTool(BaseROS2Tool):
     name: str = "is_package_damaged_tool"
     description: str = "Ask VLM if package in current slot is damaged."
@@ -419,21 +422,6 @@ class IsPackageDamagedTool(BaseROS2Tool):
         return ros2_image
 
     def _run(self) -> bool:
-        BOX_CONDITION_SYSTEM_PROMPT = """
-You are a packaging quality inspector.
-Focus on the most centered and prominent box in the image.
-
-First, describe the visible condition of the box (for example: whether it looks clean, dented, torn, or damaged).
-
-Then, provide a concise result in this format:
-- Condition: good or bad.
-- Reason: one short sentence describing the visible evidence (for example: crushed corner, torn seam, moisture stain, intact edges).
-
-Rules:
-- Base your judgment strictly on what is clearly visible.
-- If visibility or identification of the box is uncertain, decide the condition based on that level of clarity.
-- Do not speculate or add extra commentary.
-"""
         logging.info("Getting image")
         tool = GetROS2ImageConfiguredTool(
             connector=self.connector,
@@ -446,22 +434,54 @@ Rules:
         task = [
             SystemMessage(content=BOX_CONDITION_SYSTEM_PROMPT),
             HumanMultimodalMessage(
-                content="Check if the box is damaged.",
-                images=[b64_img],
+                content=BOX_CONDITION_TEXT_USER_PROMPT, images=[b64_img]
             ),
         ]
+        descriptive_response = self.vlm.invoke(task)
+
+        structured_task = [
+            SystemMessage(content=BOX_CONDITION_JSON_SYSTEM_PROMPT),
+            HumanMultimodalMessage(
+                content=BOX_CONDITION_TEXT_USER_PROMPT,
+                images=[b64_img],
+            ),
+            AIMessage(content=descriptive_response.content),
+            HumanMessage(content=BOX_CONDITION_JSON_USER_PROMPT),
+        ]
+
+        descriptive_prompt = ""
+        for msg in task:
+            descriptive_prompt += msg.pretty_repr() + "\n"
+
+        structured_prompt = ""
+        for msg in structured_task:
+            structured_prompt += msg.pretty_repr() + "\n"
+
         vlm = self.vlm.with_structured_output(BoxConditionOutput)
-        response = cast(BoxConditionOutput, vlm.invoke(task))
+        response = cast(BoxConditionOutput, vlm.invoke(structured_task))
         logging.info(f"Package damaged = {response.box_condition}")
         ros2_image = self._build_ros2_image(b64_img)
+        from rai_app.agents.inspection_agent import save_image_to_disk
+
+        images_dir = "./package_condition_images"
+        filename = save_image_to_disk(b64_img, images_dir)
+        with open(filename + ".descriptive_prompt", "w") as f:
+            f.write(descriptive_prompt)
+        with open(filename + ".structured_prompt", "w") as f:
+            f.write(structured_prompt)
+        with open(filename + ".response", "w") as f:
+            f.write(response.model_dump_json())
+        logging.info(f"Saved image to {filename}")
+
         publish_vlm_description(
             self.connector,
             ros2_image,
-            f"Package damaged: {response.box_condition}. \nDescription: {response.box_condition_reason}",
+            f"Package condition: {response.box_condition}. \nDescription: {response.box_condition_reason}",
             "Box",
         )
+        logging.info("[Box Condition] Published VLM description")
 
-        return True if response.box_condition else False
+        return True if response.box_condition == "bad" else False
 
 
 class DescribeImageToolInput(BaseModel):
@@ -879,6 +899,7 @@ class SortReturnedPackageTool(WarehouseTool):
     args_schema: Type[SortReturnedPackageToolInput] = SortReturnedPackageToolInput
 
     def _check_if_damaged(self, package_slot: Slot) -> bool:
+        self.kairos_controller.mani_ctrl.move_arm_to_base_pose()
         is_box_damaged_tool = IsPackageDamagedTool(
             connector=self.connector,
             vlm=self.vlm,
@@ -965,6 +986,8 @@ class SortReturnedPackageTool(WarehouseTool):
         self.connector.logger.info("Checking if package is damaged")
         is_damaged = self._check_if_damaged(package_slot)
         self.connector.logger.info(f"Is damaged: {is_damaged}")
+        if is_damaged is None:
+            return "Could not determine the condition of the package, because package is not visible."
         target_slot: Slot | None = None
 
         if is_damaged:

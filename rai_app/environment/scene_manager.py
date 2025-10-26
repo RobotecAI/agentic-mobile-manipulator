@@ -181,6 +181,7 @@ class SceneManager:
         items_stored: Optional[Sequence[None | str]] = None,
         std_xy: float = 0.0,
         std_yaw: float = 0.0,
+        offset_yaw: float = 0.0,
         percent_of_rotated_objects: float = 0.0,
     ):
         if items_stored is None:
@@ -209,6 +210,7 @@ class SceneManager:
                 item,
                 std_xy,
                 std_yaw,
+                offset_yaw,
                 additional_rotation=additional_rotation,
             )
             simulation_names.append(simulation_name)
@@ -259,6 +261,7 @@ class SceneManager:
         item_stored: Optional[str] = None,
         std_xy: float = 0.0,
         std_yaw: float = 0.0,
+        offset_yaw: float = 0.0,
         frame: str = "odom",
         additional_rotation: float = 0.0,
     ):
@@ -274,6 +277,7 @@ class SceneManager:
 
         # Add Gaussian noise to yaw
         yaw += random.normalvariate(0, std_yaw)
+        yaw += offset_yaw
         yaw += additional_rotation
 
         # Convert back to quaternion

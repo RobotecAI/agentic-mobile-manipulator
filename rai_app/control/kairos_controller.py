@@ -417,6 +417,7 @@ class KairosController:
     def navigate_to_and_pick(self, object_pose: Pose, gripping_point: Pose):
         """Pick an object from the specified pose."""
         self.logger.info(f"Navigating to and picking object from pose {object_pose}")
+        self.mani_ctrl.move_arm_to_base_pose()
 
         strategy = determine_strategy(object_pose, self.safe_low_approach)
         approach_distance = strategy.get_approach_distance()
