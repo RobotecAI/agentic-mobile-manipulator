@@ -314,6 +314,1214 @@
             },
             "platformFlags": 2,
             "pathHint": "assets/payload/boxes/trash/cardboardbox08_v01t.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{81080599-563A-59B1-9663-A0BF7AA8B95B}",
+                "subId": 3466808303
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/misccontainers/paintcan.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{5E1B2BF5-C8E5-515B-875D-AD7683FCFC8B}",
+                "subId": 1008822452
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/misccontainers/plasticbarrel1.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A57F79A5-C0F9-52CF-8992-BC44FE5EAD42}",
+                "subId": 3737052196
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/misccontainers/plasticbarrel2.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{407801C2-6D32-5B33-B9F4-3A82FDE261E6}",
+                "subId": 1175149139
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/misccontainers/plasticbucket.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{7C5F3698-9E2F-51F9-B408-F85317C4ABA3}",
+                "subId": 3586417688
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/misccontainers/plasticcanister.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B689D871-0360-50A0-9DA0-CA1EC5DE3D2E}",
+                "subId": 3883016802
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco00.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{892C8531-20BF-5C8C-949D-BB3413CCD99C}",
+                "subId": 3166613684
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{F0B32D8E-26AE-5415-8282-761D37FD7B3C}",
+                "subId": 2797992292
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco02.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B1D2CB14-6B6F-5AC3-B404-0F99E8A6A00F}",
+                "subId": 1249536723
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco03.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D8ECED87-BCC5-54EE-8184-EED3FD90C899}",
+                "subId": 266105902
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco04.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{2EA56E6B-4684-5E19-968E-95B03A60186F}",
+                "subId": 3334001119
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco05.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{55194024-B7CB-5972-A07C-4FDF4109A52B}",
+                "subId": 89448935
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco06.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{2027EE31-10B2-5C59-AFD4-6B22EDA7C4E0}",
+                "subId": 757033483
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco07.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{354192C7-CCAA-50F6-BD8F-2B8C8BC5F861}",
+                "subId": 588417403
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco08.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{21229791-504F-5911-B286-CBE8AD40A73D}",
+                "subId": 3065565030
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/aruco09.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{53361435-D126-5BCF-A9D1-9E8CEA8328E5}",
+                "subId": 213700765
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/carrot.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{412B42EF-AB3F-52B7-B181-5CEC20319A91}",
+                "subId": 4099978870
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/corn.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{6D155EB3-C006-5C0A-BF8E-439A4332F9D0}",
+                "subId": 3484548826
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/tomato.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{EB72ABA6-D730-53A7-BF3A-30B8B39C5928}",
+                "subId": 4034758697
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/yellow_cube.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{79DB0FE5-1DEB-547C-A6D9-E713ADBB37E7}",
+                "subId": 3879108171
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/rbkairos_plus.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{99F0293A-BF10-5A42-BE91-E6DB85A4156B}",
+                "subId": 3143803094
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/warehouse/assets/racks/storagerack_2x1.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B7FF811B-1F44-5EA8-A6CC-A22F1394B885}",
+                "subId": 457823811
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/warehouse/assets/tables/packingtable.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{3BD18999-DAF8-5619-BF89-86DFE90F8FB5}",
+                "subId": 2175484235
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/warehouse/building/ceilinglamp_local.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{77662405-1B24-5555-884C-3CD77947F3E7}",
+                "subId": 2960530211
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/barriers/barriercorner_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{7A4E061C-31F9-5CFD-9841-4267CF50CBB2}",
+                "subId": 699161403
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/barriers/barrierstraight_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{4BAB65A5-9C9B-5A10-BBED-EC3503757F19}",
+                "subId": 2368165100
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cages/cageholder_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B0AC5551-8598-5FE5-B252-3F1C592DA1B3}",
+                "subId": 3891829927
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cages/cagewallmedium_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{F0BEDA21-8FBE-5EF4-906D-7181DD763606}",
+                "subId": 1555038781
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cages/cagewallmediumholder_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{12D7BEFD-5758-5419-B2FD-5086FDBA5A1B}",
+                "subId": 4194754592
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cages/cagewallnarrow_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{87F23357-639E-5914-926E-75DB671C787A}",
+                "subId": 2945818354
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cages/cagewallnarrowholder_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A6527A94-4B23-5441-BAAD-64189EB5A7AB}",
+                "subId": 1348968638
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cages/cagewallwide_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A443B949-9BED-5571-9BBD-6695BB452711}",
+                "subId": 4201770345
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cages/cagewallwideholder_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{47496822-18AE-5368-B2EB-22059204A35A}",
+                "subId": 2550650350
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardbox/cardboardbox.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{E140E194-9B35-5086-B985-728DC54022F5}",
+                "subId": 1844381303
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox01_v00.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A35CAD86-C039-555B-8E61-CF4FFF8D23CC}",
+                "subId": 2324592874
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox01_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{78679EBF-0D8F-5C77-8F43-6B22D89F0EBD}",
+                "subId": 1204984041
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox01_v02d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D89343F1-8EC1-57FE-A576-F4F77C44066B}",
+                "subId": 3566954822
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox01_v03.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C957917D-E10A-5945-B122-38A80D09E16F}",
+                "subId": 2793039471
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox01_v04.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B0E61297-D6A0-543B-9403-71089B5E49AB}",
+                "subId": 2273155679
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox01_v05.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{439FE48D-309B-53D2-BA86-684A0BEC18FC}",
+                "subId": 941717393
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox01_v06d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{12BDCE9E-BED1-5195-98DA-E9830A602280}",
+                "subId": 1109051615
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox02_v00.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{52BEEC1E-91F9-5D6D-A281-26A27CC576E1}",
+                "subId": 21764540
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox02_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{9844946B-C0A8-5641-AC38-2A46347DCF65}",
+                "subId": 928587216
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox02_v02d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B1681030-CBF2-56EC-91C2-2C8CC9C8F9A5}",
+                "subId": 3400440699
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox02_v03.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C81D0F48-41EA-5CF4-94BB-7B5BAC8184C7}",
+                "subId": 3257573244
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox02_v04d.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{6AA94D65-5809-5661-9CFC-A3D62B07AD37}",
+                "subId": 3307820126
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox03_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{7341CE91-E36D-5C76-BC73-C71AA1BB4C69}",
+                "subId": 777448006
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox03_v02o.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{614A72FE-5448-5421-90E0-EDD0E111D8C6}",
+                "subId": 2887093557
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox03_v03o.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{80543D57-E8F5-50EE-B068-72C2773CB7BD}",
+                "subId": 179751319
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox04_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A5C39F36-4DAF-5A02-9377-B257435D648E}",
+                "subId": 545668709
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox05_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{96B8B535-C843-5528-A50C-E11DADB2E8F6}",
+                "subId": 1671361092
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox06_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{169EB89C-C80F-5407-A6B0-C45D1251F967}",
+                "subId": 3074542723
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox07_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{CF01B02F-8415-5611-8F5A-F7A735444D93}",
+                "subId": 992660026
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox08_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B816E528-C6F6-5A78-AA45-5EC88CAA7438}",
+                "subId": 1853220086
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cardboardboxes/cardboardbox09_v01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{149E40EA-88BF-5720-A23E-6AE285E8F496}",
+                "subId": 442177810
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cctvcameras/cctvcamera01/cctvcamera01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{26E44EA2-7FEE-5E09-93A9-87AEBC86F00B}",
+                "subId": 163687085
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/cctvcameras/cctvcamera02/cctvcamera02.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{777F69B1-520F-529B-8966-FA9CEEB7790B}",
+                "subId": 2074912482
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/fireextinguishers/fireextinguisher01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C0144D82-26C5-5BA2-BEF8-13E2FAF8E2E9}",
+                "subId": 2517306754
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/components/os2lidar/os2lidar.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{0DD8BC21-33AB-5D1D-ACC3-8B537961E263}",
+                "subId": 1944032823
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/components/orbbeckcamera/orbbeckcamera.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{10CF0157-67FC-5638-83A0-D572FF349813}",
+                "subId": 3251324415
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/garbagecontainers/garbagecontainer01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C9929D25-E8FA-54AF-8C28-576C5094B584}",
+                "subId": 2699121824
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/warehouserack_small_3shelves_x2.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C709DB87-8239-544F-A699-85ADF53DDA00}",
+                "subId": 439533360
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/tables/packingtable01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D03562D9-0D6C-5EE0-A320-872254C1FB26}",
+                "subId": 1166018219
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehousescene.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{5B944294-9ED1-5D98-828D-07CDF25CAE7C}",
+                "subId": 3063988155
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/default_level.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{CFF45D43-5015-578C-9C4A-560524407B72}",
+                "subId": 2369839437
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_structural/components/wall_gi.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{EB81AF37-3F74-5664-9A44-EF3118B9A725}",
+                "subId": 3829128122
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_structural/components/ceiling_lamp.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{9EC1D55C-B415-539A-91CD-65C7507E6ABF}",
+                "subId": 2229611893
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_structural/components/storage_gi_light.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D9EA4AC9-0527-5A69-8316-84594DAB7C22}",
+                "subId": 1242985870
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_structural/warehouse_roof.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{360A89BE-2410-5DBE-80F1-3FA2C40B3042}",
+                "subId": 2707816680
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_structural/warehouse_floor.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{50BA3A4E-C3A2-5128-9177-2CC807098817}",
+                "subId": 1786532566
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_structural/warehouse_walls.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{738E6134-B9F6-5938-ABBB-19C5C4B1CE4B}",
+                "subId": 827574998
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehousescene_small.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D706E911-2446-5513-93B4-ABBD0CAD5A71}",
+                "subId": 3220463128
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/empty.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{45D114B3-2B6D-5C37-B830-6AE3BA11C85D}",
+                "subId": 2583419833
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/components/warehousebox4.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{66C2B465-2661-5BBA-93E7-7E130B51B7B9}",
+                "subId": 3761928900
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/components/warehousebox3.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{2637D6F8-9F63-568E-A1D1-47DE90B80CC5}",
+                "subId": 319680564
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/components/warehouserack.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A7F742DF-FA66-5AB8-8275-E837071EC5C1}",
+                "subId": 3263026133
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/components/warehousebox1.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{14B7381F-EE02-5AC1-BDBF-02BE857734B3}",
+                "subId": 3557740923
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/components/warehousebox2.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{E22DF679-1539-5E02-B6E5-70F1EF36053E}",
+                "subId": 3878870408
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_2x2_pack2.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{94763A8B-B246-536C-A798-CA489037C5DD}",
+                "subId": 1779441921
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_2x2_pack3.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{45646196-11CF-5CF8-A9F3-D74376C7F23E}",
+                "subId": 1784497382
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_rack2.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{631D08F7-3719-51D3-8981-9E28CF4C4F2E}",
+                "subId": 1994532554
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_on_wheels.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{02E633A3-6C6B-5FE9-B517-EE75378F9C7D}",
+                "subId": 1627385545
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_2x2_pack1.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B724804E-DEDD-5FCC-8457-2364C205148D}",
+                "subId": 80089695
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/rack_protectors/rack_side_protector.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{E99A689D-28D2-5D80-8690-DD0DEF722394}",
+                "subId": 3070415827
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/rack_protectors/rack_front_protector.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{3E688C7C-F115-5CBB-8799-F76E6A5731AE}",
+                "subId": 4281762527
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_rack1.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{7A4BE392-822B-5775-8C72-A19ED76976CE}",
+                "subId": 548342336
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/misc/movable_blue.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{F2669DC6-7D1B-5F10-8387-DD5F5C1F8207}",
+                "subId": 1267830048
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_rack4.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{6E61E35A-DE72-5778-BA0B-BE1A313E0B42}",
+                "subId": 1873347962
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_rack5.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B7C6130A-3481-5230-B0B5-C196AF29956E}",
+                "subId": 1294436332
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/warehouse_storage/storage_rack3.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{0D35077C-DCA3-5AEB-A4C9-2A2041E78BA0}",
+                "subId": 4252157093
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/prefabs/basic.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{191D3916-87CA-5005-9423-B6F6BEDAF299}",
+                "subId": 1805575170
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/signs/models/materials/inspectionstation_sign.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{3AED0F88-156D-5A6F-A637-02D663844256}",
+                "subId": 1176597115
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/signs/models/materials/outboundshipment_sign.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{23DC70A6-6E6F-5508-BB97-A8A96D5B774A}",
+                "subId": 3069142837
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/lines/rack450x120_endlines.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B29AADBC-CE09-5079-AAB3-4AB0BFF75B21}",
+                "subId": 1835324749
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/lines/lineyelowstraight1_2m.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{74DA715E-FDE7-5FFA-ADD6-8BF7590AA6CD}",
+                "subId": 3262346380
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/lines/lineyellow_corner2.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{552A3CC1-FB1F-554D-826C-A3B7B72E6CB3}",
+                "subId": 3469748764
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/lines/lineyellow_corner1.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{BEC6003C-9A89-5D4B-9C7A-78942ACC0F28}",
+                "subId": 1347895562
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/lines/stripesyellow1_2x2m.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{F5EBEB55-07F4-5891-AEC3-47293902B46D}",
+                "subId": 335547262
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/lines/lineyelowstraight2_2m.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{8562CA72-BD44-5B76-9F8A-DAF0E2A9489A}",
+                "subId": 1120773348
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/lines/rack450x120_sidelines.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{0A97AC9D-6656-5CC0-BA35-D13B5D440D03}",
+                "subId": 3679320611
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/plasticbucket/plasticbucket_static.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{FC164EB2-9C5B-5910-9B15-3C5D48DC253C}",
+                "subId": 4172065139
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/plasticbucket/plasticbucket_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{DDCBAD05-3EA0-598F-B4D1-B217795B8096}",
+                "subId": 2385003809
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/pallets/europallet01_v00.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A7807111-06E7-5F36-B42B-260669B7DEB4}",
+                "subId": 944240630
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/pallets/europallet02_v00.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{4C1DC117-4FFB-59F6-AF1C-CD7C1DC54A3A}",
+                "subId": 3737052196
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/plasticbarrel/plasticbarrel2.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{CC752238-8280-5E0A-89DF-CAEAEAD70164}",
+                "subId": 1008822452
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/plasticbarrel/plasticbarrel1.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{751E3940-915B-5D3A-A20B-0782FD8F4F33}",
+                "subId": 1531927981
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/plasticbarrel/plasticbarrel1_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{E0E2AF8B-A1CD-52B2-B0FE-EE7A074F8652}",
+                "subId": 1734042911
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/ladders/laddersectioned/laddersectioned_01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{754F6722-5234-5C44-AD54-8A08970C2C86}",
+                "subId": 3560914671
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/ladders/laddersectioned/laddersectionedsetup_01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{9F0824CA-5C3D-5F52-934A-3FCA79224CE4}",
+                "subId": 2215328657
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/controlelements/controlpanel01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{BADD9922-5699-5B06-81F4-B6660A1406A7}",
+                "subId": 999127938
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/fireextinguishercabinet/fireextinguishercabinet_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{4F3D0A43-8710-57EC-9570-BE540F285FE3}",
+                "subId": 1515896634
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/fireextinguishercabinet/fireextinguishercabinet_static.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{DB2BA7B1-546D-55E9-BA3C-E91A29256A7F}",
+                "subId": 2178904437
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/ur10/ur10.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{10F68A1B-8314-5D3C-B667-FB939A6D4D40}",
+                "subId": 1966583575
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/proteusrobot/proteus.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{691025A6-818B-52CF-8027-82920805157A}",
+                "subId": 2770431967
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/plasticcanister/plasticcanister_static.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{5CA1A8A3-FF0B-52B9-A926-6475C94BBBF3}",
+                "subId": 429371813
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/plasticcanister/plasticcanister_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{352C8343-36FE-533E-A7D8-A3C3EC9A7C93}",
+                "subId": 2298205409
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode05.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{EA28F99C-44E7-547D-84BB-8C86B92607C0}",
+                "subId": 2664831421
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode07.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{E3EB97C7-49DF-5C89-BB14-23F85F19EE96}",
+                "subId": 2298998346
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode04.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{9C818D06-08BA-5CE5-9407-F9BDB8B593AA}",
+                "subId": 2237886379
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{06B2B926-0DE3-5EEA-8735-C31F53F71859}",
+                "subId": 3139148793
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode02.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{342C97D1-D271-5205-B3D3-ACD8C9E0A9DB}",
+                "subId": 665376794
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode_url01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{E71A598C-7C37-51DE-B172-FEB20DD0743A}",
+                "subId": 3205867668
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode09.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{3E508341-C6D5-5B59-BBDF-6CBC6EC6C258}",
+                "subId": 73023759
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode03.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{DD5D2CE6-F6BE-5525-ADCE-6B90E5AA0C15}",
+                "subId": 955282323
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode06.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{DC5458EA-C03B-5155-9D8A-9D701505809D}",
+                "subId": 3628188454
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode08.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{8B1493FA-FC70-54A6-A058-E60FB30B730C}",
+                "subId": 754843802
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/grippersmall/grippersmall.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{7B0DBF87-C3DE-5DD4-8DBC-E447C0D2777F}",
+                "subId": 4187770304
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/gripper.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{F77B700C-0A25-5627-A1D7-A614A5A0BC4C}",
+                "subId": 1359400585
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/cameras.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{EA20BE97-041A-5E0B-B127-167CF364EAE3}",
+                "subId": 1726443591
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/red_cube.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{664F188C-2689-5C3E-9594-87B9C66C5429}",
+                "subId": 3368959852
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/manipulation_test_level.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D7A858C2-BA90-5A8E-A854-AC7C1F6560F3}",
+                "subId": 2673158184
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/blue_cube.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C1DB821C-BCC9-599A-BB59-5F79A8548590}",
+                "subId": 1196145064
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/apple.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{56A688BC-13F9-5BC1-815F-C1E3AF9B1CCE}",
+                "subId": 406036830
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/green_cube.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D8432897-71FE-5DE5-8EF1-E165D3F28E02}",
+                "subId": 2258790635
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/demo_level.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{0CF0C1FF-0356-5B95-A122-972ED55EDBB0}",
+                "subId": 1662471215
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/warehouse/building/warehouse_30x30.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A879D9DF-CB8D-5E5F-8D6E-4102904329C2}",
+                "subId": 3310497653
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/npcs/npcs.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{D47045B6-804F-5AFF-BA2E-83EEC61B1328}",
+                "subId": 3166100822
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/environment/environment.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{2C145E33-899D-5757-B5CB-259C5F35324A}",
+                "subId": 2497354755
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/warehouserack_small_x2.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{DD58C952-F307-5DA2-9F10-6A31108908AD}",
+                "subId": 1992894972
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/containers/containerplasticred01.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C381CCA1-B4D0-5B6A-B234-6971CC085F86}",
+                "subId": 2687147327
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/warehouserack_x3.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{CE26EC2A-DDE6-543C-B982-0023D8950828}",
+                "subId": 1657543449
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/warehouse_low_30x30m/warehouse_separated_low_30x30m.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{A840F559-E581-59A0-931B-8C9DAC1E02A5}",
+                "subId": 2504993970
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/warehouse_low_30x30m/ceilinglamp.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{B77579C4-2D6B-563E-96DF-9134C1FDA6CB}",
+                "subId": 3982080406
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/warehouse_low_30x30m/warehouse_low_30x30m.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{19EF6640-35E4-53AA-9C2C-C8461EA5245D}",
+                "subId": 2651973238
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/football/footballdeflated.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C1B5D117-7BA0-5DAC-BFD3-032FD2EA9027}",
+                "subId": 3307323379
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/football/football.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{BA83A63E-FF76-590A-883F-8796851B8E35}",
+                "subId": 3339250558
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/paintcan/paintcan_visual.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{7592CF75-901E-5FFF-9F70-D4951DC7F61D}",
+                "subId": 2047488600
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/paintcan/paintcan_static.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{96C2C87C-44B6-57CE-8942-F372B31FF3E2}",
+                "subId": 2818868046
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/sampleasset/testsimulationentity.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{C94E8D50-0FE9-53A9-991E-880D6DFD0F29}",
+                "subId": 3248553553
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/rosbotxl/rosbotxl_velodyne.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{7EC32B85-3C1B-5C02-93C2-51A18C41C515}",
+                "subId": 256519762
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/rosbotxl/rosbotxl.spawnable"
+        },
+        {
+            "assetId": {
+                "guid": "{28340128-489E-5B87-8B05-98008B8577DB}",
+                "subId": 2616365864
+            },
+            "platformFlags": 2,
+            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/rosbotxl/rosbotxl_slamtec.spawnable"
         }
     ]
 }
