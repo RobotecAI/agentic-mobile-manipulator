@@ -90,7 +90,11 @@ def test_llm_model(agent_name: Literal["megamind_agent", "general"]) -> None:
 )
 def test_vlm_model(
     agent_name: Literal[
-        "megamind_agent", "inspection_agent", "safety_agent", "general"
+        "megamind_agent",
+        "inspection_agent",
+        "safety_agent",
+        "general",
+        "condition_agent",
     ],
     base64_image: str,
 ) -> None:
