@@ -584,6 +584,7 @@ def main():
                 sort_returned_package_tool,
                 correct_box_tool,
                 inspection_route_tool,
+                throw_trash_out_tool,
             ],
             system_prompt=HOUSEKEEP_EXECUTOR_SYSTEM_PROMPT.format(context=context),
         ),

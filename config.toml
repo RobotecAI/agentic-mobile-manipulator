@@ -18,9 +18,10 @@ vlm_reasoning = false
 
 # inspection agent uses vlm to determine anomalies in the image
 [inspection_agent]
-vlm_model = "gemma3:4b"
+vlm_model = "LFM2-VL"
 vlm_base_url = "http://127.0.0.1:8081/v1"
 vlm_reasoning = false
+vlm_temperature = 0.0
 
 [condition_agent]
 vlm_model = "LFM2-VL-2"

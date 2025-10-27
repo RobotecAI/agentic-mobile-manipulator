@@ -29,6 +29,7 @@ from rai.communication.ros2 import (
     wait_for_ros2_services,
 )
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
+from simulation_interfaces.msg import EntityState
 from std_srvs.srv import Trigger
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
@@ -141,9 +142,7 @@ class SceneManagerState(SceneManager):
 
     def standard_scenario(self, request: Trigger.Request, response: Trigger.Response):
         spawnables = pd.read_csv(self.spawnables_file, delimiter=",")
-        spawnables = spawnables[
-            ~spawnables["object_name"].isin(["ego", "oilspill1", "oilspill2"])
-        ]
+        spawnables = spawnables[spawnables["object_name"].str.contains("cardboardbox")]
 
         # self.clear_scene()
         collection_names, item_types = load_rack_assignment(self.rack_assignment_file)
@@ -190,16 +189,43 @@ class SceneManagerState(SceneManager):
             )
         return Trigger.Response(success=True)
 
+    def knock_object(self, object_name: str):
+        noise = random.uniform(-0.5, 0.5)
+        self.move_entity(
+            object_name, dx=0.0, dy=0.0, dz=0.1, az=0.0, ay=0.0, ax=-8.0 + noise
+        )
+
+    def get_anomaly_entities_states(self) -> dict[str, EntityState] | None:
+        all_entities = self.get_entities(name_filter="__anomaly__")
+        return {
+            entity_name: entity_state
+            for entity_name, entity_state in all_entities.items()
+            if "GrippingPoint" not in entity_name
+        }
+
+    def clear_anomalies(self, request: Trigger.Request, response: Trigger.Response):
+        all_entities = self.get_entities(name_filter="__anomaly__")
+        for entity_name in all_entities.keys():
+            self.delete_entity(entity_name)
+
+    def delete_entity(self, entity_name: str):
+        self.connector.call_service(
+            ROS2Message(payload={"entity": entity_name}),
+            target="/delete_entity",
+            msg_type="simulation_interfaces/srv/DeleteEntity",
+            timeout_sec=3.0,
+        )
+
     def anomalies(self, request: Trigger.Request, response: Trigger.Response):
+        n = 3
         spawning_points = [
             (7.20, 7.44, 0.01, 0.0, 0.0, 0.0, 1.0),
             (2.48, 2.70, 0.00, 0.0, 0.0, 0.0, 1.0),
             (11.29, 3.14, 0.01, 0.0, 0.0, 0.0, 1.0),
             (17.76, 2.95, 0.01, 0.0, 0.0, 0.0, 1.0),
             (23.38, 7.06, 0.01, 0.0, 0.0, 0.0, 1.0),
-            (24.48, 8.47, 0.01, 0.0, 0.0, 0.0, 1.0),
+            # (24.48, 8.47, 0.01, 0.0, 0.0, 0.0, 1.0),
             (26.90, 11.55, 0.01, 0.0, 0.0, 0.0, 1.0),
-            (24.50, 15.27, 0.01, 0.0, 0.0, 0.0, 1.0),
             (27.10, 21.35, 0.01, 0.0, 0.0, 0.0, 1.0),
             (27.05, 27.22, 0.01, 0.0, 0.0, 0.0, 1.0),
             (22.72, 25.47, 0.01, 0.0, 0.0, 0.0, 1.0),
@@ -210,22 +236,54 @@ class SceneManagerState(SceneManager):
             (8.64, 26.88, 0.01, 0.0, 0.0, 0.0, 1.0),
             (3.97, 25.58, 0.01, 0.0, 0.0, 0.0, 1.0),
         ]
+        anomalies_states = self.get_anomaly_entities_states()
+        self.logger.info(f"Existing anomalies: {anomalies_states.keys()}")
+        # Filter out points that are too close to existing anomalies
+        filtered_points = []
+        for point in spawning_points:
+            too_close = False
+            for anomaly_name, anomaly_state in anomalies_states.items():
+                # Calculate distance between point and existing anomaly
+                dx = point[0] - anomaly_state.pose.position.x
+                dy = point[1] - anomaly_state.pose.position.y
+                dist = (dx * dx + dy * dy) ** 0.5
+                if dist < 3.0:
+                    too_close = True
+                    break
+            if not too_close:
+                filtered_points.append(point)
+        self.logger.info(f"Filtered points: {len(filtered_points)}")
+        if len(filtered_points) < n:
+            self.logger.warning(
+                f"Not enough points to spawn {n} anomalies, spawning {len(filtered_points)} anomalies"
+            )
+            n = len(filtered_points)
+
+        # Update spawning points to filtered list
+        spawning_points = filtered_points
+
         anomalies_poses = [
             Pose(position=Point(x=point[0], y=point[1], z=point[2]))
-            for point in random.sample(spawning_points, 3)
+            for point in random.sample(spawning_points, n)
         ]
 
         available_types = [
             "cardboardbox02_v01T",
             "cardboardbox02_v01D",
             "cardboardbox01_v01",
+            "plasticbarrel1",
         ]
-        anomalies_types = [random.choice(available_types) for _ in range(3)]
+        anomalies_types = random.sample(available_types, n)
 
         for pose, anomaly_type in tqdm(
             zip(anomalies_poses, anomalies_types), desc="Spawning anomalies"
         ):
-            self.spawn_object(pose=pose, object_name=anomaly_type)
+            entity_name = self.spawn_object(
+                pose=pose, object_name=anomaly_type, item_stored="anomaly"
+            )
+            if "plasticbarrel" in entity_name:
+                self.knock_object(entity_name)
+            print("Spawned anomaly: ", entity_name)
         return Trigger.Response(success=True)
 
     def spawn_on_spot(
@@ -287,6 +345,12 @@ class SceneAgent(BaseAgent):
         )
         self.connector.create_service(
             service_type="std_srvs/srv/Trigger",
+            service_name="rai/scene/clear_anomalies",
+            on_request=self.clear_anomalies,
+            callback_group=self.callback_group,
+        )
+        self.connector.create_service(
+            service_type="std_srvs/srv/Trigger",
             service_name="rai/scene/standard",
             on_request=self.standard,
             callback_group=self.callback_group,
@@ -303,6 +367,12 @@ class SceneAgent(BaseAgent):
         self.logger.info("Request to populate the scene according to housekeep recipe")
         self.scene_manager_state.housekeep_scenario(request, response)
         self.logger.info("Scene populated according to housekeep recipe")
+        return Trigger.Response(success=True)
+
+    def clear_anomalies(self, request: Trigger.Request, response: Trigger.Response):
+        self.logger.info("Request to clear anomalies")
+        self.scene_manager_state.clear_anomalies(request, response)
+        self.logger.info("Anomalies cleared")
         return Trigger.Response(success=True)
 
     def anomalies(self, request: Trigger.Request, response: Trigger.Response):

@@ -36,3 +36,12 @@ cardboardbox07_v01T,product_asset:///assets/payload/boxes/trash/cardboardbox07_v
 cardboardbox08_v01T,product_asset:///assets/payload/boxes/trash/cardboardbox08_v01T.spawnable
 oilspill1,product_asset:///assets/payload/oilspills/oilspill1.spawnable
 oilspill2,product_asset:///assets/payload/oilspills/oilspill2.spawnable
+fireextinguisher01,product_asset:///fireextinguishers/fireextinguisher01.spawnable
+humanworker,product_asset:///humanworker/humanworker.spawnable
+laddersectioned_01,product_asset:///ladders/laddersectioned/laddersectioned_01.spawnable
+laddersectionedsetup_01,product_asset:///ladders/laddersectioned/laddersectionedsetup_01.spawnable
+paintcan,product_asset:///assets/payload/misccontainers/paintcan.spawnable
+plasticbarrel1,product_asset:///assets/payload/misccontainers/plasticbarrel1.spawnable
+plasticbarrel2,product_asset:///assets/payload/misccontainers/plasticbarrel2.spawnable
+plasticbucket,product_asset:///assets/payload/misccontainers/plasticbucket.spawnable
+plasticcanister,product_asset:///assets/payload/misccontainers/plasticcanister.spawnable

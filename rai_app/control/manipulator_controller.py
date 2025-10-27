@@ -147,6 +147,7 @@ class ManipulatorController:
             ),
             target="/rai/moveit2/set_arm_joints",
             msg_type="rai_interfaces/srv/SetArmJoints",
+            timeout_sec=5.0,
         )
         if response.payload is None:
             raise RuntimeError("Failed to set arm joints: no response from the service")

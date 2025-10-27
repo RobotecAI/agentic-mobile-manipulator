@@ -27,12 +27,12 @@ from threading import Thread
 from typing import Literal, Optional, cast
 
 import numpy as np
+import openai
 import rclpy
 import rclpy.time
 from cv_bridge import CvBridge
 from geometry_msgs.msg import Pose
-from langchain_core.exceptions import OutputParserException
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
@@ -55,20 +55,22 @@ from tf2_ros import PoseStamped
 from visualization_msgs.msg import Marker, MarkerArray
 
 from rai_app.agents.vlm_transport import publish_vlm_description
+from rai_app.config.vlm_inspection_prompts import (
+    INSPECTION_JSON_SYSTEM_PROMPT,
+    INSPECTION_JSON_USER_PROMPT,
+    INSPECTION_TEXT_FINAL_SYSTEM_PROMPT,
+    INSPECTION_TEXT_FINAL_USER_PROMPT,
+    INSPECTION_TEXT_SYSTEM_PROMPT,
+    INSPECTION_TEXT_USER_PROMPT,
+    InspectionOutput,
+)
 from rai_app.environment import SceneManager
 from rai_app.geometry_helpers import get_yaw_difference
 from rai_app.initialization.llms import get_vlm_model
 
-SYSTEM_PROMPT = "You are an expert in warehouse environment based on AMR camera. You are tested in simulation. You follow strict OSHA regulation: there should be no objects on the warehouse floor. Boxes directly under racks can be on the floor. Bins can be on the floor. Safety equipment can be on the floor. The OSHA guideline is for there to be no tripping hazard."
-# PROMPT = "Verify if there is an obstacle on a robot's path. Please don't report typical warehouse envirionemt as obstacles. To be an obstacle a object should be places in an unusual place and obstruct the clear navigation path of the robot. For example a package laying in the pathway might be an obstance and standing rack visible in the image is not."
-PROMPT = (
-    "Detect if there is an object on the floor. Decide if the object is trash or a box."
-)
-
 
 class AnomalyDescription(BaseModel):
-    anomaly_detected: bool = Field(..., description="True if obstacle is detected")
-    obstacle_type: Literal["box", "trash"] = Field(
+    obstacle_type: Literal["box", "trash", "nothing", "other"] = Field(
         ..., description="The type of the obstacle"
     )
     anomaly_description: str = Field(
@@ -128,7 +130,7 @@ class InspectionTask:
     image: np.ndarray
     img_stamp: rclpy.time.Time
     robot_location_stamp: rclpy.time.Time
-    object_pose: Pose
+    object_pose: Pose | None
 
 
 class VlmWarehouseInspector(BaseAgent):
@@ -142,10 +144,8 @@ class VlmWarehouseInspector(BaseAgent):
         ego_source_frame: str,
         anomaly_images_dir: Optional[str],
         anomalies_topic: str,
-        prompt: str = PROMPT,
-        system_prompt: str = SYSTEM_PROMPT,
-        match_anomaly_max_distance: float = 0.1,
-        match_anomaly_max_yaw_degrees: float = 10.0,
+        match_anomaly_max_distance: float = 1.0,
+        match_anomaly_max_yaw_degrees: float = 50.0,
         n_seconds: int = 1,
         debug: bool = True,
     ):
@@ -158,8 +158,6 @@ class VlmWarehouseInspector(BaseAgent):
         self.qos_profile = QoSProfile(
             depth=1, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL
         )
-        self.prompt = prompt
-        self.system_prompt = system_prompt
         self.match_anomaly_max_distance = match_anomaly_max_distance
         self.match_anomaly_max_yaw_degrees = match_anomaly_max_yaw_degrees
         self.debug = debug
@@ -171,10 +169,10 @@ class VlmWarehouseInspector(BaseAgent):
             connector=self.connector,
         )
 
-        self.vlm = vlm.with_structured_output(AnomalyDescription)
+        self.vlm = vlm
         self.n_seconds = n_seconds
 
-        self.reported_anomalies: list[Anomaly] = list()
+        self.reported_anomalies: list[tuple[Anomaly, float]] = list()
         wait_for_ros2_topics(self.connector, [self.camera_topic])
         # debug
         self.marker_array = MarkerArray()
@@ -188,7 +186,7 @@ class VlmWarehouseInspector(BaseAgent):
         while self.running:
             try:
                 msg: Image = self.connector.receive_message(
-                    self.camera_topic, timeout_sec=1.0
+                    self.camera_topic, timeout_sec=3.0
                 ).payload
             except ValueError:
                 self.get_logger().error(
@@ -204,23 +202,34 @@ class VlmWarehouseInspector(BaseAgent):
 
             try:
                 _, candidate_pose = self.scene_manager.get_anomaly_box_pose(
-                    robot_location.pose, [x.pose for x in self.reported_anomalies]
+                    robot_location.pose, [x[0].pose for x in self.reported_anomalies]
                 )
             except ValueError:
                 self.get_logger().debug("No candidate pose detected")
                 candidate_pose = None
+            self.get_logger().debug(f"Candidate pose: {candidate_pose}")
 
-            if candidate_pose:
-                self.get_logger().debug(f"Candidate pose: {candidate_pose}")
-
-                b64_img = preprocess_image(image)
-                task = InspectionTask(
-                    b64_img, image, img_stamp, robot_location_stamp, candidate_pose
-                )
-                self.process_queue.put(task)
+            b64_img = preprocess_image(image)
+            task = InspectionTask(
+                b64_img, image, img_stamp, robot_location_stamp, candidate_pose
+            )
+            self.process_queue.put(task)
 
     def check_if_anomaly_is_reported(self, anomaly: Anomaly) -> bool:
-        for reported_anomaly in self.reported_anomalies:
+        # Remove anomalies older than 1 minute
+        old_anomalies = len(self.reported_anomalies)
+        now = time.time()
+        self.reported_anomalies = [
+            (anomaly, timestamp)
+            for anomaly, timestamp in self.reported_anomalies
+            if now - timestamp < 60
+        ]
+        if old_anomalies > 0:
+            self.get_logger().info(
+                f"Actual anomalies: {len(self.reported_anomalies) / old_anomalies}"
+            )
+
+        for reported_anomaly, _ in self.reported_anomalies:
             if are_anomalies_close(
                 reported_anomaly,
                 anomaly,
@@ -250,15 +259,43 @@ class VlmWarehouseInspector(BaseAgent):
     def _prepare_description(self, anomaly: Anomaly) -> str:
         return f"Anomaly detected: {anomaly.obstacle_type} at ({anomaly.pose.position.x}, {anomaly.pose.position.y}, {anomaly.pose.position.z}). Description: {anomaly.anomaly_description}"
 
-    def vlm_process(self, task: InspectionTask):
-        result: AnomalyDescription = self.detect_obstacle(task.b64_img)
+    def vlm_process(self, task: InspectionTask, n_retries=3):
+        result: AnomalyDescription | None = None
+        for _ in range(n_retries):
+            try:
+                result, inspection_results, description = self.detect_obstacle(
+                    task.b64_img
+                )
+                break
+            except openai.APIConnectionError:
+                self.get_logger().warning("Connection error")
+
+        if result is None:
+            return
+
         print("#############")
         self.get_logger().info(f"Result: {result.model_dump()}")
         print("#############")
 
-        if result.anomaly_detected:
+        if result.obstacle_type in [
+            "box",
+            "trash",
+            "other",
+        ]:
+            if result.obstacle_type != "other" and task.object_pose is None:
+                self.get_logger().error(
+                    "Agent detected anomaly, but no object pose was been discovered"
+                    "by th GT detection module. Skipping {result.obstacle_type}:"
+                    f"{result.anomaly_description}..."
+                )
+                result.obstacle_type = "other"
+
             message = Anomaly()
-            message.pose = task.object_pose
+            if result.obstacle_type == "other":
+                message.pose = self.get_robot_location().pose
+            else:
+                message.pose = task.object_pose
+
             message.obstacle_type = result.obstacle_type
             message.anomaly_description = result.anomaly_description
 
@@ -271,7 +308,8 @@ class VlmWarehouseInspector(BaseAgent):
                 filename = save_image_to_disk(task.b64_img, self.anomaly_images_dir)
                 message.filename = filename
 
-            self.reported_anomalies.append(message)
+            now = time.time()
+            self.reported_anomalies.append((message, now))
 
             if self.debug:
                 self._publish_marker(message)
@@ -285,10 +323,27 @@ class VlmWarehouseInspector(BaseAgent):
 
             cv2_image = CvBridge().cv2_to_imgmsg(task.image, encoding="passthrough")
             cv2_image.encoding = "rgb8"
+
+            if message.obstacle_type == "other":
+                info = "Anomaly of type 'other' detected.\nNo action can be taken by the robot, please investigate manually"
+            elif message.obstacle_type == "box":
+                info = "Box detected, submitted task to move it to the inspection area"
+            elif message.obstacle_type == "trash":
+                info = (
+                    "Trash detected, submitted task to throw it out to the garbage bin"
+                )
+            else:
+                info = "Unknown anomaly type"
+
+            if "orderly" not in str(message.anomaly_description).lower():
+                vlm_description = f"{info}.\nDetails: {message.anomaly_description}"
+            else:
+                vlm_description = info
+
             publish_vlm_description(
                 self.connector,
                 cv2_image,
-                result.anomaly_description,
+                vlm_description,
                 "Inspection",
             )
 
@@ -315,23 +370,49 @@ class VlmWarehouseInspector(BaseAgent):
 
     def detect_obstacle(self, b64_img: str) -> AnomalyDescription:
         task = [
-            SystemMessage(content=self.system_prompt),
+            SystemMessage(content=INSPECTION_TEXT_SYSTEM_PROMPT),
             HumanMultimodalMessage(
-                content=self.prompt,
+                content=INSPECTION_TEXT_USER_PROMPT,
                 images=[b64_img],
             ),
         ]
 
-        response = None
-        for _ in range(3):
-            try:
-                response = cast(AnomalyDescription, self.vlm.invoke(task))
-                break
-            except OutputParserException as e:
-                self.get_logger().error(f"Failed to set output parser: {e}")
-        if response is None:
-            raise Exception("Failed to set output parser")
-        return response
+        # First get the descriptive analysis
+        descriptive_response = self.vlm.invoke(task)
+        self.get_logger().info(f"Descriptive response: {descriptive_response.content}")
+
+        structured_task = [
+            SystemMessage(content=INSPECTION_JSON_SYSTEM_PROMPT),
+            HumanMultimodalMessage(
+                content=INSPECTION_JSON_USER_PROMPT.format(
+                    descriptive_response=descriptive_response.content
+                ),
+            ),
+        ]
+
+        llm_structured = self.vlm.with_structured_output(InspectionOutput)
+        response: InspectionOutput = llm_structured.invoke(structured_task)
+        self.get_logger().info(f"Inspection output: {response}")
+        inspection_results = response.inspection_results
+
+        if len(response.inspection_results) > 0:
+            final_task = [
+                SystemMessage(INSPECTION_TEXT_FINAL_SYSTEM_PROMPT),
+                HumanMessage(
+                    content=INSPECTION_TEXT_FINAL_USER_PROMPT.format(
+                        anomalies="\n".join(response.inspection_results)
+                    )
+                ),
+            ]
+            response = cast(
+                AnomalyDescription,
+                self.vlm.with_structured_output(AnomalyDescription).invoke(final_task),
+            )
+        else:
+            response = AnomalyDescription(
+                anomaly_detected=False, anomaly_description="", obstacle_type="nothing"
+            )
+        return response, inspection_results, descriptive_response.content
 
     def get_robot_location(self) -> PoseStamped:
         transform = self.connector.get_transform(
