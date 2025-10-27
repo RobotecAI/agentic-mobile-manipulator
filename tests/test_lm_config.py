@@ -62,14 +62,14 @@ def test_reranker_model() -> None:
         0.042255107313394547,
         0.0014686192153021693,
     ]
-    REL_TOL = 5e-2
+    ABS_TOL = 5e-2
     reranker_request_json = {"model": MODEL, "query": QUERY, "documents": DOCUMENTS}
     reranker_model_url = get_reranker_model_url("safety_agent")
     reranker_response = requests.post(reranker_model_url, json=reranker_request_json)
     results = reranker_response.json()["results"]
     for idx, result in enumerate(results):
         if not math.isclose(
-            result["relevance_score"], DOCUMENTS_RELEVANCY[idx], rel_tol=REL_TOL
+            result["relevance_score"], DOCUMENTS_RELEVANCY[idx], rel_tol=ABS_TOL
         ):
             raise ValueError(
                 (
