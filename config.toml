@@ -39,4 +39,13 @@ vlm_temperature = 0.0
 
 embeddings_model = "qwen3-embedding:0.6b"
 embeddings_base_url = "http://127.0.0.1:8082/v1"
-reranker_base_url = "http://127.0.0.1:8082/v1/reranking"
+# NOTE: The reranker and the embedding model are two separate models!
+reranker_base_url = "http://127.0.0.1:8083/v1/reranking"
+
+# INFO:
+# Start the EMBEDDING model in llama.cpp using the following command:
+# ./llama-server -m /home/user/llamas/gguf/custom_ggufs/Qwen3-Embedding-0.6b_Q8_0.gguf --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082
+
+# INFO:
+# Start the RERANKER model in llama.cpp using the following command:
+# ./llama-server -m /home/user/llamas/gguf/custom_ggufs/Qwen3-Reranker-0.6B_BF16.gguf --embedding --pooling rank -c 4096  -b 2048 -ub 2048 --port 8083

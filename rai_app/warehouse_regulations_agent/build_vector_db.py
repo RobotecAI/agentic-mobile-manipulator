@@ -28,11 +28,13 @@ from typing import List, Optional
 
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
-from langchain_ollama import OllamaEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import (
     MarkdownHeaderTextSplitter,
     RecursiveCharacterTextSplitter,
 )
+
+from rai_app.initialization.llms import get_embeddings_model
 
 SUPPORTED_CONTENT_FILES = ["text.txt", "content.md"]  # prefer plain text first
 
@@ -154,16 +156,18 @@ def split_documents(
 
 
 def build_local_index(
+    embedding_model: OpenAIEmbeddings,
     source_dir: str = "filtered_regulations",
     strategy: str = "per_regulation",
     chunk_size: int = 1000,
     chunk_overlap: int = 200,
-    embedding_model: str = "mxbai-embed-large",
 ) -> FAISS:
     """Construct a FAISS vector store from local regulation documents.
 
     Parameters
     ----------
+    embedding_model : OpenAIEmbeddings, required
+        OpenAIEmbeddings embedding model.
     source_dir : str, optional
         Directory containing regulation documents. Defaults to
         ``"filtered_regulations"``.
@@ -173,8 +177,6 @@ def build_local_index(
         Chunk size for recursive splitting. Defaults to ``1000``.
     chunk_overlap : int, optional
         Chunk overlap for recursive splitting. Defaults to ``200``.
-    embedding_model : str, optional
-        Ollama embedding model name. Defaults to ``"mxbai-embed-large"``.
 
     Returns
     -------
@@ -194,11 +196,8 @@ def build_local_index(
         f"Prepared {len(docs)} chunks (avg chars: {sum(len(d.page_content) for d in docs) // max(1, len(docs))})."
     )
 
-    # Initialize embeddings
-    embeddings = OllamaEmbeddings(model=embedding_model)
-
     # Build FAISS vector store
-    vector_store = FAISS.from_documents(docs, embedding=embeddings)
+    vector_store = FAISS.from_documents(docs, embedding=embedding_model)
     print("Initialized FAISS index (dimension inferred from first batch).")
 
     return vector_store
@@ -239,25 +238,20 @@ def main():
     parser.add_argument(
         "--strategy",
         choices=["per_regulation", "recursive", "markdown_headers"],
-        default="per_regulation",
-        help="Document splitting strategy (default: per_regulation)",
+        default="recursive",
+        help="Document splitting strategy (default: recursive)",
     )
     parser.add_argument(
         "--chunk-size",
         type=int,
-        default=1000,
-        help="Chunk size for text splitting (default: 1000)",
+        default=2048,
+        help="Chunk size for text splitting (default: 2048)",
     )
     parser.add_argument(
         "--chunk-overlap",
         type=int,
-        default=200,
-        help="Chunk overlap for text splitting (default: 200)",
-    )
-    parser.add_argument(
-        "--embedding-model",
-        default="mxbai-embed-large",
-        help="Ollama embedding model to use (default: mxbai-embed-large)",
+        default=256,
+        help="Chunk overlap for text splitting (default: 256)",
     )
     parser.add_argument(
         "--test-query", help="Optional test query to run after building the database"
@@ -265,13 +259,14 @@ def main():
 
     args = parser.parse_args()
 
+    embeddings_model = get_embeddings_model("safety_agent")
     # Build the vector store
     vector_store = build_local_index(
+        embedding_model=embeddings_model,
         source_dir=args.source,
         strategy=args.strategy,
         chunk_size=args.chunk_size,
         chunk_overlap=args.chunk_overlap,
-        embedding_model=args.embedding_model,
     )
 
     # Save to disk

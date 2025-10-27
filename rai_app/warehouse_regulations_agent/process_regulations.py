@@ -15,6 +15,7 @@
 
 import argparse
 import json
+import os
 import re
 import shutil
 import time
@@ -137,25 +138,29 @@ def filter_regulations(
 
         if is_in_ranges(reg_number, ranges):
             dest_reg_path = dest_path / reg_dir.name
-            if copy_regulation(reg_dir, dest_reg_path):
-                copied_count += 1
 
-                # Summarize if requested
-                if summarize and llm is not None:
-                    if summarize_regulation(
-                        dest_reg_path,
-                        dest_path,
-                        llm,
-                        chain_type,
-                        chunk_size,
-                        chunk_overlap,
-                        short_threshold,
-                        overwrite_summaries,
-                        verbose,
-                    ):
-                        summarized_count += 1
+            # Summarize if requested
+            if summarize and llm is not None:
+                if summarize_regulation(
+                    reg_dir,
+                    dest_path,
+                    llm,
+                    chain_type,
+                    chunk_size,
+                    chunk_overlap,
+                    short_threshold,
+                    overwrite_summaries,
+                    verbose,
+                ):
+                    summarized_count += 1
+                else:
+                    skipped_count += 1
             else:
-                skipped_count += 1
+                if copy_regulation(reg_dir, dest_reg_path):
+                    copied_count += 1
+                else:
+                    skipped_count += 1
+
         else:
             print(
                 f"- Skipping {reg_dir.name} (number {reg_number} not in target ranges)"
@@ -358,6 +363,7 @@ def summarize_regulation(
     written_files = []
     for fname in source_files:
         out_path = out_dir / fname
+        os.makedirs(out_dir, exist_ok=True)
         if fname == "content.md":
             # Markdown version with header
             md_body = f"# Summary of {reg_dir.name}\n\n" + summary.strip() + "\n"

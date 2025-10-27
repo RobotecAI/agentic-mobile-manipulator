@@ -23,7 +23,7 @@ Run:
     python examples/vector_db_react_agent.py \
         --vector-store-dir ./my_faiss_index \
         --model-type complex_model \
-        --embedding-model mxbai-embed-large
+        --embedding-model qwen3-embedding:0.6b
 
 """
 
@@ -192,7 +192,7 @@ def parse_args():
     )
     parser.add_argument(
         "--embedding-model",
-        default="mxbai-embed-large",
+        default="qwen3-embedding:0.6b",
         help="Ollama embedding model name used when the index was created",
     )
     return parser.parse_args()

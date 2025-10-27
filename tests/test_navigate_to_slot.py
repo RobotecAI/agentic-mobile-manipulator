@@ -64,7 +64,7 @@ def get_partially_unavailable_slots():
                 )
             ]
             unavailable_slots.extend(rack_slots)
-    return sorted(unavailable_slots + EXCLUDED_SLOT_NAMES)
+    return sorted(unavailable_slots + list(EXCLUDED_SLOT_NAMES))
 
 
 def get_all_slots():
