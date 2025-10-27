@@ -226,13 +226,11 @@ HMIWindow::HMIWindow(QWidget *parent)
         });
 
     connect(ui->taskBButton, &QPushButton::pressed, [this](){
-        for(int i=0; i<HardcodedConfig::racks.size(); i++){
           std_msgs::msg::String msg;
-          msg.data = HardcodedConfig::taskBPrompt + HardcodedConfig::racks[i];
+          msg.data = HardcodedConfig::taskBPrompt + HardcodedConfig::racks[current_rack_index_];
           user_prompt_pub_->publish(msg);
-
-          std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
+          current_rack_index_ += 1;
+          current_rack_index_ %= HardcodedConfig::racks.size();
         });
 
     connect(ui->taskCButton, &QPushButton::pressed, [this](){

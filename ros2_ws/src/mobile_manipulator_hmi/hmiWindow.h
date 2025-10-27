@@ -80,6 +80,8 @@ private:
 
     void buildListTask();
 
+    int current_rack_index_ {0};
+
     QString currentActionText_;
     QString currentActionCommId_;
     
