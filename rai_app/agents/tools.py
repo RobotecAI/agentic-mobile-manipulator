@@ -180,41 +180,42 @@ class WarehouseTool(BaseROS2Tool):
         List[Slot]
             Filtered slots based on proximity and arm range.
         """
-        filtered_slots = self.filter_for_slots_in_arm_range(slots)
+        slots_in_range = self.filter_for_slots_in_arm_range(slots)
+        filtered_slots = []
+        sides_not_available = 0
 
-        if collection.collection_type == "rack":
-            sides_not_available = 0
-            # If not rack, approach only from 1 side
-            for pose in collection.middle_poses:
-                try:
-                    self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-                        collection.middle_poses[-1], approach_distance
-                    )
+        for pose in collection.middle_poses:
+            try:
+                self.kairos_controller.nav_ctrl.approach_target_along_orientation(
+                    collection.middle_poses[-1], approach_distance
+                )
+
+                if collection.collection_type != "rack":
+                    # Approach rack from both viewing poses
+                    # when it is not rack, view from 1 side is enough
+                    # do not filter slots further
+                    filtered_slots = slots_in_range
                     break
-                except RuntimeError:
-                    sides_not_available += 1
+                else:
+                    # if it is rack go for approach from the other side
+                    # and filter slots by proxitimy
+                    view_pose = get_global_pose_from_origin(
+                        Pose(position=Point(x=approach_distance)), pose
+                    )
+                    filtered_slots.extend(
+                        self._filter_slots_by_proximity(
+                            slots=slots_in_range, view_pose=view_pose
+                        )
+                    )
+            except RuntimeError:
+                sides_not_available += 1
+                continue
+
+            # when both poses not available raise error
             if sides_not_available == 2:
                 raise RuntimeError(
                     f"Due to robot's constrution limitations approaching rack {collection.tag} is not possible."
                 )
-        else:
-            # Approach collection from both viewing angles
-            for pose in collection.middle_poses:
-                try:
-                    self.kairos_controller.nav_ctrl.approach_target_along_orientation(
-                        pose, approach_distance
-                    )
-                    # Add only closer slots
-                    view_pose = get_global_pose_from_origin(
-                        Pose(position=Point(x=approach_distance)), pose
-                    )
-                    filtered_slots = self._filter_slots_by_proximity(
-                        slots=filtered_slots, view_pose=view_pose
-                    )
-                except RuntimeError:
-                    raise RuntimeError(
-                        f"Due to robot's constrution limitations approaching table {collection.tag} is not possible."
-                    )
 
         # Scanning
         time.sleep(1)
