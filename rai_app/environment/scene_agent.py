@@ -16,7 +16,8 @@
 import copy
 import csv
 import random
-from typing import Optional
+import time
+from typing import Literal, Optional
 
 import numpy as np
 import pandas as pd
@@ -34,7 +35,15 @@ from std_srvs.srv import Trigger
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
 
+from rai_app.environment.layout import (
+    FireExtinguisherPositions,
+    Layout,
+)
 from rai_app.environment.scene_manager import SceneManager
+
+layout = Layout()
+
+entities_dtype = Literal["box", "barrel", "can", "bucket"]
 
 
 def load_spawn_config(spawn_config_file):
@@ -73,7 +82,8 @@ class SceneManagerState(SceneManager):
         connector: ROS2Connector | None = None,
         rack_assignment_file: str = "scripts/resources/rack_assignment.csv",
         item_type_assets_file: str = "scripts/resources/item_type_assets.csv",
-        rack_fill: float = 0.5,
+        tables_spawn_file: str = "scripts/resources/spawn_config_table.csv",
+        rack_fill: float = 0.8,
     ):
         super().__init__(
             slots_file=slots_file, spawnables_file=spawnables_file, connector=connector
@@ -83,68 +93,204 @@ class SceneManagerState(SceneManager):
         self.rack_assignment_file = rack_assignment_file
         self.rack_fill = rack_fill
         self.item_type_assets_file = item_type_assets_file
+        self.tables_spawn_file = tables_spawn_file
         wait_for_ros2_services(
             self.connector, ["/spawn_entity", "/delete_entity", "/get_entities"]
         )
 
-    def housekeep_scenario(self, request: Trigger.Request, response: Trigger.Response):
-        spawnables = pd.read_csv(self.spawnables_file, delimiter=",")
-        spawnables = spawnables[
-            ~spawnables["object_name"].isin(["ego", "oilspill1", "oilspill2"])
+        self.safety_positions = [
+            (
+                "towers_top_of_right_bottom_rack",
+                layout.get_top_end_of_the_right_bottom_rack,
+            ),
+            (
+                "towers_end_of_racks",
+                layout.get_right_end_of_left_racks,
+            ),
+            (
+                "towers_right_side_of_left_rectangle",
+                layout.get_botton_left_rectangle_2,
+            ),
         ]
 
-        # self.clear_scene()
-        collection_names, item_types = load_rack_assignment(self.rack_assignment_file)
-        item_type_assets = pd.read_csv(self.item_type_assets_file, delimiter=",")
-        item_type_assets["asset_names"] = item_type_assets["asset_names"].str.split(";")
+    def spawn_fire_extinguishers(self):
+        entity_type = "fireextinguisher01"
+        positions = dict(
+            pillars=[
+                FireExtinguisherPositions.PILLAR2,
+                FireExtinguisherPositions.PILLAR3,
+            ],
+            top_wall=[
+                FireExtinguisherPositions.TOP_WALL,
+            ],
+            right_wall=[
+                FireExtinguisherPositions.RIGHT_WALL,
+                FireExtinguisherPositions.RIGHT_WALL2,
+            ],
+            bottom_wall=[
+                FireExtinguisherPositions.BOTTOM_WALL,
+            ],
+            left_wall=[
+                FireExtinguisherPositions.LEFT_WALL,
+            ],
+        )
 
-        spawn_slot_names = []
-        spawn_entity_types = []
-        items_stored = []
-        for rack, item_type in zip(collection_names, item_types):
-            slots_of_rack = self.get_collection(rack).get_all_slots().values()
-            for slot in slots_of_rack:
-                if random.random() > self.rack_fill:
-                    continue
-                spawn_slot_names.append(slot.tag)
-                spawn_entity_types.append(
-                    random.choice(
-                        item_type_assets.loc[
-                            item_type_assets["item_type"] == item_type, "asset_names"
-                        ].values[0]
-                    )
+        for location, positions in positions.items():
+            for position in positions:
+                pose = position.to_pose()
+                entity_name = self.spawn_object(pose, entity_type)
+                print(f"Spawned {entity_name} at {location}")
+
+    def get_boxes(self, box_types: str | list[Literal["O", "T", "D", "G", "all"]]):
+        entities = self.get_entities(name_filter="cardboardbox")
+
+        if "all" in box_types:
+            return entities
+
+        selected_entities = []
+        for box_type in box_types:
+            if box_type == "O":
+                selected_entities.extend(
+                    [entity for entity in entities if entity.endswith("O")]
                 )
-                items_stored.append(item_type)
+            if box_type == "T":
+                selected_entities.extend(
+                    [entity for entity in entities if entity.endswith("T")]
+                )
+            if box_type == "D":
+                selected_entities.extend(
+                    [entity for entity in entities if entity.endswith("D")]
+                )
+            if box_type == "G":
+                selected_entities.extend(
+                    [
+                        entity
+                        for entity in entities
+                        if not entity.endswith("O")
+                        and not entity.endswith("T")
+                        and not entity.endswith("D")
+                    ]
+                )
+        return selected_entities
 
-        if items_stored is None:
-            items_stored = [None] * len(spawn_slot_names)
+    def get_z_spacing(self, object_type: entities_dtype):
+        return {
+            "box": 0.25,
+            "barrel": 1.2,
+            "can": 0.3,
+            "bucket": 0.4,
+        }[object_type]
 
-        if len(spawn_slot_names) != len(items_stored):
-            raise ValueError(
-                "Slots and object names must have the same length and items stored"
-            )
+    def get_y_spacing(self, object_type: entities_dtype):
+        return {
+            "box": 0.35,
+            "barrel": 0.8,
+            "can": 0.3,
+            "bucket": 0.45,
+        }[object_type]
 
-        for slot, entity_type, item in tqdm(
-            zip(spawn_slot_names, spawn_entity_types, items_stored),
-            desc="Spawning entities",
-            total=len(spawn_slot_names),
-        ):
-            self.spawn_on_spot(
-                slot_name=slot,
-                object_name=entity_type,
-                item_stored=item,
-                std_xy=0.05,
-                std_yaw=0.05,
-                rotate_90_degrees=True,
-                rotate_90_degrees_percentage=0.1,
-            )
-        return Trigger.Response(success=True)
+    def get_max_tower(self, object_type: entities_dtype):
+        return {
+            "box": 3,
+            "barrel": 2,
+            "can": 3,
+            "bucket": 2,
+        }[object_type]
 
-    def standard_scenario(self, request: Trigger.Request, response: Trigger.Response):
+    def fill_scene(
+        self,
+        clear=True,
+        entity_types: list[str] | None = None,
+        skip_slots: list[str] | None = None,
+        fraction_of_slots: int | None = None,
+    ):
+        if clear:
+            self.clear_scene()
+
+        if entity_types is None:
+            entity_types = self.get_boxes("GDO")
+        all_slot_names = []
+
+        empty_slots = (
+            self.find_empty_slots_on_racks() | self.find_empty_slots_on_tables()
+        )
+
+        # Select 1/x of all slots randomly
+        if fraction_of_slots:
+            empty_slots = {
+                rack: random.sample(slots, max(1, int(len(slots) / fraction_of_slots)))
+                for rack, slots in empty_slots.items()
+            }
+
+        for rack in empty_slots:
+            for slot in empty_slots[rack]:
+                all_slot_names.append(slot.tag)
+
+        if skip_slots is not None:
+            all_slot_names = [
+                slot
+                for slot in all_slot_names
+                if all(s not in slot for s in skip_slots)
+            ]
+
+        spawn_slot_names = all_slot_names
+        spawn_entity_types = [
+            entity_types[i % len(entity_types)] for i in range(len(spawn_slot_names))
+        ]
+
+        self.populate_scene(
+            spawn_slot_names, spawn_entity_types, std_xy=0.01, std_yaw=0.08
+        )
+
+    def spawn_objects_in_towers(
+        self,
+        entity_type: str,
+        positions,
+        z_spacing,
+        tower_height=5,
+    ):
+        for position in positions:
+            x = position[0] + random.uniform(-0.05, 0.05)
+            y = position[1] + random.uniform(-0.05, 0.05)
+
+            print(f"Z spacing for {entity_type}: {z_spacing}")
+            heights = np.arange(0.01, tower_height * z_spacing, z_spacing)
+            for i, z in enumerate(heights):
+                point = Point(x=x, y=y, z=z)
+                pose = Pose(position=point)
+                self.spawn_object(pose, entity_type)
+                if i > 3:
+                    time.sleep(0.5)
+
+    def towers_of_objects(
+        self,
+        max_tower=6,
+    ):
+        pos = random.choice(self.safety_positions)
+        # do not spawn on the same spot twice
+        self.safety_positions.remove(pos)
+        available_types = [
+            "plasticbarrel1",
+        ]
+        ent_type = random.choice(available_types)
+        if "barrel" in ent_type:
+            general_type = "barrel"
+
+        z_spacing = self.get_z_spacing(general_type)
+        distance_between = self.get_y_spacing(general_type)
+        max_tower = self.get_max_tower(general_type)
+        print(f"Spawning {ent_type} in {pos[0]}")
+        self.spawn_objects_in_towers(
+            ent_type,
+            pos[1](distance_between),
+            z_spacing,
+            max_tower,
+        )
+
+    def get_standard_objects_to_spawn(self, rack_fill: float):
         spawnables = pd.read_csv(self.spawnables_file, delimiter=",")
         spawnables = spawnables[spawnables["object_name"].str.contains("cardboardbox")]
 
-        # self.clear_scene()
         collection_names, item_types = load_rack_assignment(self.rack_assignment_file)
         item_type_assets = pd.read_csv(self.item_type_assets_file, delimiter=",")
         item_type_assets["asset_names"] = item_type_assets["asset_names"].str.split(";")
@@ -155,7 +301,7 @@ class SceneManagerState(SceneManager):
         for rack, item_type in zip(collection_names, item_types):
             slots_of_rack = self.get_collection(rack).get_all_slots().values()
             for slot in slots_of_rack:
-                if random.random() > self.rack_fill:
+                if random.random() > rack_fill:
                     continue
                 spawn_slot_names.append(slot.tag)
                 spawn_entity_types.append(
@@ -174,6 +320,15 @@ class SceneManagerState(SceneManager):
             raise ValueError(
                 "Slots and object names must have the same length and items stored"
             )
+        return spawn_slot_names, spawn_entity_types, items_stored
+
+    def get_returns_table_objects_to_spawn(self):
+        return load_spawn_config(self.tables_spawn_file)
+
+    def housekeep_scenario(self, request: Trigger.Request, response: Trigger.Response):
+        spawn_slot_names, spawn_entity_types, items_stored = (
+            self.get_standard_objects_to_spawn(rack_fill=self.rack_fill)
+        )
 
         for slot, entity_type, item in tqdm(
             zip(spawn_slot_names, spawn_entity_types, items_stored),
@@ -184,9 +339,54 @@ class SceneManagerState(SceneManager):
                 slot_name=slot,
                 object_name=entity_type,
                 item_stored=item,
-                std_xy=0.05,
+                std_xy=0.01,
                 std_yaw=0.05,
+                rotate_90_degrees=True,
+                rotate_90_degrees_percentage=0.15,
             )
+        spawn_slot_names, spawn_entity_types, items_stored = (
+            self.get_returns_table_objects_to_spawn()
+        )
+        self.populate_scene(
+            spawn_slot_names,
+            spawn_entity_types,
+            items_stored,
+            std_yaw=0.1,
+            offset_yaw=3.14,
+        )
+        self.spawn_fire_extinguishers()
+        return Trigger.Response(success=True)
+
+    def standard_scenario(self, request: Trigger.Request, response: Trigger.Response):
+        spawn_slot_names, spawn_entity_types, items_stored = (
+            self.get_standard_objects_to_spawn(rack_fill=self.rack_fill)
+        )
+
+        for slot, entity_type, item in tqdm(
+            zip(spawn_slot_names, spawn_entity_types, items_stored),
+            desc="Spawning entities",
+            total=len(spawn_slot_names),
+        ):
+            self.spawn_on_spot(
+                slot_name=slot,
+                object_name=entity_type,
+                item_stored=item,
+                std_xy=0.01,
+                std_yaw=0.05,
+                rotate_90_degrees=True,
+                rotate_90_degrees_percentage=0.03,
+            )
+        spawn_slot_names, spawn_entity_types, items_stored = (
+            self.get_returns_table_objects_to_spawn()
+        )
+        self.populate_scene(
+            spawn_slot_names,
+            spawn_entity_types,
+            items_stored,
+            std_yaw=0.1,
+            offset_yaw=3.14,
+        )
+        self.spawn_fire_extinguishers()
         return Trigger.Response(success=True)
 
     def knock_object(self, object_name: str):
@@ -224,7 +424,6 @@ class SceneManagerState(SceneManager):
             (11.29, 3.14, 0.01, 0.0, 0.0, 0.0, 1.0),
             (17.76, 2.95, 0.01, 0.0, 0.0, 0.0, 1.0),
             (23.38, 7.06, 0.01, 0.0, 0.0, 0.0, 1.0),
-            # (24.48, 8.47, 0.01, 0.0, 0.0, 0.0, 1.0),
             (26.90, 11.55, 0.01, 0.0, 0.0, 0.0, 1.0),
             (27.10, 21.35, 0.01, 0.0, 0.0, 0.0, 1.0),
             (27.05, 27.22, 0.01, 0.0, 0.0, 0.0, 1.0),
@@ -269,9 +468,8 @@ class SceneManagerState(SceneManager):
 
         available_types = [
             "cardboardbox02_v01T",
-            "cardboardbox02_v01D",
             "cardboardbox01_v01",
-            "plasticbarrel1",
+            "fireextinguisher01",
         ]
         anomalies_types = random.sample(available_types, n)
 
@@ -284,6 +482,8 @@ class SceneManagerState(SceneManager):
             if "plasticbarrel" in entity_name:
                 self.knock_object(entity_name)
             print("Spawned anomaly: ", entity_name)
+
+        self.towers_of_objects(max_tower=6)
         return Trigger.Response(success=True)
 
     def spawn_on_spot(
@@ -394,6 +594,24 @@ class SceneAgent(BaseAgent):
             msg_type="simulation_interfaces/srv/ResetSimulation",
             timeout_sec=5.0,
         )
+        self.safety_positions = [
+            (
+                "towers_top_of_right_bottom_rack",
+                layout.get_top_end_of_the_right_bottom_rack,
+            ),
+            (
+                "towers_end_of_racks",
+                layout.get_right_end_of_left_racks,
+            ),
+            (
+                "towers_left_side_of_left_rectangle",
+                layout.get_botton_left_rectangle_2,
+            ),
+            (
+                "towers_right_side_of_left_rectangle",
+                layout.get_botton_left_rectangle_2,
+            ),
+        ]
         return Trigger.Response(success=True)
 
     def run(self):
