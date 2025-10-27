@@ -1637,12 +1637,12 @@ QGroupBox::title {
                  </font>
                 </property>
                 <property name="text">
-                 <string>LLM Selection</string>
+                 <string>LLM model:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="comboBox">
+               <widget class="QLabel" name="llm_text_field">
                 <property name="minimumSize">
                  <size>
                   <width>150</width>
@@ -1654,26 +1654,9 @@ QGroupBox::title {
                   <pointsize>12</pointsize>
                  </font>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>qwen3:4b</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>qwen3:8b</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>qwen3:30b-a3b</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>gpt-oss:20b</string>
-                 </property>
-                </item>
+                <property name="text">
+                 <string>gpt-oss:20b</string>
+                </property>
                </widget>
               </item>
               <item>
@@ -1690,12 +1673,12 @@ QGroupBox::title {
                  </font>
                 </property>
                 <property name="text">
-                 <string>VLM selection</string>
+                 <string>VLM model:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="comboBox_2">
+               <widget class="QLabel" name="vlm_text_field">
                 <property name="minimumSize">
                  <size>
                   <width>150</width>
@@ -1707,26 +1690,9 @@ QGroupBox::title {
                   <pointsize>12</pointsize>
                  </font>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>LFM-VL:2.6B (Liquid AI)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>LFM-VL:1.6B (Liquid AI)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Qwen2.5vl-3b</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Qwen2.5vl-7b</string>
-                 </property>
-                </item>
+                <property name="text">
+                 <string>LFM2-VL-3B-Fine-Tuned (Liquid AI)</string>
+                </property>
                </widget>
               </item>
              </layout>
