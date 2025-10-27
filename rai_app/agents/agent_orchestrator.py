@@ -49,7 +49,6 @@ from rai_app.agents.callbacks import (
 )
 from rai_app.agents.context_providers import WarehouseContext
 from rai_app.agents.tools import (
-    CorrectBoxPositionTool,
     DescribeImageTool,
     HouseKeepTool,
     InspectionWarehouseRouteTool,
@@ -123,20 +122,15 @@ class TaskSubscriber(Node):
         new_task_callback,
         inspection_topics: List[str],
         inspection_callback,
-        housekeep_topics: List[str],
-        housekeep_callback,
     ):
         super().__init__("task_subscriber")
         self.connector = connector
         self.new_task_callback = new_task_callback
         self.inspection_callback = inspection_callback
-        self.housekeep_callback = housekeep_callback
         for topic in task_topics:
             self.add_task_topic(topic)
         for topic in inspection_topics:
             self.add_inspection_topic(topic=topic)
-        for topic in housekeep_topics:
-            self.add_housekeep_task_topic(topic=topic)
 
     def add_task_topic(self, topic: str):
         try:
@@ -157,16 +151,6 @@ class TaskSubscriber(Node):
             )
         except ValueError:
             logging.warning(f"Inspection topic: {topic} not found")
-
-    def add_housekeep_task_topic(self, topic: str):
-        try:
-            self.connector.register_callback(
-                topic,
-                self.housekeep_callback,
-                msg_type="std_msgs/msg/String",
-            )
-        except ValueError:
-            logging.warning(f"Housekeep task topic: {topic} not found")
 
     def remove_topic(self, topic: str):
         self.connector.registered_callbacks.pop(topic)
@@ -215,7 +199,6 @@ class AgentOrchestrator:
         agent: CompiledStateGraph,
         task_topics: List[str],
         inspection_topics: List[str],
-        housekeep_topics: List[str],
         action_topic: str,
         initial_state_creator: Callable,
         recurssion_limit: int,
@@ -235,8 +218,6 @@ class AgentOrchestrator:
             new_task_callback=self.add_task,
             inspection_topics=inspection_topics,
             inspection_callback=self.add_inspection_task,
-            housekeep_topics=housekeep_topics,
-            housekeep_callback=self.add_housekeep_task,
         )
 
         self.initial_state_creator = initial_state_creator
@@ -494,7 +475,6 @@ class AgentOrchestrator:
 def main():
     logging.getLogger("rai_agent")
     task_topics = ["/user_tasks"]
-    housekeep_topics = ["/correct_boxes"]
     inspection_topics = ["/inspection_result"]
     connector = ROS2Connector()
 
@@ -534,13 +514,8 @@ def main():
         connector=connector,
         kairos_controller=kairos_controller,
         scene_manager=scene_manager,
-        task_topic=housekeep_topics[0],
     )
-    correct_box_tool = CorrectBoxPositionTool(
-        connector=connector,
-        kairos_controller=kairos_controller,
-        scene_manager=scene_manager,
-    )
+
     move_to_inspection_area_tool = MoveFromPoseToInspectionAreaTool(
         connector=connector,
         kairos_controller=kairos_controller,
@@ -582,7 +557,6 @@ def main():
             tools=[
                 housekeep_tool,
                 sort_returned_package_tool,
-                correct_box_tool,
                 inspection_route_tool,
                 throw_trash_out_tool,
             ],
@@ -627,7 +601,6 @@ def main():
         agent=agent,
         task_topics=task_topics,
         inspection_topics=inspection_topics,
-        housekeep_topics=housekeep_topics,
         action_topic="/agent/current_action",
         initial_state_creator=get_initial_megamind_state,
         recurssion_limit=100,
