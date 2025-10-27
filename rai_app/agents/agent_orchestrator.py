@@ -273,6 +273,7 @@ class AgentOrchestrator:
         logging.info("All background threads stopped. Shutting down orchestrator...")
 
         try:
+            self.connector.shutdown()
             rclpy.shutdown()
         except Exception:
             pass

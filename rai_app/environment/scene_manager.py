@@ -201,9 +201,9 @@ class SceneManager:
             should_rotate = random.random() < percent_of_rotated_objects
             if should_rotate:
                 # rotate additional 90 degrees
-                additional_rotation = 1.57
+                offset_yaw = 1.57
             else:
-                additional_rotation = 0.0
+                offset_yaw = 0.0
             simulation_name = self.spawn_on_spot(
                 slot,
                 object_name,
@@ -211,7 +211,6 @@ class SceneManager:
                 std_xy,
                 std_yaw,
                 offset_yaw,
-                additional_rotation=additional_rotation,
             )
             simulation_names.append(simulation_name)
         return simulation_names
@@ -263,7 +262,6 @@ class SceneManager:
         std_yaw: float = 0.0,
         offset_yaw: float = 0.0,
         frame: str = "odom",
-        additional_rotation: float = 0.0,
     ):
         wait_for_ros2_services(self.connector, ["/spawn_entity"])
         pose: Pose = copy.deepcopy(self.slots[slot_name].origin_pose)
@@ -278,7 +276,6 @@ class SceneManager:
         # Add Gaussian noise to yaw
         yaw += random.normalvariate(0, std_yaw)
         yaw += offset_yaw
-        yaw += additional_rotation
 
         # Convert back to quaternion
         q_new = quaternion_from_euler(roll, pitch, yaw)
