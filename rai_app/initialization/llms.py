@@ -27,7 +27,7 @@ class VLMConfig:
     model: str
     base_url: str
     reasoning: bool = False
-    temperature: float = 0.1
+    temperature: float = 0.0
 
 
 @dataclass
@@ -119,6 +119,7 @@ def load_config(config_path: str = "config.toml") -> Config:
                 model=config["inspection_agent"]["vlm_model"],
                 base_url=config["inspection_agent"]["vlm_base_url"],
                 reasoning=config["inspection_agent"]["vlm_reasoning"],
+                temperature=config["inspection_agent"]["vlm_temperature"],
             )
         ),
         safety_agent=SafetyAgentConfig(
@@ -192,6 +193,7 @@ def get_vlm_model(
             model=config.inspection_agent.vlm.model,
             base_url=config.inspection_agent.vlm.base_url,
             api_key=openai_api_key,
+            temperature=config.inspection_agent.vlm.temperature,
         )
     elif config_name == "safety_agent":
         return ChatOpenAI(
