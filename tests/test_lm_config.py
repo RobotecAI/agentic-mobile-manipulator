@@ -13,28 +13,70 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from hashlib import sha256
+import json
+import math
 from typing import Literal
 
+import numpy as np
 import pytest
+import requests
 from rai.messages import HumanMultimodalMessage
 
 from rai_app.initialization.llms import (
     get_embeddings_model,
     get_llm_model,
+    get_reranker_model_url,
     get_vlm_model,
 )
 
 
 def test_embeddings_model() -> None:
-    SHA256_HASH = "96ed3644f17076a4e3a83742c4b118859fbb5eade632de7af7469f522ecc968a"
+    # WARN: llama.cpp may return a marginally different embedding on the initial request
+    # Thus, L2 distance is computed between the embeddings with a specified tolerance
+    L2_TOL = 5e-2  # L2 difference tolerance
     embeddings_model = get_embeddings_model("safety_agent")
-    embedding = embeddings_model.embed_query("Hello, world!")
-    sha256_hash = sha256(str(embedding).encode()).hexdigest()
-    if sha256_hash != SHA256_HASH:
+    embedding = np.array(embeddings_model.embed_query("Hello, world!"))
+
+    with open("tests/expected_embedding_qwen3_0.6b.json", "r") as f:
+        expected_embedding = np.array(json.load(f)["embedding"])
+
+    if np.linalg.norm(embedding - expected_embedding) > L2_TOL:
         raise ValueError(
-            f"Embeddings model returned different hash than expected: {sha256_hash} != {SHA256_HASH}"
+            "The embedding model returned a different embedding than expected!"
         )
+
+
+def test_reranker_model() -> None:
+    MODEL = "Qwen3-Reranker:0.6b"
+    QUERY = (
+        "Retrive documents relevant to the described situation: "
+        "A woman is wearing a helmet at a construction site"
+    )
+    DOCUMENTS = [
+        "Construction site safety regulations",
+        "A man is wearing a helmet",
+        "A woman is watering tree saplings",
+    ]
+    DOCUMENTS_RELEVANCY = [
+        0.46526646614074707,
+        0.042255107313394547,
+        0.0014686192153021693,
+    ]
+    REL_TOL = 5e-2
+    reranker_request_json = {"model": MODEL, "query": QUERY, "documents": DOCUMENTS}
+    reranker_model_url = get_reranker_model_url("safety_agent")
+    reranker_response = requests.post(reranker_model_url, json=reranker_request_json)
+    results = reranker_response.json()["results"]
+    for idx, result in enumerate(results):
+        if not math.isclose(
+            result["relevance_score"], DOCUMENTS_RELEVANCY[idx], rel_tol=REL_TOL
+        ):
+            raise ValueError(
+                (
+                    "Reranker model returned a different relevancy score than expected:, "
+                    f"{result['relevance_score']} != {DOCUMENTS_RELEVANCY[idx]}"
+                )
+            )
 
 
 @pytest.mark.parametrize("agent_name", ["megamind_agent", "general"])

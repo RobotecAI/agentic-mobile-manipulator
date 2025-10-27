@@ -132,7 +132,9 @@ def load_config(config_path: str = "config.toml") -> Config:
                 model=config["safety_agent"]["embeddings_model"],
                 base_url=config["safety_agent"]["embeddings_base_url"],
             ),
-            reranker=config["safety_agent"]["reranker_base_url"],
+            reranker=RerankerConfig(
+                base_url=config["safety_agent"]["reranker_base_url"]
+            ),
         ),
         condition_agent=ConditionAgentConfig(
             vlm=VLMConfig(
@@ -223,9 +225,12 @@ def get_embeddings_model(config_name: Literal["safety_agent"]) -> OpenAIEmbeddin
     if openai_api_key is None:
         openai_api_key = "xxx"  # ChatOpenAPI does not initialize without an API key
     if config_name == "safety_agent":
+        # WARN: DO NOT set the `check_embedding_ctx_length` flag to True, as this will enable
+        # document tokenization before they are sent to llama.cpp, resulting in broken embeddings!
         return OpenAIEmbeddings(
             model=config.safety_agent.embeddings.model,
             base_url=config.safety_agent.embeddings.base_url,
+            check_embedding_ctx_length=False,
         )
     else:
         raise ValueError(f"Invalid config name: {config_name}")

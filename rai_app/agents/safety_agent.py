@@ -38,7 +38,11 @@ from sensor_msgs.msg import Image
 from skimage.metrics import structural_similarity as ssim
 
 from rai_app.agents.vlm_transport import publish_vlm_description
-from rai_app.initialization.llms import get_vlm_model
+from rai_app.initialization.llms import (
+    get_embeddings_model,
+    get_reranker_model_url,
+    get_vlm_model,
+)
 
 # Reuse vector store loader and regulation agent factory from the warehouse regulations module
 from rai_app.warehouse_regulations_agent.rag import load_vector_store  # type: ignore
@@ -99,7 +103,10 @@ class SafetyAgent:
         self.violation_storage = ViolationStorage(violations_file)
 
         # Load vector store once
-        self.vector_store = load_vector_store(vector_db)
+        embedding_model = get_embeddings_model("safety_agent")
+        self.vector_store = load_vector_store(embedding_model, vector_db)
+
+        self.reranker_url = get_reranker_model_url("safety_agent")
 
         # Vision-language model (served via REST compatible with ChatOpenAI client)
         self.vlm: BaseChatModel = get_vlm_model(config_name="safety_agent")
@@ -112,6 +119,7 @@ class SafetyAgent:
             vlm=self.vlm,
             llm=self.llm,
             vector_store=self.vector_store,
+            reranker_url=self.reranker_url,
             k=self.k,
         )
 
@@ -153,11 +161,14 @@ class SafetyAgent:
                 if self.prev_image is not None:
                     if are_2_images_similar(self.prev_image, image):
                         self.get_logger().info("Images are similar, skipping")
+                        time.sleep(5)
                         continue
                 self.prev_image = image
-
-                cv2.imwrite(f"safety_agent_images/image{self.processed_cnt}.png", image)
-                b64_img = preprocess_image(image)
+                image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                cv2.imwrite(
+                    f"safety_agent_images/image{self.processed_cnt}.png", image_bgr
+                )
+                b64_img = preprocess_image(image_bgr)
                 self.processed_cnt += 1
             except ValueError:
                 # No image available yet
@@ -184,7 +195,7 @@ class SafetyAgent:
             {
                 "messages": [
                     HumanMultimodalMessage(
-                        content="Describe the image in a very detail and identify the potential anomalies. Put attention to the anomalies and potential safety hazards related to warehouse environment. Return your response in structured output format - include image description and list of potential anomalies if any.",
+                        content="",
                         images=[b64_img],
                     )
                 ]
@@ -232,18 +243,6 @@ def main():
     parser = argparse.ArgumentParser(description="Run online safety agent")
     parser.add_argument("--vector-db", required=True, help="Path to FAISS vector DB")
     parser.add_argument(
-        "--vlm-model",
-        type=str,
-        default="LFM2-VL-3B-preview-251009-0235-2258",
-        help="Vision-language model identifier",
-    )
-    parser.add_argument(
-        "--vlm-base-url",
-        type=str,
-        default="http://localhost:8081",
-        help="Base URL for the VLM endpoint",
-    )
-    parser.add_argument(
         "--camera-topic",
         type=str,
         default="/rgbd_camera/camera_image_color",
@@ -255,7 +254,7 @@ def main():
         default="/safety",
         help="Topic to publish safety violations to",
     )
-    parser.add_argument("-k", type=int, default=3, help="RAG top-k retrieval")
+    parser.add_argument("-k", type=int, default=10, help="RAG top-k retrieval")
     parser.add_argument(
         "--n-seconds",
         type=int,
@@ -278,8 +277,6 @@ def main():
 
     agent = SafetyAgent(
         vector_db=args.vector_db,
-        vlm_model=args.vlm_model,
-        vlm_base_url=args.vlm_base_url,
         camera_topic=args.camera_topic,
         safety_topic=args.safety_topic,
         k=args.k,

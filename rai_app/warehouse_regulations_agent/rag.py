@@ -21,16 +21,23 @@ from pathlib import Path
 
 from langchain_community.vectorstores import FAISS
 from langchain_core.language_models import BaseChatModel
-from langchain_ollama import OllamaEmbeddings
-from langchain_openai import ChatOpenAI
+from langchain_openai import OpenAIEmbeddings
 from rai.messages import HumanMultimodalMessage, preprocess_image
 
+from rai_app.initialization.llms import (
+    get_embeddings_model,
+    get_reranker_model_url,
+    get_vlm_model,
+)
 from rai_app.warehouse_regulations_agent.warehouse_safety_agent import (
     create_image_regulation_agent,
 )
 
 
-def load_vector_store(db_path: str) -> FAISS:
+def load_vector_store(
+    embedding_model: OpenAIEmbeddings,
+    db_path: str,
+) -> FAISS:
     """Load a persisted FAISS vector store for regulation retrieval.
 
     Parameters
@@ -51,10 +58,8 @@ def load_vector_store(db_path: str) -> FAISS:
     if not Path(db_path).exists():
         raise FileNotFoundError(f"Vector database not found at: {db_path}")
 
-    embeddings = OllamaEmbeddings(model="mxbai-embed-large")
-
     vector_store = FAISS.load_local(
-        db_path, embeddings, allow_dangerous_deserialization=True
+        db_path, embedding_model, allow_dangerous_deserialization=True
     )
     print(f"Loaded vector store from: {db_path}")
     return vector_store
@@ -65,6 +70,7 @@ def run_agent(
     image_path: str,
     llm: BaseChatModel,
     vlm: BaseChatModel,
+    reranker_url: str,
     k: int = 3,
 ):
     """Generate a warehouse regulation assessment for an image.
@@ -91,6 +97,7 @@ def run_agent(
         vlm=vlm,
         llm=llm,
         vector_store=vector_store,
+        reranker_url=reranker_url,
         k=k,
     )
 
@@ -100,7 +107,7 @@ def run_agent(
             {
                 "messages": [
                     HumanMultimodalMessage(
-                        content="Describe the image in a very detail and identify the potential anomalies. Put attention to the anomalies and potential safety hazards related to warehouse environment. Return your response in structured output format - include image description and list of potential anomalies if any.",
+                        content="",
                         images=[preprocess_image(image_path)],
                     )
                 ]
@@ -110,6 +117,7 @@ def run_agent(
     except Exception as e:
         logging.error(f"Error running agent: {e}")
         state["output"] = "Failed to run agent"
+        state["agent_failed"] = True
         return state
     return state
 
@@ -117,17 +125,6 @@ def run_agent(
 def main():
     parser = argparse.ArgumentParser(
         description="Run warehouse safety regulation agent with pre-built vector database"
-    )
-    parser.add_argument(
-        "--vision-model",
-        required=False,
-        help="VLM model to use for image analysis (default: qwen2.5vl:7b)",
-    )
-    parser.add_argument(
-        "--base-url",
-        required=False,
-        default=None,
-        help="Base URL for the VLM model",
     )
     parser.add_argument(
         "--vector-db",
@@ -143,27 +140,26 @@ def main():
     parser.add_argument(
         "-k",
         type=int,
-        default=3,
-        help="Number of nearest neighbors to retrieve from the vector database (default: 3)",
+        default=10,
+        help="Number of nearest neighbors to retrieve from the vector database (default: 10)",
     )
 
     args = parser.parse_args()
 
-    vector_store = load_vector_store(args.vector_db)
+    vlm = get_vlm_model("safety_agent")
 
-    vlm_model = args.vision_model
-    vlm = ChatOpenAI(
-        model=vlm_model,
-        base_url=args.base_url,
-        timeout=20,
-    )
+    llm = vlm
+    embedding_model = get_embeddings_model("safety_agent")
+    reranker_model_url = get_reranker_model_url("safety_agent")
+
+    vector_store = load_vector_store(embedding_model, args.vector_db)
 
     images_dir = Path(args.images_dir)
     images = list(set(list(images_dir.rglob("*.png"))))
     random.shuffle(images)
     for image_path in images:
-        output_path = f"{image_path}.{vlm_model}.violations.jsonl"
-        output_path_id = f"{image_path}.{vlm_model}.image_description.jsonl"
+        output_path = f"{image_path}.violations.jsonl"
+        output_path_id = f"{image_path}.image_description.jsonl"
         if Path(output_path).exists():
             logging.info(f"Skipping image: {output_path} because it already exists")
             continue
@@ -172,34 +168,43 @@ def main():
         state = run_agent(
             vector_store=vector_store,
             image_path=str(image_path),
-            llm=vlm,
+            llm=llm,
             vlm=vlm,
+            reranker_url=reranker_model_url,
             k=args.k,
         )
+
         if state is str:
             output = state
         else:
             output = state.get("output") if isinstance(state, dict) else state
         logging.info(f"Output: {output}")
 
-        if "vision" in state:
-            with open(output_path_id, "w") as f:
-                json.dump(state["vision"].image_description, f)
+        if isinstance(state, dict) and not state.get("agent_failed", False):
+            if "vision" in state:
+                with open(output_path_id, "w") as f:
+                    json.dump(
+                        {
+                            "anomaly": state["vision"].is_anomaly_present,
+                            "description": state["vision"].image_description,
+                        },
+                        f,
+                    )
 
-        if output and isinstance(output, list):
-            with open(output_path, "w") as f:
-                for violation in output:
-                    if isinstance(violation, dict):
-                        json.dump(violation, f)
-                    else:
-                        json.dump(violation.model_dump(), f)
-                        f.write("\n")
-            logging.info(f"Saved violations to: {output_path}")
-        else:
-            with open(output_path, "w") as f:
-                output = {"output": "No anomalies found"}
-                json.dump(output, f)
-            logging.info(f"Saved violations to: {output_path}")
+            if output and isinstance(output, list):
+                with open(output_path, "w") as f:
+                    for violation in output:
+                        if isinstance(violation, dict):
+                            json.dump(violation, f)
+                        else:
+                            json.dump(violation.model_dump(), f)
+                            f.write("\n")
+                logging.info(f"Saved violations to: {output_path}")
+            else:
+                with open(output_path, "w") as f:
+                    output = {"output": "No anomalies found"}
+                    json.dump(output, f)
+                logging.info(f"Saved violations to: {output_path}")
 
         elapsed = time.perf_counter() - ts
         logging.info(f"Time taken: {elapsed} seconds")
