@@ -5,8 +5,9 @@
   <version>0.0.1</version>
   <description>Interfaces for Demo communication</description>
   <maintainer email="maciej.majek@robotec.ai">Maciej Majek</maintainer>
-  <license>TODO: License declaration</license>
+  <license>Apache-2.0</license>
   <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
