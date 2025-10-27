@@ -43,21 +43,32 @@ QString HRIMessageToString(const ParseRaiData::HRIMessage& msg)
         .arg(msg.tool_name_, paramsStr);
 }
 
-void CallService(QWidget *parent, rclcpp::Node::SharedPtr &node, rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr& client)
+void CallService(QWidget *parent, rclcpp::Node::SharedPtr &node,
+                 rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr &client)
 {
     const bool ok = client->wait_for_service(std::chrono::seconds(1));
     if (!ok) {
         QMessageBox::warning(parent, "Service Call Failed", "Service not available.");
         return;
     }
+
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
     auto result_future = client->async_send_request(request);
-    // Wait for the result.
-    if (rclcpp::spin_until_future_complete(node, result_future) !=
-        rclcpp::FutureReturnCode::SUCCESS)
-    {
-        QMessageBox::warning(parent, "Service Call Failed", "Failed to call service.");
+
+    // Wait for up to 10 seconds for the result
+    auto status = rclcpp::spin_until_future_complete(
+        node, result_future, std::chrono::seconds(20));
+
+    if (status != rclcpp::FutureReturnCode::SUCCESS) {
+        QMessageBox::warning(parent, "Service Call Timeout",
+                             "Service did not respond within 10 seconds.");
         return;
+    }
+
+    // If successful, you can access the response
+    auto response = result_future.get();
+    if (!response->success) {
+        QMessageBox::warning(parent, "Service Call Failed", QString::fromStdString(response->message));
     }
 }
 
