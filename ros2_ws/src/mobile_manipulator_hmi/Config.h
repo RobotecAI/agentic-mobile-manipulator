@@ -62,7 +62,9 @@ namespace HardcodedConfig {
 
     const static std::string taskAPrompt = "Do Sort Package Returns";
     const static std::string taskBPrompt = "Do Housekeeping of rack ";
-    const static std::vector<std::string> racks = {"A01",
+    const static std::vector<std::string> racks = {"J01",
+    "J02",
+    "A01",
     "A02",
     "A03",
     "A04",
@@ -100,8 +102,6 @@ namespace HardcodedConfig {
     "H02",
     "I01",
     "I02",
-    "J01",
-    "J02",
     "K01",
     "K02",
     "L01",
