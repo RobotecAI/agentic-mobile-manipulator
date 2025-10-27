@@ -69,7 +69,7 @@ def test_reranker_model() -> None:
     results = reranker_response.json()["results"]
     for idx, result in enumerate(results):
         if not math.isclose(
-            result["relevance_score"], DOCUMENTS_RELEVANCY[idx], rel_tol=ABS_TOL
+            result["relevance_score"], DOCUMENTS_RELEVANCY[idx], abs_tol=ABS_TOL
         ):
             raise ValueError(
                 (
