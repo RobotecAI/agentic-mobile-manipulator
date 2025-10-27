@@ -28,7 +28,6 @@ from geometry_msgs.msg import Point, Pose, Quaternion
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
-from rai.communication.ros2 import ROS2Message
 from rai.messages import HumanMultimodalMessage, MultimodalArtifact
 from rai.tools.ros2.base import BaseROS2Tool
 from rai.tools.ros2.simple import GetROS2ImageConfiguredTool
@@ -769,32 +768,31 @@ class HouseKeepTool(WarehouseTool):
         "Do housekeeping on the given rack. Check for wrongly placed boxes. "
         "You can only provide one rack at a time."
     )
-    task_topic: str
     approach_distance: float = 2.0
+    args_schema: Type[HouseKeepToolInput] = HouseKeepToolInput
 
-    def check_collection_boxes_for_misallignment(
-        self, collection: SlotsCollection, view_pose: Pose, send_task: bool = True
-    ) -> Optional[Slot]:
+    def check_collection_boxes_for_misalignment(
+        self, collection: SlotsCollection, view_pose: Pose
+    ):
+        """
+        Check collection for misaligned boxes and optionally correct them.
+        """
         slots = list(collection.get_all_slots().values())
         closer_slots = self._filter_slots_by_proximity(slots, view_pose)
         closer_slots_within_reach = self.filter_for_slots_in_arm_range(closer_slots)
+
         for slot in closer_slots_within_reach:
             obj = slot.get_obj_name()
             if obj:
                 obj_pose = self.scene_manager.get_pose(entity_name=obj)
                 yaw_diff = get_yaw_difference(obj_pose, slot.origin_pose)
+
                 if abs(yaw_diff) > 0.35:
-                    if send_task:
-                        self.connector.send_message(
-                            ROS2Message(
-                                payload={
-                                    "data": f"Rotate box at slot {slot.tag} so that it is aligned with the rack."
-                                }
-                            ),
-                            target=self.task_topic,
-                            msg_type="std_msgs/msg/String",
-                        )
-                    return slot
+                    self.kairos_controller.allign_object_with_slot(
+                        slot_pose=slot.origin_pose, entity_name=obj
+                    )
+                    # Refresh data after each correction
+                    self.refresh_data()
 
     def check_collection(
         self,
@@ -802,7 +800,7 @@ class HouseKeepTool(WarehouseTool):
         collection_name: str,
         approach_distance: Optional[float] = None,
     ):
-        """Inspect a rack collection for misaligned boxes."""
+        """Inspect a rack collection for misaligned boxes and optionally correct them."""
         if not approach_distance:
             approach_distance = self.approach_distance
 
@@ -814,14 +812,28 @@ class HouseKeepTool(WarehouseTool):
         view_pose = get_global_pose_from_origin(
             Pose(position=Point(x=approach_distance)), approach_pose
         )
-        self.check_collection_boxes_for_misallignment(coll, view_pose)
-        time.sleep(1)
+
+        self.check_collection_boxes_for_misalignment(coll, view_pose)
 
     def housekeep(self, rack: str):
+        """
+        Perform housekeeping on a rack.
+
+        Parameters
+        ----------
+        rack : str
+            Name of the rack to housekeep
+
+        Returns
+        -------
+        List[str]
+            List of status messages for each action taken
+        """
         self.refresh_data()
 
         poses = self.view_of_racks_poses([rack])
         sides_not_available = 0
+
         for pos in poses:
             try:
                 self.check_collection(
@@ -830,57 +842,18 @@ class HouseKeepTool(WarehouseTool):
             except RuntimeError as e:
                 sides_not_available += 1
                 logging.warning(e)
+            except Exception as e:
+                return f"Housekeeping failed: {str(e)}"
+
         if sides_not_available == 2:
             raise RuntimeError(
-                f"Due to robot's constrution limitations housekeeping on rack {rack} is not possible."
+                f"Due to robot's construction limitations housekeeping on rack {rack} is not possible."
             )
 
     def _run(self, rack: str):
+        """Execute the housekeeping tool."""
         self.housekeep(rack)
         return f"Housekeep has been completed successfully on rack: {rack}"
-
-
-class CorrectBoxPositionToolInput(BaseModel):
-    slot_name: str = Field(..., description="Name of the slot at which to rotate box")
-
-
-class CorrectBoxPositionTool(WarehouseTool):
-    name: str = "correct_box_position_in_slot"
-    description: str = (
-        "Rotate box which is located in given slot to allign it with the slot"
-    )
-
-    args_schema: Type[CorrectBoxPositionToolInput] = CorrectBoxPositionToolInput
-
-    def _run(self, slot_name: str):
-        """Align the box in a specified slot with the rack orientation.
-
-        Parameters
-        ----------
-        slot_name : str
-            Identifier of the slot containing the box to rotate.
-
-        Returns
-        -------
-        None
-            Raises exceptions on failure; otherwise completes silently.
-        """
-        slots = self.scene_manager.get_all_slots()
-        target_slot = slots[slot_name]
-        obj_name = target_slot.get_obj_name()
-        if not obj_name:
-            raise RuntimeError(f"There is no object at the slot {target_slot.tag}")
-
-        try:
-            self.kairos_controller.allign_object_with_slot(
-                slot_pose=target_slot.origin_pose, entity_name=obj_name
-            )
-        except Exception as e:
-            logging.error(f"Error during move operation: {str(e)}")
-            return f"Failed to correct box position in slot {target_slot.tag}: {str(e)}"
-        finally:
-            self.refresh_data()
-        return f"Successfully corrected box position in slot {target_slot.tag}"
 
 
 class SortReturnedPackageToolInput(BaseModel):
