@@ -117,6 +117,7 @@ Important notes:
 - if there are no clear and severe violations, set the is_violation_present flag to False,
 - do not make assumptions, all violations must be supported by strong evidence,
 - boxes laying on the floor under racks or shelves must not be report as a violation
+Please don't report instances where manipulator obstructed the camera view.
 """
 
 RERANKER_REQUEST_TEMPLATE = {

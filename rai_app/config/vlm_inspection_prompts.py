@@ -41,6 +41,7 @@ INSPECTION_TEXT_FINAL_SYSTEM_PROMPT = (
     "laying in the isle, that can be picked, 'other' - an obstacle that can't be "
     "moved by the robot with vacuum gripper - just report it."
     "Please don't report instances where manipulator obstructed the camera view."
+    "Boxes laying on the floor under racks within yellow lines must not be report as a violation"
 )
 
 INSPECTION_TEXT_FINAL_USER_PROMPT = (
