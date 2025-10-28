@@ -168,7 +168,7 @@ class SafetyAgent:
                 cv2.imwrite(
                     f"safety_agent_images/image{self.processed_cnt}.png", image_bgr
                 )
-                b64_img = preprocess_image(image_bgr)
+                b64_img = preprocess_image(image)
                 self.processed_cnt += 1
             except ValueError:
                 # No image available yet
@@ -185,7 +185,8 @@ class SafetyAgent:
         cv2_image = cv2.imdecode(
             np.frombuffer(base64.b64decode(b64_img), np.uint8), cv2.IMREAD_COLOR
         )
-        ros2_image = CvBridge().cv2_to_imgmsg(cv2_image, encoding="passthrough")
+        image_bgr = cv2.cvtColor(cv2_image, cv2.COLOR_RGB2BGR)
+        ros2_image = CvBridge().cv2_to_imgmsg(image_bgr, encoding="passthrough")
         ros2_image.encoding = "rgb8"
         return ros2_image
 
