@@ -42,7 +42,7 @@ from rai_app.config.vlm_box_condition_prompts import (
     BOX_CONDITION_TEXT_USER_PROMPT,
     BoxConditionOutput,
 )
-from rai_app.control.kairos_controller import KairosController
+from rai_app.control.kairos_controller import KairosController, determine_strategy
 from rai_app.environment import Collection, SceneManager, Slot, SlotsCollection
 from rai_app.geometry_helpers import (
     apply_relative_transform,
@@ -63,6 +63,23 @@ class WarehouseTool(BaseROS2Tool):
         entities = self.scene_manager.get_entities(name_filter="box")
         if entities:
             self.scene_manager.assign_entities_to_slots(entities)
+
+    def gt_check_if_package_is_present_in_requested_pose(
+        self, x: float, y: float, z: float
+    ) -> bool:
+        """Check if a package is present in the requested pose."""
+        entities = self.scene_manager.get_entities(name_filter="cardboard")
+        for entity_name, entity_state in entities.items():
+            if (
+                abs(entity_state.pose.position.x - x) < 0.1
+                and abs(entity_state.pose.position.y - y) < 0.1
+                and abs(entity_state.pose.position.z - z) < 0.1
+            ):
+                logging.info(
+                    f"[GT] Package {entity_name} is present in the requested pose"
+                )
+                return True
+        return False
 
     def filter_for_slots_in_arm_range(self, slots: List[Slot]) -> List[Slot]:
         # arm can't access top slots
@@ -654,6 +671,7 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
             Human-readable description of the outcome, including the target
             inspection slot or an error message.
         """
+
         top_gripping_point = Pose(
             position=Point(x=x, y=y, z=z),
         )
@@ -686,6 +704,22 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
             placing_point = apply_relative_transform(
                 target_slot_pose, relative_transform
             )
+
+            strategy = determine_strategy(
+                object_pose, self.kairos_controller.safe_low_approach
+            )
+
+            self.kairos_controller.nav_ctrl.approach_target(
+                object_pose, strategy.get_staging_distance()
+            )
+
+            # TODO(boczekbartek): Use VLM instead of GT
+            gt_package_present = self.gt_check_if_package_is_present_in_requested_pose(
+                x, y, z
+            )
+
+            if not gt_package_present:
+                return "Package is no longer present in the requested pose"
 
             self.kairos_controller.approach_and_pick(object_pose, top_gripping_point)
             self.kairos_controller.navigate_to_and_place(
@@ -745,6 +779,17 @@ class ThrowTrashOutTool(WarehouseTool):
         bin_pose = list(
             self.scene_manager.slots_collections["GarbageContainer01"].slots.values()
         )[0].origin_pose
+        self.kairos_controller.disable_safe_low_approach()
+        strategy = determine_strategy(
+            trash_pose, self.kairos_controller.safe_low_approach
+        )
+        self.kairos_controller.nav_ctrl.approach_target(
+            trash_pose, strategy.get_staging_distance()
+        )
+        if not self.gt_check_if_package_is_present_in_requested_pose(x, y, z):
+            logging.info("[GT] Trash is no longer present in the requested pose: ")
+            return "Trash is no longer present in the requested pose"
+
         try:
             self.kairos_controller.throw_object_to_bin(
                 bin_slot_pose=bin_pose,

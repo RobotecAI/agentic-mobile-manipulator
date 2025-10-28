@@ -198,20 +198,22 @@ class SceneManager:
             desc="Spawning entities",
             total=len(slots),
         ):
-            should_rotate = random.random() < percent_of_rotated_objects
-            if should_rotate:
-                # rotate additional 90 degrees
-                offset_yaw = 1.57
-            else:
-                offset_yaw = 0.0
+            if np.isclose(offset_yaw, 0.0):
+                should_rotate = random.random() < percent_of_rotated_objects
+                if should_rotate:
+                    # rotate additional 90 degrees
+                    offset_yaw = 1.57
+                else:
+                    offset_yaw = 0.0
             simulation_name = self.spawn_on_spot(
-                slot,
-                object_name,
-                item,
-                std_xy,
-                std_yaw,
-                offset_yaw,
+                slot_name=slot,
+                object_name=object_name,
+                item_stored=item,
+                std_xy=std_xy,
+                std_yaw=std_yaw,
+                offset_yaw=offset_yaw,
             )
+            self.logger.info(f"Simulation name: {simulation_name}")
             simulation_names.append(simulation_name)
         return simulation_names
 
@@ -414,6 +416,30 @@ class SceneManager:
         for name, ent in entities.items():
             if "grippingpoint" not in name.lower():
                 filtered_entities[name] = ent
+
+        return filtered_entities
+
+    def filter_out_entities_in_trash(self, entities: Dict[str, EntityState]):
+        filtered_entities = {}
+        for name, ent in entities.items():
+            # Filter out entities that are in trash area coordinates
+            if (
+                6.5 <= ent.pose.position.x <= 9.0
+                and 21.0 <= ent.pose.position.y <= 23.0
+            ):
+                continue
+            filtered_entities[name] = ent
+
+        return filtered_entities
+
+    def filter_out_entities_that_are_not_anomalies(
+        self, entities: Dict[str, EntityState]
+    ):
+        filtered_entities = {}
+        for name, ent in entities.items():
+            if "__anomaly__" not in name.lower():
+                continue
+            filtered_entities[name] = ent
 
         return filtered_entities
 
@@ -1028,17 +1054,21 @@ class SceneManager:
         filtered_entities = self.filter_out_gripping_point_entites(
             entities=all_entities
         )
-
+        filtered_entities = self.filter_out_entities_in_trash(
+            entities=filtered_entities
+        )
+        filtered_entities = self.filter_out_entities_that_are_not_anomalies(
+            entities=filtered_entities
+        )
         obj = self.find_nearest_out_of_slot_in_fov(
             camera_pose=trash_notice_pose,
             entities_states=filtered_entities,
             filter_poses=filter_poses,
         )
-
         if obj:
             trash_name = obj[0]
             trash_gripping_point = self.get_top_gripping_point(trash_name)
-            self.logger.debug(
+            self.logger.info(
                 f"Trash detected: {trash_name} at pose {trash_gripping_point}"
             )
             return trash_name, trash_gripping_point

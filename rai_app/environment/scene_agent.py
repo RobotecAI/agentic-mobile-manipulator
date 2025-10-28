@@ -495,6 +495,7 @@ class SceneManagerState(SceneManager):
         std_yaw: float = 0.0,
         rotate_90_degrees: bool = False,
         rotate_90_degrees_percentage: float = 0.1,
+        offset_yaw: float = 0.0,
         frame: str = "odom",
     ):
         pose: Pose = copy.deepcopy(self.slots[slot_name].origin_pose)
@@ -511,6 +512,7 @@ class SceneManagerState(SceneManager):
         if rotate_90_degrees:
             if random.random() < rotate_90_degrees_percentage:
                 yaw += random.choice([-np.pi / 2, np.pi / 2])
+        yaw += offset_yaw
 
         # Convert back to quaternion
         q_new = quaternion_from_euler(roll, pitch, yaw)

@@ -223,6 +223,37 @@ class SafetyAgent:
 
         # Store violations in memory and persist to file
         self.violation_storage.store_violations(violations)
+        new_violations = []
+        for violation in violations:
+            if (
+                "applicable_regulations" not in violation
+                or len(violation["applicable_regulations"]) == 0
+            ):
+                self.get_logger().info(
+                    f"Violation {violation['hazard']} is not applicable to any regulation - skipping"
+                )
+                continue
+            new_violations.append(violation)
+        violations = new_violations
+        agent_str_output = ""
+        for violation in violations:
+            agent_str_output += f"Hazard: {violation['hazard']}\n"
+            agent_str_output += f"Severity: {violation['severity']}\n"
+            agent_str_output += f"Rationale: {violation['rationale']}\n"
+            agent_str_output += "Applicable Regulations:\n:"
+            if (
+                "applicable_regulations" not in violation
+                or len(violation["applicable_regulations"]) == 0
+            ):
+                continue
+            else:
+                for regulation in violation["applicable_regulations"]:
+                    agent_str_output += (
+                        f" - {regulation['regulation_number']}: {regulation['excerpt']}"
+                    )
+            agent_str_output += "\n"
+
+        self.get_logger().info(agent_str_output)
 
         # Publish violations to /safety as JSON string
         payload = json.dumps({"violations": violations}, ensure_ascii=False)
@@ -233,7 +264,7 @@ class SafetyAgent:
             msg_type="std_msgs/msg/String",
         )
         ros2_image = self._build_ros2_image(b64_img)
-        publish_vlm_description(self.connector, ros2_image, payload, "Safety")
+        publish_vlm_description(self.connector, ros2_image, agent_str_output, "Safety")
         self.get_logger().info(
             f"Published {len(violations)} safety violation(s) to {self.safety_topic} and stored in history"
         )
