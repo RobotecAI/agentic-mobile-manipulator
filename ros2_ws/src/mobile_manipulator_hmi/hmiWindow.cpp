@@ -516,7 +516,7 @@ void HMIWindow::buildListTask(){
 
 void HMIWindow::imageCallback(const sensor_msgs::msg::Image::SharedPtr msg, QGraphicsView* view) {
     Q_ASSERT(view); // "GraphicsView is null";
-    if (auto enconding = EncodingMap.find(msg->encoding); enconding != EncodingMap.end()) {
+    if (auto encoding = EncodingMap.find(msg->encoding); encoding != EncodingMap.end()) {
         QImage image(msg->data.data(), static_cast<int>(msg->width), static_cast<int>(msg->height), QImage::Format_RGBA8888);
         // Rotate top camera view 90 degrees left (counterclockwise)
         if (view == ui->topCameraGraphicsView) {

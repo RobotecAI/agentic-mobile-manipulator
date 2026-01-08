@@ -69,7 +69,7 @@ class Layout:
             (x, y) for x in [9.95] for y in np.arange(4.6, 5.5, distance_between + 0.15)
         ]
 
-    def get_botton_left_rectangle_2(self, distance_between):
+    def get_bottom_left_rectangle_2(self, distance_between):
         return [
             (x, y)
             for x in np.arange(4.5, 8, distance_between)

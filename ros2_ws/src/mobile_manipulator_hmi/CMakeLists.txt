@@ -66,7 +66,7 @@ find_package(OpenCV REQUIRED)
 find_package(demo_msgs REQUIRED)               # custom Utilization message
 find_package(rai_interfaces REQUIRED)               # custom Utilization message
 
-# add source directoty to include path
+# add source directory to include path
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # --- nlohmann/json dependency ---

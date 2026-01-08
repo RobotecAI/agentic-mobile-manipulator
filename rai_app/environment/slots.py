@@ -211,7 +211,7 @@ class SlotsCollection:
         orientations_list: List[Quaternion] = []
         for slot in self.slots.values():
             orient = slot.origin_pose.orientation
-            # quaterion is unhasable so use a tuple here
+            # quaternion is unhashable so use a tuple here
             orient_tuple = (orient.x, orient.y, orient.z, orient.w)
             if orient_tuple not in orientations:
                 orientations.add(orient_tuple)
@@ -275,7 +275,7 @@ def get_all_slots_from_file(filepath: str) -> Dict[str, SlotsCollection]:
     # so it is not possible to get it via python api
     # for now it is stored in file
 
-    # they will be named like table1_spot1, so we will extract collcetion from name
+    # they will be named like table1_spot1, so we will extract collection from name
     # sample data:
     # name,      id ?            , x,     y,    z,    qx,   qy,   qz,   qw
     # RackSlot2,[129235007734410],23.737,29.749,0.850,0.000,0.000,0.707,0.707

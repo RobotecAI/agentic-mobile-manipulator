@@ -49,7 +49,7 @@ def test_embeddings_model() -> None:
 def test_reranker_model() -> None:
     MODEL = "Qwen3-Reranker:0.6b"
     QUERY = (
-        "Retrive documents relevant to the described situation: "
+        "Retrieve documents relevant to the described situation: "
         "A woman is wearing a helmet at a construction site"
     )
     DOCUMENTS = [

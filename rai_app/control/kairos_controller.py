@@ -256,7 +256,7 @@ class KairosController:
         self.navigate_to_and_pick(object_pose, gripping_point)
         self.navigate_to_and_place(target_slot_pose, placing_point)
 
-    def allign_object_with_slot(self, slot_pose: Pose, entity_name: str):
+    def align_object_with_slot(self, slot_pose: Pose, entity_name: str):
         obj_pose = self.scene_manager.get_pose(entity_name=entity_name)
         yaw_diff = get_yaw_difference(obj_pose, slot_pose)
         self.enable_safe_low_approach()

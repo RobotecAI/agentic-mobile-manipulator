@@ -290,7 +290,7 @@ It populates ROS 2 TF tree with the following frames:
 **Important Note:**
 
 The TF tree assumes that the robot localization is not a part evaluated in the simulation.
-Therefore, the `odom` frame is static and coincides with the `world` frame, and `ego_base_footprint` localization is direclty
+Therefore, the `odom` frame is static and coincides with the `world` frame, and `ego_base_footprint` localization is directly
 obtained from the simulation engine as ground truth. In a real-world scenario, the `odom` frame would be updated based on odometry data,
 and the `world` frame would be established by a SLAM or localization system.
 
@@ -340,7 +340,7 @@ The simulator provides the following ROS 2 actions for advanced control:
 
 Robotic stack for the simulated RB-Kairos+ robot is provided in the `robotec_kairos_ur10` ROS 2 package provided with the project.
 This package includes configurations for robot description, MoveIt 2 setup for motion planning, and launch files to start the simulation along with necessary ROS 2 nodes.
-This package provide launch files to control robot base and manipulator. It also includes neccessary resources like static map of obstacles in the warehouse environment for navigation.
+This package provide launch files to control robot base and manipulator. It also includes necessary resources like static map of obstacles in the warehouse environment for navigation.
 
 ## Environment Interaction
 

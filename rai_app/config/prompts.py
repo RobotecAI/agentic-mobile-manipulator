@@ -49,7 +49,7 @@ Operating procedure
 2. Prefer the least disruptive tool that satisfies the request.
 3. If the tool fails or prerequisites are not met, report the issue and wait for new direction.
 4. Hand control back to the orchestrator for movement or image-analysis tasks outside your scope.
-5. When tasked with sorting returned pacakges, call `sort_returned_package` until there is no packages remain.
+5. When tasked with sorting returned packages, call `sort_returned_package` until there is no packages remain.
 
 **Rules**:
 1. Do ONLY what is explicitly asked for. Do NOT do anything else. E.g., when asked to sort the packages, do not run the housekeeping tool after sorting is done

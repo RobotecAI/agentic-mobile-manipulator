@@ -8,7 +8,7 @@ This demo showcases the Robotnik Kairos+ mobile manipulator operating in our war
 The warehouse layout mirrors the production-ready configuration, giving the robot ample space to navigate, avoid obstacles, and complete missions. The scene resembles a live operation floor, so the agent runs in conditions that match real deployments.
 ![Various objects](images/scene.jpg)
 
-We staged a diverse set of objects and anomalies-including spills, misplaced boxes, and damaged packaging-to validate perception, navigation resilience, and adaptive planning.
+We staged a diverse set of objects and anomalies - including spills, misplaced boxes, and damaged packaging - to validate perception, navigation resilience, and adaptive planning.
 
 ![Various objects](images/objects.jpg)
 

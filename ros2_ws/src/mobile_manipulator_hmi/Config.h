@@ -57,7 +57,7 @@ namespace HardcodedConfig {
 
     // Frequencies are given in Hertz
     constexpr static float OrchestratorHeartbeatFrequency = 0.2f;
-    constexpr static float InpsectionFrequency = 0.2f;
+    constexpr static float InspectionFrequency = 0.2f;
     constexpr static float SafetyFrequency = 0.2f;
 
     const static std::string taskAPrompt = "Do Sort Package Returns";

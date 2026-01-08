@@ -1,4 +1,4 @@
-image: robotic_manipluation.pgm
+image: robotic_manipulation.pgm
 mode: trinary
 resolution: 0.05
 origin: [-2.63, -1.19, 0]

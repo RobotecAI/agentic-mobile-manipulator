@@ -38,7 +38,7 @@ def main():
             # method make_call_to_model
 
             # (jmatejcz) NOTE uncomment this if you want
-            # to test max load as both models will be querried at the same time
+            # to test max load as both models will be queried at the same time
             # agent.invoke({"messages": messages})
             time.sleep(1)
         except Exception:

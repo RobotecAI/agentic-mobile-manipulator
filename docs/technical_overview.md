@@ -5,7 +5,7 @@ This demo is built on top of RobotecAI's RAI framework, combining the open-sourc
 ## Platform Stack
 
 - **Agent layer (`rai_app/agents/`)**: Wraps RAI's Megamind coordinator with executor agents for housekeeping, package movement, and image analysis. LangGraph checkpointing lets the orchestrator pause, resume, and reprioritize queued tasks while streaming status back to ROS 2 topics.
-- **Tooling layer (`rai_app/agents/tools.py`)**: Bridges agent intents to robot skills-navigation, manipulation, anomaly triage-through ROS 2 actions, services, and scene queries. Warehouse context providers preload rack assignments and slot metadata so the planners can reason about inventory layout.
+- **Tooling layer (`rai_app/agents/tools.py`)**: Bridges agent intents to robot skills - navigation, manipulation, anomaly triage-through ROS 2 actions, services, and scene queries. Warehouse context providers preload rack assignments and slot metadata so the planners can reason about inventory layout.
 - **ROS 2 integration (`rai_app/environment/`, `rai_app/control/`)**: `SceneManager` in environment manages O3DE entities and slot metadata, while `KairosController` and other control modules handle MoveIt planning and Nav2 trajectories. These expose high-level routines (pick-and-place, rotate, throw to bin) that the agents call via tools.
 - **Perception services**: The inspection agent subscribes to camera feeds, triggers a VLM anomaly classifier, and publishes high-priority tasks. The safety agent runs a regulation-focused VLM + RAG pipeline to log and broadcast violations.
 

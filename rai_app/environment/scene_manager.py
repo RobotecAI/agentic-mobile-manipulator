@@ -411,7 +411,7 @@ class SceneManager:
                 entities[name] = response.states[i]
             return entities
 
-    def filter_out_gripping_point_entites(self, entities: Dict[str, EntityState]):
+    def filter_out_gripping_point_entities(self, entities: Dict[str, EntityState]):
         filtered_entities = {}
         for name, ent in entities.items():
             if "grippingpoint" not in name.lower():
@@ -495,7 +495,7 @@ class SceneManager:
         """
         assigned_slots = set()
 
-        filtered_entities = self.filter_out_gripping_point_entites(entities=entities)
+        filtered_entities = self.filter_out_gripping_point_entities(entities=entities)
 
         # First pass: assign entities to slots
         for ent_name, ent in filtered_entities.items():
@@ -1051,7 +1051,7 @@ class SceneManager:
         if not all_entities:
             raise ValueError("No entities in simulation")
 
-        filtered_entities = self.filter_out_gripping_point_entites(
+        filtered_entities = self.filter_out_gripping_point_entities(
             entities=all_entities
         )
         filtered_entities = self.filter_out_entities_in_trash(
