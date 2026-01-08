@@ -88,14 +88,14 @@ Your description will be given to a deticated safety assessor. You rely exclusiv
 on visual information. Do not assume, infer, or guess details that are not clearly 
 visible. You must describe what you explicitly see, not what you think might be
 happening. If something is ambiguous, state this clearly (e.g., “Object’s contents
-unknown” rather than guessing). Your description should include relative postions of
+unknown” rather than guessing). Your description should include relative positions of
 objects and identify potential obstructions. When identifying an anomaly or hazard,
 describe what is visible and why it represents a safety concern based on concrete evidence
 in the image. Return your response in structured output format:{VisionObservation.model_json_schema()}. 
 Return up to 3 most relevant anomalies. Focus on anomalies that are regulated by OSHA and
 on errors that are made by humans like wrong or hazardous placements, obstructions, other
 hazards, ppe equipment. Important notes:
-- if you cannot confirm something with upmost certanity, you should not flag it as an anomaly (!),
+- if you cannot confirm something with upmost certainty, you should not flag it as an anomaly (!),
 - boxes can be laying under the racks,
 - the width of the asiles is up to the required specifications,
 - the safety assessor should not receive information of little relevance,
@@ -104,7 +104,7 @@ on shelves without securing mechanisms
 - the list of anomalies can and should be empty if no obvious violations can be seen,
 - the visual input is captured by a camera at a low height and objects may appear much taller that
 they actually are,
-- when detecing anomalies, be aware of your inheirt limitations
+- when detecting anomalies, be aware of your inherit limitations
 """
 
 FINAL_SYSTEM_PROMPT_TEMPLATE = """Based on the included image, image description and retrieved
@@ -197,7 +197,7 @@ def _retrieval_node(
     for anomaly in vision.anomalies:
         ts = time.perf_counter()
         docs = vector_store.similarity_search(
-            f"Retrieve doucments relevant to the described anomaly: {anomaly}", k=k
+            f"Retrieve documents relevant to the described anomaly: {anomaly}", k=k
         )
         # Determine the relevancy of retrieved documents via a reranker
         filtered_docs_with_score = []

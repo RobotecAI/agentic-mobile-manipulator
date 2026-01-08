@@ -22,7 +22,7 @@ from langchain_core.callbacks import AsyncCallbackHandler
 from rai.communication.ros2 import ROS2Connector, ROS2HRIMessage, ROS2Message
 
 
-class AgentProgessCallback(AsyncCallbackHandler):
+class AgentProgressCallback(AsyncCallbackHandler):
     def __init__(self, connector: ROS2Connector, logger: logging.Logger | None = None):
         self.connector = connector
         if logger is None:

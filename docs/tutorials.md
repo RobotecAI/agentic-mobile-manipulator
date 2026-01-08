@@ -1,6 +1,6 @@
 # Tutorials
 
-Practical notes for extending the warehouse demo that runs on RobotecAI’s RAI framework. The sections mirror the most frequent customization requests-adding tools, wiring new executors, and updating the simulation scene-and close with a grab bag of extra tips.
+Practical notes for extending the warehouse demo that runs on RobotecAI’s RAI framework. The sections mirror the most frequent customization requests - adding tools, wiring new executors, and updating the simulation scene - and close with a grab bag of extra tips.
 
 ## Creating a Warehouse-Aware Tool
 

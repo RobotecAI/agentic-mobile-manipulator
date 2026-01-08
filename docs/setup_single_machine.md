@@ -19,11 +19,11 @@ git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
 
 #### Set the Root Directory of the Project
 
-Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following line to your `.bashrc` or `.zshrc` file:
+Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following lines to your `.bashrc` or `.zshrc` file:
 
 ```shell
 export DEMO_ROOT=/home/${USER}/MobileManipulatorDemo/
-export O3DE_ROOT=${DEMO_ROOT}/engine/o3de
+export O3DE_ROOT=${DEMO_ROOT}engine/o3de
 ```
 
 #### Install Base Dependencies
@@ -71,7 +71,7 @@ ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path  ${DEMO_ROOT}/gems/o3de-ex
 
 #### Non-canonical Gems
 
-These are gems that are open source but not maintained by O3DF.
+These are gems that are open source but not maintained by O3DE.
 
 ```shell
 cd  ${DEMO_ROOT}/gems

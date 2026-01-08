@@ -67,7 +67,7 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
-    adjusment_node = Node(
+    adjustment_node = Node(
         package='custom_adjustment_nav2',
         executable='adjustment_action_server_node',
         name='adjustment_action_server',
@@ -85,7 +85,7 @@ def generate_launch_description():
         gt_map_pub, 
         map_pub,
         map_lifecycle,
-        adjusment_node,
+        adjustment_node,
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([str(pathlib.Path(
                 get_package_share_directory('robotec_kairos_ur10')).joinpath('launch', 'robotec_navigation.launch.py'))]),

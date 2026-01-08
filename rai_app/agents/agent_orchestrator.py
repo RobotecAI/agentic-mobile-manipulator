@@ -44,7 +44,7 @@ from robotec_kairos_ur10.msg import Anomaly
 
 from rai_app.agents.callbacks import (
     AgentActionsCallback,
-    AgentProgessCallback,
+    AgentProgressCallback,
     OrchestratorTasksNotifier,
 )
 from rai_app.agents.context_providers import WarehouseContext
@@ -173,7 +173,7 @@ class AgentOrchestrator:
         Topic where agent actions are published.
     initial_state_creator : Callable
         Factory that builds the initial agent state from a prompt.
-    recurssion_limit : int
+    recursion_limit : int
         Maximum LangGraph recursion depth.
     langchain_callbacks : list[BaseCallbackHandler]
         Callback handlers attached to agent execution.
@@ -201,7 +201,7 @@ class AgentOrchestrator:
         inspection_topics: List[str],
         action_topic: str,
         initial_state_creator: Callable,
-        recurssion_limit: int,
+        recursion_limit: int,
         langchain_callbacks: List[BaseCallbackHandler],
     ):
         # low priority queue of tasks to execute
@@ -222,7 +222,7 @@ class AgentOrchestrator:
 
         self.initial_state_creator = initial_state_creator
         self.agent_graph = agent
-        self.recurssion_limit = recurssion_limit
+        self.recursion_limit = recursion_limit
         self.agent_callbacks = langchain_callbacks
         self.agent = self.add_checkpointing_to_agent(self.agent_graph)
 
@@ -376,7 +376,7 @@ class AgentOrchestrator:
             initial_state,
             config={
                 "configurable": {"thread_id": task.thread_id},
-                "recursion_limit": self.recurssion_limit,
+                "recursion_limit": self.recursion_limit,
                 "callbacks": self.agent_callbacks,
                 "tags": [f"task-id:{task.id}"],
             },
@@ -596,7 +596,7 @@ def main():
 
     langfuse_handler = CallbackHandler()
 
-    ros2_callback = AgentProgessCallback(connector)
+    ros2_callback = AgentProgressCallback(connector)
     orchestrator = AgentOrchestrator(
         connector=connector,
         agent=agent,
@@ -604,7 +604,7 @@ def main():
         inspection_topics=inspection_topics,
         action_topic="/agent/current_action",
         initial_state_creator=get_initial_megamind_state,
-        recurssion_limit=100,
+        recursion_limit=100,
         langchain_callbacks=[langfuse_handler, ros2_callback],
     )
     asyncio.run(orchestrator.orchestrator_loop())

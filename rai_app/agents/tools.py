@@ -230,7 +230,7 @@ class WarehouseTool(BaseROS2Tool):
             # when both poses not available raise error
             if sides_not_available == 2:
                 raise RuntimeError(
-                    f"Due to robot's constrution limitations approaching rack {collection.tag} is not possible."
+                    f"Due to robot's construction limitations approaching rack {collection.tag} is not possible."
                 )
 
         # Scanning
@@ -621,7 +621,7 @@ class MoveFromCollectionToCollectionTool(WarehouseTool):
             self.kairos_controller.mani_ctrl.move_arm_to_base_pose()
         except RuntimeError:
             raise RuntimeError(
-                f"Due to robot's constrution limitations approaching entity {origin_object_name} is not possible."
+                f"Due to robot's construction limitations approaching entity {origin_object_name} is not possible."
             )
         except Exception as e:
             logging.error(f"Error during move operation: {str(e)}")
@@ -675,7 +675,7 @@ class MoveFromPoseToInspectionAreaTool(WarehouseTool):
         top_gripping_point = Pose(
             position=Point(x=x, y=y, z=z),
         )
-        # NOTE setting z to 0.0 will only work when objeect is picked from the ground
+        # NOTE setting z to 0.0 will only work when object is picked from the ground
         object_pose = Pose(
             position=Point(x=x, y=y, z=0.0),
         )
@@ -833,7 +833,7 @@ class HouseKeepTool(WarehouseTool):
                 yaw_diff = get_yaw_difference(obj_pose, slot.origin_pose)
 
                 if abs(yaw_diff) > 0.35:
-                    self.kairos_controller.allign_object_with_slot(
+                    self.kairos_controller.align_object_with_slot(
                         slot_pose=slot.origin_pose, entity_name=obj
                     )
                     # Refresh data after each correction
@@ -1034,7 +1034,7 @@ class SortReturnedPackageTool(WarehouseTool):
 
 class InspectionWarehouseRouteTool(WarehouseTool):
     name: str = "route_around_warehouse"
-    description: str = "Performs a route around the warehouse for inspection purpouses"
+    description: str = "Performs a route around the warehouse for inspection purposes"
 
     def _run(self):
         self.kairos_controller.nav_ctrl.warehouse_route()

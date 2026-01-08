@@ -109,7 +109,7 @@ class SceneManagerState(SceneManager):
             ),
             (
                 "towers_right_side_of_left_rectangle",
-                layout.get_botton_left_rectangle_2,
+                layout.get_bottom_left_rectangle_2,
             ),
         ]
 
@@ -607,11 +607,11 @@ class SceneAgent(BaseAgent):
             ),
             (
                 "towers_left_side_of_left_rectangle",
-                layout.get_botton_left_rectangle_2,
+                layout.get_bottom_left_rectangle_2,
             ),
             (
                 "towers_right_side_of_left_rectangle",
-                layout.get_botton_left_rectangle_2,
+                layout.get_bottom_left_rectangle_2,
             ),
         ]
         return Trigger.Response(success=True)

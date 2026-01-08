@@ -205,7 +205,7 @@ class EntitiesAndSlotsPublisher(Node):
     def publish_entities_markers(self):
         """Get all entities and publish their markers"""
         entities = self.scene_manager.get_entities(name_filter="box")
-        entities = self.scene_manager.filter_out_gripping_point_entites(
+        entities = self.scene_manager.filter_out_gripping_point_entities(
             entities=entities
         )
         if not entities:
