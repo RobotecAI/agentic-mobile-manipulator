@@ -1068,9 +1068,6 @@ class SceneManager:
         if obj:
             trash_name = obj[0]
             trash_gripping_point = self.get_top_gripping_point(trash_name)
-            self.logger.info(
-                f"Trash detected: {trash_name} at pose {trash_gripping_point}"
-            )
             return trash_name, trash_gripping_point
         else:
             raise ValueError("Trash pose not detected")

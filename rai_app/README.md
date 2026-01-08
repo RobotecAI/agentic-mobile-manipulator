@@ -158,27 +158,20 @@ tasks queue topic-> /orchestrator/tasks_queue, std_msgs/msg/String
 ## Setup and Run
 
 1. Follow the basic setup instructions [here](../docs/setup.md).
-2. Launch the simulation.
-3. launch the robotic stack
+2. Setup your vendor and model in config [here](../config.toml). If using default openai, remember to set OPENAI_API_KEY env.
+3. Launch the simulation.
+4. launch the robotic stack
 
 ```bash
 ./scripts/run_ros2_stack.sh
 ```
 
-3. Spawn objects in the simulation using the script:
+5. Spawn objects in HMI, chosing from different scenarios
 
-```bash
-uv run scripts/populate_scene.py
-```
-
-5. Run orchestrator:
+6. Run orchestrator:
 
 ```bash
 uv run rai_app/agents/agent_orchestrator.py
 ```
 
-6. Send tasks via topcis:
-
-```bash
-ros2 topic pub --once /user_tasks std_msgs/String "data: 'Do housekeeping'"
-```
+7. Send tasks via HMI

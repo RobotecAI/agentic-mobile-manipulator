@@ -1,38 +1,38 @@
 [general]
-llm_model = "gpt-oss-20b"
-llm_base_url = "http://127.0.0.1:8080/v1"
+llm_model = "gpt-5-mini"
+llm_base_url = "https://api.openai.com/v1"
 llm_reasoning = false
-vlm_model = "LFM2-VL-3B-FT"
-vlm_base_url = "http://127.0.0.1:8081/v1"
+vlm_model = "gpt-5-mini"
+vlm_base_url = "https://api.openai.com/v1"
 vlm_reasoning = false
 
 # megamind agent utilizes llm for task delegation
 # to agents using both llm and vlm for task execution
 [megamind_agent]
-llm_model = "gpt-oss-20b"
-llm_base_url = "http://127.0.0.1:8080/v1"
-vlm_model = "LFM2-VL-3B-FT-BOX"
-vlm_base_url = "http://127.0.0.1:8084/v1"
+llm_model = "gpt-5-mini"
+llm_base_url = "https://api.openai.com/v1"
+vlm_model = "gpt-5-mini"
+vlm_base_url = "https://api.openai.com/v1"
 llm_reasoning = false
 vlm_reasoning = false
 
 # inspection agent uses vlm to determine anomalies in the image
 [inspection_agent]
-vlm_model = "LFM2-VL-3B-FT"
-vlm_base_url = "http://127.0.0.1:8081/v1"
+vlm_model = "gpt-5-mini"
+vlm_base_url = "https://api.openai.com/v1"
 vlm_reasoning = false
 vlm_temperature = 0.0
 
 [condition_agent]
-vlm_model = "LFM2-VL-3B-FT-BOX"
-vlm_base_url = "http://127.0.0.1:8084/v1"
+vlm_model = "gpt-5-mini"
+vlm_base_url = "https://api.openai.com/v1"
 vlm_reasoning = false
 vlm_temperature = 0.1
 
 # safety agent uses vlm to determine anomalies in the image
 # and embeddings to determine OSHA safety violations
 [safety_agent]
-vlm_model = "LFM2-VL-3B-FT"
+vlm_model = "gpt-5-mini"
 vlm_base_url = "http://127.0.0.1:8081/v1"
 vlm_reasoning = false
 vlm_temperature = 0.0
