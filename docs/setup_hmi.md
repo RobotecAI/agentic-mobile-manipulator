@@ -21,7 +21,6 @@ colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 ```shell
 ros2 launch mobile_manipulator_hmi hmi_launch.py
-
 ```
 
 ## ROS2 interfaces provided by the GUI

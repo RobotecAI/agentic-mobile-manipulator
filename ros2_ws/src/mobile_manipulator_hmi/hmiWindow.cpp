@@ -55,13 +55,13 @@ void CallService(QWidget *parent, rclcpp::Node::SharedPtr &node,
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
     auto result_future = client->async_send_request(request);
 
-    // Wait for up to 10 seconds for the result
+    // Wait for up to 60 seconds for the result
     auto status = rclcpp::spin_until_future_complete(
-        node, result_future, std::chrono::seconds(20));
+        node, result_future, std::chrono::seconds(60));
 
     if (status != rclcpp::FutureReturnCode::SUCCESS) {
         QMessageBox::warning(parent, "Service Call Timeout",
-                             "Service did not respond within 10 seconds.");
+                             "Service did not respond within 60 seconds.");
         return;
     }
 
@@ -315,6 +315,7 @@ HMIWindow::HMIWindow(QWidget *parent)
     cleanup_srv_ = node_->create_client<std_srvs::srv::Trigger>(HardcodedConfig::CleanupService);
 
     // buttons
+    ui->RestartButton->setEnabled(false);
     connect(ui->RestartButton, &QPushButton::clicked, [this]() {
         CallService(this, node_, restart_srv_);
     });
