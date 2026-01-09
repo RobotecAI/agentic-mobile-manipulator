@@ -202,9 +202,10 @@ class SceneManager:
                 should_rotate = random.random() < percent_of_rotated_objects
                 if should_rotate:
                     # rotate additional 90 degrees
-                    offset_yaw = 1.57
+                    offset_yaw = random.choice([1.57, -1.57, 3.14])
                 else:
                     offset_yaw = 0.0
+
             simulation_name = self.spawn_on_spot(
                 slot_name=slot,
                 object_name=object_name,

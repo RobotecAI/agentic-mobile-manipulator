@@ -104,7 +104,6 @@ def get_all_slots():
     return sorted(filtered_slots_tags)
 
 
-@pytest.mark.navigate_to_slot
 @pytest.mark.parametrize("slot_name", get_all_slots())
 def test_navigate_to_slot(
     slot_name: str,
