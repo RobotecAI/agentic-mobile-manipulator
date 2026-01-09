@@ -68,6 +68,7 @@ def main():
     parser.add_argument("--spawn-anomalies", action="store_true")
     parser.add_argument("--spawn-only-table", action="store_true")
     parser.add_argument("--spawn-only-rack", action="store_true")
+    parser.add_argument("--rotated", action="store_true")
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -118,7 +119,7 @@ def main():
                 spawn_entity_types,
                 items_stored,
                 std_yaw=0.03,
-                percent_of_rotated_objects=0.1,
+                percent_of_rotated_objects=1.0 if args.rotated else 0.0,
             )
         if not args.spawn_only_rack:
             spawn_slot_names, spawn_entity_types, items_stored = load_spawn_config(
