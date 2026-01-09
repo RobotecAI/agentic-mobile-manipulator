@@ -1,0 +1,55 @@
+name: Build and push Docker image
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push ROS 2 image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.ros2
+          push: true
+          tags: |
+            mmajekrobotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
+
+      - name: Build and push Agents image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.agents
+          push: true
+          build-args: |
+            ROS2_IMAGE=mmajekrobotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
+          tags: |
+            mmajekrobotecai/mobile-manipulator-demo-agents${{ github.ref_name == 'development' && '-development' || '' }}:latest
+
+      - name: Build and push O3DE image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.o3de
+          push: true
+          build-args: |
+            ROS2_IMAGE=mmajekrobotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
+          tags: |
+            mmajekrobotecai/mobile-manipulator-demo-o3de${{ github.ref_name == 'development' && '-development' || '' }}:latest

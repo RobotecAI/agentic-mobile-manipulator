@@ -41,6 +41,7 @@ The demo is showcased at ROSCon 2025 in Singapore, presented jointly by Robotec.
 
 ## Documentation
 
+- [Quickstart Guide (docker compose)](./docs/quickstart.md)
 - [Demo overview](./docs/demo.md)
 - [Setup instructions](./docs/setup.md)
 - [Running instructions](./docs/running.md)

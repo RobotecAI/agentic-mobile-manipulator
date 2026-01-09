@@ -1,0 +1,79 @@
+services:
+  sim:
+    image: mmajekrobotecai/mobile-manipulator-demo-o3de:latest
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+      - ./start_sim.sh:/root/MobileManipulatorDemo/start_sim.sh
+    entrypoint: /ros_entrypoint.sh
+    command: /root/MobileManipulatorDemo/start_sim.sh
+    networks:
+      - ros2_bridge
+
+  stack:
+    image: mmajekrobotecai/mobile-manipulator-demo-agents:latest
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+      - ../scripts/run_ros2_stack.sh:/root/MobileManipulatorDemo/run_ros2_stack.sh
+      - ./start_hmi_and_stack.sh:/root/MobileManipulatorDemo/start_hmi_and_stack.sh
+
+    entrypoint: /ros_entrypoint.sh
+    command: /root/MobileManipulatorDemo/start_hmi_and_stack.sh
+    networks:
+      - ros2_bridge
+
+  agents:
+    image: mmajekrobotecai/mobile-manipulator-demo-agents:latest
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+      - ./start_orchestrator.sh:/root/MobileManipulatorDemo/start_orchestrator.sh
+
+    entrypoint: /ros_entrypoint.sh
+    command: /root/MobileManipulatorDemo/start_orchestrator.sh
+    networks:
+      - ros2_bridge
+
+networks:
+  ros2_bridge:
+    driver: bridge
