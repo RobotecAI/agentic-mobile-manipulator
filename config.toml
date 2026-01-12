@@ -18,7 +18,7 @@ vlm_reasoning = false
 
 # inspection agent uses vlm to determine anomalies in the image
 [inspection_agent]
-vlm_model = "gpt-5-mini"
+vlm_model = "gpt-5-nano"
 vlm_base_url = "https://api.openai.com/v1"
 vlm_reasoning = false
 vlm_temperature = 0.0
