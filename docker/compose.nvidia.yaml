@@ -42,6 +42,7 @@ services:
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ../scripts/run_ros2_stack.sh:/root/MobileManipulatorDemo/run_ros2_stack.sh
       - ./start_hmi_and_stack.sh:/root/MobileManipulatorDemo/start_hmi_and_stack.sh
+      - ../config.toml:/root/MobileManipulatorDemo/config.toml 
 
     entrypoint: /ros_entrypoint.sh
     command: /root/MobileManipulatorDemo/start_hmi_and_stack.sh
@@ -68,6 +69,7 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ./start_orchestrator.sh:/root/MobileManipulatorDemo/start_orchestrator.sh
+      - ../config.toml:/root/MobileManipulatorDemo/config.toml 
 
     entrypoint: /ros_entrypoint.sh
     command: /root/MobileManipulatorDemo/start_orchestrator.sh
