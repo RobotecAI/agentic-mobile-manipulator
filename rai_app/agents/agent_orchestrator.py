@@ -39,7 +39,6 @@ from rai.communication.ros2 import (
     wait_for_ros2_services,
     wait_for_ros2_topics,
 )
-from rclpy.node import Node
 from robotec_kairos_ur10.msg import Anomaly
 
 from rai_app.agents.callbacks import (
@@ -89,8 +88,8 @@ class TaskExecution(BaseModel):
     priority: Literal["low", "high"] = "low"
 
 
-class TaskSubscriber(Node):
-    """ROS 2 subscriber node for orchestrator task intake.
+class TaskSubscriber:
+    """ROS 2 subscriber for orchestrator task intake.
 
     Parameters
     ----------
@@ -123,7 +122,6 @@ class TaskSubscriber(Node):
         inspection_topics: List[str],
         inspection_callback,
     ):
-        super().__init__("task_subscriber")
         self.connector = connector
         self.new_task_callback = new_task_callback
         self.inspection_callback = inspection_callback
@@ -389,9 +387,6 @@ class AgentOrchestrator:
 
             await self.action_callback.process_stream_chunk(chunk)
 
-    def spin_task_subscriber(self):
-        rclpy.spin(self.task_subscriber)
-
     def task_notifier(self):
         """Publish task queue status periodically in a background thread.
 
@@ -441,10 +436,6 @@ class AgentOrchestrator:
             Executes indefinitely, orchestrating task sequencing and agent
             invocation until ``self.running`` becomes ``False``.
         """
-
-        sub_thread = threading.Thread(target=self.spin_task_subscriber, daemon=True)
-        sub_thread.start()
-        self._threads.append(sub_thread)
 
         notification_thread = threading.Thread(target=self.task_notifier, daemon=True)
         notification_thread.start()
