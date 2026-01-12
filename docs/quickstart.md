@@ -5,10 +5,26 @@ This guide will help you get the **Mobile Manipulator Demo** up and running quic
 ## Prerequisites
 
 - [Docker Engine](https://docs.docker.com/engine/install/) installed.
+- **For AMD GPUs**: [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites).
 - **For Nvidia GPUs**: [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed and configured.
-- **For AMD GPUs**: [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites) (specifically `amdgpu-dkms` on the host).
 
-## Preparation
+## 1. Prepare the environment
+
+### 1.1 Clone the repository
+
+```bash
+git clone https://github.com/RobotecAI/golden-hiptage.git
+cd golden-hiptage
+```
+
+### 1.2 Configure the LLM/VLM
+
+config.toml file is used to configure the LLM/VLM models. By default, the demo uses OpenAI.
+If you want to use other models, modify the config.toml accordingly.
+
+## 2. Run the demo
+
+### 2.1 Allow local connections to your X server
 
 Before launching the containers, you need to allow local connections to your X server so the GUI applications (O3DE simulation and HMI) can display on your screen.
 
@@ -18,14 +34,7 @@ Run the following command in your terminal:
 xhost +local:docker
 ```
 
-## Running the Demo
-
-Clone the repository if you haven't already:
-
-```bash
-git clone https://github.com/RobotecAI/golden-hiptage.git
-cd golden-hiptage
-```
+### 2.2 Run the demo
 
 ### Option 1: AMD GPU
 
