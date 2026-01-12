@@ -1,4 +1,6 @@
-# Embodied AI for Autonomous Warehouse Robotics
+# Agentic Mobile Manipulator Demo
+
+_Physical AI for Warehouse Robotics_
 
 <div align="center">
 
@@ -30,7 +32,7 @@ See more in the demo video:
 
 https://github.com/user-attachments/assets/e96c0b01-23c4-4390-8a2c-8e42ad31dfe2
 
-## Architecture & Technology
+### Architecture & Technology Overview
 
 - Hardware platform: **AMD Ryzen™ AI** processor hosting robotics stack and embodied agentic AI multi-agent system
 - Model stack: [**Liquid AI's LFM2-VL**](https://www.liquid.ai/) (Vision-Language Model) optimized for AMD hardware
@@ -39,29 +41,25 @@ https://github.com/user-attachments/assets/e96c0b01-23c4-4390-8a2c-8e42ad31dfe2
 - Simulation setup: Hardware-in-the-loop mirrors real-world deployment for safe testing
 - Benefits: On-device reasoning, low latency, privacy, and seamless simulation-to-hardware transition
 
-## Showcase
+## Running the Demo
 
-The demo is showcased at ROSCon 2025 in Singapore, presented jointly by Robotec.ai, AMD, and Liquid AI. Visit the AMD booth (17/18) to experience real-time reasoning, task execution, and human-in-the-loop control through the industrial tablet interface.
+The original demo presented at ROSCon 2025 utilized a specific set of models, including custom fine-tunes. To facilitate easy setup, this repository is configured to use cloud vendors as a plug-and-play alternative.
 
-## Documentation
+- Quickstart: [Docker Compose](./docs/quickstart.md)
+- Detailed setup: [Setup Guide](./docs/setup.md)
+- More details: [Table of Contents](./docs/toc.md)
 
-- [Quickstart Guide (docker compose)](./docs/quickstart.md)
-- [Demo overview](./docs/demo.md)
-- [Setup instructions](./docs/setup.md)
-- [Running instructions](./docs/running.md)
-- [Dependencies](./docs/dependencies.md)
+## Acknowledgment
 
-## Contributing
-
-Contributions are welcome! Please open an issue to discuss proposed changes or submit a pull request directly. For larger feature work, share your plan first so we can align on design and interfaces.
+This project was made possible thanks to AMD, whose collaboration enabled the development and joint presentation of the demo—showcased by Robotec.ai, AMD, and Liquid AI at ROSCon 2025 in Singapore.
 
 ## License
 
 This project is licensed under the [Apache 2.0 License](https://opensource.org/licenses/Apache-2.0).
 
-## Contact
+## Contributing
 
-For questions about the demo or collaboration opportunities, please open an issue in this repository.
+Contributions are welcome! Please open an issue to discuss proposed changes or submit a pull request directly.
 
 ---
 
