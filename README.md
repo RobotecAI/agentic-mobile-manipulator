@@ -26,6 +26,10 @@ The demonstration features a fully autonomous warehouse robot capable of percept
 
 The demo illustrates the concept of physical intelligence, where robotics and Agentic AI combine to create adaptable, context-aware systems that can operate reliably in complex industrial settings.
 
+See more in the demo video:
+
+https://github.com/user-attachments/assets/e96c0b01-23c4-4390-8a2c-8e42ad31dfe2
+
 ## Architecture & Technology
 
 - Hardware platform: **AMD Ryzen™ AI** processor hosting robotics stack and embodied agentic AI multi-agent system
