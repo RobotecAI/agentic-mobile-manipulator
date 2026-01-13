@@ -11,10 +11,6 @@ repositories:
     type: git
     url: https://github.com/RobotecAI/o3de-ur-robots-gem.git
     version: 33fc9f1f0629d7d8dd5378958dae774434c9334d
-  ./gems/o3de-ur-robots-gem:
-    type: git
-    url: https://github.com/RobotecAI/o3de-ur-robots-gem.git
-    version: 33fc9f1f0629d7d8dd5378958dae774434c9334d
   ./gems/robotec-o3de-tools:
     type: git
     url: https://github.com/RobotecAI/robotec-o3de-tools.git
