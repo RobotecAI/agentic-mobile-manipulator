@@ -35,6 +35,7 @@ https://github.com/user-attachments/assets/e96c0b01-23c4-4390-8a2c-8e42ad31dfe2
 
 ### Architecture & Technology Overview
 
+- Software stack: ROS 2 and [RAI](https://github.com/RobotecAI/rai)
 - Hardware platform: **AMD Ryzen™ AI** processor hosting robotics stack and embodied agentic AI multi-agent system
 - Model stack: [**Liquid AI's LFM2-VL**](https://www.liquid.ai/) (Vision-Language Model) optimized for AMD hardware
 - Local LLM (gpt-oss-20b) for planning, instruction parsing, and dialogue
