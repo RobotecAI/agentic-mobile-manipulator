@@ -26,7 +26,8 @@ _Physical AI for Warehouse Robotics_
 
 The demonstration features a fully autonomous warehouse robot capable of perception, reasoning, and natural language understanding. It performs warehouse tasks based on human commands, detects anomalies such as spills or blocked paths, and responds appropriately to maintain safety and efficiency.
 
-The demo illustrates the concept of physical intelligence, where robotics and Agentic AI combine to create adaptable, context-aware systems that can operate reliably in complex industrial settings.
+It is the first demo of agentic embodied AI running fully on board of a portable compute platform (**AMD Ryzen™ AI**).
+The demo illustrates agentic approach to physical intelligence, where agents orchestrate a typical robot manipulation and navigation stack. Compared to dedicated robot foundation models, this approach retains steate of the art robotic software in low-level-control, and is low cost due to use of off-shelf general models and fine-tuning with simulation.
 
 See more in the demo video:
 
@@ -51,7 +52,7 @@ The original demo presented at ROSCon 2025 utilized a specific set of models, in
 
 ## Acknowledgment
 
-This project was made possible thanks to AMD, whose collaboration enabled the development and joint presentation of the demo—showcased by Robotec.ai, AMD, and Liquid AI at ROSCon 2025 in Singapore.
+This project was made possible thanks to AMD, who supported the development and joint presentation of the demo. It was showcased by Robotec.ai, AMD, and Liquid AI at ROSCon 2025 in Singapore.
 
 ## License
 
