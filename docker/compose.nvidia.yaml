@@ -23,7 +23,7 @@ services:
     networks:
       - ros2_bridge
 
-  stack:
+  stack: &stack
     image: mmajekrobotecai/mobile-manipulator-demo-agents:latest
     runtime: nvidia
     deploy:
@@ -37,18 +37,49 @@ services:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-
+    entrypoint: /ros_entrypoint.sh
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-      - ../scripts/run_ros2_stack.sh:/root/MobileManipulatorDemo/run_ros2_stack.sh
-      - ./start_hmi_and_stack.sh:/root/MobileManipulatorDemo/start_hmi_and_stack.sh
       - ../config.toml:/root/MobileManipulatorDemo/config.toml 
-
-    entrypoint: /ros_entrypoint.sh
-    command: /root/MobileManipulatorDemo/start_hmi_and_stack.sh
     networks:
       - ros2_bridge
+
+  hmi:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch mobile_manipulator_hmi hmi_launch.py"
+
+  kairos:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch robotec_kairos_ur10 robotec_launch.py"
+
+  utilization_node:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run manipulator_hmi utilization_node"
+
+  nav2_agent:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/nav2_agent.py"
+  
+  moveit2_agent:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/moveit2_agent.py"
+
+  scene_agent:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/scene_agent.py"
+
+  nav_lifecycle_node:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run nav2_lifecycle_manager nav_lifecycle_node"
+
+  inspection_agent:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/inspection_agent.py"
+
+  safety_agent:
+    <<: *stack
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && cd /root/MobileManipulatorDemo && ./scripts/start_safety_agent.sh"
 
   agents:
     image: mmajekrobotecai/mobile-manipulator-demo-agents:latest
@@ -67,13 +98,10 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=all
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-      - ./start_orchestrator.sh:/root/MobileManipulatorDemo/start_orchestrator.sh
       - ../config.toml:/root/MobileManipulatorDemo/config.toml 
 
     entrypoint: /ros_entrypoint.sh
-    command: /root/MobileManipulatorDemo/start_orchestrator.sh
+    command: bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/agent_orchestrator.py"
     networks:
       - ros2_bridge
   
