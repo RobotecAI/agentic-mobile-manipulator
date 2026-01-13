@@ -170,9 +170,10 @@ class SafetyAgent:
                 )
                 b64_img = preprocess_image(image)
                 self.processed_cnt += 1
-            except ValueError:
+            except (ValueError, TimeoutError):
                 # No image available yet
                 continue
+            
 
             now = time.time()
             if now - self.last_processed < self.n_seconds:
