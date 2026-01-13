@@ -67,7 +67,7 @@ services:
 
   scene_agent:
     <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/scene_agent.py"
+    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/environment/scene_agent.py"
 
   nav_lifecycle_node:
     <<: *stack
