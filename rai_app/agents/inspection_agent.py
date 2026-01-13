@@ -188,7 +188,7 @@ class VlmWarehouseInspector(BaseAgent):
                 msg: Image = self.connector.receive_message(
                     self.camera_topic, timeout_sec=3.0
                 ).payload
-            except ValueError:
+            except (ValueError, TimeoutError):
                 self.get_logger().error(
                     f"Failed to receive a message from {self.camera_topic}"
                 )
