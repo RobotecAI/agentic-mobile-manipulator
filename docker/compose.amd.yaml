@@ -79,12 +79,10 @@ services:
       - /dev/kfd:/dev/kfd
       - /dev/dri:/dev/dri
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-      - ./start_orchestrator.sh:/root/MobileManipulatorDemo/start_orchestrator.sh
+      - ../config.toml:/root/MobileManipulatorDemo/config.toml 
 
     entrypoint: /ros_entrypoint.sh
-    command: /root/MobileManipulatorDemo/start_orchestrator.sh
+    command: bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/agent_orchestrator.py"
     networks:
       - ros2_bridge
 
