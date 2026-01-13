@@ -273,6 +273,8 @@ HMIWindow::HMIWindow(QWidget *parent)
     ui->graphicsViewMap->setDragMode(QGraphicsView::RubberBandDrag);
     ui->graphicsViewMap->setRenderHint(QPainter::Antialiasing);
     ui->graphicsViewMap->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    ui->llm_text_field->setText(HardcodedConfig::SelectedLLMModel);
+    ui->vlm_text_field->setText(HardcodedConfig::SelectedVLMModel);
 
     logView_  = new LogView(this);
     queueView_  = new LogView(this);
