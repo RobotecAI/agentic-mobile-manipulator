@@ -132,6 +132,31 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
+### Setting Up llama.cpp (local inference)
+
+> [!TIP]
+> In this example, Vulkan is used as the backend. Choose the appropriate backend based on your setup. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
+
+```shell
+cd ${DEMO_ROOT}
+vcs import --input ${DEMO_ROOT}/inference.repos
+```
+
+```shell
+cd ${DEMO_ROOT}/inference/llama.cpp
+
+cmake -B build -DGGML_VULKAN=1
+cmake --build build --config Release
+```
+
+### Download Model
+
+For every configured model in `config.toml`, download and run the model using the following command:
+
+```shell
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-cli -hf <model/s selected in `config.toml`>
+```
+
 ## Developer Setup
 
 ### Conventional Commits

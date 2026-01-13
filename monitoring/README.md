@@ -31,8 +31,8 @@ On **tested hardware**:
 1. Install dependencies with poetry:
 
    ```bash
-   git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
-   cd MobileManipulatorDemo/monitoring
+   git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
+   cd agentic-mobile-manipulator/monitoring
    poetry install
    ```
 

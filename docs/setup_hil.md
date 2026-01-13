@@ -14,7 +14,7 @@ This repository is compatible with the following system:
 
 ```shell
 cd /home/${USER}
-git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
+git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
 ```
 
 #### Set the Root Directory of the Project
@@ -22,7 +22,7 @@ git clone git@github.com:RobotecAI/MobileManipulatorDemo.git
 Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following line to your `.bashrc` or `.zshrc` file:
 
 ```shell
-export DEMO_ROOT=/home/${USER}/MobileManipulatorDemo/
+export DEMO_ROOT=/home/${USER}/agentic-mobile-manipulator/
 ```
 
 ### Setup ROS 2
@@ -89,6 +89,8 @@ cmake --build build --config Release
 
 ### Download Model
 
+For every configured model in `config.toml`, download and run the model using the following command:
+
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-cli -hf unsloth/Qwen3-14B-GGUF
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-cli -hf <model/s selected in `config.toml`>
 ```
