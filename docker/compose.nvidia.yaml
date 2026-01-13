@@ -44,7 +44,6 @@ services:
       - ../scripts/run_ros2_stack.sh:/root/MobileManipulatorDemo/run_ros2_stack.sh
       - ./start_hmi_and_stack.sh:/root/MobileManipulatorDemo/start_hmi_and_stack.sh
       - ../config.toml:/root/MobileManipulatorDemo/config.toml 
-      - ../rai_app:/root/MobileManipulatorDemo/rai_app
 
     entrypoint: /ros_entrypoint.sh
     command: /root/MobileManipulatorDemo/start_hmi_and_stack.sh
