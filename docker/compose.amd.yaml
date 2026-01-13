@@ -54,6 +54,21 @@ services:
     networks:
       - ros2_bridge
 
+  safety-embeddings:
+    image: mmajekrobotecai/mobile-manipulator-demo-llama:latest
+    build:
+      dockerfile: Dockerfile.llama
+    command: -m /custom_ggufs/Qwen3-Embedding-0.6b_BF16.gguf --embedding -c 4096 -b 2048 -ub 2048 --pooling last --port 8082 --host 0.0.0.0
+    networks:
+      - ros2_bridge
+
+  safety-reranker:
+    image: mmajekrobotecai/mobile-manipulator-demo-llama:latest
+    build:
+      dockerfile: Dockerfile.llama
+    command: -m /custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf --embedding --pooling rank -fa on -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0
+    networks:
+      - ros2_bridge
 networks:
   ros2_bridge:
     driver: bridge
