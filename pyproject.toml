@@ -1,7 +1,7 @@
 [project]
-name = "golden-hiptage"
-version = "0.1.0"
-description = "Add your description here"
+name = "agentic-mobile-manipulator"
+version = "1.0.0"
+description = "Agentic Mobile Manipulator Demo"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [

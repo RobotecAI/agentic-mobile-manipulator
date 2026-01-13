@@ -1,6 +1,6 @@
-# Golden Hiptage: Repository & Architecture Overview
+# Agentic Mobile Manipulator: Repository & Architecture Overview
 
-This document provides a comprehensive guide to navigating the **Golden Hiptage** repository. It explains the project structure, key components, and how they interact to create an autonomous warehouse robot demo.
+This document provides a comprehensive guide to navigating the **Agentic Mobile Manipulator** repository. It explains the project structure, key components, and how they interact to create an autonomous warehouse robot demo.
 
 ## 1. Repository Structure
 

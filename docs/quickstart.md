@@ -13,8 +13,8 @@ This guide will help you get the **Mobile Manipulator Demo** up and running quic
 ### 1.1 Clone the repository
 
 ```bash
-git clone https://github.com/RobotecAI/golden-hiptage.git
-cd golden-hiptage
+git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
+cd agentic-mobile-manipulator
 ```
 
 ### 1.2 Configure the LLM/VLM
