@@ -33,6 +33,8 @@ See more in the demo video:
 
 https://github.com/user-attachments/assets/e96c0b01-23c4-4390-8a2c-8e42ad31dfe2
 
+Backup video link: https://vimeo.com/1138627688/dbfa881a27
+
 ### Architecture & Technology Overview
 
 - Software stack: ROS 2, O3DE and [RAI](https://github.com/RobotecAI/rai)
