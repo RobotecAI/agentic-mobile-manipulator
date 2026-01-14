@@ -31,7 +31,9 @@ The demo illustrates agentic approach to physical intelligence, where agents orc
 
 See more in the demo video:
 
-https://github.com/user-attachments/assets/e96c0b01-23c4-4390-8a2c-8e42ad31dfe2
+https://github.com/user-attachments/assets/4468084b-e950-4af1-ad41-4a17dedbd1e6
+
+Backup video link: https://vimeo.com/1138627688/dbfa881a27
 
 ### Architecture & Technology Overview
 
