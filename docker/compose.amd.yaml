@@ -1,6 +1,6 @@
 services:
   sim:
-    image: mmajekrobotecai/mobile-manipulator-demo-o3de:latest
+    image: robotecai/mobile-manipulator-demo-o3de:latest
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -17,7 +17,7 @@ services:
       - ros2_bridge
 
   stack: &stack
-    image: mmajekrobotecai/mobile-manipulator-demo-agents:latest
+    image: robotecai/mobile-manipulator-demo-agents:latest
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -70,7 +70,7 @@ services:
     command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && cd /root/MobileManipulatorDemo && ./scripts/start_safety_agent.sh"
 
   agents:
-    image: mmajekrobotecai/mobile-manipulator-demo-agents:latest
+    image: robotecai/mobile-manipulator-demo-agents:latest
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -87,7 +87,7 @@ services:
       - ros2_bridge
 
   safety-embeddings:
-    image: mmajekrobotecai/mobile-manipulator-demo-llama:latest
+    image: robotecai/mobile-manipulator-demo-llama:latest
     build:
       dockerfile: Dockerfile.llama
     command: -m /custom_ggufs/Qwen3-Embedding-0.6b_BF16.gguf --embedding -c 4096 -b 2048 -ub 2048 --pooling last --port 8082 --host 0.0.0.0
@@ -95,7 +95,7 @@ services:
       - ros2_bridge
 
   safety-reranker:
-    image: mmajekrobotecai/mobile-manipulator-demo-llama:latest
+    image: robotecai/mobile-manipulator-demo-llama:latest
     build:
       dockerfile: Dockerfile.llama
     command: -m /custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf --embedding --pooling rank -fa on -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0

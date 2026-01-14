@@ -30,7 +30,7 @@ jobs:
           file: docker/Dockerfile.ros2
           push: true
           tags: |
-            mmajekrobotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
+            robotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
 
       - name: Build and push Agents image
         uses: docker/build-push-action@v6
@@ -39,9 +39,9 @@ jobs:
           file: docker/Dockerfile.agents
           push: true
           build-args: |
-            ROS2_IMAGE=mmajekrobotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
+            ROS2_IMAGE=robotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
           tags: |
-            mmajekrobotecai/mobile-manipulator-demo-agents${{ github.ref_name == 'development' && '-development' || '' }}:latest
+            robotecai/mobile-manipulator-demo-agents${{ github.ref_name == 'development' && '-development' || '' }}:latest
 
       - name: Build and push O3DE image
         uses: docker/build-push-action@v6
@@ -50,6 +50,6 @@ jobs:
           file: docker/Dockerfile.o3de
           push: true
           build-args: |
-            ROS2_IMAGE=mmajekrobotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
+            ROS2_IMAGE=robotecai/mobile-manipulator-demo-ros2${{ github.ref_name == 'development' && '-development' || '' }}:latest
           tags: |
-            mmajekrobotecai/mobile-manipulator-demo-o3de${{ github.ref_name == 'development' && '-development' || '' }}:latest
+            robotecai/mobile-manipulator-demo-o3de${{ github.ref_name == 'development' && '-development' || '' }}:latest
