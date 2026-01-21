@@ -91,6 +91,12 @@ services:
     build:
       dockerfile: Dockerfile.llama
     command: -m /custom_ggufs/Qwen3-Embedding-0.6b_BF16.gguf --embedding -c 4096 -b 2048 -ub 2048 --pooling last --port 8082 --host 0.0.0.0
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:8082/ | grep -q 200 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - ros2_bridge
 
@@ -99,6 +105,12 @@ services:
     build:
       dockerfile: Dockerfile.llama
     command: -m /custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf --embedding --pooling rank -fa on -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:8083/ | grep -q 200 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - ros2_bridge
 networks:

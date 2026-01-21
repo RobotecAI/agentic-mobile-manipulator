@@ -62,7 +62,20 @@ docker compose -f docker/compose.nvidia.yaml up
 
 ## Troubleshooting
 
-- **O3DE Doesn't start**: Ensure you have the correct GPU drivers and container toolkit installed. Run `docker compose -f docker/compose.***.yaml up sim` to see the logs.
+- **O3DE Doesn't start**: Ensure you have the correct GPU drivers and container toolkit installed. Run `docker compose -f docker/compose.***.yaml up sim` to see the logs. If logs show `llvmpipe` (software rendering) instead of your NVIDIA GPU, verify NVIDIA Container Toolkit is working:
+
+  1. Check your CUDA version: `nvidia-smi` (look for "CUDA Version")
+  2. Test GPU access: `docker run --rm --gpus all nvidia/cuda:12.8.0-base-ubuntu24.04 nvidia-smi` (adjust Ubuntu version and CUDA version to match your system if needed)
+  3. If this fails, configure the toolkit: `sudo nvidia-ctk runtime configure --runtime=docker` and restart Docker daemon: `sudo systemctl restart docker`
+  4. Note: Snap Docker is incompatible with NVIDIA Container Toolkit due to sandboxing. If using snap Docker, uninstall it (`sudo snap remove --purge docker`) and install official Docker from https://get.docker.com instead.
+
+  Example of llvmpipe (software rendering) detection in logs:
+
+  ```
+  RHISystem:     Enumerated physical device: llvmpipe (LLVM 20.1.2, 256 bits)
+  RHISystem:     Using physical device: llvmpipe (LLVM 20.1.2, 256 bits)
+  ```
+
 - **Display Issues**: If windows don't appear, ensure you ran `xhost +local:docker` and that your `DISPLAY` environment variable is set correctly (`echo $DISPLAY`).
 - **GPU Access**: If the simulation runs slowly or crashes, check your GPU drivers and container toolkit installation.
 - **AMD GPU Access**: Ensure you have passed the correct devices. For more details on running ROCm Docker containers, see the [official AMD documentation](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html).
