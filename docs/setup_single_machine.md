@@ -135,7 +135,7 @@ uv sync
 ### Setting Up llama.cpp (local inference)
 
 > [!TIP]
-> In this example, Vulkan is used as the backend. Choose the appropriate backend based on your setup. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
+> For the demo presented at ROSCon 2025, the Vulkan backend was used. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
 
 ```shell
 cd ${DEMO_ROOT}
