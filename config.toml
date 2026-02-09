@@ -3,7 +3,7 @@ llm_model = "gpt-oss-20b"
 llm_base_url = "http://localhost:8080/v1"
 llm_reasoning = false
 vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8080/v1"
+vlm_base_url = "http://localhost:8081/v1"
 vlm_reasoning = false
 
 # megamind agent utilizes llm for task delegation
@@ -12,20 +12,20 @@ vlm_reasoning = false
 llm_model = "gpt-oss-20b"
 llm_base_url = "http://localhost:8080/v1"
 vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8080/v1"
+vlm_base_url = "http://localhost:8081/v1"
 llm_reasoning = false
 vlm_reasoning = false
 
 # inspection agent uses vlm to determine anomalies in the image
 [inspection_agent]
 vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8080/v1"
+vlm_base_url = "http://localhost:8081/v1"
 vlm_reasoning = false
 vlm_temperature = 0.0
 
 [condition_agent]
 vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8080/v1"
+vlm_base_url = "http://localhost:8081/v1"
 vlm_reasoning = false
 vlm_temperature = 0.1
 
@@ -33,7 +33,7 @@ vlm_temperature = 0.1
 # and embeddings to determine OSHA safety violations
 [safety_agent]
 vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8080/v1"
+vlm_base_url = "http://localhost:8081/v1"
 vlm_reasoning = false
 vlm_temperature = 0.0
 
