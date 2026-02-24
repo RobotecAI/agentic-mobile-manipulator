@@ -135,7 +135,7 @@ uv sync
 ### Setting Up llama.cpp (local inference)
 
 > [!TIP]
-> In this example, Vulkan is used as the backend. Choose the appropriate backend based on your setup. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
+> For the demo presented at ROSCon 2025, the Vulkan backend was used. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
 
 ```shell
 cd ${DEMO_ROOT}
@@ -149,13 +149,16 @@ cmake -B build -DGGML_VULKAN=1
 cmake --build build --config Release
 ```
 
-### Download Model
+### Download Models
 
-For every configured model in `config.toml`, download and run the model using the following command:
+For every configured model in `config.toml`, download the appropriate GGUF file and run it via `llama-server`.
 
-```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-cli -hf <model/s selected in `config.toml`>
-```
+For the default setup, download the following models:
+
+- [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
+- [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) along with [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
+- [Qwen3-Embedding-0.6b](https://robotecai-my.sharepoint.com/:u:/r/personal/bartlomiej_boczek_robotec_ai/Documents/golden-hiptage/agentic_mobile_manipulator/docker/custom_ggufs/Qwen3-Embedding-0.6b_Q8_0.gguf?csf=1&web=1&e=EnZJqR)
+- [Qwen3-Reranker-0.6B](https://robotecai-my.sharepoint.com/:u:/r/personal/bartlomiej_boczek_robotec_ai/Documents/golden-hiptage/agentic_mobile_manipulator/docker/custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf?csf=1&web=1&e=C6XNkR)
 
 ## Developer Setup
 

@@ -47,10 +47,10 @@ Backup video link: https://vimeo.com/1138627688/dbfa881a27
 
 ## Running the Demo
 
-The original demo presented at ROSCon 2025 utilized a specific set of models, including custom fine-tunes. To facilitate easy setup, this repository is configured to use cloud vendors as a plug-and-play alternative.
+The original demo presented at ROSCon 2025 utilized a specific set of models, including custom fine-tunes. You can choose between a local setup or cloud offload for running the demo, as described in the following documentation sections.
 
 - Quickstart: [Docker Compose](./docs/quickstart.md)
-- Detailed setup: [Setup Guide](./docs/setup.md)
+- Detailed ROSCon2025 setup: [Setup Guide](./docs/setup.md)
 - More details: [Table of Contents](./docs/toc.md)
 
 ## Acknowledgment

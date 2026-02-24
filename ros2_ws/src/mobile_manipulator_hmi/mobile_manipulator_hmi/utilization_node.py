@@ -67,7 +67,15 @@ class UtilizationCollector:
 
     @staticmethod
     def _gpu() -> Optional[float]:
-        # Try NVIDIA first
+        # Try AMD
+        try:
+            result = subprocess.check_output(["rocm-smi", "--showuse"], text=True)
+            match = re.search(r"GPU use \(%\):\s+(\d+)", result)
+            return int(match.group(1)) if match else None
+        except FileNotFoundError:
+            pass
+
+        # Try NVIDIA
         try:
             result = subprocess.check_output(
                 ["nvidia-smi", "--query-gpu=utilization.gpu", "--format=csv,noheader"],
@@ -76,14 +84,8 @@ class UtilizationCollector:
             return float(result.strip().rstrip("%"))
         except FileNotFoundError:
             pass
+        return None
 
-        # Try AMD
-        try:
-            result = subprocess.check_output(["rocm-smi", "--showuse"], text=True)
-            match = re.search(r"GPU use \(%\):\s+(\d+)", result)
-            return int(match.group(1)) if match else None
-        except FileNotFoundError:
-            return None
 
     @staticmethod
     def _npu() -> Optional[float]:
