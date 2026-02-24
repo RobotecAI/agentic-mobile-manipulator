@@ -154,31 +154,11 @@ cmake --build build --config Release
 For every configured model in `config.toml`, download the appropriate GGUF file and run it via `llama-server`.
 
 For the default setup, download the following models:
-* [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
-* [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) along with [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
-* [Qwen3-Embedding-0.6b](https://robotecai-my.sharepoint.com/:u:/r/personal/bartlomiej_boczek_robotec_ai/Documents/golden-hiptage/agentic_mobile_manipulator/docker/custom_ggufs/Qwen3-Embedding-0.6b_Q8_0.gguf?csf=1&web=1&e=EnZJqR)
-* [Qwen3-Reranker-0.6B](https://robotecai-my.sharepoint.com/:u:/r/personal/bartlomiej_boczek_robotec_ai/Documents/golden-hiptage/agentic_mobile_manipulator/docker/custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf?csf=1&web=1&e=C6XNkR)
 
-Next, run the models using `llama-server`, each in a separate terminal:
-* GPT-OSS-20B
-```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-Q4_K_M.gguf --port 8080
-```
-
-* LFM2-VL-3B-GGUF
-```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/LFM2-VL-3B_public/LFM2-VL-3B-Q8_0.gguf --mmproj /path/to/downloaded/model/mmproj-LFM2-VL-3B-Q8_0.gguf --port 8081
-```
-
-* Qwen3-Embedding-0.6b
-```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/Qwen3-Embedding-0.6b_Q8_0.gguf --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082
-```
-
-* Qwen3-Reranker-0.6B
-```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/Qwen3-Reranker-0.6B.gguf --embedding --pooling rank -c 4096  -b 2048 -ub 2048 --port 8083
-```
+- [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
+- [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) along with [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
+- [Qwen3-Embedding-0.6b](https://robotecai-my.sharepoint.com/:u:/r/personal/bartlomiej_boczek_robotec_ai/Documents/golden-hiptage/agentic_mobile_manipulator/docker/custom_ggufs/Qwen3-Embedding-0.6b_Q8_0.gguf?csf=1&web=1&e=EnZJqR)
+- [Qwen3-Reranker-0.6B](https://robotecai-my.sharepoint.com/:u:/r/personal/bartlomiej_boczek_robotec_ai/Documents/golden-hiptage/agentic_mobile_manipulator/docker/custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf?csf=1&web=1&e=C6XNkR)
 
 ## Developer Setup
 

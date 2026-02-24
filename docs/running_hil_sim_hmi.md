@@ -28,6 +28,32 @@ To run the inference, execute:
 ${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf <model/s selected in `config.toml`>
 ```
 
+e.g.
+
+````
+* GPT-OSS-20B
+```shell
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-Q4_K_M.gguf --port 8080
+````
+
+- LFM2-VL-3B-GGUF
+
+```shell
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/LFM2-VL-3B_public/LFM2-VL-3B-Q8_0.gguf --mmproj /path/to/downloaded/model/mmproj-LFM2-VL-3B-Q8_0.gguf --port 8081
+```
+
+- Qwen3-Embedding-0.6b
+
+```shell
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/Qwen3-Embedding-0.6b_Q8_0.gguf --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082
+```
+
+- Qwen3-Reranker-0.6B
+
+```shell
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/Qwen3-Reranker-0.6B.gguf --embedding --pooling rank -c 4096  -b 2048 -ub 2048 --port 8083
+```
+
 ## HMI
 
 ### Running the GUI
