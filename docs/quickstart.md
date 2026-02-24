@@ -2,11 +2,15 @@
 
 This guide will help you get the **Mobile Manipulator Demo** up and running quickly using Docker Compose.
 
+> [!IMPORTANT]
+> This guide is designed for running the demo with cloud-based models for a smooth and easy setup.
+> If you’d like to use local models instead, please refer to the [Setup Guide](./setup.md). _Note:_ Running local models requires approximately 48GB of VRAM.
+
 ## Prerequisites
 
+- AMD GPU | AMD Ryzen™ AI
 - [Docker Engine](https://docs.docker.com/engine/install/) installed.
 - **For AMD GPUs**: [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites).
-- **For Nvidia GPUs**: [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed and configured.
 
 ## 1. Prepare the environment
 
@@ -44,20 +48,8 @@ xhost +local:docker
 
 ### 2.2 Run the demo
 
-### Option 1: AMD GPU
-
-If you have an AMD GPU, use the `amd` compose file:
-
 ```bash
-docker compose -f docker/compose.amd.yaml up
-```
-
-### Option 2: Nvidia GPU
-
-If you have an Nvidia GPU, use the `nvidia` compose file:
-
-```bash
-docker compose -f docker/compose.nvidia.yaml up
+docker compose -f docker/compose.yaml up
 ```
 
 ## What to Expect
@@ -70,7 +62,7 @@ docker compose -f docker/compose.nvidia.yaml up
 
 ## Troubleshooting
 
-- **O3DE Doesn't start**: Ensure you have the correct GPU drivers and container toolkit installed. Run `docker compose -f docker/compose.***.yaml up sim` to see the logs.
+- **O3DE Doesn't start**: Ensure you have the correct GPU drivers and container toolkit installed. Run `docker compose -f docker/compose.yaml up sim` to see the logs.
 - **Display Issues**: If windows don't appear, ensure you ran `xhost +local:docker` and that your `DISPLAY` environment variable is set correctly (`echo $DISPLAY`).
 - **GPU Access**: If the simulation runs slowly or crashes, check your GPU drivers and container toolkit installation.
 - **AMD GPU Access**: Ensure you have passed the correct devices. For more details on running ROCm Docker containers, see the [official AMD documentation](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html).
