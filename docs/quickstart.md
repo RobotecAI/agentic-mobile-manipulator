@@ -60,7 +60,7 @@ docker compose -f docker/compose.yaml up
 
 ## Troubleshooting
 
-- **O3DE Doesn't start**: Ensure you have the correct GPU drivers and container toolkit installed. Run `docker compose -f docker/compose.yaml up sim` to see the logs.
+- **O3DE Doesn't start**: Please make sure your GPU drivers and container toolkit are properly installed. For more information about what might be going wrong, try running `docker compose -f docker/compose.yaml up sim` to check the logs. If the issue persists, perform a _graceful shutdown_ of the container/docker compose and then restart it.
 - **Display Issues**: If windows don't appear, ensure you ran `xhost +local:docker` and that your `DISPLAY` environment variable is set correctly (`echo $DISPLAY`).
 - **GPU Access**: If the simulation runs slowly or crashes, check your GPU drivers and container toolkit installation.
 - **AMD GPU Access**: Ensure you have passed the correct devices. For more details on running ROCm Docker containers, see the [official AMD documentation](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html).
