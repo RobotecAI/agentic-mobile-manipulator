@@ -79,7 +79,7 @@ services:
       - /dev/kfd:/dev/kfd
       - /dev/dri:/dev/dri
     volumes:
-      - ../config.toml:/root/MobileManipulatorDemo/config.toml 
+      - ../cloud_config.toml:/root/MobileManipulatorDemo/config.toml 
 
     entrypoint: /ros_entrypoint.sh
     command: bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/agent_orchestrator.py"

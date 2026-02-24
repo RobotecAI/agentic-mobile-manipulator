@@ -28,11 +28,9 @@ cd agentic-mobile-manipulator
 >
 > - config.toml: Configuration for the LLM/VLM models.
 > - cloud_config.toml: Configuration for the cloud LLM/VLM models.
->
->   For the quickstart guide to work, rename the cloud_config.toml to config.toml.
 
-The config.toml file is used to configure the LLM/VLM models. By default, the demo uses OpenAI.
-If you want to use other models, modify the config.toml accordingly.
+The cloud_config.toml file is used to configure the LLM/VLM models. By default, the demo uses OpenAI.
+If you want to use other models, modify the config.toml and compose.yaml (vendor api key environment variable) accordingly.
 
 ## 2. Run the demo
 
