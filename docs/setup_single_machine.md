@@ -157,8 +157,8 @@ For the default setup, download the following models:
 
 - [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
 - [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) along with [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
-- [Qwen3-Embedding-0.6b](https://robotecai-my.sharepoint.com/:u:/r/personal/bartlomiej_boczek_robotec_ai/Documents/golden-hiptage/agentic_mobile_manipulator/docker/custom_ggufs/Qwen3-Embedding-0.6b_Q8_0.gguf?csf=1&web=1&e=EnZJqR)
-- [Qwen3-Reranker-0.6B](https://robotecai-my.sharepoint.com/:u:/r/personal/bartlomiej_boczek_robotec_ai/Documents/golden-hiptage/agentic_mobile_manipulator/docker/custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf?csf=1&web=1&e=C6XNkR)
+- [Qwen3-Embedding-0.6b](https://robotecai-my.sharepoint.com/:u:/g/personal/bartlomiej_boczek_robotec_ai/IQB7tkMkmi34Q6xtTB89N1LxAfod0sMpGT4uTffjo6iW7qc?e=6kLoTi)
+- [Qwen3-Reranker-0.6B](https://robotecai-my.sharepoint.com/:u:/g/personal/bartlomiej_boczek_robotec_ai/IQAgWOVPiyS8RZ1QUVVx6N9gAaOGGrvDnk7Qa0IpSbhlp_8?e=P0b1Ak)
 
 ## Developer Setup
 
