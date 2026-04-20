@@ -370,22 +370,29 @@ class AgentOrchestrator:
         logging.info(f"Starting agent for task: {task.prompt}")
         initial_state = self.initial_state_creator(task.prompt)
 
-        async for chunk in self.agent.astream(
-            initial_state,
-            config={
-                "configurable": {"thread_id": task.thread_id},
-                "recursion_limit": self.recursion_limit,
-                "callbacks": self.agent_callbacks,
-                "tags": [f"task-id:{task.id}"],
-            },
-            subgraphs=True,
-            stream_mode=["messages"],
-        ):
-            if self.stop:
-                logging.error("Stopping the agent...")
-                return
+        # BUG: If the agent orchestrator LLM is running via llama.cpp without the
+        # `--no-prefill-assistant` flag, a ValueError maybe risen by `self.agent.astream()`
+        # method, resulting in premature task termination
+        try:
+            async for chunk in self.agent.astream(
+                initial_state,
+                config={
+                    "configurable": {"thread_id": task.thread_id},
+                    "recursion_limit": self.recursion_limit,
+                    "callbacks": self.agent_callbacks,
+                    "tags": [f"task-id:{task.id}"],
+                },
+                subgraphs=True,
+                stream_mode=["messages"],
+            ):
+                if self.stop:
+                    logging.error("Stopping the agent...")
+                    return
 
-            await self.action_callback.process_stream_chunk(chunk)
+                await self.action_callback.process_stream_chunk(chunk)
+        except ValueError:
+            logging.error("Response parsing error. Stopping the agent...")
+            return
 
     def task_notifier(self):
         """Publish task queue status periodically in a background thread.
