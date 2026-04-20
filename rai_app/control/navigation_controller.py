@@ -99,7 +99,7 @@ class Navigator:
             raise RuntimeError("Result should not be None")
         # BUG: result.success is False, despite the robot behaving as expected
         # Rasing this exception results in task failure
-       
+
         # if not self.result.result().result.success:
         #     raise RuntimeError(
         #         f"Failed to drive on heading: {self.result.result().result.report}"
