@@ -36,9 +36,8 @@ ${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf <model/s selected in
 ```
 
 e.g.
+-  GPT-OSS-20B
 
-````
-* GPT-OSS-20B
 ```shell
 ${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-Q4_K_M.gguf --port 8080
 ````
