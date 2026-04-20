@@ -371,7 +371,7 @@ class AgentOrchestrator:
         initial_state = self.initial_state_creator(task.prompt)
 
         # BUG: If the agent orchestrator LLM is running via llama.cpp without the
-        # `--no-prefill-assistant` flag, a ValueError maybe risen by `self.agent.astream()`
+        # `--no-prefill-assistant` flag, a ValueError may be risen by `self.agent.astream()`
         # method, resulting in premature task termination
         try:
             async for chunk in self.agent.astream(
