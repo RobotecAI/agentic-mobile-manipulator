@@ -32,16 +32,17 @@ ros2 launch mobile_manipulator_hmi hmi_launch.py
 To run the inference, execute:
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf <model/s selected in `config.toml`>
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf <model/s selected in `config.toml`> <args>
 ```
 
-e.g.
+For example, use the following commands to start each of the models. Note that the extra arguments
+are required for a stable operation of the Demo:
 
-````
-* GPT-OSS-20B
+- GPT-OSS-20B
+
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-Q4_K_M.gguf --port 8080
-````
+${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-Q4_K_M.gguf --no-prefill-assistant --port 8080
+```
 
 - LFM2-VL-3B-GGUF
 

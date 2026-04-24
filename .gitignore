@@ -13,7 +13,6 @@ sim/backtrace.log
 sim/imgui.ini
 .env
 .vscode/
-uv.lock
 *.egg-info
 safety_agent_images/
 safety_violations.json

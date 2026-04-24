@@ -171,6 +171,7 @@ tasks queue topic-> /orchestrator/tasks_queue, std_msgs/msg/String
 6. Run orchestrator:
 
 ```bash
+source ${DEMO_ROOT}/ros2_ws/install/setup.bash
 uv run rai_app/agents/agent_orchestrator.py
 ```
 
