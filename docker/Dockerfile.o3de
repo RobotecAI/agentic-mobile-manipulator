@@ -29,16 +29,6 @@ RUN ${O3DE_ROOT}/scripts/o3de.sh register --this-engine
 WORKDIR ${DEMO_ROOT}/gems
 RUN git lfs install --force
 RUN git lfs pull
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path  ${DEMO_ROOT}/gems/o3de-extras/Gems
-
-WORKDIR ${DEMO_ROOT}/gems
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --gem-path ${DEMO_ROOT}/gems/o3de-humanworker-gem
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --gem-path ${DEMO_ROOT}/gems/o3de-ur-robots-gem
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-warehouse-assets
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-generic-assets
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-o3de-tools
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/project_gems/
-RUN ${O3DE_ROOT}/scripts/o3de.sh register  --project-path ${DEMO_ROOT}/sim
 
 # ---- Build O3DE ---- # 
 
