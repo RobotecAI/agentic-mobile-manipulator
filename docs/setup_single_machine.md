@@ -66,27 +66,6 @@ ${O3DE_ROOT}/scripts/o3de.sh register --this-engine
 cd ${DEMO_ROOT}/gems
 git lfs install
 git lfs pull
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path  ${DEMO_ROOT}/gems/o3de-extras/Gems
-```
-
-#### Non-canonical Gems
-
-These are gems that are open source but not maintained by O3DE.
-
-```shell
-cd  ${DEMO_ROOT}/gems
-${O3DE_ROOT}/scripts/o3de.sh register --gem-path ${DEMO_ROOT}/gems/o3de-humanworker-gem
-${O3DE_ROOT}/scripts/o3de.sh register --gem-path ${DEMO_ROOT}/gems/o3de-ur-robots-gem
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-warehouse-assets
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-generic-assets
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-o3de-tools
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/project_gems/
-```
-
-#### Register Project
-
-```shell
-${O3DE_ROOT}/scripts/o3de.sh register  --project-path ${DEMO_ROOT}/sim
 ```
 
 ### Setup ROS 2
