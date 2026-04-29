@@ -21,6 +21,7 @@
     "requirements": "",
     "documentation_url": "",
     "dependencies": [
+        "SimulationInterfaces"
     ],
     "compatible_engines": [
     ],

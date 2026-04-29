@@ -3,6 +3,7 @@
 #include <AzCore/Module/Module.h>
 
 #include "MobileManipulatorDemoSystemComponent.h"
+#include "TrackedBySimulationInterfacesComponent.h"
 
 #include <MobileManipulatorDemo/MobileManipulatorDemoTypeIds.h>
 
@@ -21,6 +22,7 @@ namespace MobileManipulatorDemo
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
             m_descriptors.insert(m_descriptors.end(), {
                 MobileManipulatorDemoSystemComponent::CreateDescriptor(),
+                TrackedBySimulationInterfacesComponent::CreateDescriptor(),
             });
         }
 

@@ -34,6 +34,7 @@ ly_add_target(
         PRIVATE
             AZ::AzGameFramework
             Gem::Atom_AtomBridge.Static
+            Gem::SimulationInterfaces.API
 )
 
 ly_add_target(
@@ -49,6 +50,7 @@ ly_add_target(
         PRIVATE
             Gem::${gem_name}.Private.Object
             AZ::AzCore
+            Gem::SimulationInterfaces.API
 )
 
 # Include the gem name into the Client Module source file
