@@ -1,20 +1,20 @@
 repositories:
   ./gems/o3de-extras:
     type: git
-    url: https://github.com/robotecai/o3de-extras.git
-    version: a653caeb431a3cf2da26c227b57c0fc1829fefcd
+    url: https://github.com/o3de/o3de-extras.git
+    version: fc7f1071560457e41dba0ffd88de6f44f40c1379
   ./gems/o3de-humanworker-gem:
     type: git
     url: https://github.com/RobotecAI/o3de-humanworker-gem.git
-    version: f7bcf0f78383a30d60947de30e06971f15682ce6
+    version: f29a7ca3c1bdcea53b1349bd4d79fab7b9602e7d
   ./gems/o3de-ur-robots-gem:
     type: git
     url: https://github.com/RobotecAI/o3de-ur-robots-gem.git
-    version: 33fc9f1f0629d7d8dd5378958dae774434c9334d
+    version: 8751e756b1e0f7d805f10620b4e11c7c16524099
   ./gems/robotec-o3de-tools:
     type: git
     url: https://github.com/RobotecAI/robotec-o3de-tools.git
-    version: b88b11f3de7185197a4b396d51c6b00c1283d51a
+    version: f8ff72cc2fd249f77c16c5cf43d4341dccc29633
   ./gems/robotec-warehouse-assets:
     type: git
     url: https://github.com/RobotecAI/robotec-warehouse-assets.git

@@ -18,7 +18,7 @@ repositories:
   ros2_ws/src/packages/simulation_interfaces:
     type: git
     url: https://github.com/ros-simulation/simulation_interfaces.git
-    version: 1.0.1
+    version: 2.1.0
   ros2_ws/src/packages/rai_interfaces:
     type: git
     url: https://github.com/RobotecAI/rai_interfaces.git
@@ -27,15 +27,15 @@ repositories:
   ros2_ws/src/packages/control_msgs:
     type: git
     url: https://github.com/ros-controls/control_msgs.git
-    version: da34baa99f66772e73b75d75e19a62cfc3516f75
+    version: ecfc5df44b2490faf80f3650f62b55c549393c1a
   ros2_ws/src/packages/control_toolbox:
     type: git
     url: https://github.com/ros-controls/control_toolbox.git
-    version: 6d0482f6b7ce3e1f44e89e5b44f6f92ced60bae5
+    version: 689ec6f911f1f5cb9ef29d9fd9a0abfc769c7224
   ros2_ws/src/packages/kinematics_interface:
     type: git
     url: https://github.com/ros-controls/kinematics_interface.git
-    version: cd1e80e1012c8de53407086afd800d9cfe276dbd
+    version: fe60f651628ea97a5ca295aa5088e965220af244
   ros2_ws/src/packages/moveit2:
     type: git
     url: https://github.com/moveit/moveit2.git
@@ -47,15 +47,15 @@ repositories:
   ros2_ws/src/packages/realtime_tools:
     type: git
     url: https://github.com/ros-controls/realtime_tools.git
-    version: 842a3c9b69e157ef27b05b755526b953b18c06bd
+    version: 6ea36e1bae2983bdf250134e46ae9c01ff5a6a16
   ros2_ws/src/packages/ros2_control:
     type: git
     url: https://github.com/ros-controls/ros2_control.git
-    version: b315f2b7dcadf2d76a58deb67436213acc8214b6
+    version: 324966525b7e0c7b47a1b6f52cb87017b9d0cc58
   ros2_ws/src/packages/ros2_controllers:
     type: git
     url: https://github.com/ros-controls/ros2_controllers
-    version: 88ce478aba10ecca75f61b1bc3a79d3a7e34187f
+    version: 9e7dc558404ef98de7191af68b7922d07d358f67
   ros2_ws/src/packages/srdfdom:
     type: git
     url: https://github.com/moveit/srdfdom.git
