@@ -39,11 +39,11 @@ repositories:
   ros2_ws/src/packages/moveit2:
     type: git
     url: https://github.com/moveit/moveit2.git
-    version: 950322e0018b86a64258ebc1241b5d0509331ef7
+    version: 2d780de168dc8e1dff597191066209351f5581ee
   ros2_ws/src/packages/moveit_msgs:
     type: git
     url: https://github.com/moveit/moveit_msgs.git
-    version: a76e0d67f356735b0a59313eca2c9a3fe2e17da7
+    version: 8daca8c56914e9cb8bd31d3332e71dd93dde5cc6
   ros2_ws/src/packages/realtime_tools:
     type: git
     url: https://github.com/ros-controls/realtime_tools.git
