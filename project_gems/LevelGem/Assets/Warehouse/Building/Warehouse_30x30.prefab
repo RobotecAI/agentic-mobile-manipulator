@@ -24209,7 +24209,7 @@
             ]
         },
         "Instance_[367928860992204]": {
-            "Source": "Signs/Models/Materials/InspectionStation_Sign.prefab",
+            "Source": "Signs/InspectionStation_Sign.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -24239,7 +24239,7 @@
             ]
         },
         "Instance_[370523021238988]": {
-            "Source": "Signs/Models/Materials/OutboundShipment_Sign.prefab",
+            "Source": "Signs/OutboundShipment_Sign.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -25295,7 +25295,7 @@
             ]
         },
         "Instance_[429501512147660]": {
-            "Source": "Signs/Models/Materials/InspectionStation_Sign.prefab",
+            "Source": "Signs/InspectionStation_Sign.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -25421,7 +25421,7 @@
             ]
         },
         "Instance_[488510067827404]": {
-            "Source": "Signs/Models/Materials/OutboundShipment_Sign.prefab",
+            "Source": "Signs/OutboundShipment_Sign.prefab",
             "Patches": [
                 {
                     "op": "replace",
