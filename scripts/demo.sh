@@ -8,11 +8,45 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
-log()    { echo -e "  ${GREEN}●${RESET} $*"; }
-warn()   { echo -e "  ${YELLOW}!${RESET} $*"; }
-err()    { echo -e "  ${RED}✗${RESET} $*" >&2; exit 1; }
-ok()     { echo -e "  ${GREEN}✓${RESET} $*"; }
-section(){ echo -e "\n${BOLD}${CYAN}$*${RESET}"; }
+log()     { echo -e "  ${GREEN}●${RESET} $*"; }
+warn()    { echo -e "  ${YELLOW}!${RESET} $*"; }
+err()     { echo -e "  ${RED}✗${RESET} $*" >&2; }
+ok()      { echo -e "  ${GREEN}✓${RESET} $*"; }
+section() { echo -e "\n${BOLD}${CYAN}$*${RESET}"; }
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+wait_topic() {
+    local topic="$1" timeout="${2:-120}" elapsed=0 dots=""
+    echo -ne "  ${YELLOW}○${RESET} Waiting for ${topic}"
+    while ! ros2 topic list 2>/dev/null | grep -q "^${topic}$"; do
+        sleep 2; elapsed=$((elapsed + 2)); dots="${dots}."; echo -n "."
+        if [ $elapsed -ge $timeout ]; then
+            printf " ${RED}✗${RESET}\n"
+            err "Timed out waiting for ${topic} (${timeout}s)"
+            return 1
+        fi
+    done
+    printf "\r  ${GREEN}●${RESET} Waiting for ${topic}%s ${GREEN}✓${RESET}\n" "$dots"
+}
+
+check_inference() {
+    log "Waiting 10s for inference servers to initialize..."
+    sleep 10
+    if bash "$DEMO_ROOT/scripts/smoke_test.sh"; then
+        return 0
+    else
+        echo ""
+        warn "Inference servers not healthy. Inspect with: pixi run serve-all"
+        return 1
+    fi
+}
+
+stop_all() {
+    for s in simulation inference agent; do
+        tmux kill-session -t "$s" 2>/dev/null || true
+    done
+}
 
 # ── Guard ─────────────────────────────────────────────────────────────────────
 
@@ -24,7 +58,7 @@ for s in simulation inference agent; do
     fi
 done
 
-trap 'echo; warn "Interrupted. Run: pixi run demo-stop"' INT TERM
+trap 'echo; warn "Interrupted — cleaning up..."; stop_all; exit 1' INT TERM QUIT
 
 # ── 1. Simulation ─────────────────────────────────────────────────────────────
 
@@ -37,20 +71,16 @@ tmux split-window -v -t simulation:0.0
 tmux send-keys -t simulation:0.0 "cd $DEMO_ROOT && pixi run sim" Enter
 log "O3DE launched  (simulation — top pane)"
 
-echo -ne "  ${YELLOW}○${RESET} Waiting for /clock"
-elapsed=0
-while ! ros2 topic list 2>/dev/null | grep -q "^/clock$"; do
-    sleep 2; elapsed=$((elapsed + 2)); echo -n "."
-    [ $elapsed -ge 120 ] && echo && err "Timed out waiting for /clock (120 s)"
-done
-echo -e " ${GREEN}✓${RESET}"
+wait_topic "/clock" 120 || { stop_all; exit 1; }
 
 # ── 2. ROS 2 Stack ────────────────────────────────────────────────────────────
 
 section "Starting ROS 2 stack..."
 
 tmux send-keys -t simulation:0.1 "cd $DEMO_ROOT && pixi run ros2" Enter
-ok "ROS 2 stack launched  (simulation — bottom pane)"
+log "ROS 2 stack launched  (simulation — bottom pane)"
+
+wait_topic "/joint_states" 60 || { stop_all; exit 1; }
 
 # ── 3. Inference servers ──────────────────────────────────────────────────────
 
@@ -67,26 +97,9 @@ tmux send-keys -t inference:0.0 "cd $DEMO_ROOT && pixi run serve-llm"       Ente
 tmux send-keys -t inference:0.1 "cd $DEMO_ROOT && pixi run serve-embedding"  Enter
 tmux send-keys -t inference:0.2 "cd $DEMO_ROOT && pixi run serve-vlm"        Enter
 tmux send-keys -t inference:0.3 "cd $DEMO_ROOT && pixi run serve-reranker"   Enter
-
 log "Inference session created  (inference — 2×2 grid)"
 
-echo -ne "  ${YELLOW}○${RESET} Waiting for inference servers"
-elapsed=0
-while true; do
-    all_up=true
-    for port in 8080 8081 8082 8083; do
-        code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 2 \
-               "http://localhost:$port/health" 2>/dev/null)
-        [ "$code" != "200" ] && all_up=false && break
-    done
-    if $all_up; then echo -e " ${GREEN}✓${RESET}"; break; fi
-    sleep 5; elapsed=$((elapsed + 5)); echo -n "."
-    if [ $elapsed -ge 600 ]; then
-        echo
-        warn "Not all inference servers ready after 600 s — continuing anyway"
-        break
-    fi
-done
+check_inference || { stop_all; exit 1; }
 
 # ── 4. Orchestrator ───────────────────────────────────────────────────────────
 
@@ -95,9 +108,53 @@ section "Starting orchestrator..."
 tmux new-session -d -s agent -x 220 -y 50
 tmux rename-window -t agent:0 "orchestrator"
 tmux send-keys -t agent:0 "cd $DEMO_ROOT && pixi run orchestrator" Enter
-ok "Orchestrator launched  (agent)"
+log "Orchestrator launched  (agent)"
 
-# ── Summary ───────────────────────────────────────────────────────────────────
+# ── Final health check ────────────────────────────────────────────────────────
+
+section "Running health check in 10s..."
+sleep 10
+
+failed=false
+
+for s in simulation inference agent; do
+    if tmux has-session -t "$s" 2>/dev/null; then
+        ok "Session '$s' is running"
+    else
+        err "Session '$s' has exited unexpectedly"
+        failed=true
+    fi
+done
+
+for port in 8080 8081 8082 8083; do
+    code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 2 \
+           "http://localhost:$port/health" 2>/dev/null || echo "000")
+    if [ "$code" = "200" ]; then
+        ok "Inference port $port — OK"
+    else
+        err "Inference port $port — not responding (HTTP $code)"
+        failed=true
+    fi
+done
+
+for topic in /clock /joint_states; do
+    if ros2 topic list 2>/dev/null | grep -q "^${topic}$"; then
+        ok "Topic ${topic} — OK"
+    else
+        err "Topic ${topic} — not found"
+        failed=true
+    fi
+done
+
+# ── Result ────────────────────────────────────────────────────────────────────
+
+if $failed; then
+    echo ""
+    echo -e "${BOLD}${RED}=== Demo failed — stopping all sessions ===${RESET}"
+    echo ""
+    stop_all
+    exit 1
+fi
 
 echo ""
 echo -e "${BOLD}${GREEN}=== Demo running ===${RESET}"

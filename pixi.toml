@@ -170,9 +170,7 @@ cmd = "bash $DEMO_ROOT/scripts/demo.sh"
 description = "Start full demo: sim → ros2 → inference → orchestrator (3 tmux sessions)"
 
 [tasks.demo-stop]
-cmd = """for s in simulation inference agent; do
-    tmux kill-session -t "$s" 2>/dev/null && echo "  killed '$s'" || true
-done"""
+cmd = "bash $DEMO_ROOT/scripts/demo_stop.sh"
 description = "Stop all demo tmux sessions"
 
 [tasks.download-models]
