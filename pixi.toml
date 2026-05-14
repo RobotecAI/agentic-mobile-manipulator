@@ -161,37 +161,43 @@ cmd = "$DEMO_ROOT/scripts/start_safety_agent.sh"
 description = "Launch safety agent (with RAG)"
 
 # ─── Local Inference ────────────────────────────────────────────────────────────
-# Set the model env vars before running, e.g.:
+# Default model paths assume models are placed in $DEMO_ROOT/models/.
+# Override by setting the env var before running, e.g.:
 #   LLM_MODEL=/path/to/gpt-oss-20b-Q4_K_M.gguf pixi run serve-llm
-#
-# Default paths assume models are placed in $DEMO_ROOT/models/.
+
+[tasks.download-models]
+cmd = "bash $DEMO_ROOT/scripts/download_models.sh"
+description = "Download models for local inference (embedding/reranker must be downloaded manually)"
+
+[tasks.serve-all]
+cmd = "bash $DEMO_ROOT/scripts/serve_all.sh"
+description = "Launch all inference servers in a tmux session (2x2 grid)"
 
 [tasks.serve-llm]
-cmd = """$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server \
-    -m ${LLM_MODEL:-$DEMO_ROOT/models/gpt-oss-20b-Q4_K_M.gguf} \
-    --no-prefill-assistant --port 8080"""
+cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $LLM_MODEL --no-prefill-assistant --port 8080"
+env = { LLM_MODEL = "$DEMO_ROOT/models/gpt-oss-20b-Q4_K_M.gguf" }
 description = "Serve GPT-OSS-20B on port 8080 (set LLM_MODEL to override path)"
 
 [tasks.serve-vlm]
-cmd = """$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server \
-    -m ${VLM_MODEL:-$DEMO_ROOT/models/LFM2-VL-3B-Q8_0.gguf} \
-    --mmproj ${VLM_MMPROJ:-$DEMO_ROOT/models/mmproj-LFM2-VL-3B-Q8_0.gguf} \
-    --port 8081"""
+cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $VLM_MODEL --mmproj $VLM_MMPROJ --port 8081"
+env = { VLM_MODEL = "$DEMO_ROOT/models/LFM2-VL-3B-Q8_0.gguf", VLM_MMPROJ = "$DEMO_ROOT/models/mmproj-LFM2-VL-3B-Q8_0.gguf" }
 description = "Serve LFM2-VL-3B on port 8081 (set VLM_MODEL / VLM_MMPROJ to override paths)"
 
 [tasks.serve-embedding]
-cmd = """$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server \
-    -m ${EMBEDDING_MODEL:-$DEMO_ROOT/models/Qwen3-Embedding-0.6b_Q8_0.gguf} \
-    --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082"""
+cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $EMBEDDING_MODEL --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082"
+env = { EMBEDDING_MODEL = "$DEMO_ROOT/models/Qwen3-Embedding-0.6b_Q8_0.gguf" }
 description = "Serve Qwen3-Embedding-0.6b on port 8082"
 
 [tasks.serve-reranker]
-cmd = """$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server \
-    -m ${RERANKER_MODEL:-$DEMO_ROOT/models/Qwen3-Reranker-0.6B.gguf} \
-    --embedding --pooling rank -c 4096 -b 2048 -ub 2048 --port 8083"""
+cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $RERANKER_MODEL --embedding --pooling rank -c 4096 -b 2048 -ub 2048 --port 8083"
+env = { RERANKER_MODEL = "$DEMO_ROOT/models/Qwen3-Reranker-0.6B.gguf" }
 description = "Serve Qwen3-Reranker-0.6B on port 8083"
 
 # ─── Dev Tasks ──────────────────────────────────────────────────────────────────
+
+[tasks.smoke-test]
+cmd = "bash $DEMO_ROOT/scripts/smoke_test.sh"
+description = "Check if all LLM inference servers are up"
 
 [tasks.pre-commit-install]
 cmd = "uv run pre-commit install"
