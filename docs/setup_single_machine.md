@@ -65,8 +65,6 @@ This single command runs the full build pipeline in the correct order:
 | 5    | `build-o3de`    | CMake configure + Ninja build (Editor + GameLauncher) |
 | 6    | `sync`          | `uv sync` — install Python dependencies               |
 
-> [!NOTE] > `build-o3de` takes 30–60 minutes on first run.
-
 #### Local Inference (optional)
 
 If you want to run models locally via llama.cpp instead of cloud APIs:
@@ -74,18 +72,16 @@ If you want to run models locally via llama.cpp instead of cloud APIs:
 ```shell
 pixi run clone-inference
 pixi run build-llama
+pixi run download-models  # or download the models manually, check the links below
 ```
-
-Then [download the required models](#download-models).
 
 ---
 
 ### Running the Demo
 
-`pixi run` replaces all manual `source` calls — the ROS 2 environment is sourced automatically.
-
 ```shell
 # In separate terminals:
+pixi run serve-all    # All inference servers
 pixi run sim          # O3DE simulation
 pixi run ros2         # Full ROS 2 stack
 pixi run orchestrator # Agent orchestrator
@@ -97,28 +93,8 @@ For the HMI:
 pixi run hmi
 ```
 
-Individual agents (for debugging):
-
-```shell
-pixi run nav2-agent
-pixi run moveit2-agent
-pixi run scene-agent
-pixi run inspection-agent
-pixi run safety-agent
-```
-
-Local inference servers:
-
-```shell
-# Models default to $DEMO_ROOT/models/<filename>.
-# Override with env vars, e.g.: LLM_MODEL=/path/to/model.gguf pixi run serve-llm
-pixi run serve-llm        # GPT-OSS-20B  → port 8080
-pixi run serve-vlm        # LFM2-VL-3B   → port 8081
-pixi run serve-embedding  # Qwen3-Embedding-0.6b → port 8082
-pixi run serve-reranker   # Qwen3-Reranker-0.6B  → port 8083
-```
-
-Run `pixi task list` to see all available commands.
+> [!TIP]
+> Want to run certain part of the stack? Run `pixi task list` to see all available commands.
 
 ---
 
