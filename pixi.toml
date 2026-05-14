@@ -93,7 +93,7 @@ description = "Build O3DE Editor and GameLauncher (slow — takes 30–60 min)"
 cmd = """
 cd $DEMO_ROOT/inference/llama.cpp &&
 cmake -B build -DGGML_VULKAN=1 &&
-cmake --build build --config Release
+cmake --build build --config Release -j $(nproc)
 """
 depends-on = ["clone-inference"]
 description = "Clone and build llama.cpp with Vulkan backend (standalone, no O3DE/ROS 2 required)"
