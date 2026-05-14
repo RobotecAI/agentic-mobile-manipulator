@@ -1,24 +1,32 @@
 # Running the Demo
 
-## O3DE
+## Run all at once
+
+```shell
+pixi run demo
+```
+
+## Run separately
+
+### O3DE
 
 ```shell
 pixi run sim
 ```
 
-## ROS 2
+### ROS 2
 
 ```shell
 pixi run ros2
 ```
 
-## HMI
+### HMI
 
 ```shell
 pixi run hmi
 ```
 
-## Local inference (llama.cpp)
+### Local inference (llama.cpp)
 
 Models default to `$DEMO_ROOT/models/<filename>`. Override with env vars if your models are elsewhere.
 
@@ -44,12 +52,6 @@ VLM_MODEL=/path/to/LFM2-VL-3B-Q8_0.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run
 EMBEDDING_MODEL=/path/to/embedding.gguf pixi run serve-embedding
 RERANKER_MODEL=/path/to/reranker.gguf pixi run serve-reranker
 ```
-
-## Agent
-
-For instructions, see: [Agent setup and inference](../rai_app/README.md)
-
-## Local Runtime Components
 
 ### Agent Orchestrator
 
