@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 (
   ros2 launch robotec_kairos_ur10 robotec_launch.py &
   ros2 run mobile_manipulator_hmi utilization_node &

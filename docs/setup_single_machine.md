@@ -77,27 +77,6 @@ pixi run download-models  # or download the models manually, check the links bel
 
 ---
 
-### Running the Demo
-
-```shell
-# In separate terminals:
-pixi run serve-all    # All inference servers
-pixi run sim          # O3DE simulation
-pixi run ros2         # Full ROS 2 stack
-pixi run orchestrator # Agent orchestrator
-```
-
-For the HMI:
-
-```shell
-pixi run hmi
-```
-
-> [!TIP]
-> Want to run certain part of the stack? Run `pixi task list` to see all available commands.
-
----
-
 ### Download Models
 
 For every model configured in `config.toml`, download the GGUF file and place it in `$DEMO_ROOT/models/`:

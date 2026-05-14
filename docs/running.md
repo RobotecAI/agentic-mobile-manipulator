@@ -1,9 +1,5 @@
 # Running the Demo
 
-All commands use `pixi run` — the ROS 2 workspace is sourced automatically via `pixi_activate.sh`.
-
-Run `pixi task list` to see all available commands.
-
 ## O3DE
 
 ```shell
@@ -22,9 +18,7 @@ pixi run ros2
 pixi run hmi
 ```
 
-# Inference
-
-## Local (llama.cpp)
+## Local inference (llama.cpp)
 
 Models default to `$DEMO_ROOT/models/<filename>`. Override with env vars if your models are elsewhere.
 
@@ -61,25 +55,4 @@ For instructions, see: [Agent setup and inference](../rai_app/README.md)
 
 ```shell
 pixi run orchestrator
-```
-
-### Individual Components
-
-Use these when you want to run components separately instead of `pixi run ros2`:
-
-```shell
-pixi run nav2-agent
-pixi run moveit2-agent
-pixi run scene-agent
-pixi run inspection-agent
-pixi run safety-agent
-```
-
-### Safety Embeddings and Reranker (optional)
-
-These are only required when running the safety agent with RAG. See `docs/safety_agent_with_rag.md`.
-
-```shell
-EMBEDDING_MODEL=/path/to/embeddings.gguf pixi run serve-embedding
-RERANKER_MODEL=/path/to/reranker.gguf pixi run serve-reranker
 ```
