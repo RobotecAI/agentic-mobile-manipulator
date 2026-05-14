@@ -165,6 +165,16 @@ description = "Launch safety agent (with RAG)"
 # Override by setting the env var before running, e.g.:
 #   LLM_MODEL=/path/to/gpt-oss-20b-Q4_K_M.gguf pixi run serve-llm
 
+[tasks.demo]
+cmd = "bash $DEMO_ROOT/scripts/demo.sh"
+description = "Start full demo: sim → ros2 → inference → orchestrator (3 tmux sessions)"
+
+[tasks.demo-stop]
+cmd = """for s in simulation inference agent; do
+    tmux kill-session -t "$s" 2>/dev/null && echo "  killed '$s'" || true
+done"""
+description = "Stop all demo tmux sessions"
+
 [tasks.download-models]
 cmd = "bash $DEMO_ROOT/scripts/download_models.sh"
 description = "Download models for local inference"
