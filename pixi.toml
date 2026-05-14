@@ -190,7 +190,7 @@ description = "Serve Qwen3-Embedding-0.6b on port 8082"
 
 [tasks.serve-reranker]
 cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $RERANKER_MODEL --embedding --pooling rank -c 4096 -b 2048 -ub 2048 --port 8083"
-env = { RERANKER_MODEL = "$DEMO_ROOT/models/Qwen3-Reranker-0.6B.gguf" }
+env = { RERANKER_MODEL = "$DEMO_ROOT/models/Qwen3-Reranker-0.6B_16BF.gguf" }
 description = "Serve Qwen3-Reranker-0.6B on port 8083"
 
 # ─── Dev Tasks ──────────────────────────────────────────────────────────────────
