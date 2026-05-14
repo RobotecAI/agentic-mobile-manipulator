@@ -71,7 +71,7 @@ If you want to run models locally via llama.cpp instead of cloud APIs:
 
 ```shell
 pixi run clone-inference
-pixi run build-llama
+pixi run build-llama # this step is hardware specifc. By default, it builds with Vulkan backend. Check for better solutions for your hardware.
 pixi run download-models  # or download the models manually, check the links below
 ```
 
