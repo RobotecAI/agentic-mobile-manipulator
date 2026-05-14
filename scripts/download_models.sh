@@ -32,14 +32,10 @@ download "LFM2-VL-3B mmproj" \
     "https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true" \
     "$MODELS_DIR/mmproj-LFM2-VL-3B-Q8_0.gguf"
 
-echo ""
-echo "=== Manual downloads required ==="
-echo ""
-echo "  The following models must be downloaded manually and placed in $MODELS_DIR/:"
-echo ""
-echo "  Qwen3-Embedding-0.6b:"
-echo "  https://robotecai-my.sharepoint.com/:u:/g/personal/bartlomiej_boczek_robotec_ai/IQB7tkMkmi34Q6xtTB89N1LxAfod0sMpGT4uTffjo6iW7qc?e=6kLoTi"
-echo ""
-echo "  Qwen3-Reranker-0.6B:"
-echo "  https://robotecai-my.sharepoint.com/:u:/g/personal/bartlomiej_boczek_robotec_ai/IQAgWOVPiyS8RZ1QUVVx6N9gAaOGGrvDnk7Qa0IpSbhlp_8?e=P0b1Ak"
-echo ""
+download "Qwen3-Embedding-0.6B (Embed)" \
+    "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true" \
+    "$MODELS_DIR/Qwen3-Embedding-0.6B-Q8_0.gguf"
+
+download "Qwen3-Reranker-0.6B (Rerank)" \
+    "https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true" \
+    "$MODELS_DIR/qwen3-reranker-0.6b-q8_0.gguf"
