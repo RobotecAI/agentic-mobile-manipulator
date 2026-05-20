@@ -9,20 +9,18 @@ if tmux has-session -t "$SESSION" 2>/dev/null; then
     exit 0
 fi
 
-tmux new-session -d -s "$SESSION" -x 220 -y 50
+tmux new-session -d -s "$SESSION" -n inference -x 220 -y 50
 
-tmux rename-window -t "$SESSION:0" "inference"
+INF_TOP_LEFT=$(tmux display-message -p -t "$SESSION:inference" "#{pane_id}")
+INF_TOP_RIGHT=$(tmux split-window -h -P -F "#{pane_id}" -t "$INF_TOP_LEFT")
+INF_BOTTOM_LEFT=$(tmux split-window -v -P -F "#{pane_id}" -t "$INF_TOP_LEFT")
+INF_BOTTOM_RIGHT=$(tmux split-window -v -P -F "#{pane_id}" -t "$INF_TOP_RIGHT")
 
-# 2x2 grid: split into 4 panes
-tmux split-window -h -t "$SESSION:0"
-tmux split-window -v -t "$SESSION:0.0"
-tmux split-window -v -t "$SESSION:0.2"
+tmux send-keys -t "$INF_TOP_LEFT" "pixi run serve-llm" Enter
+tmux send-keys -t "$INF_TOP_RIGHT" "pixi run serve-embedding" Enter
+tmux send-keys -t "$INF_BOTTOM_LEFT" "pixi run serve-vlm" Enter
+tmux send-keys -t "$INF_BOTTOM_RIGHT" "pixi run serve-reranker" Enter
 
-tmux send-keys -t "$SESSION:0.0" "pixi run serve-llm" Enter
-tmux send-keys -t "$SESSION:0.1" "pixi run serve-embedding" Enter
-tmux send-keys -t "$SESSION:0.2" "pixi run serve-vlm" Enter
-tmux send-keys -t "$SESSION:0.3" "pixi run serve-reranker" Enter
-
-tmux select-layout -t "$SESSION:0" tiled
+tmux select-layout -t "$SESSION:inference" tiled
 
 tmux attach-session -t "$SESSION"
