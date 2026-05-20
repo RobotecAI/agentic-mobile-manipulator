@@ -49,20 +49,13 @@ $O3DE_ROOT/scripts/o3de.sh register --this-engine
 depends-on = ["clone-engine"]
 description = "Pull O3DE LFS assets and register the engine"
 
-[tasks.register-gems]
+[tasks.register-project]
 cmd = """
 cd $DEMO_ROOT/gems && git lfs install && git lfs pull &&
-$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/gems/o3de-extras/Gems &&
-$O3DE_ROOT/scripts/o3de.sh register --gem-path $DEMO_ROOT/gems/o3de-humanworker-gem &&
-$O3DE_ROOT/scripts/o3de.sh register --gem-path $DEMO_ROOT/gems/o3de-ur-robots-gem &&
-$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/gems/robotec-warehouse-assets &&
-$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/gems/robotec-generic-assets &&
-$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/gems/robotec-o3de-tools &&
-$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/project_gems/ &&
 $O3DE_ROOT/scripts/o3de.sh register --project-path $DEMO_ROOT/sim --force
 """
 depends-on = ["setup-o3de"]
-description = "Register all O3DE gems and the simulation project"
+description = "Register the simulation project"
 
 [tasks.build-ros2]
 cmd = """
@@ -86,7 +79,7 @@ cmake -B build/linux -G "Ninja Multi-Config" \
 cmake --build build/linux --config profile \
     --target MobileManipulatorDemo Editor MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher
 """
-depends-on = ["register-gems", "build-ros2"]
+depends-on = ["register-project", "build-ros2"]
 description = "Build O3DE Editor and GameLauncher (slow — takes 30–60 min)"
 
 [tasks.build-llama]
