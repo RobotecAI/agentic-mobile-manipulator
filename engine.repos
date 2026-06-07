@@ -1,5 +1,5 @@
 repositories:
   ./engine/o3de:
     type: git
-    url: https://github.com/RobotecAI/o3de.git
-    version: 725882d7a09d4c3f204a6256f5a79e839e33ea0c
+    url: https://github.com/o3de/o3de.git
+    version: 2605.0
