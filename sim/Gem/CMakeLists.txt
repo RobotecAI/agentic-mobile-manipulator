@@ -12,13 +12,22 @@ include(${pal_dir}/PAL_${PAL_PLATFORM_NAME_LOWERCASE}.cmake)
 # Now that we have loaded our project traits for this platform, see if this project is even supported on this platform.
 # If its not supported we just return after including the unsupported.
 if(NOT PAL_TRAIT_MOBILEMANIPULATORDEMO_SUPPORTED)
-    return()
+  return()
 endif()
 
 # We are on a supported platform, so add the ${gem_name} target
 # Note: We include the common files and the platform specific files which are set in mobilemanipulatordemo_files.cmake and
 # in ${pal_dir}/mobilemanipulatordemo_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
 
+find_package(simulation_interfaces REQUIRED)
+if(simulation_interfaces_VERSION VERSION_GREATER_EQUAL "2.0.0")
+  set(SIMULATION_INTERFACES_MAJOR_API_VERSION 2)
+elseif(simulation_interfaces_VERSION VERSION_GREATER_EQUAL "1.4.0")
+  set(SIMULATION_INTERFACES_MAJOR_API_VERSION 1)
+else()
+  message(FATAL_ERROR "simulation_interfaces version ${simulation_interfaces_VERSION} is not supported. Minimum required: 1.4.0")
+endif()
+message(STATUS "simulation_interfaces ${simulation_interfaces_VERSION} -> SIMULATION_INTERFACES_MAJOR_API_VERSION=${SIMULATION_INTERFACES_MAJOR_API_VERSION}")
 # The ${gem_name}.Private.Object target is an internal target
 # It should not be used outside of this CMakeLists.txt
 ly_add_target(
@@ -34,7 +43,12 @@ ly_add_target(
         PRIVATE
             AZ::AzGameFramework
             Gem::Atom_AtomBridge.Static
+            Gem::SimulationInterfaces.API
+            Gem::ROS2.Static
 )
+target_compile_definitions(${gem_name}.Private.Object PUBLIC
+    SIMULATION_INTERFACES_MAJOR_API_VERSION=${SIMULATION_INTERFACES_MAJOR_API_VERSION})
+
 
 ly_add_target(
     NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
@@ -49,6 +63,8 @@ ly_add_target(
         PRIVATE
             Gem::${gem_name}.Private.Object
             AZ::AzCore
+            Gem::SimulationInterfaces.API
+            Gem::ROS2.Static
 )
 
 # Include the gem name into the Client Module source file
@@ -87,5 +103,5 @@ o3de_find_ancestor_project_root(project_path project_name "${CMAKE_CURRENT_SOURC
 # If the project name could not be queried from a project.json file, then fallback
 # to using the name of the project provided when the project template was instantiated
 if (NOT project_name)
-    set(project_name MobileManipulatorDemo)
+  set(project_name MobileManipulatorDemo)
 endif()

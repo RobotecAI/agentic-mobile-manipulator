@@ -5,6 +5,10 @@
 
 #include <MobileManipulatorDemo/MobileManipulatorDemoBus.h>
 
+#include "AzCore/Debug/Trace.h"
+#include "ROS2/Handlers/IROS2HandlerBase.h"
+#include <AzCore/std/smart_ptr/make_shared.h>
+
 namespace MobileManipulatorDemo
 {
     class MobileManipulatorDemoSystemComponent
@@ -36,5 +40,19 @@ namespace MobileManipulatorDemo
         void Activate() override;
         void Deactivate() override;
         ////////////////////////////////////////////////////////////////////////
+
+    private:
+        AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<ROS2::IROS2HandlerBase>> m_availableRos2Interface;
+        template<typename T>
+        void RegisterInterface(rclcpp::Node::SharedPtr ros2Node)
+        {
+            AZStd::shared_ptr handler = AZStd::make_shared<T>();
+            handler->Initialize(ros2Node);
+            if (handler->IsValid())
+            {
+                m_availableRos2Interface[handler->GetTypeName()] = AZStd::move(handler);
+            }
+            handler.reset();
+        };
     };
 }
