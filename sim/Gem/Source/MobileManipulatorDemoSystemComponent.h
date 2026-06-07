@@ -5,8 +5,8 @@
 
 #include <MobileManipulatorDemo/MobileManipulatorDemoBus.h>
 
-#include "AzCore/Debug/Trace.h"
 #include "ROS2/Handlers/IROS2HandlerBase.h"
+#include "ROS2/ROS2Bus.h"
 #include <AzCore/std/smart_ptr/make_shared.h>
 
 namespace MobileManipulatorDemo
@@ -54,5 +54,9 @@ namespace MobileManipulatorDemo
             }
             handler.reset();
         };
+        ROS2::ROS2Requests::NodeChangedEvent::Handler m_nodeHandler;
+
+        void TryRegisterSpawnServiceHandler();
+        void DestroyHandlers();
     };
 }

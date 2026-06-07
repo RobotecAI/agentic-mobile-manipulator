@@ -211,3 +211,7 @@ description = "Run all linters and formatters"
 [tasks.test]
 cmd = "uv run pytest"
 description = "Run test suite"
+
+[tasks.editor]
+cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/Editor"
+description = "Launch O3DE editor"

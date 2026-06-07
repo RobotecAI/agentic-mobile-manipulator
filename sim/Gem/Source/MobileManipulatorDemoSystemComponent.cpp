@@ -43,6 +43,17 @@ namespace MobileManipulatorDemo
     }
 
     MobileManipulatorDemoSystemComponent::MobileManipulatorDemoSystemComponent()
+        : m_nodeHandler([this] (std::shared_ptr<rclcpp::Node> node)
+            {
+                if (node)
+                {
+                    TryRegisterSpawnServiceHandler();
+                }
+                else
+                {
+                    DestroyHandlers();
+                }
+            })
     {
         if (MobileManipulatorDemoInterface::Get() == nullptr)
         {
@@ -62,28 +73,39 @@ namespace MobileManipulatorDemo
     {
     }
 
-    void MobileManipulatorDemoSystemComponent::Activate()
+    void MobileManipulatorDemoSystemComponent::TryRegisterSpawnServiceHandler()
     {
-        MobileManipulatorDemoRequestBus::Handler::BusConnect();
-
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         if (!ros2Node)
         {
-            AZ_Trace("MobileManipulatorDemo", "ROS 2 node is not available.");
             return;
         }
 
         RegisterInterface<SpawnEntityServiceHandler>(ros2Node);
     }
 
-    void MobileManipulatorDemoSystemComponent::Deactivate()
+    void MobileManipulatorDemoSystemComponent::DestroyHandlers()
     {
-        MobileManipulatorDemoRequestBus::Handler::BusDisconnect();
-
         for (auto& [handlerType, handler] : m_availableRos2Interface)
         {
             handler.reset();
         }
         m_availableRos2Interface.clear();
+    }
+
+    void MobileManipulatorDemoSystemComponent::Activate()
+    {
+        MobileManipulatorDemoRequestBus::Handler::BusConnect();
+
+        ROS2::ROS2Interface::Get()->ConnectOnNodeChanged(m_nodeHandler);
+        TryRegisterSpawnServiceHandler();
+    }
+
+    void MobileManipulatorDemoSystemComponent::Deactivate()
+    {
+        MobileManipulatorDemoRequestBus::Handler::BusDisconnect();
+
+        m_nodeHandler.Disconnect();
+        DestroyHandlers();
     }
 }

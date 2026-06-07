@@ -90,7 +90,6 @@ namespace MobileManipulatorDemo
     AZStd::optional<SpawnEntityServiceHandler::Response> SpawnEntityServiceHandler::HandleServiceRequest(
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
-        AZ_Printf("MobileManipulatorDemo", "Hello world!!! SpawnEntityServiceHandler");
         const AZStd::string_view name{ request.name.c_str(), request.name.size() };
 #if SIMULATION_INTERFACES_MAJOR_API_VERSION >= 2
         const AZStd::string_view uri{ request.entity_resource.uri.c_str(), request.entity_resource.uri.size() };
