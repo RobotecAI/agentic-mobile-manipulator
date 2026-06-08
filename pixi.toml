@@ -1,0 +1,220 @@
+[workspace]
+name = "agentic-mobile-manipulator"
+version = "1.0.0"
+description = "Agentic Mobile Manipulator Demo"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+# ─── Environment ────────────────────────────────────────────────────────────────
+# DEMO_ROOT and O3DE_ROOT are set automatically — no need to add them to .bashrc.
+# pixi_activate.sh sources ROS 2 setup files when available.
+[activation]
+env = { DEMO_ROOT = "${PIXI_PROJECT_ROOT}", O3DE_ROOT = "${PIXI_PROJECT_ROOT}/engine/o3de" }
+scripts = ["pixi_activate.sh"]
+
+[dependencies]
+# uv is the Python package manager used by this project.
+# All other build tools (cmake, ninja, clang, colcon, vcs) come from the ROS 2
+# dev-tools apt installation documented in docs/setup_single_machine.md.
+uv = ">=0.5"
+
+# ─── Setup Tasks ────────────────────────────────────────────────────────────────
+
+[tasks.clone-engine]
+cmd = """
+vcs import --input $DEMO_ROOT/engine.repos &&
+vcs import --input $DEMO_ROOT/gems.repos
+"""
+description = "Clone O3DE engine and gems"
+
+[tasks.clone-ros2-ws]
+cmd = "vcs import --input $DEMO_ROOT/ros2_ws.repos"
+description = "Clone ROS 2 workspace repositories"
+
+[tasks.clone]
+depends-on = ["clone-engine", "clone-ros2-ws"]
+description = "Clone all repositories (engine, gems, and ROS 2 workspace)"
+
+[tasks.clone-inference]
+cmd = "vcs import --input $DEMO_ROOT/inference.repos"
+description = "Clone llama.cpp (required for local inference)"
+
+[tasks.setup-o3de]
+cmd = """
+cd $O3DE_ROOT &&
+git lfs install && git lfs pull &&
+python/get_python.sh &&
+$O3DE_ROOT/scripts/o3de.sh register --this-engine
+"""
+depends-on = ["clone-engine"]
+description = "Pull O3DE LFS assets and register the engine"
+
+[tasks.register-gems]
+cmd = """
+cd $DEMO_ROOT/gems && git lfs install && git lfs pull &&
+$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/gems/o3de-extras/Gems &&
+$O3DE_ROOT/scripts/o3de.sh register --gem-path $DEMO_ROOT/gems/o3de-humanworker-gem &&
+$O3DE_ROOT/scripts/o3de.sh register --gem-path $DEMO_ROOT/gems/o3de-ur-robots-gem &&
+$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/gems/robotec-warehouse-assets &&
+$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/gems/robotec-generic-assets &&
+$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/gems/robotec-o3de-tools &&
+$O3DE_ROOT/scripts/o3de.sh register --all-gems-path $DEMO_ROOT/project_gems/ &&
+$O3DE_ROOT/scripts/o3de.sh register --project-path $DEMO_ROOT/sim --force
+"""
+depends-on = ["setup-o3de"]
+description = "Register all O3DE gems and the simulation project"
+
+[tasks.build-ros2]
+cmd = """
+cd $DEMO_ROOT/ros2_ws &&
+rosdep update &&
+rosdep install --ignore-src --from-paths src -y &&
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+"""
+depends-on = ["clone-ros2-ws"]
+description = "Build the ROS 2 workspace with colcon"
+
+[tasks.build-o3de]
+cmd = """
+cd $DEMO_ROOT/sim &&
+cmake -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_MODULE_PATH=$O3DE_ROOT/cmake \
+    -DLY_DISABLE_TEST_MODULES=ON \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+    -DLY_STRIP_DEBUG_SYMBOLS=ON \
+    -DCMAKE_LINKER_TYPE=MOLD &&
+cmake --build build/linux --config profile \
+    --target MobileManipulatorDemo Editor MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher
+"""
+depends-on = ["register-gems", "build-ros2"]
+description = "Build O3DE Editor and GameLauncher (slow — takes 30–60 min)"
+
+[tasks.build-llama]
+cmd = """
+cd $DEMO_ROOT/inference/llama.cpp &&
+cmake -B build -DGGML_VULKAN=1 &&
+cmake --build build --config Release -j $(nproc)
+"""
+depends-on = ["clone-inference"]
+description = "Clone and build llama.cpp with Vulkan backend (standalone, no O3DE/ROS 2 required)"
+
+[tasks.sync]
+cmd = "uv sync"
+description = "Install Python dependencies"
+
+# Full setup: runs all build steps in dependency order.
+# Run pixi run setup-local if you also need local llama.cpp inference.
+[tasks.setup]
+depends-on = ["build-ros2", "build-o3de", "sync"]
+description = "Full setup (O3DE + ROS 2 + Python). See also: setup-local."
+
+[tasks.setup-hil]
+depends-on = ["build-ros2", "sync"]
+description = "Setup HIL machine (ROS 2 workspace + Python, no O3DE)"
+
+[tasks.setup-hil-local]
+depends-on = ["setup-hil", "build-llama"]
+description = "Setup HIL machine including local llama.cpp inference"
+
+[tasks.setup-local]
+depends-on = ["setup", "build-llama"]
+description = "Full setup including local llama.cpp inference"
+
+# ─── Run Tasks ──────────────────────────────────────────────────────────────────
+# These tasks assume the workspace has been sourced via pixi_activate.sh.
+
+[tasks.sim]
+cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
+description = "Launch O3DE simulation"
+
+[tasks.ros2]
+cmd = "$DEMO_ROOT/scripts/run_ros2_stack.sh"
+description = "Launch full ROS 2 stack (robot, nav2, moveit2, scene, agents)"
+
+[tasks.hmi]
+cmd = "ros2 launch mobile_manipulator_hmi hmi_launch.py"
+description = "Launch the Human-Machine Interface"
+
+[tasks.orchestrator]
+cmd = "uv run python rai_app/agents/agent_orchestrator.py"
+description = "Launch the agent orchestrator"
+
+# Individual agents — use these instead of ros2 when debugging a specific component.
+[tasks.nav2-agent]
+cmd = "uv run python rai_app/agents/nav2_agent.py"
+description = "Launch nav2 agent"
+
+[tasks.moveit2-agent]
+cmd = "uv run python rai_app/agents/moveit2_agent.py"
+description = "Launch moveit2 agent"
+
+[tasks.scene-agent]
+cmd = "uv run python rai_app/environment/scene_agent.py"
+description = "Launch scene agent"
+
+[tasks.inspection-agent]
+cmd = "uv run python rai_app/agents/inspection_agent.py"
+description = "Launch inspection agent"
+
+[tasks.safety-agent]
+cmd = "$DEMO_ROOT/scripts/start_safety_agent.sh"
+description = "Launch safety agent (with RAG)"
+
+# ─── Local Inference ────────────────────────────────────────────────────────────
+# Default model paths assume models are placed in $DEMO_ROOT/models/.
+# Override by setting the env var before running, e.g.:
+#   LLM_MODEL=/path/to/gpt-oss-20b-Q4_K_M.gguf pixi run serve-llm
+
+[tasks.demo]
+cmd = "bash $DEMO_ROOT/scripts/demo.sh"
+description = "Start full demo: sim → ros2 → inference → orchestrator (3 tmux sessions)"
+
+[tasks.demo-stop]
+cmd = "bash $DEMO_ROOT/scripts/demo_stop.sh"
+description = "Stop all demo tmux sessions"
+
+[tasks.download-models]
+cmd = "bash $DEMO_ROOT/scripts/download_models.sh"
+description = "Download models for local inference"
+
+[tasks.serve-all]
+cmd = "bash $DEMO_ROOT/scripts/serve_all.sh"
+description = "Launch all inference servers in a tmux session (2x2 grid)"
+
+[tasks.serve-llm]
+cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $LLM_MODEL --no-prefill-assistant --port 8080"
+env = { LLM_MODEL = "$DEMO_ROOT/models/gpt-oss-20b-Q4_K_M.gguf" }
+description = "Serve GPT-OSS-20B on port 8080 (set LLM_MODEL to override path)"
+
+[tasks.serve-vlm]
+cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $VLM_MODEL --mmproj $VLM_MMPROJ --port 8081"
+env = { VLM_MODEL = "$DEMO_ROOT/models/LFM2-VL-3B-Q8_0.gguf", VLM_MMPROJ = "$DEMO_ROOT/models/mmproj-LFM2-VL-3B-Q8_0.gguf" }
+description = "Serve LFM2-VL-3B on port 8081 (set VLM_MODEL / VLM_MMPROJ to override paths)"
+
+[tasks.serve-embedding]
+cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $EMBEDDING_MODEL --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082"
+env = { EMBEDDING_MODEL = "$DEMO_ROOT/models/Qwen3-Embedding-0.6B-Q8_0.gguf" }
+description = "Serve Qwen3-Embedding-0.6b on port 8082"
+
+[tasks.serve-reranker]
+cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $RERANKER_MODEL --embedding --pooling rank -c 4096 -b 2048 -ub 2048 --port 8083"
+env = { RERANKER_MODEL = "$DEMO_ROOT/models/qwen3-reranker-0.6b-q8_0.gguf" }
+description = "Serve Qwen3-Reranker-0.6B on port 8083"
+
+# ─── Dev Tasks ──────────────────────────────────────────────────────────────────
+
+[tasks.smoke-test]
+cmd = "bash $DEMO_ROOT/scripts/smoke_test.sh"
+description = "Check if all LLM inference servers are up"
+
+[tasks.pre-commit-install]
+cmd = "uv run pre-commit install"
+description = "Install pre-commit hooks"
+
+[tasks.lint]
+cmd = "uv run pre-commit run --all-files"
+description = "Run all linters and formatters"
+
+[tasks.test]
+cmd = "uv run pytest"
+description = "Run test suite"

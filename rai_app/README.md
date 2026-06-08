@@ -157,22 +157,26 @@ tasks queue topic-> /orchestrator/tasks_queue, std_msgs/msg/String
 
 ## Setup and Run
 
-1. Follow the basic setup instructions [here](../docs/setup.md).
+1. Follow the setup instructions [here](../docs/setup_single_machine.md).
 2. Setup your vendor and model in config [here](../config.toml). If using default openai, remember to set OPENAI_API_KEY env.
-3. Launch the simulation.
-4. launch the robotic stack
+3. Launch the simulation:
 
 ```bash
-./scripts/run_ros2_stack.sh
+pixi run sim
 ```
 
-5. Spawn objects in HMI, chosing from different scenarios
+4. Launch the robotic stack:
+
+```bash
+pixi run ros2
+```
+
+5. Spawn objects in HMI, choosing from different scenarios
 
 6. Run orchestrator:
 
 ```bash
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-uv run rai_app/agents/agent_orchestrator.py
+pixi run orchestrator
 ```
 
 7. Send tasks via HMI

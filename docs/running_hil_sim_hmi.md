@@ -1,105 +1,70 @@
 # Running a Demo on HIL, Simulation, and HMI
 
-## Simulation
+All commands use `pixi run` — the ROS 2 workspace is sourced automatically.
+
+## Simulation Machine
 
 ### O3DE
 
 ```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-${DEMO_ROOT}/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher
+pixi run sim
 ```
 
-## HIL
+## HIL Machine
 
 ### ROS 2
 
-To run the ROS 2 stack and control agents, execute:
-
 ```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-./scripts/run_ros2_stack.sh
+pixi run ros2
 ```
 
 ### Inference
 
-To run the inference, execute:
-
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf <model/s selected in `config.toml`>
+pixi run serve-llm        # GPT-OSS-20B       → port 8080
+pixi run serve-vlm        # LFM2-VL-3B        → port 8081
+pixi run serve-embedding  # Qwen3-Embedding   → port 8082
+pixi run serve-reranker   # Qwen3-Reranker    → port 8083
 ```
 
-e.g.
-
-````
-* GPT-OSS-20B
-```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-Q4_K_M.gguf --port 8080
-````
-
-- LFM2-VL-3B-GGUF
+Models default to `$DEMO_ROOT/models/<filename>`. Override with env vars if your models are elsewhere:
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/LFM2-VL-3B_public/LFM2-VL-3B-Q8_0.gguf --mmproj /path/to/downloaded/model/mmproj-LFM2-VL-3B-Q8_0.gguf --port 8081
+LLM_MODEL=/path/to/model.gguf pixi run serve-llm
+VLM_MODEL=/path/to/vlm.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run serve-vlm
 ```
 
-- Qwen3-Embedding-0.6b
+### Agent Orchestrator
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/Qwen3-Embedding-0.6b_Q8_0.gguf --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082
+pixi run orchestrator
 ```
 
-- Qwen3-Reranker-0.6B
+## HMI Machine
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/Qwen3-Reranker-0.6B.gguf --embedding --pooling rank -c 4096  -b 2048 -ub 2048 --port 8083
+pixi run hmi
 ```
 
-## HMI
-
-### Running the GUI
-
-```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-ros2 launch mobile_manipulator_hmi hmi_launch.py
-```
-
-## Local Runtime Components
-
-These commands run the same components locally that are defined in `docker/compose.yaml`.
-Each command assumes you have sourced your ROS 2 environment:
-
-```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-```
-
-### Configuration Files
-
-- Local inference (default): `${DEMO_ROOT}/config.toml`
+---
 
 ## Individual ROS 2 Components
 
-Use these commands when you want to run components separately instead of `./scripts/run_ros2_stack.sh`:
+Use these when you want to run components separately instead of `pixi run ros2`:
 
 ```shell
-ros2 launch robotec_kairos_ur10 robotec_launch.py
-ros2 run mobile_manipulator_hmi utilization_node
-uv run python rai_app/agents/nav2_agent.py
-uv run python rai_app/agents/moveit2_agent.py
-uv run python rai_app/environment/scene_agent.py
-ros2 run nav2_lifecycle_manager nav_lifecycle_node
-uv run python rai_app/agents/inspection_agent.py
-${DEMO_ROOT}/scripts/start_safety_agent.sh
+pixi run nav2-agent
+pixi run moveit2-agent
+pixi run scene-agent
+pixi run inspection-agent
+pixi run safety-agent
 ```
-
-Start the orchestrator:
-
-For instructions, see: [Agent setup and inference](../rai_app/README.md)
 
 ## Safety Embeddings and Reranker (optional)
 
-These services are only required if you run the safety agent with RAG. See `docs/safety_agent_with_rag.md`.
+These are only required when running the safety agent with RAG. See `docs/safety_agent_with_rag.md`.
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m <embeddings_model.gguf> --embedding --pooling last --port 8082 --host 0.0.0.0
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m <reranker_model.gguf> --embedding --pooling rank -fa on --port 8083 --host 0.0.0.0
+pixi run serve-embedding
+pixi run serve-reranker
 ```

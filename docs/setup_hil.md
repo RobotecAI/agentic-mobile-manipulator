@@ -3,7 +3,7 @@
 This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
-- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
+- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Real-Time-Kernel-Tuning-Guide.html)
 - Python: 3.12
 
 ## Building the Project
@@ -13,52 +13,52 @@ This repository is compatible with the following system:
 #### Clone the Repository
 
 ```shell
-cd /home/${USER}
 git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
+cd agentic-mobile-manipulator
 ```
 
-#### Set the Root Directory of the Project
+#### Install System Dependencies
 
-Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following line to your `.bashrc` or `.zshrc` file:
+```bash
+sudo apt update
+sudo apt install git git-lfs python3-vcstool
+```
+
+> [!NOTE]
+> ROS 2 Jazzy with dev tools (including `colcon`, `rosdep`) must also be installed.
+> See the [ROS 2 installation guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional).
+
+#### Install pixi
+
+[pixi](https://pixi.sh) orchestrates all build steps and sets environment variables automatically.
 
 ```shell
-export DEMO_ROOT=/home/${USER}/agentic-mobile-manipulator/
+curl -fsSL https://pixi.sh/install.sh | sh
 ```
 
-### Setup ROS 2
+Restart your shell or run `source ~/.bashrc` after installation.
 
-#### Build the ROS 2 Workspace
+---
+
+### Build
 
 ```shell
-cd ${DEMO_ROOT}/ros2_ws
-rosdep update
-rosdep install --ignore-src --from-paths src -y
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+pixi run setup-hil
 ```
 
-Source the installation in your `.bashrc` or `.zshrc` file:
+This runs:
 
-```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-```
+| Step | pixi task       | What it does                            |
+| ---- | --------------- | --------------------------------------- |
+| 1    | `clone-ros2-ws` | `vcs import` for ROS 2 workspace        |
+| 2    | `build-ros2`    | `rosdep install` + `colcon build`       |
+| 3    | `sync`          | `uv sync` — install Python dependencies |
 
-### Setup Python Environment
+---
 
-1. Install uv
+## Setting Up llama.cpp (optional)
 
-```shell
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-2. Install dependencies
-
-```shell
-uv sync
-```
-
-## Setting Up llama.cpp
-
-llama.cpp is used as the default GenAI inference engine. Other inference engines can be used if they maintain compatibility with the OpenAI API.
+llama.cpp is used as the default local GenAI inference engine. Skip this section if using a cloud API.
 
 ### Prerequisites
 
@@ -72,25 +72,19 @@ vulkaninfo
 
 ### Build llama.cpp
 
-> [!TIP]
-> In this example, Vulkan is used as the backend. Choose the appropriate backend based on your setup. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
-
 ```shell
-cd ${DEMO_ROOT}
-vcs import --input ${DEMO_ROOT}/inference.repos
+pixi run build-llama
 ```
 
-```shell
-cd ${DEMO_ROOT}/inference/llama.cpp
+This clones llama.cpp and builds it with Vulkan backend.
 
-cmake -B build -DGGML_VULKAN=1
-cmake --build build --config Release
-```
-
-### Download Model
-
-For every configured model in `config.toml`, download and run the model using the following command:
+Or, to run the full HIL setup including llama.cpp in one command:
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-cli -hf <model/s selected in `config.toml`>
+pixi run setup-hil-local
 ```
+
+### Download Models
+
+For every model configured in `config.toml`, download the GGUF file and place it in `$DEMO_ROOT/models/`.
+See [Download Models](setup_single_machine.md#download-models) for links.
