@@ -6,12 +6,19 @@ services:
       dockerfile: docker/Dockerfile.o3de
       args:
         ROS2_IMAGE: mobile-manipulator-demo-ros2:latest
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
-    devices:
-      - /dev/kfd:/dev/kfd
-      - /dev/dri:/dev/dri
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
@@ -32,14 +39,19 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.agents
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     entrypoint: /ros_entrypoint.sh
-    devices:
-      - /dev/kfd:/dev/kfd
-      - /dev/dri:/dev/dri
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
@@ -85,21 +97,28 @@ services:
 
   agents:
     image: robotecai/mobile-manipulator-demo-agents:latest
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-    devices:
-      - /dev/kfd:/dev/kfd
-      - /dev/dri:/dev/dri
     volumes:
-      - ../cloud_config.toml:/root/MobileManipulatorDemo/config.toml 
+      - ../config.toml:/root/MobileManipulatorDemo/config.toml 
 
     entrypoint: /ros_entrypoint.sh
     command: bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/agent_orchestrator.py"
     networks:
       - ros2_bridge
-
+  
   safety-embeddings:
     image: robotecai/mobile-manipulator-demo-llama:latest
     build:
@@ -115,6 +134,8 @@ services:
     command: -m /custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf --embedding --pooling rank -fa on -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0
     networks:
       - ros2_bridge
+
+
 networks:
   ros2_bridge:
     driver: bridge

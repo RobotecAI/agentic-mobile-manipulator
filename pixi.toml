@@ -6,10 +6,11 @@ channels = ["conda-forge"]
 platforms = ["linux-64"]
 
 # ─── Environment ────────────────────────────────────────────────────────────────
-# DEMO_ROOT and O3DE_ROOT are set automatically — no need to add them to .bashrc.
+# DEMO_ROOT is set automatically — no need to add it to .bashrc.
+# O3DE_ROOT points to the installed 26.05 SDK at /opt/O3DE/26.05.
 # pixi_activate.sh sources ROS 2 setup files when available.
 [activation]
-env = { DEMO_ROOT = "${PIXI_PROJECT_ROOT}", O3DE_ROOT = "${PIXI_PROJECT_ROOT}/engine/o3de" }
+env = { DEMO_ROOT = "${PIXI_PROJECT_ROOT}", O3DE_ROOT = "/opt/O3DE/26.05" }
 scripts = ["pixi_activate.sh"]
 
 [dependencies]
@@ -20,20 +21,17 @@ uv = ">=0.5"
 
 # ─── Setup Tasks ────────────────────────────────────────────────────────────────
 
-[tasks.clone-engine]
-cmd = """
-vcs import --input $DEMO_ROOT/engine.repos &&
-vcs import --input $DEMO_ROOT/gems.repos
-"""
-description = "Clone O3DE engine and gems"
+[tasks.clone-gems]
+cmd = "vcs import --input $DEMO_ROOT/gems.repos"
+description = "Clone O3DE gems"
 
 [tasks.clone-ros2-ws]
 cmd = "vcs import --input $DEMO_ROOT/ros2_ws.repos"
 description = "Clone ROS 2 workspace repositories"
 
 [tasks.clone]
-depends-on = ["clone-engine", "clone-ros2-ws"]
-description = "Clone all repositories (engine, gems, and ROS 2 workspace)"
+depends-on = ["clone-gems", "clone-ros2-ws"]
+description = "Clone all repositories (gems and ROS 2 workspace)"
 
 [tasks.clone-inference]
 cmd = "vcs import --input $DEMO_ROOT/inference.repos"
@@ -41,28 +39,39 @@ description = "Clone llama.cpp (required for local inference)"
 
 [tasks.setup-o3de]
 cmd = """
-cd $O3DE_ROOT &&
-git lfs install && git lfs pull &&
-python/get_python.sh &&
-$O3DE_ROOT/scripts/o3de.sh register --this-engine
+$O3DE_ROOT/python/get_python.sh &&
+$O3DE_ROOT/scripts/o3de.sh register --this-engine &&
+python3 -c "import json,os; p=os.path.join(os.environ['DEMO_ROOT'],'sim','user'); os.makedirs(p,exist_ok=True); json.dump({'engine_path':os.environ['O3DE_ROOT']},open(os.path.join(p,'project.json'),'w'),indent=4)"
 """
-depends-on = ["clone-engine"]
-description = "Pull O3DE LFS assets and register the engine"
+description = "Register the O3DE 26.05 SDK engine and bind it to this project"
 
 [tasks.register-project]
 cmd = """
 cd $DEMO_ROOT/gems && git lfs install && git lfs pull &&
+python3 -c "
+import json, os
+m = os.path.expanduser('~/.o3de/o3de_manifest.json')
+with open(m) as f: d = json.load(f)
+keep = lambda x: not x.startswith(os.path.expanduser('~/.o3de/o3de-extras')) and x != os.path.expanduser('~/agentic-mobile-manipulator') and '/home/mmajek/agentic-mobile-manipulator' not in x
+d['external_subdirectories'] = [x for x in d.get('external_subdirectories', []) if keep(x)]
+d['projects'] = [x for x in d.get('projects', []) if '/home/mmajek/agentic-mobile-manipulator' not in x]
+d['engines'] = [x for x in d.get('engines', []) if '/home/mmajek/agentic-mobile-manipulator' not in x]
+d.get('engines_path', {}).pop('o3de', None)
+with open(m, 'w') as f: json.dump(d, f, indent=4)
+print('Manifest cleaned')
+" &&
 $O3DE_ROOT/scripts/o3de.sh register --project-path $DEMO_ROOT/sim --force
 """
-depends-on = ["setup-o3de"]
-description = "Register the simulation project"
+depends-on = ["setup-o3de", "clone-gems"]
+description = "Register the simulation project (also removes stale global gem registrations)"
 
 [tasks.build-ros2]
 cmd = """
 cd $DEMO_ROOT/ros2_ws &&
 rosdep update &&
 rosdep install --ignore-src --from-paths src -y &&
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
+    --packages-skip moveit_setup_assistant
 """
 depends-on = ["clone-ros2-ws"]
 description = "Build the ROS 2 workspace with colcon"
@@ -70,8 +79,9 @@ description = "Build the ROS 2 workspace with colcon"
 [tasks.build-o3de]
 cmd = """
 cd $DEMO_ROOT/sim &&
-cmake -B build/linux -G "Ninja Multi-Config" \
+cmake --fresh -B build/linux -G "Ninja Multi-Config" \
     -DCMAKE_MODULE_PATH=$O3DE_ROOT/cmake \
+    -DCMAKE_PREFIX_PATH="$DEMO_ROOT/ros2_ws/install;$CMAKE_PREFIX_PATH" \
     -DLY_DISABLE_TEST_MODULES=ON \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
     -DLY_STRIP_DEBUG_SYMBOLS=ON \
@@ -193,6 +203,26 @@ description = "Serve Qwen3-Embedding-0.6b on port 8082"
 cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $RERANKER_MODEL --embedding --pooling rank -c 4096 -b 2048 -ub 2048 --port 8083"
 env = { RERANKER_MODEL = "$DEMO_ROOT/models/qwen3-reranker-0.6b-q8_0.gguf" }
 description = "Serve Qwen3-Reranker-0.6B on port 8083"
+
+# ─── Docker Tasks ───────────────────────────────────────────────────────────────
+
+[tasks.docker-build-ros2]
+cmd = "docker compose -f $DEMO_ROOT/docker/compose.yaml build ros2"
+description = "Build the ROS 2 Docker image locally"
+
+[tasks.docker-build-o3de]
+cmd = "docker compose -f $DEMO_ROOT/docker/compose.yaml build sim"
+depends-on = ["docker-build-ros2"]
+description = "Build the O3DE simulation Docker image locally"
+
+[tasks.docker-build-agents]
+cmd = "docker compose -f $DEMO_ROOT/docker/compose.yaml build stack"
+depends-on = ["docker-build-ros2"]
+description = "Build the agents Docker image locally"
+
+[tasks.docker-build]
+depends-on = ["docker-build-o3de", "docker-build-agents"]
+description = "Build all Docker images locally"
 
 # ─── Dev Tasks ──────────────────────────────────────────────────────────────────
 

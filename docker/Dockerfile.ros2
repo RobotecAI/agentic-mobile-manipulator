@@ -1,23 +1,22 @@
 FROM ros:jazzy-ros-core
 
+RUN apt update && apt install -y \
+    curl \
+    python3-vcstool \
+    git \
+    git-lfs \
+    ninja-build \
+    ros-dev-tools
+
+RUN curl -fsSL https://pixi.sh/install.sh | PIXI_HOME=/usr/local bash
+
 WORKDIR /root/MobileManipulatorDemo
 ENV DEMO_ROOT=/root/MobileManipulatorDemo
-RUN apt update && apt install -y python3-vcstool git git-lfs ninja-build ros-dev-tools
-RUN rosdep init
 
-COPY ros2_ws.repos ${DEMO_ROOT}
-COPY ros2_ws/src ${DEMO_ROOT}/ros2_ws/src
+COPY pixi.toml pixi.lock pixi_activate.sh ros2_ws.repos ./
 
-WORKDIR ${DEMO_ROOT}
-RUN vcs import --input ${DEMO_ROOT}/ros2_ws.repos
+RUN rosdep init && pixi run build-ros2
 
-WORKDIR ${DEMO_ROOT}/ros2_ws
-RUN rosdep update
-RUN rosdep install --ignore-src --from-paths src -y
-RUN . /opt/ros/${ROS_DISTRO}/setup.sh && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 RUN echo "source ${DEMO_ROOT}/ros2_ws/install/setup.bash" >> ~/.bashrc
 
-RUN apt clean
-RUN rm -rf /var/lib/apt/lists/*
-
-WORKDIR ${DEMO_ROOT}
+RUN apt clean && rm -rf /var/lib/apt/lists/*

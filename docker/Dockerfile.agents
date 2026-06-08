@@ -4,16 +4,13 @@ FROM ${ROS2_IMAGE}
 WORKDIR /root/MobileManipulatorDemo
 ENV DEMO_ROOT=/root/MobileManipulatorDemo
 
-# install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.local/bin:$PATH"
+COPY pixi.toml pixi.lock pixi_activate.sh ./
+COPY pyproject.toml uv.lock ./
+COPY rai_app/ rai_app/
+COPY scripts/ scripts/
+COPY tests/ tests/
+COPY regulations_db/ regulations_db/
+COPY monitoring/ monitoring/
+COPY config.toml ./
 
-COPY pyproject.toml ${DEMO_ROOT}
-COPY rai_app/ ${DEMO_ROOT}/rai_app/
-COPY scripts/ ${DEMO_ROOT}/scripts/
-COPY tests/ ${DEMO_ROOT}/tests/
-COPY regulations_db/ ${DEMO_ROOT}/regulations_db/
-COPY monitoring/ ${DEMO_ROOT}/monitoring/
-COPY config.toml ${DEMO_ROOT}
-
-RUN uv sync
+RUN pixi run sync

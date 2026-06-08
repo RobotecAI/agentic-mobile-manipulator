@@ -13,7 +13,7 @@
         "MobileManipulatorDemo"
     ],
     "icon_path": "preview.png",
-    "engine": "o3de",
+    "engine": "o3de-sdk",
     "external_subdirectories": [
         "Gem",
         "../gems/o3de-extras/Gems/LevelGeoreferencing",
@@ -91,5 +91,5 @@
         "RobotecWarehouseFloorMarkingAssets",
         "HumanWorker"
     ],
-    "engine_version": "2.4.0"
+    "engine_version": "2.6.0"
 }
