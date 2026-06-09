@@ -16,6 +16,7 @@ scripts = ["scripts/setup_env.sh"]
 # All other build tools (cmake, ninja, clang, colcon, vcs) come from the ROS 2
 # dev-tools apt installation documented in docs/setup_single_machine.md.
 uv = ">=0.5"
+aria2 = ">=1.37"
 
 # ─── Setup Tasks ────────────────────────────────────────────────────────────────
 
