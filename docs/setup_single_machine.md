@@ -13,8 +13,7 @@ This repository is compatible with the following system:
 #### Clone the Repository
 
 ```shell
-cd /home/${USER}
-git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
+git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
 cd agentic-mobile-manipulator
 ```
 
