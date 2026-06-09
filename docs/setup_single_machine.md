@@ -73,19 +73,25 @@ If you want to run models locally via llama.cpp instead of cloud APIs:
 ```shell
 pixi run clone-inference
 pixi run build-llama # this step is hardware specifc. By default, it builds with Vulkan backend. Check for better solutions for your hardware.
-pixi run download-models  # or download the models manually, check the links below
+pixi run download-models
 ```
+
+`pixi run download-models` fetches all required models in parallel using `aria2c` and places them in `$DEMO_ROOT/models/`. Already downloaded files are skipped. If a download is interrupted, re-running the command will resume from where it left off.
 
 ---
 
 ### Download Models
 
-For every model configured in `config.toml`, download the GGUF file and place it in `$DEMO_ROOT/models/`:
+The following models are required for local inference. `pixi run download-models` handles all of them automatically, but the links below are provided for reference or manual download:
 
-- [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
-- [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) + [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
-- [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true)
-- [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true)
+| Model                                                                                                                                                                                                                            | Type      | Size              |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------------- |
+| [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)                                                                                                                | LLM       | ~12 GB            |
+| [LFM2-VL-3B](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) + [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true) | VLM       | ~3.2 GB + ~0.5 GB |
+| [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true)                                                                                          | Embedding | ~0.6 GB           |
+| [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true)                                                                                    | Reranker  | ~0.6 GB           |
+
+All files should be placed in `$DEMO_ROOT/models/`.
 
 ---
 
