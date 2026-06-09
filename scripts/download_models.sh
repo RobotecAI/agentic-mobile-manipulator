@@ -41,10 +41,10 @@ echo ""
 input_lines=()
 for i in "${!model_names[@]}"; do
     dest="$MODELS_DIR/${model_files[$i]}"
-    if [ -f "$dest" ]; then
+    if [ -f "$dest" ] && [ ! -f "${dest}.aria2" ]; then
         echo "  [skip]   ${model_names[$i]}"
     else
-        echo "  [queue]  ${model_names[$i]}"
+        echo "  [fetch]  ${model_names[$i]}"
         input_lines+=("${model_urls[$i]}")
         input_lines+=("  out=${model_files[$i]}")
     fi
@@ -57,6 +57,8 @@ if [ ${#input_lines[@]} -eq 0 ]; then
     exit 0
 fi
 
+echo ""
+echo "  Starting parallel download..."
 echo ""
 printf '%s\n' "${input_lines[@]}" | aria2c \
     --input-file=- \
