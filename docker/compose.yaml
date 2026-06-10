@@ -1,6 +1,11 @@
 services:
   sim:
     image: robotecai/mobile-manipulator-demo-o3de:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.o3de
+      args:
+        ROS2_IMAGE: mobile-manipulator-demo-ros2:latest
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -16,8 +21,17 @@ services:
     networks:
       - ros2_bridge
 
+  ros2:
+    image: mobile-manipulator-demo-ros2:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.ros2
+
   stack: &stack
     image: robotecai/mobile-manipulator-demo-agents:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.agents
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -29,7 +43,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-      - ../config.toml:/root/MobileManipulatorDemo/config.toml 
+      - ../config.toml:/root/MobileManipulatorDemo/config.toml
     networks:
       - ros2_bridge
 
@@ -48,7 +62,7 @@ services:
   nav2_agent:
     <<: *stack
     command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/nav2_agent.py"
-  
+
   moveit2_agent:
     <<: *stack
     command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/moveit2_agent.py"
@@ -79,7 +93,7 @@ services:
       - /dev/kfd:/dev/kfd
       - /dev/dri:/dev/dri
     volumes:
-      - ../cloud_config.toml:/root/MobileManipulatorDemo/config.toml 
+      - ../cloud_config.toml:/root/MobileManipulatorDemo/config.toml
 
     entrypoint: /ros_entrypoint.sh
     command: bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/agent_orchestrator.py"
