@@ -2,12 +2,12 @@
     "gem_name": "MobileManipulatorDemo",
     "version": "1.0.0",
     "display_name": "MobileManipulatorDemo",
-    "license": "What license MobileManipulatorDemo uses goes here: i.e. Apache-2.0 or MIT",
-    "license_url": "Link to the license web site goes here: i.e. https://opensource.org/licenses/Apache-2.0 Or https://opensource.org/licenses/MIT",
-    "origin": "The name of the originator goes here. i.e. XYZ Inc.",
-    "origin_url": "The primary repo for MobileManipulatorDemo goes here: i.e. http://www.mydomain.com",
+    "license": "Apache-2.0",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "https://github.com/RobotecAI/MobileManipulatorDemo",
+    "origin_url": "https://github.com/RobotecAI/MobileManipulatorDemo",
     "type": "",
-    "summary": "A short description of MobileManipulatorDemo.",
+    "summary": "Simulation environment for the Mobile Manipulator Demo.",
     "canonical_tags": [
         "Gem"
     ],
