@@ -235,7 +235,7 @@ class SceneManager:
 
         req = SpawnEntity.Request()
         req.name = name
-        req.entity_resource.uri = self.spawnable_to_uri[object_name]
+        req.uri = self.spawnable_to_uri[object_name]
         req.initial_pose.header.frame_id = frame
         req.initial_pose.pose.position.x = pose.position.x
         req.initial_pose.pose.position.y = pose.position.y
