@@ -5,8 +5,8 @@
 
 #include <MobileManipulatorDemo/MobileManipulatorDemoBus.h>
 
-#include "ROS2/Handlers/IROS2HandlerBase.h"
-#include "ROS2/ROS2Bus.h"
+#include <ROS2/Handlers/IROS2HandlerBase.h>
+#include <ROS2/ROS2Bus.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 
 namespace MobileManipulatorDemo

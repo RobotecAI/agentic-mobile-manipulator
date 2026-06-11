@@ -9,11 +9,10 @@
  */
 
 #include "SpawnEntityServiceHandler.h"
-#include "AzCore/Component/ComponentApplicationBus.h"
-#include "AzCore/Component/EntityId.h"
-#include "AzCore/Component/TransformBus.h"
-#include "AzCore/Debug/Trace.h"
-#include "SimulationInterfaces/Result.h"
+#include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/Component/TransformBus.h>
+#include <SimulationInterfaces/Result.h>
 #include "SpawnServiceUtils.h"
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <ROS2/ROS2Bus.h>
