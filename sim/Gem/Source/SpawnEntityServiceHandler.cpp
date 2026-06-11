@@ -87,15 +87,21 @@ namespace MobileManipulatorDemo
                 simulation_interfaces::msg::SimulatorFeatures::SPAWNING });
     }
 
+    template<typename RequestT>
+    AZStd::string_view getSpawnRequestUri(const RequestT& request)
+    {
+        if constexpr (requires { RequestT::entity_resource; }) {
+            return { request.entity_resource.uri.c_str(), request.entity_resource.uri.size() };
+        } else {
+            return { request.uri.c_str(), request.uri.size() };
+        }
+    }
+
     AZStd::optional<SpawnEntityServiceHandler::Response> SpawnEntityServiceHandler::HandleServiceRequest(
         const std::shared_ptr<rmw_request_id_t> header, const Request& request)
     {
         const AZStd::string_view name{ request.name.c_str(), request.name.size() };
-#if SIMULATION_INTERFACES_MAJOR_API_VERSION >= 2
-        const AZStd::string_view uri{ request.entity_resource.uri.c_str(), request.entity_resource.uri.size() };
-#else
-        const AZStd::string_view uri{ request.uri.c_str(), request.uri.size() };
-#endif
+        const AZStd::string_view uri = getSpawnRequestUri(request);
         const AZStd::string_view entityNamespace{ request.entity_namespace.c_str(), request.entity_namespace.size() };
         const AZStd::string_view messageFrameId{ request.initial_pose.header.frame_id.c_str(),
                                                  request.initial_pose.header.frame_id.size() };

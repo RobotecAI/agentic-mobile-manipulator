@@ -19,15 +19,6 @@ endif()
 # Note: We include the common files and the platform specific files which are set in mobilemanipulatordemo_files.cmake and
 # in ${pal_dir}/mobilemanipulatordemo_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
 
-find_package(simulation_interfaces REQUIRED)
-if(simulation_interfaces_VERSION VERSION_GREATER_EQUAL "2.0.0")
-  set(SIMULATION_INTERFACES_MAJOR_API_VERSION 2)
-elseif(simulation_interfaces_VERSION VERSION_GREATER_EQUAL "1.4.0")
-  set(SIMULATION_INTERFACES_MAJOR_API_VERSION 1)
-else()
-  message(FATAL_ERROR "simulation_interfaces version ${simulation_interfaces_VERSION} is not supported. Minimum required: 1.4.0")
-endif()
-message(STATUS "simulation_interfaces ${simulation_interfaces_VERSION} -> SIMULATION_INTERFACES_MAJOR_API_VERSION=${SIMULATION_INTERFACES_MAJOR_API_VERSION}")
 # The ${gem_name}.Private.Object target is an internal target
 # It should not be used outside of this CMakeLists.txt
 ly_add_target(
@@ -46,9 +37,6 @@ ly_add_target(
             Gem::SimulationInterfaces.API
             Gem::ROS2.API
 )
-target_compile_definitions(${gem_name}.Private.Object PUBLIC
-    SIMULATION_INTERFACES_MAJOR_API_VERSION=${SIMULATION_INTERFACES_MAJOR_API_VERSION})
-
 
 ly_add_target(
     NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
