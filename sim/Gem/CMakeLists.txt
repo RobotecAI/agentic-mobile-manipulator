@@ -44,7 +44,7 @@ ly_add_target(
             AZ::AzGameFramework
             Gem::Atom_AtomBridge.Static
             Gem::SimulationInterfaces.API
-            Gem::ROS2.Static
+            Gem::ROS2.API
 )
 target_compile_definitions(${gem_name}.Private.Object PUBLIC
     SIMULATION_INTERFACES_MAJOR_API_VERSION=${SIMULATION_INTERFACES_MAJOR_API_VERSION})
@@ -64,7 +64,7 @@ ly_add_target(
             Gem::${gem_name}.Private.Object
             AZ::AzCore
             Gem::SimulationInterfaces.API
-            Gem::ROS2.Static
+            Gem::ROS2.API
 )
 
 # Include the gem name into the Client Module source file
