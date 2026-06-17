@@ -1,5 +1,4 @@
-ARG ROS2_IMAGE=mobile-manipulator-demo-ros2:latest
-FROM ${ROS2_IMAGE}
+FROM base_image
 
 # Install O3DE build dependencies and the 26.05 SDK
 # Note: git, git-lfs, ninja-build, ros-dev-tools, pixi are inherited from base image
@@ -38,6 +37,7 @@ COPY .git .git/
 COPY project_gems/ project_gems/
 COPY sim/ sim/
 
+RUN pixi run install-o3de
 RUN pixi run build-sim
 
 WORKDIR /root/MobileManipulatorDemo

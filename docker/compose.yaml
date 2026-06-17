@@ -4,8 +4,8 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.o3de
-      args:
-        ROS2_IMAGE: mobile-manipulator-demo-ros2:latest
+      additional_contexts:
+        base_image: service:ros2
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -15,14 +15,13 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-      - ./start_sim.sh:/root/MobileManipulatorDemo/start_sim.sh
     entrypoint: /ros_entrypoint.sh
-    command: /root/MobileManipulatorDemo/start_sim.sh
+    command: pixi run sim
     networks:
       - ros2_bridge
 
   ros2:
-    image: mobile-manipulator-demo-ros2:latest
+    image: robotecai/mobile-manipulator-demo-ros2:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile.ros2
@@ -32,6 +31,8 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.agents
+      additional_contexts:
+        base_image: service:ros2
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -44,47 +45,53 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ../config.toml:/root/MobileManipulatorDemo/config.toml
+    command: pixi run ros2
     networks:
       - ros2_bridge
 
-  hmi:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch mobile_manipulator_hmi hmi_launch.py"
+  # hmi:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch mobile_manipulator_hmi hmi_launch.py"
 
-  kairos:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch robotec_kairos_ur10 robotec_launch.py"
+  # kairos:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch robotec_kairos_ur10 robotec_launch.py"
 
-  utilization_node:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run manipulator_hmi utilization_node"
+  # utilization_node:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run manipulator_hmi utilization_node"
 
-  nav2_agent:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/nav2_agent.py"
+  # nav2_agent:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/nav2_agent.py"
 
-  moveit2_agent:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/moveit2_agent.py"
+  # moveit2_agent:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/moveit2_agent.py"
 
-  scene_agent:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/environment/scene_agent.py"
+  # scene_agent:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/environment/scene_agent.py"
 
-  nav_lifecycle_node:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run nav2_lifecycle_manager nav_lifecycle_node"
+  # nav_lifecycle_node:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run nav2_lifecycle_manager nav_lifecycle_node"
 
-  inspection_agent:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/inspection_agent.py"
+  # inspection_agent:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/inspection_agent.py"
 
-  safety_agent:
-    <<: *stack
-    command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && cd /root/MobileManipulatorDemo && ./scripts/start_safety_agent.sh"
+  # safety_agent:
+  #   <<: *stack
+  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && cd /root/MobileManipulatorDemo && ./scripts/start_safety_agent.sh"
 
   agents:
     image: robotecai/mobile-manipulator-demo-agents:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.agents
+      additional_contexts:
+        base_image: service:ros2
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -96,25 +103,25 @@ services:
       - ../cloud_config.toml:/root/MobileManipulatorDemo/config.toml
 
     entrypoint: /ros_entrypoint.sh
-    command: bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/agent_orchestrator.py"
+    command: pixi run orchestrator
     networks:
       - ros2_bridge
 
-  safety-embeddings:
-    image: robotecai/mobile-manipulator-demo-llama:latest
-    build:
-      dockerfile: Dockerfile.llama
-    command: -m /custom_ggufs/Qwen3-Embedding-0.6b_BF16.gguf --embedding -c 4096 -b 2048 -ub 2048 --pooling last --port 8082 --host 0.0.0.0
-    networks:
-      - ros2_bridge
+  # safety-embeddings:
+  #   image: robotecai/mobile-manipulator-demo-llama:latest
+  #   build:
+  #     dockerfile: Dockerfile.llama
+  #   command: -m /custom_ggufs/Qwen3-Embedding-0.6b_BF16.gguf --embedding -c 4096 -b 2048 -ub 2048 --pooling last --port 8082 --host 0.0.0.0
+  #   networks:
+  #     - ros2_bridge
 
-  safety-reranker:
-    image: robotecai/mobile-manipulator-demo-llama:latest
-    build:
-      dockerfile: Dockerfile.llama
-    command: -m /custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf --embedding --pooling rank -fa on -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0
-    networks:
-      - ros2_bridge
+  # safety-reranker:
+  #   image: robotecai/mobile-manipulator-demo-llama:latest
+  #   build:
+  #     dockerfile: Dockerfile.llama
+  #   command: -m /custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf --embedding --pooling rank -fa on -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0
+  #   networks:
+  #     - ros2_bridge
 networks:
   ros2_bridge:
     driver: bridge

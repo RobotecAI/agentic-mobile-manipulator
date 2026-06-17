@@ -1,5 +1,4 @@
-ARG ROS2_IMAGE=robotecai/mobile-manipulator-demo-ros2:latest
-FROM ${ROS2_IMAGE}
+FROM base_image
 
 WORKDIR /root/MobileManipulatorDemo
 ENV DEMO_ROOT=/root/MobileManipulatorDemo
