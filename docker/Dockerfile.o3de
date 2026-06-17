@@ -38,6 +38,7 @@ COPY project_gems/ project_gems/
 COPY sim/ sim/
 
 RUN pixi run install-o3de
+RUN apt install -y git-lfs && git lfs install --force
 RUN pixi run build-sim
 
 WORKDIR /root/MobileManipulatorDemo

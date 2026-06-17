@@ -16,8 +16,10 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
     entrypoint: /ros_entrypoint.sh
-    command: pixi run sim
+    command: >
+      sh -c 'find /root/MobileManipulatorDemo/sim/Cache -type f -exec sh -c '"'"'cat "$@" > /dev/null'"'"' sh {} + && pixi run sim'
     networks:
+
       - ros2_bridge
 
   ros2:
