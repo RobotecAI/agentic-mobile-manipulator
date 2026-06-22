@@ -1,0 +1,21 @@
+<RCC>
+  <qresource prefix="/">
+    <file>qml/Main.qml</file>
+    <file>qml/Theme.js</file>
+    <file>qml/components/Kicker.qml</file>
+    <file>qml/components/GlassPanel.qml</file>
+    <file>qml/components/AppButton.qml</file>
+    <file>qml/components/StatusOrb.qml</file>
+    <file>qml/components/Chip.qml</file>
+    <file>qml/components/RadialGauge.qml</file>
+    <file>qml/components/Sparkline.qml</file>
+    <file>qml/components/StatTile.qml</file>
+    <file>qml/components/CameraTile.qml</file>
+    <file>qml/components/ActionCard.qml</file>
+    <file>qml/components/ScenarioTile.qml</file>
+    <file>qml/components/DpadButton.qml</file>
+    <file>qml/views/MissionView.qml</file>
+    <file>qml/views/ControlView.qml</file>
+    <file>qml/views/TelemetryView.qml</file>
+  </qresource>
+</RCC>

@@ -42,15 +42,14 @@
 #include "Config.h"
 #include "LogQueue.h"
 #include "LogView.h"
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class HMIWindow;
-}
-QT_END_NAMESPACE
+#include "UiKit.h"
+#include "ZoomableGraphicsView.h"
 
-class QFrame;
-
-
+class QCheckBox;
+class QLineEdit;
+class QListWidget;
+class QVBoxLayout;
+class QLabel;
 
 class HMIWindow : public QMainWindow
 {
@@ -65,46 +64,79 @@ private slots:
     void openCustomTaskDialog();
 
 private:
+    // --- UI construction ---
+    QWidget* buildHeader();
+    QWidget* buildControlTab();
+    QWidget* buildStatusTab();
+    QWidget* buildMissionTab();
+
+    // --- ROS handling ---
+    void initRos();
     void cameraButtonCallback(const std::string& cameraName);
     void imageCallback(const sensor_msgs::msg::Image::SharedPtr msg, QGraphicsView* view);
     void mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg);
     void logCallback(const rcl_interfaces::msg::Log::SharedPtr msg);
     void publishCmdVel(double linear_x, double angular_z);
-    // void setCurrentTaskName(const QString& name);
-    // void setDoneTasks(const QStringList& done);
+    void publishPrompt(const std::string& prompt);
 
     void updateRobotPose();
-    void setFrameUtilization(QFrame* frame, float percent);
-    void setFrameBinaryState(QFrame* frame, bool ok);
-    void setFrameDisabled(QFrame* frame);
-
     void buildListTask();
 
     int current_rack_index_ {0};
 
     QString currentActionText_;
     QString currentActionCommId_;
-    
-    Ui::HMIWindow *ui;
+
     rclcpp::Node::SharedPtr node_;
-    QTimer *ros_timer_;
+    QTimer *ros_timer_ {nullptr};
+    QTimer *orchestrator_timer_ {nullptr};
 
-    QTimer *orchestrator_timer_;
-    QTimer *inspection_timer_;
-    QTimer *safety_timer_;
+    // --- widgets referenced by callbacks ---
+    // mission observer
+    QGraphicsView* graphicsViewCameras_ {nullptr};
+    QGraphicsView* topCameraGraphicsView_ {nullptr};
+    ZoomableGraphicsView* graphicsViewMap_ {nullptr};
 
-    LogQueue *logQueue_;
-    LogView *logView_;
-    LogView *queueView_;
+    // control tab inputs
+    QCheckBox* cpuCheck_ {nullptr};
+    QCheckBox* gpuCheck_ {nullptr};
+    QCheckBox* pipesCheck_ {nullptr};
+    QCheckBox* hammersCheck_ {nullptr};
+    QCheckBox* nailsCheck_ {nullptr};
+    QCheckBox* motherboardCheck_ {nullptr};
+    QLineEdit* freeFormEdit_ {nullptr};
+    QPushButton* restartButton_ {nullptr};
+    QLabel* housekeepingHint_ {nullptr};
 
-    LogItemWidget *currentAction_;
-    LogItemWidget *currentTask_;
+    // status tab telemetry
+    ui::StatBar* cpuBar_ {nullptr};
+    ui::StatBar* ramBar_ {nullptr};
+    ui::StatBar* gpuBar_ {nullptr};
+    ui::StatBar* diskBar_ {nullptr};
+    ui::StatBar* vramBar_ {nullptr};
+    ui::StatusPill* nav2Pill_ {nullptr};
+    ui::StatusPill* moveit2Pill_ {nullptr};
+    ui::StatusPill* orchestratorPill_ {nullptr};
+    ui::StatusPill* ddsPill_ {nullptr};
+    ui::StatusPill* watchdogPill_ {nullptr};
+    ui::StatusPill* entitiesPill_ {nullptr};
+    ui::StatusPill* agentPill_ {nullptr}; // lives in the header
+    QListWidget* listLog_ {nullptr};
+    QLabel* lastWarningLabel_ {nullptr};
+
+    // mission tab
+    ui::StatTile* taskTile_ {nullptr};
+    LogView* logView_ {nullptr};
+    LogView* queueView_ {nullptr};
+    LogItemWidget* currentAction_ {nullptr};
+    LogItemWidget* currentTask_ {nullptr};
+    QVBoxLayout* listTaskLayout_ {nullptr};
+    QVBoxLayout* vlmLayout_ {nullptr};
 
     QStringList past_steps_;
     QStringList task_queue_;
     QStringList paused_tasks_;
 
-    int agent_fill_percent_ = 0;
     std::map<std::string, QPushButton*> camera_buttons_;
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_;
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr top_image_sub_;
@@ -127,7 +159,6 @@ private:
     rclcpp::Subscription<demo_msgs::msg::Utilization>::SharedPtr utilization_sub_;
 
     rclcpp::Subscription<demo_msgs::msg::VlmDescription>::SharedPtr vlm_topic_sub_;
-
 
     rclcpp::Subscription<rai_interfaces::msg::HRIMessage>::SharedPtr current_action_sub_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr agent_past_steps_sub_;

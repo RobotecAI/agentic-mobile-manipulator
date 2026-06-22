@@ -6,5 +6,6 @@
         <file>icons/Up.svg</file>
         <file>icons/DoneTask.svg</file>
         <file>icons/CurrentTask.svg</file>
+        <file>icons/Check.svg</file>
     </qresource>
 </RCC>

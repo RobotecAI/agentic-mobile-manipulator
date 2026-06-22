@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<package format="3">
+  <name>kairos_hmi_qml</name>
+  <version>0.1.0</version>
+  <description>Qt Quick (QML) Human-Machine-Interface for the Robotnik Kairos+ agentic mobile manipulator — a high-fidelity port of the web HMI design.</description>
+  <maintainer email="maciej.majek@robotec.ai">Robotec.ai</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <depend>rcl_interfaces</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>demo_msgs</depend>
+  <depend>rai_interfaces</depend>
+
+  <exec_depend>qml-module-qtquick2</exec_depend>
+  <exec_depend>qml-module-qtquick-controls2</exec_depend>
+  <exec_depend>qml-module-qtquick-layouts</exec_depend>
+  <exec_depend>qml-module-qtgraphicaleffects</exec_depend>
+  <exec_depend>qml-module-qtquick-window2</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

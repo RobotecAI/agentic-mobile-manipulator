@@ -91,7 +91,9 @@ set(PROJECT_SOURCES
         LogQueue.cpp
         hmiWindow.cpp
         hmiWindow.h
-        hmiWindow.ui
+        Theme.h
+        UiKit.h
+        UiKit.cpp
         TaskDialog.cpp
         TaskDialog.h
         resources.qrc

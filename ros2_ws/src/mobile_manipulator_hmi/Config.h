@@ -117,6 +117,24 @@ namespace HardcodedConfig {
     "L09",
     "L10"};
     const static std::string taskCPrompt = "Prepare shipping of the following items: ";
+    const static std::string taskInspectPrompt =
+        "Drive the warehouse and inspect for hazards such as spills, blocked paths "
+        "or misplaced items. Report any anomalies you find.";
+
+    // Static roster shown in the Status tab "AI Models" panel. These reflect the
+    // ROSCon2025 local model stack; live port/VRAM/slot telemetry is not wired yet.
+    struct ModelInfo {
+        const char* name;
+        const char* role;
+        const char* port;
+        const char* vram;
+    };
+    const static std::vector<ModelInfo> AiModels = {
+        {"gpt-oss-20b",     "orchestrator LLM", ":8080", "11.5 GB"},
+        {"lfm2-vl",         "VLM hazard analysis", ":8081", "3.8 GB"},
+        {"qwen3-embedding", "memory retrieval", ":8082", "0.7 GB"},
+        {"qwen3-reranker",  "memory ranking", ":8083", "0.7 GB"},
+    };
 
     const static char MapTopic[] = "/global_costmap/static_layer";
     const static char GoalTopic[] = "/goal_pose";

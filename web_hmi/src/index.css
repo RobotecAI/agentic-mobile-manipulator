@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   KAIROS COMMAND — a cinematic, dark "mission-control" theme.
+   Glassmorphism, gradient accents, glow, refined type. Looks over practicality.
+============================================================================ */
+@theme {
+  --color-bg: #06080d;
+  --color-bg2: #0a0e16;
+
+  --color-fg: #e9eef7;
+  --color-dim: #9aa6ba;
+  --color-faint: #5c6779;
+
+  --color-cyan: #22d3ee;
+  --color-blue: #38bdf8;
+  --color-indigo: #6366f1;
+  --color-violet: #a78bfa;
+  --color-amber: #f9a23b;
+  --color-rose: #fb7185;
+  --color-emerald: #34d399;
+  --color-red: #fb5a5a;
+  --color-yellow: #fbbf24;
+
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Inter Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---- ambient backdrop: deep space + drifting aurora + faint grid ---- */
+.app-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(1100px 700px at 12% -8%, rgba(56, 189, 248, 0.16), transparent 60%),
+    radial-gradient(1000px 760px at 100% 0%, rgba(167, 139, 250, 0.14), transparent 58%),
+    radial-gradient(1200px 900px at 78% 116%, rgba(249, 162, 59, 0.12), transparent 60%),
+    linear-gradient(180deg, #070a11, #05070c);
+}
+.app-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(circle at 50% 30%, black, transparent 78%);
+}
+
+/* ---- glass surfaces ---- */
+.glass {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 18px 40px -22px rgba(0, 0, 0, 0.8);
+}
+.glass-tint {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ---- glows ---- */
+.glow-cyan {
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.4), 0 0 32px -6px rgba(34, 211, 238, 0.5);
+}
+.glow-red {
+  box-shadow: 0 0 0 1px rgba(251, 90, 90, 0.5), 0 0 30px -4px rgba(251, 90, 90, 0.6);
+}
+
+/* ---- type helpers ---- */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-cyan), var(--color-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- scrollbars ---- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.26);
+  background-clip: content-box;
+}
+
+/* ---- keyframes ---- */
+@keyframes orb-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes sheen {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(220%); }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
