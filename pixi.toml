@@ -6,11 +6,10 @@ channels = ["conda-forge"]
 platforms = ["linux-64"]
 
 # ─── Environment ────────────────────────────────────────────────────────────────
-# DEMO_ROOT and O3DE_ROOT are set automatically — no need to add them to .bashrc.
 # pixi_activate.sh sources ROS 2 setup files when available.
 [activation]
-env = { DEMO_ROOT = "${PIXI_PROJECT_ROOT}", O3DE_ROOT = "${PIXI_PROJECT_ROOT}/engine/o3de" }
-scripts = ["pixi_activate.sh"]
+env = {DEMO_ROOT = "${PIXI_PROJECT_ROOT}"}
+scripts = ["scripts/setup_env.sh"]
 
 [dependencies]
 # uv is the Python package manager used by this project.
@@ -20,41 +19,37 @@ uv = ">=0.5"
 
 # ─── Setup Tasks ────────────────────────────────────────────────────────────────
 
-[tasks.clone-engine]
+[tasks.install-o3de]
+cmd = "scripts/install_o3de.sh"
+
+[tasks.clone-gems]
 cmd = """
-vcs import --input $DEMO_ROOT/engine.repos &&
 vcs import --input $DEMO_ROOT/gems.repos
 """
-description = "Clone O3DE engine and gems"
+description = "Clone local O3DE gems"
 
 [tasks.clone-ros2-ws]
 cmd = "vcs import --input $DEMO_ROOT/ros2_ws.repos"
 description = "Clone ROS 2 workspace repositories"
 
 [tasks.clone]
-depends-on = ["clone-engine", "clone-ros2-ws"]
-description = "Clone all repositories (engine, gems, and ROS 2 workspace)"
+depends-on = ["clone-gems", "clone-ros2-ws"]
+description = "Clone all repositories (gems and ROS 2 workspace)"
 
 [tasks.clone-inference]
 cmd = "vcs import --input $DEMO_ROOT/inference.repos"
 description = "Clone llama.cpp (required for local inference)"
 
-[tasks.setup-o3de]
-cmd = """
-cd $O3DE_ROOT &&
-git lfs install && git lfs pull &&
-python/get_python.sh &&
-$O3DE_ROOT/scripts/o3de.sh register --this-engine
-"""
-depends-on = ["clone-engine"]
-description = "Pull O3DE LFS assets and register the engine"
+[tasks.register-gems]
+cmd = "scripts/register_gems.sh"
+depends-on = ["clone-gems", "install-o3de"]
 
 [tasks.register-project]
 cmd = """
 cd $DEMO_ROOT/gems && git lfs install && git lfs pull &&
-$O3DE_ROOT/scripts/o3de.sh register --project-path $DEMO_ROOT/sim --force
+$O3DE_ENGINE_PATH/scripts/o3de.sh register --project-path $DEMO_ROOT/sim --force
 """
-depends-on = ["setup-o3de"]
+depends-on = ["install-o3de"]
 description = "Register the simulation project"
 
 [tasks.build-ros2]
@@ -67,7 +62,7 @@ colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 depends-on = ["clone-ros2-ws"]
 description = "Build the ROS 2 workspace with colcon"
 
-[tasks.build-o3de]
+[tasks.build-sim]
 cmd = """
 cd $DEMO_ROOT/sim &&
 cmake -B build/linux -G "Ninja Multi-Config" \
@@ -79,8 +74,8 @@ cmake -B build/linux -G "Ninja Multi-Config" \
 cmake --build build/linux --config profile \
     --target MobileManipulatorDemo Editor MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher
 """
-depends-on = ["register-project", "build-ros2"]
-description = "Build O3DE Editor and GameLauncher (slow — takes 30–60 min)"
+depends-on = ["register-gems", "register-project", "build-ros2"]
+description = "Build O3DE Editor and GameLauncher"
 
 [tasks.build-llama]
 cmd = """
@@ -98,7 +93,7 @@ description = "Install Python dependencies"
 # Full setup: runs all build steps in dependency order.
 # Run pixi run setup-local if you also need local llama.cpp inference.
 [tasks.setup]
-depends-on = ["build-ros2", "build-o3de", "sync"]
+depends-on = ["build-ros2", "build-sim", "sync"]
 description = "Full setup (O3DE + ROS 2 + Python). See also: setup-local."
 
 [tasks.setup-hil]
@@ -131,6 +126,10 @@ description = "Launch the Human-Machine Interface"
 [tasks.orchestrator]
 cmd = "uv run python rai_app/agents/agent_orchestrator.py"
 description = "Launch the agent orchestrator"
+
+[tasks.editor]
+cmd = "$O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor"
+description = "Launch O3DE editor"
 
 # Individual agents — use these instead of ros2 when debugging a specific component.
 [tasks.nav2-agent]
