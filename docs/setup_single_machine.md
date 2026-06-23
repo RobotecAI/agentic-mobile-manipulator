@@ -99,13 +99,13 @@ We use conventional commits to ensure that the commit messages are consistent an
 ### Pre-commit
 
 ```bash
-pixi run pre-commit-install
+pixi run -e dev pre-commit-install
 ```
 
 To run hooks manually:
 
 ```bash
-pixi run lint
+pixi run -e dev lint
 ```
 
 # Next Steps

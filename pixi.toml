@@ -278,6 +278,14 @@ description = "Start full demo: sim → ros2 → inference → orchestrator (3 t
 cmd = "bash scripts/demo_stop.sh"
 description = "Stop all demo tmux sessions"
 
+# ─── Feature: dev ───────────────────────────────────────────────────────────────
+# Lightweight environment for linting and pre-commit only (no ROS 2, no compiler).
+# Use `pixi run -e dev <task>` for pre-commit-install, lint, and test so that
+# pixi does not pull gcc/ROS 2 packages just to run Python tooling.
+
+[feature.dev.dependencies]
+uv = ">=0.5"
+
 # ─── Environments ───────────────────────────────────────────────────────────────
 # Run `pixi run -e <env> setup` to bootstrap the matching machine type.
 # Tasks from features not included in an environment are unavailable in it —
@@ -288,3 +296,4 @@ default   = {features = ["ros2", "sim", "profile-default"]}
 hil       = {features = ["ros2", "profile-hil"]}
 hil-local = {features = ["ros2", "local-inference", "profile-hil-local"]}
 local     = {features = ["ros2", "sim", "local-inference", "profile-local"]}
+dev       = {features = ["dev"], no-default-feature = true}
