@@ -48,12 +48,12 @@ pixi run -e hil setup
 
 This runs:
 
-| Step | pixi task        | What it does                            |
-| ---- | ---------------- | --------------------------------------- |
-| 1    | `clone-ros2-ws`  | `vcs import` for ROS 2 workspace        |
-| 2    | `rosdep-update`  | `rosdep update` — refresh package index |
-| 3    | `build-ros2`     | `rosdep install` + `colcon build`       |
-| 4    | `sync`           | `uv sync` — install Python dependencies |
+| Step | pixi task       | What it does                            |
+| ---- | --------------- | --------------------------------------- |
+| 1    | `clone-ros2-ws` | `vcs import` for ROS 2 workspace        |
+| 2    | `rosdep-update` | `rosdep update` — refresh package index |
+| 3    | `build-ros2`    | `rosdep install` + `colcon build`       |
+| 4    | `sync`          | `uv sync` — install Python dependencies |
 
 ---
 
