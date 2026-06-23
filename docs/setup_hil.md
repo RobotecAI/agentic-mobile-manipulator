@@ -43,16 +43,17 @@ Restart your shell or run `source ~/.bashrc` after installation.
 ### Build
 
 ```shell
-pixi run setup-hil
+pixi run -e hil setup
 ```
 
 This runs:
 
-| Step | pixi task       | What it does                            |
-| ---- | --------------- | --------------------------------------- |
-| 1    | `clone-ros2-ws` | `vcs import` for ROS 2 workspace        |
-| 2    | `build-ros2`    | `rosdep install` + `colcon build`       |
-| 3    | `sync`          | `uv sync` — install Python dependencies |
+| Step | pixi task        | What it does                            |
+| ---- | ---------------- | --------------------------------------- |
+| 1    | `clone-ros2-ws`  | `vcs import` for ROS 2 workspace        |
+| 2    | `rosdep-update`  | `rosdep update` — refresh package index |
+| 3    | `build-ros2`     | `rosdep install` + `colcon build`       |
+| 4    | `sync`           | `uv sync` — install Python dependencies |
 
 ---
 
@@ -73,7 +74,7 @@ vulkaninfo
 ### Build llama.cpp
 
 ```shell
-pixi run build-llama
+pixi run -e hil-local build-llama
 ```
 
 This clones llama.cpp and builds it with Vulkan backend.
@@ -81,7 +82,7 @@ This clones llama.cpp and builds it with Vulkan backend.
 Or, to run the full HIL setup including llama.cpp in one command:
 
 ```shell
-pixi run setup-hil-local
+pixi run -e hil-local setup
 ```
 
 ### Download Models

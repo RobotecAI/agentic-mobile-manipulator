@@ -1,3 +1,24 @@
+x-ros2-stack: &stack
+  image: robotecai/mobile-manipulator-demo-agents:latest
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile.agents
+    additional_contexts:
+      base_image: service:ros2
+  environment:
+    - DISPLAY=${DISPLAY}
+    - QT_X11_NO_MITSHM=1
+    - OPENAI_API_KEY=${OPENAI_API_KEY}
+  entrypoint: /ros_entrypoint.sh
+  devices:
+    - /dev/kfd:/dev/kfd
+    - /dev/dri:/dev/dri
+  volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  networks:
+    - ros2_bridge
+
 services:
   sim:
     image: robotecai/mobile-manipulator-demo-o3de:latest
@@ -19,8 +40,10 @@ services:
     command: >
       sh -c 'find /root/MobileManipulatorDemo/sim/Cache -type f -exec sh -c '"'"'cat "$@" > /dev/null'"'"' sh {} + && pixi run sim'
     networks:
-
       - ros2_bridge
+    depends_on:
+      ros2-stack:
+        condition: service_started
 
   ros2:
     image: robotecai/mobile-manipulator-demo-ros2:latest
@@ -28,63 +51,84 @@ services:
       context: ..
       dockerfile: docker/Dockerfile.ros2
 
-  stack: &stack
-    image: robotecai/mobile-manipulator-demo-agents:latest
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.agents
-      additional_contexts:
-        base_image: service:ros2
-    environment:
-      - DISPLAY=${DISPLAY}
-      - QT_X11_NO_MITSHM=1
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-    entrypoint: /ros_entrypoint.sh
-    devices:
-      - /dev/kfd:/dev/kfd
-      - /dev/dri:/dev/dri
+  ros2-stack:
+    <<: *stack
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ../config.toml:/root/MobileManipulatorDemo/config.toml
     command: pixi run ros2
-    networks:
-      - ros2_bridge
 
   # hmi:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch mobile_manipulator_hmi hmi_launch.py"
 
   # kairos:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch robotec_kairos_ur10 robotec_launch.py"
 
   # utilization_node:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run manipulator_hmi utilization_node"
 
   # nav2_agent:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/nav2_agent.py"
 
   # moveit2_agent:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/moveit2_agent.py"
 
   # scene_agent:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/environment/scene_agent.py"
 
   # nav_lifecycle_node:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run nav2_lifecycle_manager nav_lifecycle_node"
 
   # inspection_agent:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/inspection_agent.py"
 
   # safety_agent:
   #   <<: *stack
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
   #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && cd /root/MobileManipulatorDemo && ./scripts/start_safety_agent.sh"
 
   agents:
@@ -95,19 +139,19 @@ services:
       additional_contexts:
         base_image: service:ros2
     environment:
-      - DISPLAY=${DISPLAY}
-      - QT_X11_NO_MITSHM=1
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     devices:
       - /dev/kfd:/dev/kfd
       - /dev/dri:/dev/dri
     volumes:
       - ../cloud_config.toml:/root/MobileManipulatorDemo/config.toml
-
     entrypoint: /ros_entrypoint.sh
     command: pixi run orchestrator
     networks:
       - ros2_bridge
+    depends_on:
+      ros2-stack:
+        condition: service_started
 
   # safety-embeddings:
   #   image: robotecai/mobile-manipulator-demo-llama:latest
@@ -124,6 +168,7 @@ services:
   #   command: -m /custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf --embedding --pooling rank -fa on -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0
   #   networks:
   #     - ros2_bridge
+
 networks:
   ros2_bridge:
     driver: bridge

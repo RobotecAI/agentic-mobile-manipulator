@@ -23,7 +23,7 @@ ENV DEMO_ROOT=/root/MobileManipulatorDemo
 
 COPY pixi.toml pixi.lock ros2_ws.repos ./
 COPY scripts/ scripts/
-COPY ros2_ws/ ros2_ws/
+COPY ros2_ws/src/ ros2_ws/src/
 
 RUN rosdep init && pixi run build-ros2
 
