@@ -53,17 +53,16 @@ pixi run setup
 
 This single command runs the full build pipeline in the correct order:
 
-| Step | pixi task          | What it does                                          |
-| ---- | ------------------ | ----------------------------------------------------- |
-| 1    | `clone-gems`       | `vcs import` for local O3DE gems                      |
-| 2    | `clone-ros2-ws`    | `vcs import` for the ROS 2 workspace                  |
-| 3    | `install-o3de`     | Install the O3DE engine                               |
-| 4    | `register-gems`    | Register O3DE gems                                    |
-| 5    | `register-project` | Run `git lfs pull` and register the simulation project|
-| 6    | `build-ros2`       | `rosdep install` + `colcon build`                     |
-| 7    | `build-sim`        | CMake configure + Ninja build (GameLauncher)          |
-| 8    | `sync`             | `uv sync` — install Python dependencies               |
-
+| Step | pixi task          | What it does                                           |
+| ---- | ------------------ | ------------------------------------------------------ |
+| 1    | `clone-gems`       | `vcs import` for local O3DE gems                       |
+| 2    | `clone-ros2-ws`    | `vcs import` for the ROS 2 workspace                   |
+| 3    | `install-o3de`     | Install the O3DE engine                                |
+| 4    | `register-gems`    | Register O3DE gems                                     |
+| 5    | `register-project` | Run `git lfs pull` and register the simulation project |
+| 6    | `build-ros2`       | `rosdep install` + `colcon build`                      |
+| 7    | `build-sim`        | CMake configure + Ninja build (GameLauncher)           |
+| 8    | `sync`             | `uv sync` — install Python dependencies                |
 
 ---
 
