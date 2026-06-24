@@ -12,9 +12,6 @@ env = {DEMO_ROOT = "${PIXI_PROJECT_ROOT}"}
 scripts = ["scripts/setup_env.sh"]
 
 [dependencies]
-# Python package manager for rai_app dependencies.
-uv = ">=0.5"
-
 # ─── ROS 2 Jazzy (RoboStack) ─────────────────────────────────────────────────
 # The full ROS 2 runtime comes from the robostack-jazzy conda channel.
 # pixi runs RoboStack's activation scripts automatically, so AMENT_PREFIX_PATH,
@@ -54,30 +51,11 @@ pkg-config = "*"
 qt-main = "*"
 nlohmann_json = "*"
 
-# ─── Workspace tasks (available in every environment) ───────────────────────────
+# ─── Workspace tasks ────────────────────────────────────────────────────────────
 
 [tasks.check-env]
 cmd = "bash scripts/check_env.sh"
 description = "Fail fast if apt ROS 2 (/opt/ros) is sourced — must not be mixed with conda/RoboStack"
-
-[tasks.sync]
-cmd = "uv sync"
-description = "Install Python dependencies"
-
-[tasks.pre-commit-install]
-cmd = "uv run pre-commit install"
-depends-on = ["sync"]
-description = "Install pre-commit hooks"
-
-[tasks.lint]
-cmd = "uv run pre-commit run --all-files"
-depends-on = ["sync"]
-description = "Run all linters and formatters"
-
-[tasks.test]
-cmd = "uv run pytest"
-depends-on = ["sync"]
-description = "Run test suite"
 
 [tasks.smoke-test]
 cmd = "bash scripts/smoke_test.sh"
@@ -279,12 +257,32 @@ cmd = "bash scripts/demo_stop.sh"
 description = "Stop all demo tmux sessions"
 
 # ─── Feature: dev ───────────────────────────────────────────────────────────────
-# Lightweight environment for linting and pre-commit only (no ROS 2, no compiler).
-# Use `pixi run -e dev <task>` for pre-commit-install, lint, and test so that
-# pixi does not pull gcc/ROS 2 packages just to run Python tooling.
+# Lightweight feature for Python tooling (uv, pre-commit, pytest).
+# Included in every environment so `pixi run sync/lint/test` works everywhere.
+# Use `pixi run -e dev <task>` to avoid installing ROS 2 / compiler packages
+# when all you need is linting or tests.
 
 [feature.dev.dependencies]
 uv = ">=0.5"
+
+[feature.dev.tasks.sync]
+cmd = "uv sync"
+description = "Install Python dependencies"
+
+[feature.dev.tasks.pre-commit-install]
+cmd = "uv run pre-commit install"
+depends-on = ["sync"]
+description = "Install pre-commit hooks"
+
+[feature.dev.tasks.lint]
+cmd = "uv run pre-commit run --all-files"
+depends-on = ["sync"]
+description = "Run all linters and formatters"
+
+[feature.dev.tasks.test]
+cmd = "uv run pytest"
+depends-on = ["sync"]
+description = "Run test suite"
 
 # ─── Environments ───────────────────────────────────────────────────────────────
 # Run `pixi run -e <env> setup` to bootstrap the matching machine type.
@@ -292,8 +290,8 @@ uv = ">=0.5"
 # e.g. `build-sim` cannot be run in the `hil` environment.
 
 [environments]
-default   = {features = ["ros2", "sim", "profile-default"]}
-hil       = {features = ["ros2", "profile-hil"]}
-hil-local = {features = ["ros2", "local-inference", "profile-hil-local"]}
-local     = {features = ["ros2", "sim", "local-inference", "profile-local"]}
+default   = {features = ["dev", "ros2", "sim", "profile-default"]}
+hil       = {features = ["dev", "ros2", "profile-hil"]}
+hil-local = {features = ["dev", "ros2", "local-inference", "profile-hil-local"]}
+local     = {features = ["dev", "ros2", "sim", "local-inference", "profile-local"]}
 dev       = {features = ["dev"], no-default-feature = true}
