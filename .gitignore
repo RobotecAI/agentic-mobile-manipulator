@@ -1,5 +1,6 @@
 gems/
 engine/
+external/
 inference/
 ros2_ws/install
 ros2_ws/build

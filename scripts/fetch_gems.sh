@@ -2,21 +2,33 @@
 # Clone o3de-extras (ROS2, SimulationInterfaces, etc.) into external/o3de-extras
 # at a pinned ref, project-local. No o3de.sh calls — gems are registered purely
 # via external_subdirectories in sim/project.json.
-# Idempotent: skips the clone if already at the pinned ref.
+# Shallow clone (--depth 1): only the working tree at the pinned commit.
+# Idempotent: skips the fetch if HEAD already matches the pinned ref.
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 O3DE_EXTRAS_URL="${O3DE_EXTRAS_URL:-https://github.com/o3de/o3de-extras.git}"
-O3DE_EXTRAS_REF="${O3DE_EXTRAS_REF:-2942b796c4fe4a8b9e255be1b315df79393d9c39}"
+O3DE_EXTRAS_TAG="${O3DE_EXTRAS_TAG:-2605.0}"
+O3DE_EXTRAS_REF="${O3DE_EXTRAS_REF:-8e7f0f049772a61756ecf46b4319a14ff27710da}"
 O3DE_EXTRAS_PATH="${O3DE_EXTRAS_PATH:-$REPO_ROOT/external/o3de-extras}"
 PROJECT_JSON="$REPO_ROOT/sim/project.json"
+
+_shallow_fetch() {
+    git -C "$O3DE_EXTRAS_PATH" fetch --depth 1 origin "refs/tags/$O3DE_EXTRAS_TAG"
+    git -C "$O3DE_EXTRAS_PATH" checkout FETCH_HEAD
+    ACTUAL=$(git -C "$O3DE_EXTRAS_PATH" rev-parse HEAD)
+    if [[ "$ACTUAL" != "$O3DE_EXTRAS_REF" ]]; then
+        echo "ERROR: tag $O3DE_EXTRAS_TAG resolved to $ACTUAL, expected $O3DE_EXTRAS_REF" >&2
+        echo "       Update O3DE_EXTRAS_REF in this script if the tag was intentionally moved." >&2
+        exit 1
+    fi
+}
 
 # ── Clone / reconcile o3de-extras ───────────────────────────────────────────
 if [[ -d "$O3DE_EXTRAS_PATH/.git" ]]; then
     CURRENT_REF=$(git -C "$O3DE_EXTRAS_PATH" rev-parse HEAD)
-    EXPECTED_REF=$(git -C "$O3DE_EXTRAS_PATH" rev-parse "$O3DE_EXTRAS_REF" 2>/dev/null || echo "")
-    if [[ "$CURRENT_REF" == "$EXPECTED_REF" && -n "$EXPECTED_REF" ]]; then
+    if [[ "$CURRENT_REF" == "$O3DE_EXTRAS_REF" ]]; then
         echo "o3de-extras at pinned ref ${O3DE_EXTRAS_REF:0:12} ($O3DE_EXTRAS_PATH)"
     else
         if ! git -C "$O3DE_EXTRAS_PATH" diff --quiet HEAD --; then
@@ -25,15 +37,14 @@ if [[ -d "$O3DE_EXTRAS_PATH/.git" ]]; then
             exit 1
         fi
         echo "o3de-extras HEAD (${CURRENT_REF:0:12}) != pinned (${O3DE_EXTRAS_REF:0:12}); reconciling..."
-        git -C "$O3DE_EXTRAS_PATH" fetch --quiet origin "$O3DE_EXTRAS_REF" || \
-            git -C "$O3DE_EXTRAS_PATH" fetch --quiet origin
-        git -C "$O3DE_EXTRAS_PATH" checkout --quiet "$O3DE_EXTRAS_REF"
+        _shallow_fetch
     fi
 else
-    echo "Cloning o3de-extras into $O3DE_EXTRAS_PATH..."
-    mkdir -p "$(dirname "$O3DE_EXTRAS_PATH")"
-    git clone "$O3DE_EXTRAS_URL" "$O3DE_EXTRAS_PATH"
-    git -C "$O3DE_EXTRAS_PATH" checkout "$O3DE_EXTRAS_REF"
+    echo "Cloning o3de-extras into $O3DE_EXTRAS_PATH (shallow, no LFS)..."
+    mkdir -p "$O3DE_EXTRAS_PATH"
+    git init "$O3DE_EXTRAS_PATH"
+    git -C "$O3DE_EXTRAS_PATH" remote add origin "$O3DE_EXTRAS_URL"
+    _shallow_fetch
 fi
 
 # ── Validate all external_subdirectories exist ──────────────────────────────

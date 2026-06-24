@@ -110,13 +110,16 @@ description = "Launch safety agent (with RAG)"
 
 # ─── Feature: sim ───────────────────────────────────────────────────────────────
 
+[feature.sim.dependencies]
+git-lfs = "*"
+
 [feature.sim.tasks.install-o3de]
 cmd = "scripts/install_o3de.sh"
 outputs = ["/opt/O3DE/26.05/scripts/o3de.sh"]
 description = "Install the O3DE engine SDK"
 
 [feature.sim.tasks.clone-gems]
-cmd = "vcs import --input gems.repos && git lfs install && (cd gems && vcs custom --git --args 'lfs pull')"
+cmd = "vcs import --input gems.repos && git lfs install && bash -c 'for repo in gems/*/; do git -C \"$repo\" lfs pull; done'"
 outputs = ["gems/robotec-warehouse-assets"]
 description = "Clone local O3DE gems and fetch LFS assets"
 
