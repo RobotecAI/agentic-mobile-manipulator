@@ -21,3 +21,4 @@ anomaly_images/
 package_condition_images/
 models/
 *.bak0
+sim/user/

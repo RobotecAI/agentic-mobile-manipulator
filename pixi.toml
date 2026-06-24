@@ -65,6 +65,7 @@ description = "Check if all LLM inference servers are up"
 
 [feature.ros2.tasks.clone-ros2-ws]
 cmd = "vcs import --input ros2_ws.repos"
+outputs = ["ros2_ws/src/packages/rai_interfaces"]
 description = "Clone ROS 2 workspace repositories"
 
 [feature.ros2.tasks.build-ros2]
@@ -111,24 +112,18 @@ description = "Launch safety agent (with RAG)"
 
 [feature.sim.tasks.install-o3de]
 cmd = "scripts/install_o3de.sh"
+outputs = ["/opt/O3DE/26.05/scripts/o3de.sh"]
+description = "Install the O3DE engine SDK"
 
 [feature.sim.tasks.clone-gems]
-cmd = "vcs import --input gems.repos"
-description = "Clone local O3DE gems"
+cmd = "vcs import --input gems.repos && git lfs install && (cd gems && vcs custom --git --args 'lfs pull')"
+outputs = ["gems/robotec-warehouse-assets"]
+description = "Clone local O3DE gems and fetch LFS assets"
 
-[feature.sim.tasks.pull-gems-lfs]
-cmd = "git lfs install && git lfs pull"
-cwd = "gems"
-description = "Fetch LFS assets for gems (vcs import does not pull LFS objects automatically)"
-
-[feature.sim.tasks.register-gems]
-cmd = "scripts/register_gems.sh && touch .gems-registered"
-outputs = [".gems-registered"]
-
-[feature.sim.tasks.register-project]
-cmd = "$O3DE_ENGINE_PATH/scripts/o3de.sh register --project-path $DEMO_ROOT/sim --force"
-cwd = "gems"
-description = "Register the simulation project with the O3DE engine"
+[feature.sim.tasks.fetch-gems]
+cmd = "scripts/fetch_gems.sh"
+outputs = ["external/o3de-extras"]
+description = "Clone o3de-extras gems locally and validate all gem paths from project.json"
 
 [feature.sim.tasks.build-sim]
 cmd = """
@@ -145,19 +140,18 @@ outputs = ["sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"]
 description = "Build O3DE GameLauncher and project assets"
 
 [feature.sim.tasks.sim]
-cmd = "env -u LD_LIBRARY_PATH $DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
-depends-on = ["register-gems", "register-project"]
+cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
 description = "Launch O3DE simulation"
 
 [feature.sim.tasks.editor]
-cmd = "env -u LD_LIBRARY_PATH $O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor"
-depends-on = ["register-gems", "register-project"]
-description = "Launch O3DE Editor from SDK (project must be registered and assets built first)"
+cmd = "$O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor --project-path $DEMO_ROOT/sim"
+description = "Launch O3DE Editor from SDK (project must be built first)"
 
 # ─── Feature: local-inference ───────────────────────────────────────────────────
 
 [feature.local-inference.tasks.clone-inference]
 cmd = "vcs import --input inference.repos"
+outputs = ["inference/llama.cpp"]
 description = "Clone llama.cpp (required for local inference)"
 
 [feature.local-inference.tasks.build-llama]
@@ -210,15 +204,15 @@ depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
 [feature.profile-default.tasks.setup]
-depends-on = ["build-ros2", "build-sim", "sync"]
+depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync"]
 description = "Full setup (O3DE + ROS 2 + Python)"
 
 [feature.profile-hil.tasks.setup]
-depends-on = ["build-ros2", "sync"]
+depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
 description = "Setup HIL machine (ROS 2 + Python, no O3DE)"
 
 [feature.profile-hil-local.tasks.setup]
-depends-on = ["build-ros2", "sync", "build-llama"]
+depends-on = ["clone-ros2-ws", "clone-inference", "build-ros2", "sync", "build-llama"]
 description = "Setup HIL machine with local llama.cpp inference"
 
 [feature.profile-local.tasks.clone]
@@ -226,7 +220,7 @@ depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
 [feature.profile-local.tasks.setup]
-depends-on = ["build-ros2", "build-sim", "sync", "build-llama"]
+depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama"]
 description = "Full setup including local llama.cpp inference"
 
 [feature.profile-local.tasks.demo]

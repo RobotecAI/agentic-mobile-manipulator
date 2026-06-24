@@ -51,21 +51,19 @@ Restart your shell or run `source ~/.bashrc` after installation.
 ### Build Everything
 
 ```shell
-pixi run setup
+pixi run -e default setup
 ```
 
 This single command runs the full build pipeline in the correct order:
 
-| Step | pixi task          | What it does                                           |
-| ---- | ------------------ | ------------------------------------------------------ |
-| 1    | `clone`            | `vcs import` for gems and the ROS 2 workspace          |
-| 2    | `install-o3de`     | Install the O3DE engine                                |
-| 3    | `register-gems`    | Register O3DE gems                                     |
-| 4    | `register-project` | Run `git lfs pull` and register the simulation project |
-| 5    | `rosdep-update`    | `rosdep update` — refresh package index                |
-| 6    | `build-ros2`       | `rosdep install` + `colcon build`                      |
-| 7    | `build-sim`        | CMake configure + Ninja build (GameLauncher)           |
-| 8    | `sync`             | `uv sync` — install Python dependencies                |
+| Step | pixi task      | What it does                                        |
+| ---- | -------------- | --------------------------------------------------- |
+| 1    | `clone`        | `vcs import` + `git lfs pull` for gems and ROS 2 ws |
+| 2    | `install-o3de` | Install the O3DE engine                             |
+| 3    | `fetch-gems`   | Clone o3de-extras locally, validate all gem paths   |
+| 5    | `build-ros2`   | `colcon build` (deps provided by conda/RoboStack)   |
+| 6    | `build-sim`    | CMake configure + Ninja build (GameLauncher)        |
+| 7    | `sync`         | `uv sync` — install Python dependencies             |
 
 #### Local Inference (optional)
 
