@@ -64,11 +64,13 @@ trap 'echo; warn "Interrupted — cleaning up..."; stop_all; exit 1' INT TERM QU
 
 section "Starting simulation..."
 
-tmux new-session -d -s simulation -x 220 -y 50
-tmux rename-window -t simulation:0 "sim+ros2"
-tmux split-window -v -t simulation:0.0
+# Create the session with a named first window so we don't rely on window index numbers
+tmux new-session -d -s simulation -n "sim+ros2" -x 220 -y 50
+SIM_TOP_PANE=$(tmux display-message -p -t simulation:sim+ros2 "#{pane_id}")
+SIM_BOTTOM_PANE=$(tmux split-window -v -P -F "#{pane_id}" -t "$SIM_TOP_PANE")
 
-tmux send-keys -t simulation:0.0 "cd $DEMO_ROOT && pixi run sim" Enter
+# Send commands to the panes using pane IDs so pane-base-index does not matter
+tmux send-keys -t "$SIM_TOP_PANE" "cd $DEMO_ROOT && pixi run sim" Enter
 log "O3DE launched  (simulation — top pane)"
 
 wait_topic "/clock" 120 || { stop_all; exit 1; }
@@ -77,7 +79,7 @@ wait_topic "/clock" 120 || { stop_all; exit 1; }
 
 section "Starting ROS 2 stack..."
 
-tmux send-keys -t simulation:0.1 "cd $DEMO_ROOT && pixi run ros2" Enter
+tmux send-keys -t "$SIM_BOTTOM_PANE" "cd $DEMO_ROOT && pixi run ros2" Enter
 log "ROS 2 stack launched  (simulation — bottom pane)"
 
 wait_topic "/joint_states" 60 || { stop_all; exit 1; }
@@ -86,17 +88,19 @@ wait_topic "/joint_states" 60 || { stop_all; exit 1; }
 
 section "Starting inference servers..."
 
-tmux new-session -d -s inference -x 220 -y 50
-tmux rename-window -t inference:0 "models"
-tmux split-window -h -t inference:0.0
-tmux split-window -v -t inference:0.0
-tmux split-window -v -t inference:0.2
-tmux select-layout -t inference:0 tiled
+# Create inference session with a named window
+tmux new-session -d -s inference -n models -x 220 -y 50
+INF_TOP_LEFT=$(tmux display-message -p -t inference:models "#{pane_id}")
+INF_TOP_RIGHT=$(tmux split-window -h -P -F "#{pane_id}" -t "$INF_TOP_LEFT")
+INF_BOTTOM_LEFT=$(tmux split-window -v -P -F "#{pane_id}" -t "$INF_TOP_LEFT")
+INF_BOTTOM_RIGHT=$(tmux split-window -v -P -F "#{pane_id}" -t "$INF_TOP_RIGHT")
+tmux select-layout -t inference:models tiled
 
-tmux send-keys -t inference:0.0 "cd $DEMO_ROOT && pixi run serve-llm"       Enter
-tmux send-keys -t inference:0.1 "cd $DEMO_ROOT && pixi run serve-embedding"  Enter
-tmux send-keys -t inference:0.2 "cd $DEMO_ROOT && pixi run serve-vlm"        Enter
-tmux send-keys -t inference:0.3 "cd $DEMO_ROOT && pixi run serve-reranker"   Enter
+# Target panes by pane ID so the script works with any pane-base-index setting
+tmux send-keys -t "$INF_TOP_LEFT" "cd $DEMO_ROOT && pixi run serve-llm"       Enter
+tmux send-keys -t "$INF_TOP_RIGHT" "cd $DEMO_ROOT && pixi run serve-embedding"  Enter
+tmux send-keys -t "$INF_BOTTOM_LEFT" "cd $DEMO_ROOT && pixi run serve-vlm"     Enter
+tmux send-keys -t "$INF_BOTTOM_RIGHT" "cd $DEMO_ROOT && pixi run serve-reranker" Enter
 log "Inference session created  (inference — 2×2 grid)"
 
 check_inference || { stop_all; exit 1; }
@@ -105,12 +109,12 @@ check_inference || { stop_all; exit 1; }
 
 section "Starting orchestrator..."
 
-tmux new-session -d -s agent -x 220 -y 50
-tmux rename-window -t agent:0 "orchestrator"
-tmux send-keys -t agent:0 "cd $DEMO_ROOT && pixi run orchestrator" Enter
+# Create agent session with a named window so we don't rely on index 0
+tmux new-session -d -s agent -n orchestrator -x 220 -y 50
+tmux send-keys -t agent:orchestrator "cd $DEMO_ROOT && pixi run orchestrator" Enter
 log "Orchestrator launched  (agent)"
 
-# ── Final health check ────────────────────────────────────────────────────────
+# ── Final health check ───────────────────────────────────────────────────────
 
 section "Running health check in 10s..."
 sleep 10

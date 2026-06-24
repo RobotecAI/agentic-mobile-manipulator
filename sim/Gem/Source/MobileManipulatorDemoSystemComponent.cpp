@@ -5,6 +5,9 @@
 
 #include <MobileManipulatorDemo/MobileManipulatorDemoTypeIds.h>
 
+#include <ROS2/ROS2Bus.h>
+#include "SpawnEntityServiceHandler.h"
+
 namespace MobileManipulatorDemo
 {
     AZ_COMPONENT_IMPL(MobileManipulatorDemoSystemComponent, "MobileManipulatorDemoSystemComponent",
@@ -32,6 +35,7 @@ namespace MobileManipulatorDemo
 
     void MobileManipulatorDemoSystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
+        required.push_back(AZ_CRC_CE("ROS2Service"));
     }
 
     void MobileManipulatorDemoSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
@@ -39,6 +43,17 @@ namespace MobileManipulatorDemo
     }
 
     MobileManipulatorDemoSystemComponent::MobileManipulatorDemoSystemComponent()
+        : m_nodeHandler([this] (std::shared_ptr<rclcpp::Node> node)
+            {
+                if (node)
+                {
+                    TryRegisterSpawnServiceHandler();
+                }
+                else
+                {
+                    DestroyHandlers();
+                }
+            })
     {
         if (MobileManipulatorDemoInterface::Get() == nullptr)
         {
@@ -58,13 +73,39 @@ namespace MobileManipulatorDemo
     {
     }
 
+    void MobileManipulatorDemoSystemComponent::TryRegisterSpawnServiceHandler()
+    {
+        auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
+        if (!ros2Node)
+        {
+            return;
+        }
+
+        RegisterInterface<SpawnEntityServiceHandler>(ros2Node);
+    }
+
+    void MobileManipulatorDemoSystemComponent::DestroyHandlers()
+    {
+        for (auto& [handlerType, handler] : m_availableRos2Interface)
+        {
+            handler.reset();
+        }
+        m_availableRos2Interface.clear();
+    }
+
     void MobileManipulatorDemoSystemComponent::Activate()
     {
         MobileManipulatorDemoRequestBus::Handler::BusConnect();
+
+        ROS2::ROS2Interface::Get()->ConnectOnNodeChanged(m_nodeHandler);
+        TryRegisterSpawnServiceHandler();
     }
 
     void MobileManipulatorDemoSystemComponent::Deactivate()
     {
         MobileManipulatorDemoRequestBus::Handler::BusDisconnect();
+
+        m_nodeHandler.Disconnect();
+        DestroyHandlers();
     }
 }

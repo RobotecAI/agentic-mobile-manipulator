@@ -1,23 +1,30 @@
 FROM ros:jazzy-ros-core
 
+RUN apt update && apt install -y --no-install-recommends \
+    curl \
+    python3-vcstool \
+    git \
+    git-lfs \
+    ninja-build \
+    ros-dev-tools \
+    lsb-release \
+    wget \
+    gnupg
+
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+RUN apt update
+RUN apt install -y libgz-math7-dev
+
+RUN curl -fsSL https://pixi.sh/install.sh | PIXI_HOME=/usr/local bash
+
 WORKDIR /root/MobileManipulatorDemo
 ENV DEMO_ROOT=/root/MobileManipulatorDemo
-RUN apt update && apt install -y python3-vcstool git git-lfs ninja-build ros-dev-tools
-RUN rosdep init
 
-COPY ros2_ws.repos ${DEMO_ROOT}
-COPY ros2_ws/src ${DEMO_ROOT}/ros2_ws/src
+COPY pixi.toml pixi.lock ros2_ws.repos ./
+COPY scripts/ scripts/
+COPY ros2_ws/ ros2_ws/
 
-WORKDIR ${DEMO_ROOT}
-RUN vcs import --input ${DEMO_ROOT}/ros2_ws.repos
+RUN rosdep init && pixi run build-ros2
 
-WORKDIR ${DEMO_ROOT}/ros2_ws
-RUN rosdep update
-RUN rosdep install --ignore-src --from-paths src -y
-RUN . /opt/ros/${ROS_DISTRO}/setup.sh && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 RUN echo "source ${DEMO_ROOT}/ros2_ws/install/setup.bash" >> ~/.bashrc
-
-RUN apt clean
-RUN rm -rf /var/lib/apt/lists/*
-
-WORKDIR ${DEMO_ROOT}

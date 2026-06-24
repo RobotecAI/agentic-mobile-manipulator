@@ -20,3 +20,4 @@ imgui.ini
 anomaly_images/
 package_condition_images/
 models/
+*.bak0
