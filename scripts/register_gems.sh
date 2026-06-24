@@ -43,7 +43,7 @@ RELEASED_GEMS=(
 echo "=== Downloading O3DE Gems ==="
 for gem in "${RELEASED_GEMS[@]}"; do
     echo "  Downloading: $gem"
-    "$O3DE_CLI" download --gem-name "$gem" -f
+    "$O3DE_CLI" download --gem-name "$gem"
 done
 
 # ── Step 3: Register local submodule gems ───────────────────────────────────

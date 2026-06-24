@@ -71,49 +71,40 @@ description = "Clone ROS 2 workspace repositories"
 cmd = "colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release"
 cwd = "ros2_ws"
 outputs = ["ros2_ws/install/"]
-depends-on = ["check-env", "clone-ros2-ws"]
 description = "Build the ROS 2 workspace with colcon (deps provided by conda/RoboStack — no rosdep)"
 
 [feature.ros2.tasks.ros2]
 cmd = "bash scripts/run_ros2_stack.sh"
-depends-on = ["check-env", "build-ros2"]
 description = "Launch full ROS 2 stack (robot, nav2, moveit2, scene, agents)"
 
 [feature.ros2.tasks.hmi]
 cmd = "ros2 launch mobile_manipulator_hmi hmi_launch.py"
-depends-on = ["check-env", "build-ros2"]
 description = "Launch the Human-Machine Interface"
 
 [feature.ros2.tasks.orchestrator]
 cmd = "uv run python rai_app/agents/agent_orchestrator.py"
-depends-on = ["check-env", "build-ros2", "sync"]
 description = "Launch the agent orchestrator"
 
 # Individual agents — use these instead of ros2 when debugging a specific component.
 
 [feature.ros2.tasks.nav2-agent]
 cmd = "uv run python rai_app/agents/nav2_agent.py"
-depends-on = ["check-env", "build-ros2", "sync"]
 description = "Launch nav2 agent"
 
 [feature.ros2.tasks.moveit2-agent]
 cmd = "uv run python rai_app/agents/moveit2_agent.py"
-depends-on = ["check-env", "build-ros2", "sync"]
 description = "Launch moveit2 agent"
 
 [feature.ros2.tasks.scene-agent]
 cmd = "uv run python rai_app/environment/scene_agent.py"
-depends-on = ["check-env", "build-ros2", "sync"]
 description = "Launch scene agent"
 
 [feature.ros2.tasks.inspection-agent]
 cmd = "uv run python rai_app/agents/inspection_agent.py"
-depends-on = ["check-env", "build-ros2", "sync"]
 description = "Launch inspection agent"
 
 [feature.ros2.tasks.safety-agent]
 cmd = "bash scripts/start_safety_agent.sh"
-depends-on = ["check-env", "build-ros2", "sync"]
 description = "Launch safety agent (with RAG)"
 
 # ─── Feature: sim ───────────────────────────────────────────────────────────────
@@ -128,17 +119,15 @@ description = "Clone local O3DE gems"
 [feature.sim.tasks.pull-gems-lfs]
 cmd = "git lfs install && git lfs pull"
 cwd = "gems"
-depends-on = ["clone-gems"]
 description = "Fetch LFS assets for gems (vcs import does not pull LFS objects automatically)"
 
 [feature.sim.tasks.register-gems]
-cmd = "scripts/register_gems.sh"
-depends-on = ["pull-gems-lfs", "install-o3de"]
+cmd = "scripts/register_gems.sh && touch .gems-registered"
+outputs = [".gems-registered"]
 
 [feature.sim.tasks.register-project]
 cmd = "$O3DE_ENGINE_PATH/scripts/o3de.sh register --project-path $DEMO_ROOT/sim --force"
 cwd = "gems"
-depends-on = ["pull-gems-lfs", "install-o3de"]
 description = "Register the simulation project with the O3DE engine"
 
 [feature.sim.tasks.build-sim]
@@ -153,17 +142,16 @@ cmake --build build/linux --config profile \
 """
 cwd = "sim"
 outputs = ["sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"]
-depends-on = ["check-env", "register-gems", "register-project", "build-ros2"]
 description = "Build O3DE GameLauncher and project assets"
 
 [feature.sim.tasks.sim]
-cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
-depends-on = ["check-env", "build-sim"]
+cmd = "env -u LD_LIBRARY_PATH $DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
+depends-on = ["register-gems", "register-project"]
 description = "Launch O3DE simulation"
 
 [feature.sim.tasks.editor]
-cmd = "$O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor"
-depends-on = ["check-env", "build-sim"]
+cmd = "env -u LD_LIBRARY_PATH $O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor"
+depends-on = ["register-gems", "register-project"]
 description = "Launch O3DE Editor from SDK (project must be registered and assets built first)"
 
 # ─── Feature: local-inference ───────────────────────────────────────────────────
@@ -179,7 +167,6 @@ cmake --build build --config Release -j $(nproc)
 """
 cwd = "inference/llama.cpp"
 outputs = ["inference/llama.cpp/build/bin/llama-server"]
-depends-on = ["clone-inference"]
 description = "Build llama.cpp with Vulkan backend"
 
 [feature.local-inference.tasks.download-models]
@@ -193,30 +180,25 @@ description = "Download models for local inference"
 [feature.local-inference.tasks.serve-llm]
 cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $LLM_MODEL --no-prefill-assistant --port 8080"
 env = { LLM_MODEL = "$DEMO_ROOT/models/gpt-oss-20b-Q4_K_M.gguf" }
-depends-on = ["build-llama"]
 description = "Serve GPT-OSS-20B on port 8080 (set LLM_MODEL to override path)"
 
 [feature.local-inference.tasks.serve-vlm]
 cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $VLM_MODEL --mmproj $VLM_MMPROJ --port 8081"
 env = { VLM_MODEL = "$DEMO_ROOT/models/LFM2-VL-3B-Q8_0.gguf", VLM_MMPROJ = "$DEMO_ROOT/models/mmproj-LFM2-VL-3B-Q8_0.gguf" }
-depends-on = ["build-llama"]
 description = "Serve LFM2-VL-3B on port 8081 (set VLM_MODEL / VLM_MMPROJ to override paths)"
 
 [feature.local-inference.tasks.serve-embedding]
 cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $EMBEDDING_MODEL --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082"
 env = { EMBEDDING_MODEL = "$DEMO_ROOT/models/Qwen3-Embedding-0.6B-Q8_0.gguf" }
-depends-on = ["build-llama"]
 description = "Serve Qwen3-Embedding-0.6b on port 8082"
 
 [feature.local-inference.tasks.serve-reranker]
 cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $RERANKER_MODEL --embedding --pooling rank -c 4096 -b 2048 -ub 2048 --port 8083"
 env = { RERANKER_MODEL = "$DEMO_ROOT/models/qwen3-reranker-0.6b-q8_0.gguf" }
-depends-on = ["build-llama"]
 description = "Serve Qwen3-Reranker-0.6B on port 8083"
 
 [feature.local-inference.tasks.serve-all]
 cmd = "bash scripts/serve_all.sh"
-depends-on = ["build-llama"]
 description = "Launch all inference servers in a tmux session (2x2 grid)"
 
 # ─── Profile features ───────────────────────────────────────────────────────────
@@ -249,7 +231,6 @@ description = "Full setup including local llama.cpp inference"
 
 [feature.profile-local.tasks.demo]
 cmd = "bash scripts/demo.sh"
-depends-on = ["build-ros2", "build-sim", "sync", "build-llama"]
 description = "Start full demo: sim → ros2 → inference → orchestrator (3 tmux sessions)"
 
 [feature.profile-local.tasks.demo-stop]
