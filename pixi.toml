@@ -72,6 +72,7 @@ description = "Clone ROS 2 workspace repositories"
 cmd = "colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release"
 cwd = "ros2_ws"
 outputs = ["ros2_ws/install/"]
+depends-on = ["clone-ros2-ws"]
 description = "Build the ROS 2 workspace with colcon (deps provided by conda/RoboStack — no rosdep)"
 
 [feature.ros2.tasks.ros2]
