@@ -127,20 +127,27 @@ description = "Clone local O3DE gems and fetch LFS assets"
 [feature.sim.tasks.fetch-gems]
 cmd = "scripts/fetch_gems.sh"
 outputs = ["external/o3de-extras"]
+# clone-gems must run first: fetch_gems.sh validates every external_subdirectory
+# in project.json, including the ../gems/* paths that clone-gems provides.
+depends-on = ["clone-gems"]
 description = "Clone o3de-extras gems locally and validate all gem paths from project.json"
 
+# Runs via scripts/build_sim.sh rather than an inline cmake invocation: pixi
+# activates the environment once, at the start of a `pixi run`, so on a clean
+# tree the ros2_ws overlay (built by build-ros2 during the same run) is not yet
+# sourced. The script sources it at build time so the O3DE SimulationInterfaces
+# gem's find_package(simulation_interfaces) resolves on the FIRST run, not only
+# the second. (It also pins CMAKE_CXX_STANDARD=20.)
 [feature.sim.tasks.build-sim]
-cmd = """
-cmake -B build/linux -G "Ninja Multi-Config" \
-    -DCMAKE_MODULE_PATH=$O3DE_ENGINE_PATH/cmake \
-    -DLY_DISABLE_TEST_MODULES=ON \
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-    -DLY_STRIP_DEBUG_SYMBOLS=ON &&
-cmake --build build/linux --config profile \
-    --target MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher
-"""
-cwd = "sim"
+# No cwd override: the script path is project-root-relative and the script cd's
+# into $DEMO_ROOT/sim itself.
+cmd = "bash scripts/build_sim.sh"
 outputs = ["sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"]
+# All gems are registered project-locally via external_subdirectories in
+# sim/project.json, so the gem source trees must exist before cmake configure.
+# fetch-gems (transitively clone-gems) clones them; depend on it so a clean
+# checkout — and the Docker o3de build — fetch gems before building.
+depends-on = ["fetch-gems"]
 description = "Build O3DE GameLauncher and project assets"
 
 [feature.sim.tasks.sim]
