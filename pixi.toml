@@ -12,11 +12,26 @@ env = { DEMO_ROOT = "${PIXI_PROJECT_ROOT}" }
 scripts = ["scripts/setup_env.sh"]
 
 [dependencies]
-# uv is the Python package manager used by this project.
-# All other build tools (cmake, ninja, clang, colcon, vcs) come from the ROS 2
-# dev-tools apt installation documented in docs/setup_single_machine.md.
 uv = ">=0.5"
 aria2 = ">=1.37"
+
+# ─── ROS 2 Jazzy (RoboStack) ─────────────────────────────────────────────────
+# The full ROS 2 runtime comes from the robostack-jazzy conda channel.
+# pixi runs RoboStack's activation scripts automatically, so AMENT_PREFIX_PATH,
+# PYTHONPATH, etc. are set up on `pixi shell` / `pixi run`.
+#
+# NOTE: nav2-bringup is deliberately omitted — it transitively pulls
+# ros-gz-sim → simulation_interfaces 1.2.0, which clashes with the source-built
+# 1.5.1 overlay required by the O3DE SimulationInterfaces gem.
+ros-jazzy-desktop = "*"
+ros-jazzy-navigation2 = "*"
+ros-jazzy-interactive-marker-twist-server = "*"
+ros-jazzy-vision-msgs = "*"
+ros-jazzy-moveit = "2.12.*"
+ros-jazzy-moveit-py = "2.12.*"
+ros-jazzy-tf-transformations = "*"
+ros-jazzy-ros2-control = "*"
+ros-jazzy-ros2-controllers = "*"
 
 # Previously vcs-imported and colcon-built; now binary conda packages.
 # (See ros2_ws.repos for the full migration note.)
