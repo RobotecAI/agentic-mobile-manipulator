@@ -206,6 +206,10 @@ description = "Serve Qwen3-Reranker-0.6B on port 8083"
 cmd = "bash scripts/serve_all.sh"
 description = "Launch all inference servers in a tmux session (2x2 grid)"
 
+[feature.local-inference.tasks.install-npu-inference]
+cmd = "bash scripts/install_npu_inference.sh"
+description = "Install AMD NPU drivers + FastFlowLM for NPU inference (optional; may require reboot)"
+
 # ─── Profile features ───────────────────────────────────────────────────────────
 # One profile feature per environment. Each defines a `setup` entry point so
 # that `pixi run -e <env> setup` builds exactly the components for that machine.
