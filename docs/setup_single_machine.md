@@ -50,29 +50,28 @@ Restart your shell or run `source ~/.bashrc` after installation.
 ### Build Everything
 
 ```shell
-pixi run setup
+pixi run -e default setup
 ```
 
 This single command runs the full build pipeline in the correct order:
 
-| Step | pixi task          | What it does                                           |
-| ---- | ------------------ | ------------------------------------------------------ |
-| 1    | `clone`            | `vcs import` for gems and the ROS 2 workspace          |
-| 2    | `install-o3de`     | Install the O3DE engine                                |
-| 3    | `register-gems`    | Register O3DE gems                                     |
-| 4    | `register-project` | Run `git lfs pull` and register the simulation project |
-| 5    | `build-ros2`       | `rosdep install` + `colcon build`                      |
-| 6    | `build-sim`        | CMake configure + Ninja build (GameLauncher)           |
-| 7    | `sync`             | `uv sync` — install Python dependencies                |
+| Step | pixi task      | What it does                                        |
+| ---- | -------------- | --------------------------------------------------- |
+| 1    | `clone`        | `vcs import` + `git lfs pull` for gems and ROS 2 ws |
+| 2    | `install-o3de` | Install the O3DE engine                             |
+| 3    | `fetch-gems`   | Clone o3de-extras locally, validate all gem paths   |
+| 5    | `build-ros2`   | `colcon build` (deps provided by conda/RoboStack)   |
+| 6    | `build-sim`    | CMake configure + Ninja build (GameLauncher)        |
+| 7    | `sync`         | `uv sync` — install Python dependencies             |
 
 #### Local Inference (optional)
 
 If you want to run models locally via llama.cpp instead of cloud APIs:
 
 ```shell
-pixi run clone-inference
-pixi run build-llama # this step is hardware specifc. By default, it builds with Vulkan backend. Check for better solutions for your hardware.
-pixi run download-models
+pixi run -e local clone-inference
+pixi run -e local build-llama # this step is hardware specific. By default, it builds with Vulkan backend. Check for better solutions for your hardware.
+pixi run -e local download-models  # or download the models manually, check the links below
 ```
 
 `pixi run download-models` fetches all required models in parallel using `aria2c` and places them in `$DEMO_ROOT/models/`. Already downloaded files are skipped. If a download is interrupted, re-running the command will resume from where it left off.
@@ -103,13 +102,13 @@ We use conventional commits to ensure that the commit messages are consistent an
 ### Pre-commit
 
 ```bash
-pixi run pre-commit-install
+pixi run -e dev pre-commit-install
 ```
 
 To run hooks manually:
 
 ```bash
-pixi run lint
+pixi run -e dev lint
 ```
 
 # Next Steps

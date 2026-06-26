@@ -21,17 +21,17 @@ pixi run ros2
 ### Inference
 
 ```shell
-pixi run serve-llm        # GPT-OSS-20B       → port 8080
-pixi run serve-vlm        # LFM2-VL-3B        → port 8081
-pixi run serve-embedding  # Qwen3-Embedding   → port 8082
-pixi run serve-reranker   # Qwen3-Reranker    → port 8083
+pixi run -e hil-local serve-llm        # GPT-OSS-20B       → port 8080
+pixi run -e hil-local serve-vlm        # LFM2-VL-3B        → port 8081
+pixi run -e hil-local serve-embedding  # Qwen3-Embedding   → port 8082
+pixi run -e hil-local serve-reranker   # Qwen3-Reranker    → port 8083
 ```
 
 Models default to `$DEMO_ROOT/models/<filename>`. Override with env vars if your models are elsewhere:
 
 ```shell
-LLM_MODEL=/path/to/model.gguf pixi run serve-llm
-VLM_MODEL=/path/to/vlm.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run serve-vlm
+LLM_MODEL=/path/to/model.gguf pixi run -e hil-local serve-llm
+VLM_MODEL=/path/to/vlm.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run -e hil-local serve-vlm
 ```
 
 ### Agent Orchestrator
@@ -65,6 +65,6 @@ pixi run safety-agent
 These are only required when running the safety agent with RAG. See `docs/safety_agent_with_rag.md`.
 
 ```shell
-pixi run serve-embedding
-pixi run serve-reranker
+pixi run -e hil-local serve-embedding
+pixi run -e hil-local serve-reranker
 ```
