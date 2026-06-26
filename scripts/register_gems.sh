@@ -42,8 +42,13 @@ RELEASED_GEMS=(
 
 echo "=== Downloading O3DE Gems ==="
 for gem in "${RELEASED_GEMS[@]}"; do
-    echo "  Downloading: $gem"
-    "$O3DE_CLI" download --gem-name "$gem" -f
+    gem_name="${gem%%==*}"
+    if grep -q "/Gems/$gem_name/" "$HOME/.o3de/o3de_manifest.json" 2>/dev/null; then
+        echo "  Already registered, skipping: $gem"
+    else
+        echo "  Downloading: $gem"
+        "$O3DE_CLI" download --gem-name "$gem" -f
+    fi
 done
 
 # ── Step 3: Register local submodule gems ───────────────────────────────────

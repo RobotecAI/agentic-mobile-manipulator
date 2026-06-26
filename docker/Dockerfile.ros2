@@ -23,8 +23,14 @@ ENV DEMO_ROOT=/root/MobileManipulatorDemo
 
 COPY pixi.toml pixi.lock ros2_ws.repos ./
 COPY scripts/ scripts/
-COPY ros2_ws/ ros2_ws/
+COPY ros2_ws/src/ ros2_ws/src/
 
-RUN rosdep init && pixi run build-ros2
+# Drop the packages/ directory that was copied from the host; all those packages
+# are either conda packages (ros-jazzy-*) or will be freshly cloned by vcs import
+# (clone-ros2-ws depends-on in build-ros2). Keeping host-side checkouts causes
+# colcon to try building stale source that can no longer satisfy its cmake deps.
+RUN rm -rf ros2_ws/src/packages/
+
+RUN pixi run build-ros2
 
 RUN echo "source ${DEMO_ROOT}/ros2_ws/install/setup.bash" >> ~/.bashrc

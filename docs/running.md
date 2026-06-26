@@ -3,7 +3,7 @@
 ## Run all at once
 
 ```shell
-pixi run demo
+pixi run -e local demo
 ```
 
 ## Run separately
@@ -32,25 +32,25 @@ Models default to `$DEMO_ROOT/models/<filename>`. Override with env vars if your
 
 ```shell
 # GPT-OSS-20B — port 8080
-pixi run serve-llm
+pixi run -e local serve-llm
 
 # LFM2-VL-3B — port 8081
-pixi run serve-vlm
+pixi run -e local serve-vlm
 
 # Qwen3-Embedding-0.6b — port 8082
-pixi run serve-embedding
+pixi run -e local serve-embedding
 
 # Qwen3-Reranker-0.6B — port 8083
-pixi run serve-reranker
+pixi run -e local serve-reranker
 ```
 
 To use a custom path:
 
 ```shell
-LLM_MODEL=/path/to/gpt-oss-20b-Q4_K_M.gguf pixi run serve-llm
-VLM_MODEL=/path/to/LFM2-VL-3B-Q8_0.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run serve-vlm
-EMBEDDING_MODEL=/path/to/embedding.gguf pixi run serve-embedding
-RERANKER_MODEL=/path/to/reranker.gguf pixi run serve-reranker
+LLM_MODEL=/path/to/gpt-oss-20b-Q4_K_M.gguf pixi run -e local serve-llm
+VLM_MODEL=/path/to/LFM2-VL-3B-Q8_0.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run -e local serve-vlm
+EMBEDDING_MODEL=/path/to/embedding.gguf pixi run -e local serve-embedding
+RERANKER_MODEL=/path/to/reranker.gguf pixi run -e local serve-reranker
 ```
 
 ### Agent Orchestrator
