@@ -120,6 +120,15 @@ def llama_server_bin(root: str) -> str:
     return os.path.join(root, "inference", "llama.cpp", "build", "bin", "llama-server")
 
 
+def flm_bin(root: str) -> str | None:
+    """The repo-built fork binary, or None if it hasn't been built. We deliberately
+    do NOT fall back to a `flm` on PATH: the global /usr/local/bin flm is the upstream
+    release with no GBNF grammar support, and BOTH report the same `flm version`, so a
+    PATH fallback would silently serve the wrong binary. Local or nothing."""
+    repo_flm = os.path.join(root, "inference", "FastFlowLM", "src", "build", "flm")
+    return repo_flm if os.path.exists(repo_flm) else None
+
+
 def build_command(name: str, ep: dict, root: str) -> list[str]:
     """Resolve a single endpoint into its launch argv. Raises ValueError on a
     misconfigured endpoint (missing weights, unknown backend, ...)."""
@@ -164,7 +173,12 @@ def build_command(name: str, ep: dict, root: str) -> list[str]:
             raise ValueError(
                 f"endpoint '{name}': backend 'npu' needs 'flm_model' (FastFlowLM tag)"
             )
-        flm = shutil.which("flm") or "flm"
+        flm = flm_bin(root)
+        if not flm:
+            raise ValueError(
+                f"endpoint '{name}': FastFlowLM not built at "
+                f"inference/FastFlowLM/src/build/flm — run 'pixi run build-fastflowlm'"
+            )
         return [
             flm,
             "serve",
@@ -219,13 +233,14 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
         backend = ep.get("backend")
         if backend == "npu":
             tag = ep.get("flm_model")
-            if not shutil.which("flm"):
+            flm = flm_bin(root)
+            if not flm:
                 print(
                     f"[skip] {name}: FastFlowLM ('flm') not installed — run 'pixi run build-fastflowlm' on an NPU host"
                 )
                 continue
             print(f"[flm pull] {name}: {tag}")
-            rc |= subprocess.call(["flm", "pull", tag])
+            rc |= subprocess.call([flm, "pull", tag])
             continue
         # llama.cpp backends: fetch the gguf(s) named in the SSOT.
         targets = [(ep.get("model_url"), ep.get("model_path"))]
