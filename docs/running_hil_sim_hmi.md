@@ -20,19 +20,21 @@ pixi run ros2
 
 ### Inference
 
-```shell
-pixi run -e hil-local serve-llm        # GPT-OSS-20B       → port 8080
-pixi run -e hil-local serve-vlm        # LFM2-VL-3B        → port 8081
-pixi run -e hil-local serve-embedding  # Qwen3-Embedding   → port 8082
-pixi run -e hil-local serve-reranker   # Qwen3-Reranker    → port 8083
-```
-
-Models default to `$DEMO_ROOT/models/<filename>`. Override with env vars if your models are elsewhere:
+Endpoints (model, backend, port, weights) are declared once in `config.toml`
+under `[endpoints.*]`. Launch them all from that SSOT, or one at a time by name:
 
 ```shell
-LLM_MODEL=/path/to/model.gguf pixi run -e hil-local serve-llm
-VLM_MODEL=/path/to/vlm.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run -e hil-local serve-vlm
+pixi run -e hil-local inference        # all local endpoints (tmux grid)
+
+pixi run -e hil-local serve-llm        # endpoints.main_llm   → port 8080
+pixi run -e hil-local serve-vlm        # endpoints.vlm        → port 8081
+pixi run -e hil-local serve-embedding  # endpoints.embeddings → port 8082
+pixi run -e hil-local serve-reranker   # endpoints.reranker   → port 8083
 ```
+
+To use different weights, backend, or ports, edit the endpoint in `config.toml`
+(`model_path`, `backend`, `port`, …). Preview without launching:
+`pixi run -e hil-local inference --print`.
 
 ### Agent Orchestrator
 

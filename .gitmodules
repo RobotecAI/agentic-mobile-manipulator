@@ -1,0 +1,8 @@
+[submodule "inference/llama.cpp"]
+	path = inference/llama.cpp
+	url = https://github.com/ggml-org/llama.cpp.git
+	shallow = true
+[submodule "inference/FastFlowLM"]
+	path = inference/FastFlowLM
+	url = https://github.com/RobotecAI/FastFlowLM.git
+	shallow = true

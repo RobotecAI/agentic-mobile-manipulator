@@ -160,51 +160,83 @@ description = "Launch O3DE Editor from SDK (project must be built first)"
 
 # ─── Feature: local-inference ───────────────────────────────────────────────────
 
-[feature.local-inference.tasks.clone-inference]
-cmd = "vcs import --input inference.repos"
-outputs = ["inference/llama.cpp"]
-description = "Clone llama.cpp (required for local inference)"
+[feature.local-inference.dependencies]
+# Vulkan SDK pieces llama.cpp's GGML_VULKAN backend needs to BUILD: headers +
+# loader for find_package(Vulkan), and glslc (from shaderc) to compile shaders.
+# The runtime ICD is the system GPU driver (e.g. RADV for AMD), discovered by
+# the loader at run time — not provided here.
+libvulkan-headers = "*"
+libvulkan-loader = "*"
+shaderc = "*"          # provides glslc (Vulkan COMPONENTS glslc)
+spirv-headers = "*"    # find_package(SPIRV-Headers) in ggml-vulkan
+
+# llama.cpp and FastFlowLM are git submodules pinned under inference/ — see
+# .gitmodules. Their versions are tracked by commit, so bump them with
+# `git submodule update --remote <path>` and commit the new pointer.
+[feature.local-inference.tasks.submodules]
+cmd = "git submodule update --init --recursive --depth 1 inference/llama.cpp inference/FastFlowLM"
+outputs = ["inference/llama.cpp/CMakeLists.txt", "inference/FastFlowLM/src/CMakeLists.txt"]
+description = "Check out the pinned llama.cpp + FastFlowLM submodules, shallow (required for local inference)"
 
 [feature.local-inference.tasks.build-llama]
+# GGML_CCACHE=OFF: the conda env's ccache links against a libfmt ABI it doesn't
+# ship (wants libfmt.so.9, env has .so.12), so leaving ccache on breaks every
+# compile with Error 127. The build doesn't need ccache.
 cmd = """
-cmake -B build -DGGML_VULKAN=1 &&
+cmake -B build -DGGML_VULKAN=1 -DGGML_CCACHE=OFF &&
 cmake --build build --config Release -j $(nproc)
 """
 cwd = "inference/llama.cpp"
+depends-on = ["submodules"]
 outputs = ["inference/llama.cpp/build/bin/llama-server"]
 description = "Build llama.cpp with Vulkan backend"
 
+# ─── FastFlowLM (AMD Ryzen AI NPU backend) ───────────────────────────────────
+# The submodule (RobotecAI/FastFlowLM fork) already includes GBNF grammar-
+# constrained sampling, needed for structured agent output on the NPU. Building
+# and serving require an AMD NPU with the amdxdna driver + XRT stack — see
+# scripts/build_fastflowlm.sh. The submodule checkout itself works on any host.
+
+[feature.local-inference.tasks.build-fastflowlm]
+cmd = "bash scripts/build_fastflowlm.sh"
+depends-on = ["submodules"]
+outputs = ["inference/FastFlowLM/src/build/flm"]
+description = "Build + install FastFlowLM from source (NPU host only: needs XRT/amdxdna dev headers)"
+
+# ─── SSOT-driven inference (config.toml drives everything below) ─────────────
+# rai_app/inference/serve.py reads config.toml's [endpoints.*] and routes each to
+# its backend (gpu/cpu→llama.cpp, npu→FastFlowLM). Change a port/model/backend
+# in config.toml — these tasks need no edits.
+
 [feature.local-inference.tasks.download-models]
-cmd = "bash scripts/download_models.sh"
-description = "Download models for local inference"
+cmd = "python -m rai_app.inference.serve --download"
+description = "Download weights for every local endpoint in config.toml (gguf via wget, NPU tags via `flm pull`)"
 
-# Default model paths assume models are placed in $DEMO_ROOT/models/.
-# Override by setting the env var before running, e.g.:
-#   LLM_MODEL=/path/to/gpt-oss-20b-Q4_K_M.gguf pixi run serve-llm
+[feature.local-inference.tasks.inference]
+cmd = "python -m rai_app.inference.serve"
+description = "Launch every local endpoint from config.toml in a tmux grid (one pane per server)"
 
+# Per-endpoint launchers (used by demo.sh and for debugging a single server).
+# Each runs the command config.toml specifies for that endpoint.
 [feature.local-inference.tasks.serve-llm]
-cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $LLM_MODEL --no-prefill-assistant --port 8080"
-env = { LLM_MODEL = "$DEMO_ROOT/models/gpt-oss-20b-Q4_K_M.gguf" }
-description = "Serve GPT-OSS-20B on port 8080 (set LLM_MODEL to override path)"
+cmd = "python -m rai_app.inference.serve --only main_llm"
+description = "Serve the 'main_llm' endpoint from config.toml"
 
 [feature.local-inference.tasks.serve-vlm]
-cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $VLM_MODEL --mmproj $VLM_MMPROJ --port 8081"
-env = { VLM_MODEL = "$DEMO_ROOT/models/LFM2-VL-3B-Q8_0.gguf", VLM_MMPROJ = "$DEMO_ROOT/models/mmproj-LFM2-VL-3B-Q8_0.gguf" }
-description = "Serve LFM2-VL-3B on port 8081 (set VLM_MODEL / VLM_MMPROJ to override paths)"
+cmd = "python -m rai_app.inference.serve --only vlm"
+description = "Serve the 'vlm' endpoint from config.toml (npu/FastFlowLM by default)"
 
 [feature.local-inference.tasks.serve-embedding]
-cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $EMBEDDING_MODEL --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082"
-env = { EMBEDDING_MODEL = "$DEMO_ROOT/models/Qwen3-Embedding-0.6B-Q8_0.gguf" }
-description = "Serve Qwen3-Embedding-0.6b on port 8082"
+cmd = "python -m rai_app.inference.serve --only embeddings"
+description = "Serve the 'embeddings' endpoint from config.toml"
 
 [feature.local-inference.tasks.serve-reranker]
-cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $RERANKER_MODEL --embedding --pooling rank -c 4096 -b 2048 -ub 2048 --port 8083"
-env = { RERANKER_MODEL = "$DEMO_ROOT/models/qwen3-reranker-0.6b-q8_0.gguf" }
-description = "Serve Qwen3-Reranker-0.6B on port 8083"
+cmd = "python -m rai_app.inference.serve --only reranker"
+description = "Serve the 'reranker' endpoint from config.toml"
 
 [feature.local-inference.tasks.serve-all]
-cmd = "bash scripts/serve_all.sh"
-description = "Launch all inference servers in a tmux session (2x2 grid)"
+cmd = "python -m rai_app.inference.serve"
+description = "Alias for `inference`: launch all local endpoints in a tmux grid"
 
 # ─── Profile features ───────────────────────────────────────────────────────────
 # One profile feature per environment. Each defines a `setup` entry point so
@@ -223,7 +255,7 @@ depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
 description = "Setup HIL machine (ROS 2 + Python, no O3DE)"
 
 [feature.profile-hil-local.tasks.setup]
-depends-on = ["clone-ros2-ws", "clone-inference", "build-ros2", "sync", "build-llama"]
+depends-on = ["clone-ros2-ws", "submodules", "build-ros2", "sync", "build-llama"]
 description = "Setup HIL machine with local llama.cpp inference"
 
 [feature.profile-local.tasks.clone]

@@ -67,13 +67,34 @@ This single command runs the full build pipeline in the correct order:
 
 #### Local Inference (optional)
 
-If you want to run models locally via llama.cpp instead of cloud APIs:
+If you want to run models locally instead of cloud APIs:
 
 ```shell
-pixi run -e local clone-inference
-pixi run -e local build-llama # this step is hardware specific. By default, it builds with Vulkan backend. Check for better solutions for your hardware.
-pixi run -e local download-models  # or download the models manually, check the links below
+pixi run -e local submodules      # check out the pinned llama.cpp + FastFlowLM submodules
+pixi run -e local build-llama     # hardware specific; defaults to the Vulkan backend. Swap the cmake flag for your hardware.
+pixi run -e local download-models # downloads every weight referenced in config.toml; or grab them manually below
 ```
+
+`config.toml` is the single source of truth for inference: each `[endpoints.*]`
+table fixes a model's backend, port, and weights, and the agents reference those
+endpoints by name. `pixi run inference` launches them all. See
+[Running the demo](running.md#local-inference).
+
+##### NPU backend (AMD Ryzen AI, optional)
+
+To run an endpoint on the NPU instead of the GPU, set its `backend = "npu"` in
+`config.toml` and build FastFlowLM. The [RobotecAI/FastFlowLM](https://github.com/RobotecAI/FastFlowLM)
+fork (pinned as a submodule) includes GBNF grammar-constrained sampling, so the
+NPU path can produce the structured/JSON output the agents rely on:
+
+```shell
+pixi run -e local submodules         # checks out the FastFlowLM submodule (works without an NPU)
+pixi run -e local build-fastflowlm   # NPU host only: needs the amdxdna driver + XRT dev stack
+```
+
+Note FastFlowLM has no LFM2-VL tag yet — its vision models are Gemma 3 / Qwen 3 —
+so the NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see
+the comment on `[endpoints.vlm]` in `config.toml`.
 
 ---
 

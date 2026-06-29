@@ -86,63 +86,89 @@ class Config:
     condition_agent: ConditionAgentConfig
 
 
-def load_config(config_path: str = "config.toml") -> Config:
+def load_raw_config(config_path: str = "config.toml") -> dict:
+    """Load the SSOT config as a raw dict (endpoints + agent references)."""
     with open(config_path, "rb") as f:
-        config = tomli.load(f)
+        return tomli.load(f)
+
+
+def endpoint_base_url(endpoint: dict) -> str:
+    """OpenAI-compatible base_url a client should call for an endpoint.
+
+    An explicit ``base_url`` (remote/openai endpoints, or custom routing) wins;
+    otherwise it is derived from host/port. The reranker gets llama.cpp's
+    ``/v1/reranking`` path instead of ``/v1``.
+    """
+    if endpoint.get("base_url"):
+        return endpoint["base_url"]
+    host = endpoint.get("host", "localhost")
+    port = endpoint["port"]
+    suffix = "/v1/reranking" if endpoint.get("type") == "reranker" else "/v1"
+    return f"http://{host}:{port}{suffix}"
+
+
+def resolve_endpoint(raw: dict, agent: str, key: str) -> dict:
+    """Return the endpoint table referenced by ``raw[agent][key]``."""
+    try:
+        ref = raw[agent][key]
+    except KeyError as exc:
+        raise KeyError(f"[{agent}] is missing required key '{key}'") from exc
+    endpoints = raw.get("endpoints", {})
+    if ref not in endpoints:
+        raise KeyError(
+            f"[{agent}].{key} references unknown endpoint '{ref}'. "
+            f"Defined endpoints: {sorted(endpoints)}"
+        )
+    return endpoints[ref]
+
+
+def _llm_config(raw: dict, agent: str) -> LLMConfig:
+    endpoint = resolve_endpoint(raw, agent, "llm")
+    return LLMConfig(
+        model=endpoint["model"],
+        base_url=endpoint_base_url(endpoint),
+        reasoning=raw[agent].get("llm_reasoning", False),
+    )
+
+
+def _vlm_config(raw: dict, agent: str) -> VLMConfig:
+    endpoint = resolve_endpoint(raw, agent, "vlm")
+    return VLMConfig(
+        model=endpoint["model"],
+        base_url=endpoint_base_url(endpoint),
+        reasoning=raw[agent].get("vlm_reasoning", False),
+        temperature=raw[agent].get("vlm_temperature", 0.0),
+    )
+
+
+def load_config(config_path: str = "config.toml") -> Config:
+    raw = load_raw_config(config_path)
+    embeddings_endpoint = resolve_endpoint(raw, "safety_agent", "embeddings")
+    reranker_endpoint = resolve_endpoint(raw, "safety_agent", "reranker")
     return Config(
         general=GeneralConfig(
-            llm=LLMConfig(
-                model=config["general"]["llm_model"],
-                base_url=config["general"]["llm_base_url"],
-                reasoning=config["general"]["llm_reasoning"],
-            ),
-            vlm=VLMConfig(
-                model=config["general"]["vlm_model"],
-                base_url=config["general"]["vlm_base_url"],
-                reasoning=config["general"]["vlm_reasoning"],
-            ),
+            llm=_llm_config(raw, "general"),
+            vlm=_vlm_config(raw, "general"),
         ),
         megamind_agent=MegamindConfig(
-            llm=LLMConfig(
-                model=config["megamind_agent"]["llm_model"],
-                base_url=config["megamind_agent"]["llm_base_url"],
-                reasoning=config["megamind_agent"]["llm_reasoning"],
-            ),
-            vlm=VLMConfig(
-                model=config["megamind_agent"]["vlm_model"],
-                base_url=config["megamind_agent"]["vlm_base_url"],
-                reasoning=config["megamind_agent"]["vlm_reasoning"],
-            ),
+            llm=_llm_config(raw, "megamind_agent"),
+            vlm=_vlm_config(raw, "megamind_agent"),
         ),
         inspection_agent=InspectionAgentConfig(
-            vlm=VLMConfig(
-                model=config["inspection_agent"]["vlm_model"],
-                base_url=config["inspection_agent"]["vlm_base_url"],
-                reasoning=config["inspection_agent"]["vlm_reasoning"],
-                temperature=config["inspection_agent"]["vlm_temperature"],
-            )
+            vlm=_vlm_config(raw, "inspection_agent"),
         ),
         safety_agent=SafetyAgentConfig(
-            vlm=VLMConfig(
-                model=config["safety_agent"]["vlm_model"],
-                base_url=config["safety_agent"]["vlm_base_url"],
-                reasoning=config["safety_agent"]["vlm_reasoning"],
-            ),
+            vlm=_vlm_config(raw, "safety_agent"),
             embeddings=EmbeddingsConfig(
-                model=config["safety_agent"]["embeddings_model"],
-                base_url=config["safety_agent"]["embeddings_base_url"],
+                model=embeddings_endpoint["model"],
+                base_url=endpoint_base_url(embeddings_endpoint),
             ),
             reranker=RerankerConfig(
-                base_url=config["safety_agent"]["reranker_base_url"]
+                base_url=endpoint_base_url(reranker_endpoint),
             ),
         ),
         condition_agent=ConditionAgentConfig(
-            vlm=VLMConfig(
-                model=config["condition_agent"]["vlm_model"],
-                base_url=config["condition_agent"]["vlm_base_url"],
-                reasoning=config["condition_agent"]["vlm_reasoning"],
-                temperature=config["condition_agent"]["vlm_temperature"],
-            )
+            vlm=_vlm_config(raw, "condition_agent"),
         ),
     )
 
