@@ -42,10 +42,17 @@ done
 
 echo ""
 if [ "$FAIL" -eq 0 ]; then
-    echo -e "  ${GREEN}$PASS passed, $FAIL failed${RESET}"
+    echo -e "  ${GREEN}$PASS up, $FAIL down${RESET}"
 else
-    echo -e "  ${RED}$PASS passed, $FAIL failed${RESET}"
+    echo -e "  ${RED}$PASS up, $FAIL down${RESET}"
 fi
 echo ""
 
-[ "$FAIL" -eq 0 ]
+# Functional check: send a real, type-appropriate inference request to each
+# endpoint (llm/vlm chat, embeddings vector, reranker scores, + GBNF grammar on
+# NPU). Liveness alone doesn't prove the checkpoint actually serves.
+python -m rai_app.inference.serve --check --config "$CONFIG"
+CHECK_RC=$?
+
+# Overall pass requires both: all endpoints up AND all functional checks passed.
+[ "$FAIL" -eq 0 ] && [ "$CHECK_RC" -eq 0 ]

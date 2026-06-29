@@ -25,7 +25,9 @@ echo "Configuring (cmake --preset linux-default) ..."
 cmake --preset linux-default
 echo "Building (-j$(nproc)) ..."
 cmake --build build -j"$(nproc)"
-echo "Installing (requires sudo) ..."
-sudo cmake --install build
 
-echo "FastFlowLM installed. Verify the NPU with: flm validate"
+# Build-only — deliberately NO `sudo cmake --install`. The dispatcher runs the
+# repo binary directly (inference/FastFlowLM/src/build/flm), so a system-wide
+# install (which would clobber an existing /usr/local/bin/flm) is never needed.
+echo "FastFlowLM built at: $SRC/build/flm"
+echo "Verify the NPU with: $SRC/build/flm validate"

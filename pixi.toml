@@ -57,10 +57,6 @@ nlohmann_json = "*"
 cmd = "bash scripts/check_env.sh"
 description = "Fail fast if apt ROS 2 (/opt/ros) is sourced — must not be mixed with conda/RoboStack"
 
-[tasks.smoke-test]
-cmd = "bash scripts/smoke_test.sh"
-description = "Check if all LLM inference servers are up"
-
 # ─── Feature: ros2 ──────────────────────────────────────────────────────────────
 
 [feature.ros2.tasks.clone-ros2-ws]
@@ -161,6 +157,18 @@ description = "Launch O3DE Editor from SDK (project must be built first)"
 # ─── Feature: local-inference ───────────────────────────────────────────────────
 
 [feature.local-inference.dependencies]
+# Everything needed to BUILD + SERVE local inference, so the lightweight
+# `inference` environment (no ROS, no O3DE) is self-sufficient. In the heavier
+# `local`/`hil-local` envs these merge harmlessly with the default-feature
+# toolchain (same conda-forge packages).
+python = "*"           # runs the stdlib dispatcher (rai_app.inference.serve)
+cmake = "*"
+ninja = "*"            # FastFlowLM's `cmake --preset linux-default` uses Ninja
+make = "*"             # llama.cpp default (Makefiles) generator
+c-compiler = "*"
+cxx-compiler = "*"
+pkg-config = "*"
+wget = "*"             # download-models fetches ggufs
 # Vulkan SDK pieces llama.cpp's GGML_VULKAN backend needs to BUILD: headers +
 # loader for find_package(Vulkan), and glslc (from shaderc) to compile shaders.
 # The runtime ICD is the system GPU driver (e.g. RADV for AMD), discovered by
@@ -194,14 +202,15 @@ description = "Build llama.cpp with Vulkan backend"
 # ─── FastFlowLM (AMD Ryzen AI NPU backend) ───────────────────────────────────
 # The submodule (RobotecAI/FastFlowLM fork) already includes GBNF grammar-
 # constrained sampling, needed for structured agent output on the NPU. Building
-# and serving require an AMD NPU with the amdxdna driver + XRT stack — see
-# scripts/build_fastflowlm.sh. The submodule checkout itself works on any host.
+# needs the XRT/amdxdna dev headers (no NPU required to compile); only serving
+# (`flm serve`) needs the NPU + amdxdna driver loaded. The build is install-free
+# — the dispatcher runs the repo binary directly.
 
 [feature.local-inference.tasks.build-fastflowlm]
 cmd = "bash scripts/build_fastflowlm.sh"
 depends-on = ["submodules"]
 outputs = ["inference/FastFlowLM/src/build/flm"]
-description = "Build + install FastFlowLM from source (NPU host only: needs XRT/amdxdna dev headers)"
+description = "Build FastFlowLM from source, build-only/no install (needs XRT/amdxdna dev headers)"
 
 # ─── SSOT-driven inference (config.toml drives everything below) ─────────────
 # rai_app/inference/serve.py reads config.toml's [endpoints.*] and routes each to
@@ -237,6 +246,10 @@ description = "Serve the 'reranker' endpoint from config.toml"
 [feature.local-inference.tasks.serve-all]
 cmd = "python -m rai_app.inference.serve"
 description = "Alias for `inference`: launch all local endpoints in a tmux grid"
+
+[feature.local-inference.tasks.smoke-test]
+cmd = "bash scripts/smoke_test.sh"
+description = "Smoke-test inference: /health liveness + one real inference request per endpoint (config.toml SSOT)"
 
 # ─── Profile features ───────────────────────────────────────────────────────────
 # One profile feature per environment. Each defines a `setup` entry point so
@@ -313,3 +326,6 @@ hil       = {features = ["dev", "ros2", "profile-hil"]}
 hil-local = {features = ["dev", "ros2", "local-inference", "profile-hil-local"]}
 local     = {features = ["dev", "ros2", "sim", "local-inference", "profile-local"]}
 dev       = {features = ["dev"], no-default-feature = true}
+# Lightweight inference-only env (no ROS 2, no O3DE) — for a dedicated inference
+# host: build llama.cpp/FastFlowLM, download models, serve, and smoke-test.
+inference = {features = ["dev", "local-inference"], no-default-feature = true}

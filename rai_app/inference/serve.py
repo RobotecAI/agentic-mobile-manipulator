@@ -32,6 +32,7 @@ Usage:
     python -m rai_app.inference.serve --only NAME   # run ONE endpoint in the foreground
     python -m rai_app.inference.serve --print       # print resolved commands and exit
     python -m rai_app.inference.serve --health      # print health-check URLs and exit
+    python -m rai_app.inference.serve --check       # send a real request to each running endpoint
     python -m rai_app.inference.serve --download    # fetch weights for all local endpoints
 
 Stdlib-only on purpose: the dispatcher must run under the bare pixi/conda env
@@ -40,11 +41,14 @@ in the agent stack (langchain, etc.).
 """
 
 import argparse
+import json
 import os
 import shlex
 import shutil
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 import tomllib
@@ -54,6 +58,13 @@ LOCAL_BACKENDS = {"gpu", "cpu", "npu"}
 LLAMA_BACKENDS = {"gpu", "cpu"}
 
 TMUX_SESSION = "llm-servers"
+
+# 1x1 PNG (red) as a data URI — enough to exercise the multimodal path in --check
+# without shipping an image file. The check only asserts a non-empty reply.
+_TEST_IMAGE_DATA_URI = (
+    "data:image/png;base64,"
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+)
 
 # Extra llama.cpp flags implied by an endpoint's `type`. The embedding/reranker
 # context flags mirror the values the demo has always served with.
@@ -196,6 +207,108 @@ def build_command(name: str, ep: dict, root: str) -> list[str]:
 def health_url(ep: dict) -> str:
     host = ep.get("host", "localhost")
     return f"http://{host}:{ep['port']}/health"
+
+
+def _api_root(ep: dict) -> str:
+    return f"http://{ep.get('host', 'localhost')}:{ep['port']}"
+
+
+def _post_json(url: str, payload: dict, timeout: float) -> dict:
+    """POST JSON and return the parsed JSON response (raises on HTTP/transport error)."""
+    data = json.dumps(payload).encode()
+    req = urllib.request.Request(
+        url, data=data, headers={"Content-Type": "application/json"}, method="POST"
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return json.loads(resp.read().decode())
+
+
+def check_endpoint(name: str, ep: dict) -> tuple[bool, str]:
+    """Send one type-appropriate inference request and validate a real response.
+    Returns (ok, detail). First request may trigger a model load, so timeouts are
+    generous."""
+    etype = ep.get("type")
+    model = ep.get("model", "")
+    root = _api_root(ep)
+    try:
+        if etype == "embedding":
+            r = _post_json(
+                f"{root}/v1/embeddings", {"model": model, "input": "hello world"}, 90
+            )
+            vec = r["data"][0]["embedding"]
+            return (len(vec) > 0, f"dim={len(vec)}")
+
+        if etype == "reranker":
+            r = _post_json(
+                f"{root}/v1/reranking",
+                {"model": model, "query": "a cat", "documents": ["a cat", "a car"]},
+                90,
+            )
+            results = r.get("results", [])
+            return (
+                len(results) > 0 and "relevance_score" in results[0],
+                f"{len(results)} scored",
+            )
+
+        if etype in ("llm", "vlm"):
+            content: object = "Reply with the single word: pong."
+            if etype == "vlm":
+                content = [
+                    {"type": "text", "text": "Reply with the single word: pong."},
+                    {"type": "image_url", "image_url": {"url": _TEST_IMAGE_DATA_URI}},
+                ]
+            r = _post_json(
+                f"{root}/v1/chat/completions",
+                {
+                    "model": model,
+                    "messages": [{"role": "user", "content": content}],
+                    "max_tokens": 16,
+                },
+                300,  # a cold 20B load can be slow
+            )
+            text = (r["choices"][0]["message"]["content"] or "").strip()
+            if not text:
+                return (False, "empty completion")
+            # NPU endpoints additionally exercise the fork's GBNF grammar support.
+            if ep.get("backend") == "npu":
+                g = _post_json(
+                    f"{root}/v1/chat/completions",
+                    {
+                        "model": model,
+                        "messages": [{"role": "user", "content": "yes or no?"}],
+                        "max_tokens": 8,
+                        "grammar": 'root ::= "yes" | "no"',
+                    },
+                    120,
+                )
+                gtext = (g["choices"][0]["message"]["content"] or "").strip()
+                ok = gtext in ("yes", "no")
+                return (ok, f"chat ok; grammar={'ok' if ok else f'BAD({gtext!r})'}")
+            return (True, f"reply={text[:24]!r}")
+
+        return (False, f"unknown type {etype!r}")
+    except (urllib.error.URLError, TimeoutError) as exc:
+        return (False, f"unreachable ({getattr(exc, 'reason', exc)})")
+    except (KeyError, IndexError, ValueError) as exc:
+        return (False, f"bad response ({exc})")
+
+
+def cmd_check(endpoints: dict[str, dict]) -> int:
+    serveable = local_endpoints(endpoints)
+    if not serveable:
+        print("no local endpoints to check (all remote?)")
+        return 0
+    failed = 0
+    print("=== Inference functional check ===")
+    for name, ep in serveable:
+        ok, detail = check_endpoint(name, ep)
+        mark = "PASS" if ok else "FAIL"
+        print(
+            f"  [{mark}] {name:<12} type={ep.get('type'):<9} :{ep.get('port')}  {detail}"
+        )
+        failed += not ok
+    print(f"  {len(serveable) - failed} passed, {failed} failed")
+    return 1 if failed else 0
 
 
 # ─── Modes ──────────────────────────────────────────────────────────────────
@@ -376,6 +489,11 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument(
         "--download", action="store_true", help="download weights for local endpoints"
     )
+    mode.add_argument(
+        "--check",
+        action="store_true",
+        help="send a real inference request to each running local endpoint and validate it",
+    )
     args = parser.parse_args(argv)
 
     endpoints = load_endpoints(args.config)
@@ -387,6 +505,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_health(endpoints)
     if args.download:
         return cmd_download(endpoints, root)
+    if args.check:
+        return cmd_check(endpoints)
     if args.only:
         return cmd_only(endpoints, root, args.only)
     return cmd_grid(endpoints, root)
