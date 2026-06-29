@@ -29,6 +29,8 @@ ros-jazzy-moveit-py = "2.12.*"
 ros-jazzy-tf-transformations = "*"
 ros-jazzy-ros2-control = "*"
 ros-jazzy-ros2-controllers = "*"
+ros-jazzy-nav2-bringup = "*"
+ros-jazzy-simulation-interfaces = "1.5.1.*"
 
 # Previously vcs-imported and colcon-built; now binary conda packages.
 # (See ros2_ws.repos for the full migration note.)
@@ -266,7 +268,7 @@ depends-on = ["sync"]
 description = "Run all linters and formatters"
 
 [feature.dev.tasks.test]
-cmd = "uv run pytest"
+cmd = "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run python -m pytest"
 depends-on = ["sync"]
 description = "Run test suite"
 
