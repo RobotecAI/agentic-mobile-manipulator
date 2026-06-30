@@ -57,7 +57,7 @@ import tomllib
 LOCAL_BACKENDS = {"gpu", "cpu", "npu"}
 LLAMA_BACKENDS = {"gpu", "cpu"}
 
-TMUX_SESSION = "llm-servers"
+TMUX_SESSION = "agentic-mobile-manipulator-llm-servers"
 
 # 1x1 PNG (red) as a data URI — enough to exercise the multimodal path in --check
 # without shipping an image file. The check only asserts a non-empty reply.
@@ -411,6 +411,14 @@ def cmd_only(endpoints: dict[str, dict], root: str, name: str) -> int:
     os.execvp(cmd[0], cmd)  # replace this process with the server
 
 
+def _attach(session: str) -> int:
+    # Leave the grid detached when nested in tmux or when a caller (demo.sh)
+    # only wants it started, not attached.
+    if os.environ.get("TMUX") or os.environ.get("AMM_NO_ATTACH"):
+        return 0
+    return subprocess.call(["tmux", "attach-session", "-t", session])
+
+
 def cmd_grid(endpoints: dict[str, dict], root: str) -> int:
     serveable = local_endpoints(endpoints)
     if not serveable:
@@ -431,8 +439,8 @@ def cmd_grid(endpoints: dict[str, dict], root: str) -> int:
         )
         == 0
     ):
-        print(f"Session '{TMUX_SESSION}' already exists. Attaching...")
-        return subprocess.call(["tmux", "attach-session", "-t", TMUX_SESSION])
+        print(f"Session '{TMUX_SESSION}' already exists.")
+        return _attach(TMUX_SESSION)
 
     # Re-enter pixi per pane so each server gets the activated runtime, then run
     # this same dispatcher in --only mode (which execs the server in-place).
@@ -485,7 +493,7 @@ def cmd_grid(endpoints: dict[str, dict], root: str) -> int:
     subprocess.check_call(
         ["tmux", "select-layout", "-t", f"{TMUX_SESSION}:inference", "tiled"]
     )
-    return subprocess.call(["tmux", "attach-session", "-t", TMUX_SESSION])
+    return _attach(TMUX_SESSION)
 
 
 def main(argv: list[str] | None = None) -> int:

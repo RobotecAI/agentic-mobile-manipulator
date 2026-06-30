@@ -8,6 +8,17 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
+# Each component runs in its own tmux session (created by its `pixi run` task).
+# AMM_NO_ATTACH tells those launchers to start the session detached and return
+# instead of attaching, so this script can drive them in sequence.
+export AMM_NO_ATTACH=1
+SIM_SESSION="agentic-mobile-manipulator-sim"
+STACK_SESSION="agentic-mobile-manipulator-stack"
+INF_SESSION="agentic-mobile-manipulator-llm-servers"
+AGENTS_SESSION="agentic-mobile-manipulator-agents"
+HMI_SESSION="agentic-mobile-manipulator-hmi"
+ALL_SESSIONS=("$SIM_SESSION" "$STACK_SESSION" "$INF_SESSION" "$AGENTS_SESSION" "$HMI_SESSION")
+
 log()     { echo -e "  ${GREEN}●${RESET} $*"; }
 warn()    { echo -e "  ${YELLOW}!${RESET} $*"; }
 err()     { echo -e "  ${RED}✗${RESET} $*" >&2; }
@@ -42,15 +53,11 @@ check_inference() {
     fi
 }
 
-stop_all() {
-    for s in simulation inference agent; do
-        tmux kill-session -t "$s" 2>/dev/null || true
-    done
-}
+stop_all() { bash "$DEMO_ROOT/scripts/kill_sessions.sh"; }
 
 # ── Guard ─────────────────────────────────────────────────────────────────────
 
-for s in simulation inference agent; do
+for s in "${ALL_SESSIONS[@]}"; do
     if tmux has-session -t "$s" 2>/dev/null; then
         warn "Session '$s' already exists."
         warn "Run 'pixi run demo-stop' first, or attach with: tmux attach -t $s"
@@ -63,58 +70,37 @@ trap 'echo; warn "Interrupted — cleaning up..."; stop_all; exit 1' INT TERM QU
 # ── 1. Simulation ─────────────────────────────────────────────────────────────
 
 section "Starting simulation..."
-
-# Create the session with a named first window so we don't rely on window index numbers
-tmux new-session -d -s simulation -n "sim+ros2" -x 220 -y 50
-SIM_TOP_PANE=$(tmux display-message -p -t simulation:sim+ros2 "#{pane_id}")
-SIM_BOTTOM_PANE=$(tmux split-window -v -P -F "#{pane_id}" -t "$SIM_TOP_PANE")
-
-# Send commands to the panes using pane IDs so pane-base-index does not matter
-tmux send-keys -t "$SIM_TOP_PANE" "cd $DEMO_ROOT && pixi run sim" Enter
-log "O3DE launched  (simulation — top pane)"
-
+pixi run sim
+log "O3DE launched  ($SIM_SESSION)"
 wait_topic "/clock" 120 || { stop_all; exit 1; }
 
 # ── 2. ROS 2 Stack ────────────────────────────────────────────────────────────
 
 section "Starting ROS 2 stack..."
-
-tmux send-keys -t "$SIM_BOTTOM_PANE" "cd $DEMO_ROOT && pixi run stack" Enter
-log "ROS 2 stack launched  (simulation — bottom pane)"
-
+pixi run stack
+log "ROS 2 stack launched  ($STACK_SESSION)"
 wait_topic "/joint_states" 60 || { stop_all; exit 1; }
 
 # ── 3. Inference servers ──────────────────────────────────────────────────────
 
 section "Starting inference servers..."
-
-# One pane per inference server (config.toml SSOT). Both VLMs run:
+# One pane per local endpoint (config.toml SSOT). Both VLMs run:
 # vlm_safety (npu) and vlm_inspection (gpu).
-tmux new-session -d -s inference -n models -x 220 -y 50
-INF_TASKS=(serve-llm serve-vlm-safety serve-vlm-inspection serve-embedding serve-reranker)
-first_pane=$(tmux display-message -p -t inference:models "#{pane_id}")
-tmux send-keys -t "$first_pane" "cd $DEMO_ROOT && pixi run ${INF_TASKS[0]}" Enter
-for task in "${INF_TASKS[@]:1}"; do
-    pane=$(tmux split-window -P -F "#{pane_id}" -t inference:models)
-    tmux select-layout -t inference:models tiled
-    tmux send-keys -t "$pane" "cd $DEMO_ROOT && pixi run $task" Enter
-done
-tmux select-layout -t inference:models tiled
-log "Inference session created  (inference — ${#INF_TASKS[@]} panes)"
-
+pixi run inference
+log "Inference servers launched  ($INF_SESSION)"
 check_inference || { stop_all; exit 1; }
 
 # ── 4. Agents + Orchestrator ──────────────────────────────────────────────────
 
 section "Starting agents + orchestrator..."
+pixi run agents
+log "Agents + orchestrator launched  ($AGENTS_SESSION)"
 
-# agent session: agents (top pane) + orchestrator (bottom pane)
-tmux new-session -d -s agent -n agents -x 220 -y 50
-AGENT_TOP=$(tmux display-message -p -t agent:agents "#{pane_id}")
-AGENT_BOTTOM=$(tmux split-window -v -P -F "#{pane_id}" -t "$AGENT_TOP")
-tmux send-keys -t "$AGENT_TOP" "cd $DEMO_ROOT && pixi run agents" Enter
-tmux send-keys -t "$AGENT_BOTTOM" "cd $DEMO_ROOT && pixi run orchestrator" Enter
-log "Agents + orchestrator launched  (agent)"
+# ── 5. HMI ────────────────────────────────────────────────────────────────────
+
+section "Starting HMI..."
+pixi run hmi
+log "HMI launched  ($HMI_SESSION)"
 
 # ── Final health check ───────────────────────────────────────────────────────
 
@@ -123,7 +109,7 @@ sleep 10
 
 failed=false
 
-for s in simulation inference agent; do
+for s in "${ALL_SESSIONS[@]}"; do
     if tmux has-session -t "$s" 2>/dev/null; then
         ok "Session '$s' is running"
     else
@@ -164,9 +150,11 @@ fi
 echo ""
 echo -e "${BOLD}${GREEN}=== Demo running ===${RESET}"
 echo ""
-echo -e "  ${CYAN}tmux attach -t simulation${RESET}   — O3DE sim (top) + ROS 2 stack (bottom)"
-echo -e "  ${CYAN}tmux attach -t inference${RESET}    — inference servers (one pane each)"
-echo -e "  ${CYAN}tmux attach -t agent${RESET}        — agents (top) + orchestrator (bottom)"
+echo -e "  ${CYAN}tmux attach -t $SIM_SESSION${RESET}      — O3DE simulation"
+echo -e "  ${CYAN}tmux attach -t $STACK_SESSION${RESET}    — ROS 2 stack"
+echo -e "  ${CYAN}tmux attach -t $INF_SESSION${RESET} — inference servers (one pane each)"
+echo -e "  ${CYAN}tmux attach -t $AGENTS_SESSION${RESET}   — agents + orchestrator (one pane each)"
+echo -e "  ${CYAN}tmux attach -t $HMI_SESSION${RESET}      — HMI"
 echo ""
-echo -e "  Stop everything:  ${YELLOW}pixi run demo-stop${RESET}"
+echo -e "  Stop everything:  ${YELLOW}pixi run demo-stop${RESET}  (or ${YELLOW}pixi run kill${RESET})"
 echo ""

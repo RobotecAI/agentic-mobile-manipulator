@@ -67,16 +67,24 @@ depends-on = ["clone-ros2-ws"]
 description = "Build the ROS 2 workspace with colcon (deps provided by conda/RoboStack — no rosdep)"
 
 [feature.ros2.tasks.stack]
+cmd = "bash scripts/tmux_run.sh agentic-mobile-manipulator-stack pixi run stack-fg"
+description = "Launch the barebones ROS 2 stack in its own tmux session (robot + supporting nodes, no agents)"
+
+[feature.ros2.tasks.stack-fg]
 cmd = "bash scripts/run_ros2_stack.sh"
-description = "Launch the barebones ROS 2 stack (robot + supporting nodes, no agents)"
+description = "Launch the barebones ROS 2 stack in the foreground (no tmux)"
 
 [feature.ros2.tasks.agents]
 cmd = "bash scripts/run_agents.sh"
-description = "Start the rai agents (nav2, moveit2, scene, inspection, safety)"
+description = "Start the rai agents + orchestrator in a tmux grid (nav2, moveit2, scene, inspection, safety, orchestrator)"
 
 [feature.ros2.tasks.hmi]
+cmd = "bash scripts/tmux_run.sh agentic-mobile-manipulator-hmi pixi run hmi-fg"
+description = "Launch the Human-Machine Interface in its own tmux session"
+
+[feature.ros2.tasks.hmi-fg]
 cmd = "ros2 launch mobile_manipulator_hmi hmi_launch.py"
-description = "Launch the Human-Machine Interface"
+description = "Launch the Human-Machine Interface in the foreground (no tmux)"
 
 [feature.ros2.tasks.orchestrator]
 cmd = "uv run python rai_app/agents/agent_orchestrator.py"
@@ -146,8 +154,12 @@ depends-on = ["fetch-gems"]
 description = "Build O3DE GameLauncher and project assets"
 
 [feature.sim.tasks.sim]
+cmd = "bash scripts/tmux_run.sh agentic-mobile-manipulator-sim pixi run sim-fg"
+description = "Launch O3DE simulation in its own tmux session"
+
+[feature.sim.tasks.sim-fg]
 cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
-description = "Launch O3DE simulation"
+description = "Launch O3DE simulation in the foreground (no tmux)"
 
 [feature.sim.tasks.editor]
 cmd = "$O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor --project-path $DEMO_ROOT/sim"
@@ -291,10 +303,10 @@ description = "List built runnables (GameLauncher, llama.cpp, FastFlowLM, ...)"
 
 [feature.profile-single-pc.tasks.demo]
 cmd = "bash scripts/demo.sh"
-description = "Start full demo: sim → ros2 → inference → orchestrator (3 tmux sessions)"
+description = "Start full demo: sim → stack → inference → agents+orchestrator → hmi (one tmux session each)"
 
 [feature.profile-single-pc.tasks.demo-stop]
-cmd = "bash scripts/demo_stop.sh"
+cmd = "bash scripts/kill_sessions.sh"
 description = "Stop all demo tmux sessions"
 
 # ─── Feature: dev ───────────────────────────────────────────────────────────────
@@ -305,6 +317,10 @@ description = "Stop all demo tmux sessions"
 
 [feature.dev.dependencies]
 uv = ">=0.5"
+
+[feature.dev.tasks.kill]
+cmd = "bash scripts/kill_sessions.sh"
+description = "Kill all project tmux sessions (agentic-mobile-manipulator-*)"
 
 [feature.dev.tasks.sync]
 cmd = "uv sync"
