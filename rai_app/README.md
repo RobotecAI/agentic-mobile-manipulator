@@ -168,7 +168,7 @@ pixi run sim
 4. Launch the robotic stack:
 
 ```bash
-pixi run ros2
+pixi run stack
 ```
 
 5. Spawn objects in HMI, choosing from different scenarios

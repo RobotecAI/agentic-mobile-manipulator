@@ -15,7 +15,7 @@ pixi run sim
 ### ROS 2
 
 ```shell
-pixi run ros2
+pixi run stack
 ```
 
 ### Inference

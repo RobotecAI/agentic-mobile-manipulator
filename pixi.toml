@@ -66,7 +66,7 @@ outputs = ["ros2_ws/install/"]
 depends-on = ["clone-ros2-ws"]
 description = "Build the ROS 2 workspace with colcon (deps provided by conda/RoboStack — no rosdep)"
 
-[feature.ros2.tasks.ros2]
+[feature.ros2.tasks.stack]
 cmd = "bash scripts/run_ros2_stack.sh"
 description = "Launch the barebones ROS 2 stack (robot + supporting nodes, no agents)"
 

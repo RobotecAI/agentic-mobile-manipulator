@@ -79,7 +79,7 @@ wait_topic "/clock" 120 || { stop_all; exit 1; }
 
 section "Starting ROS 2 stack..."
 
-tmux send-keys -t "$SIM_BOTTOM_PANE" "cd $DEMO_ROOT && pixi run ros2" Enter
+tmux send-keys -t "$SIM_BOTTOM_PANE" "cd $DEMO_ROOT && pixi run stack" Enter
 log "ROS 2 stack launched  (simulation — bottom pane)"
 
 wait_topic "/joint_states" 60 || { stop_all; exit 1; }

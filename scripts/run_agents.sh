@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Start the rai agents (the AI layer driving the ROS 2 stack). Requires the
-# barebones stack (`pixi run ros2`) and the inference servers to be up. The
+# barebones stack (`pixi run stack`) and the inference servers to be up. The
 # orchestrator is launched separately (`pixi run orchestrator`).
 (
   uv run python rai_app/agents/nav2_agent.py $1 &
