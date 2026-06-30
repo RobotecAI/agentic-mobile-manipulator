@@ -39,6 +39,11 @@ cmake --preset linux-default -DCMAKE_C_COMPILER="$FLM_CC" -DCMAKE_CXX_COMPILER="
 echo "Building (-j$(nproc)) ..."
 cmake --build build -j"$(nproc)"
 
+# flm looks for model_list.json next to its executable (or at FLM_CONFIG_PATH).
+# We run the build-tree binary, so drop the model registry beside it — needed by
+# both `flm serve` and `flm pull` (download-models).
+cp model_list.json build/model_list.json
+
 # Build-only — deliberately NO `sudo cmake --install`. The dispatcher runs the
 # repo binary directly (inference/FastFlowLM/src/build/flm), so a system-wide
 # install (which would clobber an existing /usr/local/bin/flm) is never needed.

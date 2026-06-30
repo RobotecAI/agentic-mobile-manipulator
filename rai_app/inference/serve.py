@@ -41,6 +41,7 @@ in the agent stack (langchain, etc.).
 """
 
 import argparse
+import concurrent.futures
 import json
 import os
 import shlex
@@ -365,10 +366,13 @@ def cmd_health(endpoints: dict[str, dict]) -> int:
 
 
 def cmd_download(endpoints: dict[str, dict], root: str) -> int:
-    rc = 0
+    # Collect every fetch up front, then run them concurrently so total
+    # throughput saturates the link instead of trickling one file at a time.
+    # Output streams live (bars from parallel jobs interleave — that's the cost
+    # of seeing progress while saturating the link).
+    jobs: list[tuple[str, list[str]]] = []  # (label, argv)
     for name, ep in local_endpoints(endpoints):
-        backend = ep.get("backend")
-        if backend == "npu":
+        if ep.get("backend") == "npu":
             tag = ep.get("flm_model")
             flm = flm_bin(root)
             if not flm:
@@ -376,8 +380,7 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
                     f"[skip] {name}: FastFlowLM ('flm') not installed — run 'pixi run build-fastflowlm' on an NPU host"
                 )
                 continue
-            print(f"[flm pull] {name}: {tag}")
-            rc |= subprocess.call([flm, "pull", tag])
+            jobs.append((f"{name}: {tag}", [flm, "pull", tag]))
             continue
         # llama.cpp backends: fetch the gguf(s) named in the SSOT.
         targets = [(ep.get("model_url"), ep.get("model_path"))]
@@ -391,10 +394,23 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
                 print(f"[skip] {name}: {os.path.basename(dest)} already exists")
                 continue
             os.makedirs(os.path.dirname(dest), exist_ok=True)
-            print(f"[download] {name}: {os.path.basename(dest)}")
-            rc |= subprocess.call(
-                ["wget", "-q", "--show-progress", "-c", "-O", dest, url]
-            )
+            jobs.append((f"{name}: {os.path.basename(dest)}", ["wget", "-q", "--show-progress", "-c", "-O", dest, url]))
+
+    if not jobs:
+        return 0
+
+    def fetch(job: tuple[str, list[str]]) -> tuple[str, int]:
+        label, argv = job
+        print(f"[download] {label}", flush=True)
+        return label, subprocess.call(argv)  # inherit stdout/stderr -> live progress
+
+    rc = 0
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:
+        for label, code in [f.result() for f in
+                            [pool.submit(fetch, j) for j in jobs]]:
+            print(f"[done] {label}" if code == 0
+                  else f"[FAIL] {label} (exit {code})", file=sys.stderr)
+            rc |= 1 if code else 0
     return rc
 
 
