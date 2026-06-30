@@ -30,8 +30,6 @@ ros-jazzy-tf-transformations = "1.1.1.*"
 ros-jazzy-ros2-control = "4.45.1.*"
 ros-jazzy-ros2-controllers = "4.40.0.*"
 
-# Previously vcs-imported and colcon-built; now binary conda packages.
-# (See ros2_ws.repos for the full migration note.)
 ros-jazzy-ur-description = "3.5.1.*"
 ros-jazzy-control-msgs = "5.9.0.*"
 ros-jazzy-control-toolbox = "4.11.0.*"
@@ -40,11 +38,8 @@ ros-jazzy-moveit-msgs = "2.6.0.*"
 ros-jazzy-realtime-tools = "3.11.0.*"
 ros-jazzy-srdfdom = "2.0.7.*"
 
-# simulation_interfaces: was source-built (ros2_ws.repos) for >= 1.4.0 since the
-# O3DE SimulationInterfaces gem needs it. robostack-jazzy now ships 1.5.1 (which
-# pulled the whole stack up to the ros2-distro-mutex 0.15 generation), so it
-# comes from conda — pinned to match the O3DE build.
 ros-jazzy-simulation-interfaces = "1.5.1.*"
+ros-jazzy-nav2-bringup = "1.3.12.*"
 
 # ─── Build toolchain (for source packages remaining in ros2_ws/src) ──────────
 # Use conda compilers so source packages stay ABI-compatible with the RoboStack
