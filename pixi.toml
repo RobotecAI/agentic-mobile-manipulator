@@ -332,6 +332,11 @@ description = "Run test suite"
 # e.g. `build-sim` cannot be run in the `hil` environment.
 
 [environments]
+# `default` mirrors `single-pc` so a bare `pixi run <task>` (no -e) targets the
+# one-PC setup with no environment prompt. pixi always resolves bare tasks against
+# the default env, so shared tasks (build-sim, install-o3de, …) stop being ambiguous.
+# TODO: drop this duplicate if pixi gains a way to alias the default to a named env.
+default   = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc"]}
 single-pc = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc"]}  # one PC: everything incl. NPU
 hil       = {features = ["dev", "ros2", "local-inference", "profile-hil"]}            # compute: ROS2 + inference (GPU+NPU)
 sim       = {features = ["dev", "ros2", "sim", "profile-sim"]}                        # O3DE simulation + ROS2
