@@ -280,8 +280,15 @@ depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
 [feature.profile-single-pc.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama"]
+depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "find-runnables"]
 description = "Full setup including local llama.cpp inference"
+
+# Runs last (depends on the builds it inventories) so setup ends by listing what
+# it produced: GameLauncher, llama.cpp, FastFlowLM, and other executables.
+[feature.profile-single-pc.tasks.find-runnables]
+cmd = "bash scripts/find_runnables.sh"
+depends-on = ["build-sim", "build-llama"]
+description = "List built runnables (GameLauncher, llama.cpp, FastFlowLM, ...)"
 
 [feature.profile-single-pc.tasks.demo]
 cmd = "bash scripts/demo.sh"
