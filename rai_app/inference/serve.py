@@ -305,6 +305,16 @@ def check_endpoint(name: str, ep: dict) -> tuple[bool, str]:
         return (False, f"bad response ({exc})")
 
 
+def framework(ep: dict) -> str:
+    """Serving framework implied by an endpoint's backend (from the SSOT)."""
+    backend = ep.get("backend")
+    if backend in LLAMA_BACKENDS:
+        return "llama.cpp"
+    if backend == "npu":
+        return "FastFlowLM"
+    return backend or "?"
+
+
 def cmd_check(endpoints: dict[str, dict]) -> int:
     serveable = local_endpoints(endpoints)
     if not serveable:
@@ -315,8 +325,10 @@ def cmd_check(endpoints: dict[str, dict]) -> int:
     for name, ep in serveable:
         ok, detail = check_endpoint(name, ep)
         mark = "PASS" if ok else "FAIL"
+        via = f"{framework(ep)}/{ep.get('backend')}"
         print(
-            f"  [{mark}] {name:<12} type={ep.get('type'):<9} :{ep.get('port')}  {detail}"
+            f"  [{mark}] {name:<12} type={ep.get('type'):<9} {via:<15} "
+            f":{ep.get('port')}  {detail}"
         )
         failed += not ok
     print(f"  {len(serveable) - failed} passed, {failed} failed")
