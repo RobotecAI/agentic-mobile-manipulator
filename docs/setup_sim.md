@@ -48,7 +48,7 @@ Restart your shell or run `source ~/.bashrc` after installation.
 ### Build Everything
 
 ```shell
-pixi run -e default setup
+pixi run -e sim setup
 ```
 
 This single command runs the full build pipeline in the correct order:

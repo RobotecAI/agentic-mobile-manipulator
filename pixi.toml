@@ -159,7 +159,7 @@ description = "Launch O3DE Editor from SDK (project must be built first)"
 [feature.local-inference.dependencies]
 # Everything needed to BUILD + SERVE local inference, so the lightweight
 # `inference` environment (no ROS, no O3DE) is self-sufficient. In the heavier
-# `local`/`hil-local` envs these merge harmlessly with the default-feature
+# `single-pc`/`hil` envs these merge harmlessly with the default-feature
 # toolchain (same conda-forge packages).
 python = "*"           # runs the stdlib dispatcher (rai_app.inference.serve)
 cmake = "*"
@@ -259,35 +259,35 @@ description = "Smoke-test inference: /health liveness + one real inference reque
 # One profile feature per environment. Each defines a `setup` entry point so
 # that `pixi run -e <env> setup` builds exactly the components for that machine.
 
-[feature.profile-default.tasks.clone]
+[feature.profile-sim.tasks.clone]
 depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
-[feature.profile-default.tasks.setup]
+[feature.profile-sim.tasks.setup]
 depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync"]
-description = "Full setup (O3DE + ROS 2 + Python)"
+description = "Setup sim machine (O3DE + ROS 2)"
+
+[feature.profile-hmi.tasks.setup]
+depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
+description = "Setup HMI machine (ROS 2)"
 
 [feature.profile-hil.tasks.setup]
-depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
-description = "Setup HIL machine (ROS 2 + Python, no O3DE)"
-
-[feature.profile-hil-local.tasks.setup]
 depends-on = ["clone-ros2-ws", "submodules", "build-ros2", "sync", "build-llama"]
-description = "Setup HIL machine with local llama.cpp inference"
+description = "Setup HIL compute machine (ROS 2 + inference, GPU+NPU)"
 
-[feature.profile-local.tasks.clone]
+[feature.profile-single-pc.tasks.clone]
 depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
-[feature.profile-local.tasks.setup]
+[feature.profile-single-pc.tasks.setup]
 depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama"]
 description = "Full setup including local llama.cpp inference"
 
-[feature.profile-local.tasks.demo]
+[feature.profile-single-pc.tasks.demo]
 cmd = "bash scripts/demo.sh"
 description = "Start full demo: sim → ros2 → inference → orchestrator (3 tmux sessions)"
 
-[feature.profile-local.tasks.demo-stop]
+[feature.profile-single-pc.tasks.demo-stop]
 cmd = "bash scripts/demo_stop.sh"
 description = "Stop all demo tmux sessions"
 
@@ -325,11 +325,9 @@ description = "Run test suite"
 # e.g. `build-sim` cannot be run in the `hil` environment.
 
 [environments]
-default   = {features = ["dev", "ros2", "sim", "profile-default"]}
-hil       = {features = ["dev", "ros2", "profile-hil"]}
-hil-local = {features = ["dev", "ros2", "local-inference", "profile-hil-local"]}
-local     = {features = ["dev", "ros2", "sim", "local-inference", "profile-local"]}
-dev       = {features = ["dev"], no-default-feature = true}
-# Lightweight inference-only env (no ROS 2, no O3DE) — for a dedicated inference
-# host: build llama.cpp/FastFlowLM, download models, serve, and smoke-test.
-inference = {features = ["dev", "local-inference"], no-default-feature = true}
+single-pc = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc"]}  # one PC: everything incl. NPU
+hil       = {features = ["dev", "ros2", "local-inference", "profile-hil"]}            # compute: ROS2 + inference (GPU+NPU)
+sim       = {features = ["dev", "ros2", "sim", "profile-sim"]}                        # O3DE simulation + ROS2
+hmi       = {features = ["dev", "ros2", "profile-hmi"]}                               # operator interface
+dev       = {features = ["dev"], no-default-feature = true}                           # lint/test/format
+inference = {features = ["dev", "local-inference"], no-default-feature = true}        # headless inference host (no ROS2/O3DE)

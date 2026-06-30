@@ -74,7 +74,7 @@ vulkaninfo
 ### Build llama.cpp
 
 ```shell
-pixi run -e hil-local build-llama
+pixi run -e hil build-llama
 ```
 
 This clones llama.cpp and builds it with Vulkan backend.
@@ -82,7 +82,7 @@ This clones llama.cpp and builds it with Vulkan backend.
 Or, to run the full HIL setup including llama.cpp in one command:
 
 ```shell
-pixi run -e hil-local setup
+pixi run -e hil setup
 ```
 
 ### Download Models

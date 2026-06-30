@@ -51,7 +51,7 @@ Restart your shell or run `source ~/.bashrc` after installation.
 ### Build Everything
 
 ```shell
-pixi run -e default setup
+pixi run -e single-pc setup
 ```
 
 This single command runs the full build pipeline in the correct order:
@@ -70,9 +70,9 @@ This single command runs the full build pipeline in the correct order:
 If you want to run models locally instead of cloud APIs:
 
 ```shell
-pixi run -e local submodules      # check out the pinned llama.cpp + FastFlowLM submodules
-pixi run -e local build-llama     # hardware specific; defaults to the Vulkan backend. Swap the cmake flag for your hardware.
-pixi run -e local download-models # downloads every weight referenced in config.toml; or grab them manually below
+pixi run -e single-pc submodules      # check out the pinned llama.cpp + FastFlowLM submodules
+pixi run -e single-pc build-llama     # hardware specific; defaults to the Vulkan backend. Swap the cmake flag for your hardware.
+pixi run -e single-pc download-models # downloads every weight referenced in config.toml; or grab them manually below
 ```
 
 `config.toml` is the single source of truth for inference: each `[endpoints.*]`
@@ -88,13 +88,12 @@ fork (pinned as a submodule) includes GBNF grammar-constrained sampling, so the
 NPU path can produce the structured/JSON output the agents rely on:
 
 ```shell
-pixi run -e local submodules         # checks out the FastFlowLM submodule (works without an NPU)
-pixi run -e local build-fastflowlm   # NPU host only: needs the amdxdna driver + XRT dev stack
+pixi run -e single-pc submodules         # checks out the FastFlowLM submodule (works without an NPU)
+pixi run -e single-pc build-fastflowlm   # NPU host only: needs the amdxdna driver + XRT dev stack
 ```
 
-Note FastFlowLM has no LFM2-VL tag yet — its vision models are Gemma 3 / Qwen 3 —
-so the NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see
-the comment on `[endpoints.vlm]` in `config.toml`.
+The NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see
+`[endpoints.vlm_safety]` in `config.toml`.
 
 ---
 
