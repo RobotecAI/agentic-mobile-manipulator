@@ -28,6 +28,7 @@ class VLMConfig:
     base_url: str
     reasoning: bool = False
     temperature: float = 0.0
+    backend: str | None = None  # npu/gpu/cpu/openai; see structured.vlm_structured
 
 
 @dataclass
@@ -138,6 +139,7 @@ def _vlm_config(raw: dict, agent: str) -> VLMConfig:
         base_url=endpoint_base_url(endpoint),
         reasoning=raw[agent].get("vlm_reasoning", False),
         temperature=raw[agent].get("vlm_temperature", 0.0),
+        backend=endpoint.get("backend"),
     )
 
 
@@ -205,9 +207,6 @@ def get_vlm_model(
 ) -> ChatOpenAI:
     config = load_config()
     openai_api_key = os.getenv("OPENAI_API_KEY")
-    print(
-        config_name,
-    )
     if openai_api_key is None:
         openai_api_key = "xxx"  # ChatOpenAPI does not initialize without an API key
     if config_name == "megamind_agent":
@@ -243,6 +242,25 @@ def get_vlm_model(
         )
     else:
         raise ValueError(f"Invalid config name: {config_name}")
+
+
+def get_vlm_backend(
+    config_name: Literal[
+        "megamind_agent",
+        "inspection_agent",
+        "safety_agent",
+        "general",
+        "condition_agent",
+    ],
+) -> str | None:
+    """SSOT backend of an agent's VLM endpoint (npu/gpu/cpu/openai). Pass it to
+    ``rai_app.initialization.structured.vlm_structured`` so the right structured-
+    output mechanism is used (grammar for npu/FastFlowLM, response_format else)."""
+    config = load_config()
+    agent_cfg = getattr(config, config_name, None)
+    if agent_cfg is None or not hasattr(agent_cfg, "vlm"):
+        raise ValueError(f"Invalid config name: {config_name}")
+    return agent_cfg.vlm.backend
 
 
 def get_embeddings_model(config_name: Literal["safety_agent"]) -> OpenAIEmbeddings:

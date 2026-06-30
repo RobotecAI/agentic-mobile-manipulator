@@ -231,9 +231,13 @@ description = "Launch every local endpoint from config.toml in a tmux grid (one 
 cmd = "python -m rai_app.inference.serve --only main_llm"
 description = "Serve the 'main_llm' endpoint from config.toml"
 
-[feature.local-inference.tasks.serve-vlm]
-cmd = "python -m rai_app.inference.serve --only vlm"
-description = "Serve the 'vlm' endpoint from config.toml (npu/FastFlowLM by default)"
+[feature.local-inference.tasks.serve-vlm-safety]
+cmd = "python -m rai_app.inference.serve --only vlm_safety"
+description = "Serve the safety agent's VLM from config.toml (npu/FastFlowLM)"
+
+[feature.local-inference.tasks.serve-vlm-inspection]
+cmd = "python -m rai_app.inference.serve --only vlm_inspection"
+description = "Serve the inspection agent's VLM from config.toml (gpu/llama.cpp, LFM2-VL)"
 
 [feature.local-inference.tasks.serve-embedding]
 cmd = "python -m rai_app.inference.serve --only embeddings"

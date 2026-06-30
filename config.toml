@@ -27,19 +27,22 @@ model_path = "${DEMO_ROOT}/models/gpt-oss-20b-Q4_K_M.gguf"
 model_url  = "https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true"
 extra_args = ["--no-prefill-assistant"]
 
-[endpoints.vlm]
+# safety agent VLM — FastFlowLM (npu)
+[endpoints.vlm_safety]
 type       = "vlm"
-backend    = "npu"                  # FastFlowLM on the AMD Ryzen AI NPU
+backend    = "npu"
 host       = "localhost"
 port       = 8081
-# NOTE: FastFlowLM has no LFM2-VL tag yet — its LFM2 family is text-only, and its
-#       vision models are Gemma 3 and Qwen 3. The NPU path therefore serves a
-#       FastFlowLM vision tag. To run the VLM on the GPU with the original
-#       LFM2-VL-3B weights instead, set `backend = "gpu"`: the dispatcher then
-#       uses model_path + mmproj_path below and ignores flm_model.
-model      = "gemma3:4b"            # must match what the server actually serves
-flm_model  = "gemma3:4b"            # tag passed to `flm pull` / `flm serve` (npu)
-# --- llama.cpp fallback (used only when backend = "gpu") ---
+model      = "gemma3:4b"
+flm_model  = "gemma3:4b"
+
+# inspection/general/megamind/condition VLM — LFM2-VL on llama.cpp (gpu)
+[endpoints.vlm_inspection]
+type        = "vlm"
+backend     = "gpu"
+host        = "localhost"
+port        = 8084
+model       = "LFM2-VL-3B"
 model_path  = "${DEMO_ROOT}/models/LFM2-VL-3B-Q8_0.gguf"
 mmproj_path = "${DEMO_ROOT}/models/mmproj-LFM2-VL-3B-Q8_0.gguf"
 model_url   = "https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true"
@@ -69,7 +72,7 @@ model_url  = "https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/reso
 
 [general]
 llm = "main_llm"
-vlm = "vlm"
+vlm = "vlm_inspection"
 llm_reasoning = false
 vlm_reasoning = false
 
@@ -77,25 +80,25 @@ vlm_reasoning = false
 # to agents using both llm and vlm for task execution
 [megamind_agent]
 llm = "main_llm"
-vlm = "vlm"
+vlm = "vlm_inspection"
 llm_reasoning = false
 vlm_reasoning = false
 
 # inspection agent uses vlm to determine anomalies in the image
 [inspection_agent]
-vlm = "vlm"
+vlm = "vlm_inspection"
 vlm_reasoning = false
 vlm_temperature = 0.0
 
 [condition_agent]
-vlm = "vlm"
+vlm = "vlm_inspection"
 vlm_reasoning = false
 vlm_temperature = 0.1
 
 # safety agent uses vlm to determine anomalies in the image
 # and embeddings + reranker to determine OSHA safety violations
 [safety_agent]
-vlm = "vlm"
+vlm = "vlm_safety"
 vlm_reasoning = false
 vlm_temperature = 0.0
 embeddings = "embeddings"
