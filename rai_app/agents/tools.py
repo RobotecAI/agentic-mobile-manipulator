@@ -887,6 +887,8 @@ class HouseKeepTool(WarehouseTool):
                     pos, collection_name=rack, approach_distance=self.approach_distance
                 )
             except RuntimeError as e:
+                if "arm" in str(e): # don't count moveit related exceptions as "side not available"
+                    raise e
                 sides_not_available += 1
                 logging.warning(e)
             except Exception as e:
