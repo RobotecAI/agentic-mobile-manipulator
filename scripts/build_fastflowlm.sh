@@ -21,8 +21,21 @@ if [ ! -d "$SRC" ]; then
 fi
 
 cd "$SRC"
-echo "Configuring (cmake --preset linux-default) ..."
-cmake --preset linux-default
+
+# Build flm with the SYSTEM compiler, not pixi's conda toolchain. flm is a
+# standalone binary (run directly, never linked into the RoboStack) that links
+# the host's XRT + NPU libs built against the system glibc; the conda compiler's
+# older glibc sysroot can't link them (undefined __libc_csu_init/fini at link).
+# System gcc also finds the apt-installed XRT headers under /usr natively, so no
+# XRT path overrides are needed. Override FLM_CC/FLM_CXX for a different compiler.
+FLM_CC="${FLM_CC:-/usr/bin/gcc}"
+FLM_CXX="${FLM_CXX:-/usr/bin/g++}"
+[ -f /usr/include/xrt/xrt_bo.h ] || { echo "error: XRT dev headers missing — install libxrt-dev." >&2; exit 1; }
+
+# Switching toolchains invalidates the CMake cache, so configure fresh.
+rm -rf build
+echo "Configuring (cmake --preset linux-default, system $FLM_CXX) ..."
+cmake --preset linux-default -DCMAKE_C_COMPILER="$FLM_CC" -DCMAKE_CXX_COMPILER="$FLM_CXX"
 echo "Building (-j$(nproc)) ..."
 cmake --build build -j"$(nproc)"
 

@@ -201,14 +201,18 @@ description = "Check out the pinned llama.cpp + FastFlowLM submodules, shallow (
 # GGML_CCACHE=OFF: the conda env's ccache links against a libfmt ABI it doesn't
 # ship (wants libfmt.so.9, env has .so.12), so leaving ccache on breaks every
 # compile with Error 127. The build doesn't need ccache.
+# Server-only minimal build: LLAMA_BUILD_UI=OFF skips the embedded webui's
+# npm/PWA build (server API doesn't need it); tests/examples off too. The
+# --target llama-server then builds only that binary + its deps.
 cmd = """
-cmake -B build -DGGML_VULKAN=1 -DGGML_CCACHE=OFF &&
-cmake --build build --config Release -j $(nproc)
+cmake -B build -DGGML_VULKAN=1 -DGGML_CCACHE=OFF \
+  -DLLAMA_BUILD_UI=OFF -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_EXAMPLES=OFF &&
+cmake --build build --config Release -j $(nproc) --target llama-server
 """
 cwd = "inference/llama.cpp"
 depends-on = ["submodules"]
 outputs = ["inference/llama.cpp/build/bin/llama-server"]
-description = "Build llama.cpp with Vulkan backend"
+description = "Build llama.cpp (Vulkan), server only — no webui/tests/examples"
 
 # ─── FastFlowLM (AMD Ryzen AI NPU backend) ───────────────────────────────────
 # The submodule (RobotecAI/FastFlowLM fork) already includes GBNF grammar-
@@ -290,17 +294,6 @@ description = "Setup HIL compute machine (ROS 2 + inference, GPU+NPU)"
 depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
-[feature.profile-single-pc.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "find-runnables"]
-description = "Full setup including local llama.cpp inference"
-
-# Runs last (depends on the builds it inventories) so setup ends by listing what
-# it produced: GameLauncher, llama.cpp, FastFlowLM, and other executables.
-[feature.profile-single-pc.tasks.find-runnables]
-cmd = "bash scripts/find_runnables.sh"
-depends-on = ["build-sim", "build-llama"]
-description = "List built runnables (GameLauncher, llama.cpp, FastFlowLM, ...)"
-
 [feature.profile-single-pc.tasks.demo]
 cmd = "bash scripts/demo.sh"
 description = "Start full demo: sim → stack → inference → agents+orchestrator → hmi (one tmux session each)"
@@ -308,6 +301,32 @@ description = "Start full demo: sim → stack → inference → agents+orchestra
 [feature.profile-single-pc.tasks.demo-stop]
 cmd = "bash scripts/kill_sessions.sh"
 description = "Stop all demo tmux sessions"
+
+# ─── Single-PC setup variants: GPU (default) vs GPU+NPU ──────────────────────────
+# Share clone/demo above; differ only in what `setup` builds and what
+# find-runnables waits on. -gpu builds llama.cpp (Vulkan); -npu also builds
+# FastFlowLM. Each env includes exactly one variant, so the duplicate
+# `setup`/`find-runnables` names never collide.
+
+[feature.profile-single-pc-gpu.tasks.setup]
+depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "find-runnables"]
+description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU)"
+
+# Runs last (depends on the builds it inventories) so setup ends by listing them.
+[feature.profile-single-pc-gpu.tasks.find-runnables]
+cmd = "bash scripts/find_runnables.sh"
+depends-on = ["build-sim", "build-llama"]
+description = "List built runnables (GameLauncher, llama.cpp, ...)"
+
+[feature.profile-single-pc-npu.tasks.setup]
+depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "build-fastflowlm", "find-runnables"]
+description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU) + FastFlowLM (NPU)"
+
+# Waits on the NPU build too, so FastFlowLM reports as built.
+[feature.profile-single-pc-npu.tasks.find-runnables]
+cmd = "bash scripts/find_runnables.sh"
+depends-on = ["build-sim", "build-llama", "build-fastflowlm"]
+description = "List built runnables (GameLauncher, llama.cpp, FastFlowLM, ...)"
 
 # ─── Feature: dev ───────────────────────────────────────────────────────────────
 # Lightweight feature for Python tooling (uv, pre-commit, pytest).
@@ -347,12 +366,14 @@ description = "Run test suite"
 # e.g. `build-sim` cannot be run in the `hil` environment.
 
 [environments]
-# `default` mirrors `single-pc` so a bare `pixi run <task>` (no -e) targets the
-# one-PC setup with no environment prompt. pixi always resolves bare tasks against
-# the default env, so shared tasks (build-sim, install-o3de, …) stop being ambiguous.
-# TODO: drop this duplicate if pixi gains a way to alias the default to a named env.
-default   = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc"]}
-single-pc = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc"]}  # one PC: everything incl. NPU
+# `default` mirrors `single-pc` (GPU) so a bare `pixi run <task>` (no -e) targets
+# the one-PC GPU setup with no environment prompt. pixi always resolves bare tasks
+# against the default env, so shared tasks (build-sim, install-o3de, …) stop being
+# ambiguous. `single-pc-with-npu` adds the FastFlowLM NPU build on top.
+# TODO: drop the default duplicate if pixi gains a way to alias default to a named env.
+default            = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-gpu"]}
+single-pc          = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-gpu"]}  # one PC: llama.cpp Vulkan GPU
+single-pc-with-npu = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-npu"]}  # one PC: GPU + FastFlowLM NPU
 hil       = {features = ["dev", "ros2", "local-inference", "profile-hil"]}            # compute: ROS2 + inference (GPU+NPU)
 sim       = {features = ["dev", "ros2", "sim", "profile-sim"]}                        # O3DE simulation + ROS2
 hmi       = {features = ["dev", "ros2", "profile-hmi"]}                               # operator interface
