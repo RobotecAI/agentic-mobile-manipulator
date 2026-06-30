@@ -73,7 +73,11 @@ description = "Build the ROS 2 workspace with colcon (deps provided by conda/Rob
 
 [feature.ros2.tasks.ros2]
 cmd = "bash scripts/run_ros2_stack.sh"
-description = "Launch full ROS 2 stack (robot, nav2, moveit2, scene, agents)"
+description = "Launch the barebones ROS 2 stack (robot + supporting nodes, no agents)"
+
+[feature.ros2.tasks.agents]
+cmd = "bash scripts/run_agents.sh"
+description = "Start the rai agents (nav2, moveit2, scene, inspection, safety)"
 
 [feature.ros2.tasks.hmi]
 cmd = "ros2 launch mobile_manipulator_hmi hmi_launch.py"
@@ -83,7 +87,7 @@ description = "Launch the Human-Machine Interface"
 cmd = "uv run python rai_app/agents/agent_orchestrator.py"
 description = "Launch the agent orchestrator"
 
-# Individual agents — use these instead of ros2 when debugging a specific component.
+# Individual agents — use these instead of 'agents' when debugging a specific one.
 
 [feature.ros2.tasks.nav2-agent]
 cmd = "uv run python rai_app/agents/nav2_agent.py"

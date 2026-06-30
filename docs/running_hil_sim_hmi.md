@@ -37,6 +37,12 @@ To use different weights, backend, or ports, edit the endpoint in `config.toml`
 (`model_path`, `backend`, `port`, …). Preview without launching:
 `pixi run -e hil inference --print`.
 
+### Agents
+
+```shell
+pixi run agents
+```
+
 ### Agent Orchestrator
 
 ```shell
@@ -51,9 +57,9 @@ pixi run hmi
 
 ---
 
-## Individual ROS 2 Components
+## Individual Agents
 
-Use these when you want to run components separately instead of `pixi run ros2`:
+Use these when you want to run an agent separately instead of `pixi run agents`:
 
 ```shell
 pixi run nav2-agent

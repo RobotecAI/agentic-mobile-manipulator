@@ -57,6 +57,12 @@ starting anything:
 pixi run -e single-pc inference --print
 ```
 
+### Agents
+
+```shell
+pixi run agents
+```
+
 ### Agent Orchestrator
 
 ```shell

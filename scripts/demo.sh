@@ -104,14 +104,17 @@ log "Inference session created  (inference — ${#INF_TASKS[@]} panes)"
 
 check_inference || { stop_all; exit 1; }
 
-# ── 4. Orchestrator ───────────────────────────────────────────────────────────
+# ── 4. Agents + Orchestrator ──────────────────────────────────────────────────
 
-section "Starting orchestrator..."
+section "Starting agents + orchestrator..."
 
-# Create agent session with a named window so we don't rely on index 0
-tmux new-session -d -s agent -n orchestrator -x 220 -y 50
-tmux send-keys -t agent:orchestrator "cd $DEMO_ROOT && pixi run orchestrator" Enter
-log "Orchestrator launched  (agent)"
+# agent session: agents (top pane) + orchestrator (bottom pane)
+tmux new-session -d -s agent -n agents -x 220 -y 50
+AGENT_TOP=$(tmux display-message -p -t agent:agents "#{pane_id}")
+AGENT_BOTTOM=$(tmux split-window -v -P -F "#{pane_id}" -t "$AGENT_TOP")
+tmux send-keys -t "$AGENT_TOP" "cd $DEMO_ROOT && pixi run agents" Enter
+tmux send-keys -t "$AGENT_BOTTOM" "cd $DEMO_ROOT && pixi run orchestrator" Enter
+log "Agents + orchestrator launched  (agent)"
 
 # ── Final health check ───────────────────────────────────────────────────────
 
@@ -162,8 +165,8 @@ echo ""
 echo -e "${BOLD}${GREEN}=== Demo running ===${RESET}"
 echo ""
 echo -e "  ${CYAN}tmux attach -t simulation${RESET}   — O3DE sim (top) + ROS 2 stack (bottom)"
-echo -e "  ${CYAN}tmux attach -t inference${RESET}    — 4 inference servers (2×2 grid)"
-echo -e "  ${CYAN}tmux attach -t agent${RESET}        — orchestrator"
+echo -e "  ${CYAN}tmux attach -t inference${RESET}    — inference servers (one pane each)"
+echo -e "  ${CYAN}tmux attach -t agent${RESET}        — agents (top) + orchestrator (bottom)"
 echo ""
 echo -e "  Stop everything:  ${YELLOW}pixi run demo-stop${RESET}"
 echo ""
