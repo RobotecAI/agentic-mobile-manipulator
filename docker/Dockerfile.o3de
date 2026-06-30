@@ -1,7 +1,8 @@
 FROM base_image
 
-# Install O3DE build dependencies and the 26.05 SDK
-# Note: git, git-lfs, ninja-build, ros-dev-tools, pixi are inherited from base image
+# Install O3DE build dependencies and the 26.05 SDK.
+# Note: git, git-lfs, pixi are inherited from the base image; ROS/colcon/cmake/
+# ninja come from the conda env. clang is O3DE's compiler, hence apt here.
 RUN apt update && apt install -y \
     cmake \
     libstdc++-12-dev \
@@ -37,8 +38,11 @@ COPY .git .git/
 COPY project_gems/ project_gems/
 COPY sim/ sim/
 
-RUN pixi run install-o3de
-RUN apt install -y git-lfs && git lfs install --force
+# install_o3de.sh apt-installs the SDK's system deps (ninja-build, pkg-config,
+# ...) without running `apt-get update` itself, so refresh the lists here — the
+# ros2 base strips them to stay small.
+RUN apt-get update && pixi run install-o3de && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN git lfs install --force
 RUN pixi run build-sim
 
 WORKDIR /root/MobileManipulatorDemo

@@ -158,3 +158,20 @@ echo -e "  ${CYAN}tmux attach -t $HMI_SESSION${RESET}      — HMI"
 echo ""
 echo -e "  Stop everything:  ${YELLOW}pixi run kill${RESET}"
 echo ""
+
+# When run as a container's PID 1 (AMM_KEEP_ALIVE=1), don't return: exiting lets
+# the container stop and take the tmux sessions with it. Locally the var is unset
+# and the script returns, leaving the sessions in the background.
+# With a TTY (docker compose run) attach to tmux so PID 1 is a live client you can
+# debug in — prefix+s switches between all sessions, prefix+d detaches and stops
+# the demo. Without a TTY (detached compose up / CI) attach would exit instantly,
+# so just block until the HMI session goes away.
+if [ -n "${AMM_KEEP_ALIVE:-}" ]; then
+    if [ -t 0 ]; then
+        log "Attaching to tmux — prefix+s to switch sessions, prefix+d detaches (stops the demo)."
+        exec tmux attach -t "$HMI_SESSION"
+    fi
+    log "AMM_KEEP_ALIVE set — holding until the HMI session exits (Ctrl-C / 'pixi run kill' to stop)."
+    while tmux has-session -t "$HMI_SESSION" 2>/dev/null; do sleep 5; done
+    warn "HMI session gone — exiting."
+fi

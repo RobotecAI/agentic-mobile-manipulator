@@ -22,7 +22,7 @@ Run HMI, agents and simulation on one computer
 
 > [!IMPORTANT]
 > Please note that this setup is intended for systems with approximately 48GB of available VRAM.
-> If your system does not meet this requirement, you may opt to use cloud-based models by following the instructions in the [Quickstart Guide](./quickstart.md).
+> If your system does not meet this requirement, you can configure the agents to use cloud-based models instead via `cloud_config.toml`.
 
 [Single-machine setup](./setup_single_machine.md)
 
