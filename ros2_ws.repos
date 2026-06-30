@@ -19,16 +19,6 @@ repositories:
     url: https://github.com/RobotecAI/rai_interfaces.git
     version: feat/nav2-ai
 
-  # simulation_interfaces: built from source because the O3DE SimulationInterfaces
-  # gem requires >= 1.4.0, but robostack-jazzy only ships 1.2.0 on the Eigen-3.x
-  # generation. (The conda 1.5.1 exists only on the Eigen-5 generation, which
-  # breaks the O3DE WheelAnimTool gem — see pixi.toml.) Pinned to 1.5.1 to match
-  # the apt version and supply one consistent version to both agents and O3DE.
-  ros2_ws/src/packages/simulation_interfaces:
-    type: git
-    url: https://github.com/ros-simulation/simulation_interfaces.git
-    version: 1.5.1
-
 # NOTE: The following packages were removed on migration to RoboStack — they are
 # now installed as conda packages via pixi.toml instead of being vcs-imported and
 # colcon-built:
@@ -42,3 +32,4 @@ repositories:
 #   ros2_control                      -> ros-jazzy-ros2-control
 #   ros2_controllers                  -> ros-jazzy-ros2-controllers
 #   srdfdom                           -> ros-jazzy-srdfdom
+#   simulation_interfaces             -> ros-jazzy-simulation-interfaces (1.5.1)
