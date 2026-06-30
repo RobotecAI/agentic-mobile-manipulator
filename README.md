@@ -5,6 +5,11 @@ _Physical AI for Warehouse Robotics_
 <div align="center">
 
 ![Small warehouse featuring Robotnik Kairos](docs/images/demo_comp.jpg)
+
+![CPU: ready](https://img.shields.io/badge/CPU-ready-ED1C24?style=for-the-badge&logo=amd&logoColor=white&labelColor=000000)
+![GPU: ready](https://img.shields.io/badge/GPU-ready-ED1C24?style=for-the-badge&logo=amd&logoColor=white&labelColor=000000)
+![NPU: ready](https://img.shields.io/badge/NPU-ready-ED1C24?style=for-the-badge&logo=amd&logoColor=white&labelColor=000000)
+
 ![Static Badge](https://img.shields.io/badge/AgenticAI-darkred)
 ![Static Badge](https://img.shields.io/badge/EmbodiedAI-black)
 ![Static Badge](https://img.shields.io/badge/LLM-darkred)
@@ -41,6 +46,7 @@ Backup video link: https://vimeo.com/1138627688/dbfa881a27
 - Hardware platform: **AMD Ryzen™ AI** processor hosting robotics stack and embodied agentic AI multi-agent system
 - Model stack: [**Liquid AI's LFM2-VL**](https://www.liquid.ai/) (Vision-Language Model) optimized for AMD hardware
 - Local LLM (gpt-oss-20b) for planning, instruction parsing, and dialogue
+- Local inference across **CPU, GPU (llama.cpp / Vulkan) and the AMD Ryzen™ AI NPU (FastFlowLM)** — the safety VLM runs on the NPU, freeing the GPU for the LLM and perception VLM
 - Robot platform: Mobile manipulator (Robotnik Kairos) in ROS 2 simulated warehouse environment
 - Simulation setup: Hardware-in-the-loop mirrors real-world deployment for safe testing
 - Benefits: On-device reasoning, low latency, privacy, and seamless simulation-to-hardware transition
