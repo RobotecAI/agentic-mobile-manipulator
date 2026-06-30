@@ -17,7 +17,7 @@ PANES=(
   "pixi run scene-agent"
   "pixi run inspection-agent"
   "pixi run safety-agent"
-  "pixi run orchestrator"
+  "pixi run orchestrator-agent"
 )
 
 if ! command -v tmux >/dev/null; then

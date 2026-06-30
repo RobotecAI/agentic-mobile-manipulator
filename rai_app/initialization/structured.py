@@ -49,7 +49,7 @@ def _converter_module():
     if not _CONVERTER.exists():
         raise FileNotFoundError(
             f"GBNF converter not found at {_CONVERTER}; check out the llama.cpp "
-            "submodule (`pixi run -e inference submodules`)."
+            "submodule (`pixi run -e inference init-submodules`)."
         )
     spec = importlib.util.spec_from_file_location(
         "_flm_json_schema_to_grammar", _CONVERTER

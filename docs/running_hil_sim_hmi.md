@@ -46,7 +46,7 @@ pixi run agents
 ### Agent Orchestrator
 
 ```shell
-pixi run orchestrator
+pixi run orchestrator-agent
 ```
 
 ## HMI Machine

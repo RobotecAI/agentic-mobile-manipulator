@@ -176,7 +176,7 @@ pixi run stack
 6. Run orchestrator:
 
 ```bash
-pixi run orchestrator
+pixi run orchestrator-agent
 ```
 
 7. Send tasks via HMI

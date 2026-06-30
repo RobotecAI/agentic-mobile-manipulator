@@ -86,7 +86,7 @@ description = "Launch the Human-Machine Interface in its own tmux session"
 cmd = "ros2 launch mobile_manipulator_hmi hmi_launch.py"
 description = "Launch the Human-Machine Interface in the foreground (no tmux)"
 
-[feature.ros2.tasks.orchestrator]
+[feature.ros2.tasks.orchestrator-agent]
 cmd = "uv run python rai_app/agents/agent_orchestrator.py"
 description = "Launch the agent orchestrator"
 
@@ -170,7 +170,7 @@ description = "Launch O3DE Editor from SDK (project must be built first)"
 [feature.local-inference.dependencies]
 # Everything needed to BUILD + SERVE local inference, so the lightweight
 # `inference` environment (no ROS, no O3DE) is self-sufficient. In the heavier
-# `single-pc`/`hil` envs these merge harmlessly with the default-feature
+# `single-pc-gpu`/`hil` envs these merge harmlessly with the default-feature
 # toolchain (same conda-forge packages).
 python = "*"           # runs the stdlib dispatcher (rai_app.inference.serve)
 cmake = "*"
@@ -192,7 +192,7 @@ spirv-headers = "*"    # find_package(SPIRV-Headers) in ggml-vulkan
 # llama.cpp and FastFlowLM are git submodules pinned under inference/ — see
 # .gitmodules. Their versions are tracked by commit, so bump them with
 # `git submodule update --remote <path>` and commit the new pointer.
-[feature.local-inference.tasks.submodules]
+[feature.local-inference.tasks.init-submodules]
 cmd = "git submodule update --init --recursive --depth 1 inference/llama.cpp inference/FastFlowLM"
 outputs = ["inference/llama.cpp/CMakeLists.txt", "inference/FastFlowLM/src/CMakeLists.txt"]
 description = "Check out the pinned llama.cpp + FastFlowLM submodules, shallow (required for local inference)"
@@ -210,7 +210,7 @@ cmake -B build -DGGML_VULKAN=1 -DGGML_CCACHE=OFF \
 cmake --build build --config Release -j $(nproc) --target llama-server
 """
 cwd = "inference/llama.cpp"
-depends-on = ["submodules"]
+depends-on = ["init-submodules"]
 outputs = ["inference/llama.cpp/build/bin/llama-server"]
 description = "Build llama.cpp (Vulkan), server only — no webui/tests/examples"
 
@@ -223,7 +223,7 @@ description = "Build llama.cpp (Vulkan), server only — no webui/tests/examples
 
 [feature.local-inference.tasks.build-fastflowlm]
 cmd = "bash scripts/build_fastflowlm.sh"
-depends-on = ["submodules"]
+depends-on = ["init-submodules"]
 outputs = ["inference/FastFlowLM/src/build/flm"]
 description = "Build FastFlowLM from source, build-only/no install (needs XRT/amdxdna dev headers)"
 
@@ -262,10 +262,6 @@ description = "Serve the 'embeddings' endpoint from config.toml"
 cmd = "python -m rai_app.inference.serve --only reranker"
 description = "Serve the 'reranker' endpoint from config.toml"
 
-[feature.local-inference.tasks.serve-all]
-cmd = "python -m rai_app.inference.serve"
-description = "Alias for `inference`: launch all local endpoints in a tmux grid"
-
 [feature.local-inference.tasks.smoke-test]
 cmd = "bash scripts/smoke_test.sh"
 description = "Smoke-test inference: /health liveness + one real inference request per endpoint (config.toml SSOT)"
@@ -287,7 +283,7 @@ depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
 description = "Setup HMI machine (ROS 2)"
 
 [feature.profile-hil.tasks.setup]
-depends-on = ["clone-ros2-ws", "submodules", "build-ros2", "sync", "build-llama"]
+depends-on = ["clone-ros2-ws", "init-submodules", "build-ros2", "sync", "build-llama"]
 description = "Setup HIL compute machine (ROS 2 + inference, GPU+NPU)"
 
 [feature.profile-single-pc.tasks.clone]
@@ -297,10 +293,6 @@ description = "Clone all repositories (gems and ROS 2 workspace)"
 [feature.profile-single-pc.tasks.demo]
 cmd = "bash scripts/demo.sh"
 description = "Start full demo: sim → stack → inference → agents+orchestrator → hmi (one tmux session each)"
-
-[feature.profile-single-pc.tasks.demo-stop]
-cmd = "bash scripts/kill_sessions.sh"
-description = "Stop all demo tmux sessions"
 
 # ─── Single-PC setup variants: GPU (default) vs GPU+NPU ──────────────────────────
 # Share clone/demo above; differ only in what `setup` builds and what
@@ -366,14 +358,14 @@ description = "Run test suite"
 # e.g. `build-sim` cannot be run in the `hil` environment.
 
 [environments]
-# `default` mirrors `single-pc` (GPU) so a bare `pixi run <task>` (no -e) targets
+# `default` mirrors `single-pc-gpu` so a bare `pixi run <task>` (no -e) targets
 # the one-PC GPU setup with no environment prompt. pixi always resolves bare tasks
 # against the default env, so shared tasks (build-sim, install-o3de, …) stop being
-# ambiguous. `single-pc-with-npu` adds the FastFlowLM NPU build on top.
+# ambiguous. `single-pc-gpu-and-npu` adds the FastFlowLM NPU build on top.
 # TODO: drop the default duplicate if pixi gains a way to alias default to a named env.
-default            = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-gpu"]}
-single-pc          = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-gpu"]}  # one PC: llama.cpp Vulkan GPU
-single-pc-with-npu = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-npu"]}  # one PC: GPU + FastFlowLM NPU
+default               = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-gpu"]}
+single-pc-gpu         = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-gpu"]}  # one PC: llama.cpp Vulkan GPU
+single-pc-gpu-and-npu = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-npu"]}  # one PC: GPU + FastFlowLM NPU
 hil       = {features = ["dev", "ros2", "local-inference", "profile-hil"]}            # compute: ROS2 + inference (GPU+NPU)
 sim       = {features = ["dev", "ros2", "sim", "profile-sim"]}                        # O3DE simulation + ROS2
 hmi       = {features = ["dev", "ros2", "profile-hmi"]}                               # operator interface

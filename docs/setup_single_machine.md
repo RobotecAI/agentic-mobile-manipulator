@@ -51,7 +51,7 @@ Restart your shell or run `source ~/.bashrc` after installation.
 ### Build Everything
 
 ```shell
-pixi run -e single-pc setup
+pixi run -e single-pc-gpu setup
 ```
 
 This single command runs the full build pipeline in the correct order:
@@ -70,9 +70,9 @@ This single command runs the full build pipeline in the correct order:
 If you want to run models locally instead of cloud APIs:
 
 ```shell
-pixi run -e single-pc submodules      # check out the pinned llama.cpp + FastFlowLM submodules
-pixi run -e single-pc build-llama     # hardware specific; defaults to the Vulkan backend. Swap the cmake flag for your hardware.
-pixi run -e single-pc download-models # downloads every weight referenced in config.toml; or grab them manually below
+pixi run -e single-pc-gpu init-submodules # check out the pinned llama.cpp + FastFlowLM submodules
+pixi run -e single-pc-gpu build-llama     # hardware specific; defaults to the Vulkan backend. Swap the cmake flag for your hardware.
+pixi run -e single-pc-gpu download-models # downloads every weight referenced in config.toml; or grab them manually below
 ```
 
 `config.toml` is the single source of truth for inference: each `[endpoints.*]`
@@ -88,8 +88,8 @@ fork (pinned as a submodule) includes GBNF grammar-constrained sampling, so the
 NPU path can produce the structured/JSON output the agents rely on:
 
 ```shell
-pixi run -e single-pc submodules         # checks out the FastFlowLM submodule (works without an NPU)
-pixi run -e single-pc build-fastflowlm   # NPU host only: needs the amdxdna driver + XRT dev stack
+pixi run -e single-pc-gpu init-submodules    # checks out the FastFlowLM submodule (works without an NPU)
+pixi run -e single-pc-gpu build-fastflowlm   # NPU host only: needs the amdxdna driver + XRT dev stack
 ```
 
 The NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see

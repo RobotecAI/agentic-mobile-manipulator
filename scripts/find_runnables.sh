@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Check the demo's built runnables and print OK/ERROR per component. Found via
-# the build trees (robust to the build-config dir). Runs at the end of `single-pc`
+# the build trees (robust to the build-config dir). Runs at the end of `single-pc-gpu`
 # setup. Informational — never fails setup (FastFlowLM is a separate NPU step).
 set -uo pipefail
 ROOT="${DEMO_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"

@@ -146,7 +146,7 @@ services:
     volumes:
       - ../cloud_config.toml:/root/MobileManipulatorDemo/config.toml
     entrypoint: /ros_entrypoint.sh
-    command: pixi run orchestrator
+    command: pixi run orchestrator-agent
     networks:
       - ros2_bridge
     depends_on:

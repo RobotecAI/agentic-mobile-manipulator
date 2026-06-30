@@ -48,7 +48,7 @@ check_inference() {
         return 0
     else
         echo ""
-        warn "Inference servers not healthy. Inspect with: pixi run serve-all"
+        warn "Inference servers not healthy. Inspect with: pixi run inference"
         return 1
     fi
 }
@@ -60,7 +60,7 @@ stop_all() { bash "$DEMO_ROOT/scripts/kill_sessions.sh"; }
 for s in "${ALL_SESSIONS[@]}"; do
     if tmux has-session -t "$s" 2>/dev/null; then
         warn "Session '$s' already exists."
-        warn "Run 'pixi run demo-stop' first, or attach with: tmux attach -t $s"
+        warn "Run 'pixi run kill' first, or attach with: tmux attach -t $s"
         exit 1
     fi
 done
@@ -156,5 +156,5 @@ echo -e "  ${CYAN}tmux attach -t $INF_SESSION${RESET} — inference servers (one
 echo -e "  ${CYAN}tmux attach -t $AGENTS_SESSION${RESET}   — agents + orchestrator (one pane each)"
 echo -e "  ${CYAN}tmux attach -t $HMI_SESSION${RESET}      — HMI"
 echo ""
-echo -e "  Stop everything:  ${YELLOW}pixi run demo-stop${RESET}  (or ${YELLOW}pixi run kill${RESET})"
+echo -e "  Stop everything:  ${YELLOW}pixi run kill${RESET}"
 echo ""
