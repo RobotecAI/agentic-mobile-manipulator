@@ -190,12 +190,17 @@ def build_command(name: str, ep: dict, root: str) -> list[str]:
                 f"endpoint '{name}': FastFlowLM not built at "
                 f"inference/FastFlowLM/src/build/flm — run 'pixi run build-fastflowlm'"
             )
+        # flm's --host wants a numeric IP: "localhost" fails with
+        # "Invalid argument [system:22]". llama.cpp accepts "localhost", so the
+        # SSOT keeps it; only flm needs the translation. Clients still reach it
+        # via localhost (resolves to 127.0.0.1).
+        flm_host = "127.0.0.1" if str(host) == "localhost" else str(host)
         return [
             flm,
             "serve",
             flm_model,
             "--host",
-            str(host),
+            flm_host,
             "--port",
             str(port),
             *extra,
@@ -206,7 +211,10 @@ def build_command(name: str, ep: dict, root: str) -> list[str]:
 
 def health_url(ep: dict) -> str:
     host = ep.get("host", "localhost")
-    return f"http://{host}:{ep['port']}/health"
+    # flm (npu/FastFlowLM) has no /health route — its liveness signal is /v1/models.
+    # llama.cpp serves /health.
+    path = "/v1/models" if ep.get("backend") == "npu" else "/health"
+    return f"http://{host}:{ep['port']}{path}"
 
 
 def _api_root(ep: dict) -> str:
@@ -262,11 +270,15 @@ def check_endpoint(name: str, ep: dict) -> tuple[bool, str]:
                 {
                     "model": model,
                     "messages": [{"role": "user", "content": content}],
-                    "max_tokens": 16,
+                    "max_tokens": 256,  # reasoning models (gpt-oss) spend tokens on
+                    # reasoning_content first; 16 left content empty
                 },
                 300,  # a cold 20B load can be slow
             )
-            text = (r["choices"][0]["message"]["content"] or "").strip()
+            msg = r["choices"][0]["message"]
+            # A reasoning model may put its output in reasoning_content and leave
+            # content empty on a tight budget — either proves it's generating.
+            text = (msg.get("content") or msg.get("reasoning_content") or "").strip()
             if not text:
                 return (False, "empty completion")
             # NPU endpoints additionally exercise the fork's GBNF grammar support.
