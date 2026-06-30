@@ -51,7 +51,9 @@ def _converter_module():
             f"GBNF converter not found at {_CONVERTER}; check out the llama.cpp "
             "submodule (`pixi run -e inference submodules`)."
         )
-    spec = importlib.util.spec_from_file_location("_flm_json_schema_to_grammar", _CONVERTER)
+    spec = importlib.util.spec_from_file_location(
+        "_flm_json_schema_to_grammar", _CONVERTER
+    )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -79,8 +81,11 @@ def _flm_structured(model: Runnable, schema: type[T], include_raw: bool) -> Runn
             return schema.model_validate_json(text)
         # Match with_structured_output(include_raw=True)'s shape.
         try:
-            return {"raw": message, "parsed": schema.model_validate_json(text),
-                    "parsing_error": None}
+            return {
+                "raw": message,
+                "parsed": schema.model_validate_json(text),
+                "parsing_error": None,
+            }
         except ValidationError as exc:
             return {"raw": message, "parsed": None, "parsing_error": exc}
 
@@ -103,6 +108,7 @@ def vlm_structured(
 
 def demo() -> None:
     """Self-check: schema → GBNF produces a 'root' rule. Needs no server."""
+
     class _Box(BaseModel):
         damaged: bool
 

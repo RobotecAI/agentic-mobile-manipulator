@@ -43,7 +43,6 @@ from rai_app.config.vlm_box_condition_prompts import (
     BoxConditionOutput,
 )
 from rai_app.control.kairos_controller import KairosController, determine_strategy
-from rai_app.initialization.structured import vlm_structured
 from rai_app.environment import Collection, SceneManager, Slot, SlotsCollection
 from rai_app.geometry_helpers import (
     apply_relative_transform,
@@ -51,6 +50,7 @@ from rai_app.geometry_helpers import (
     get_global_pose_from_origin,
     get_yaw_difference,
 )
+from rai_app.initialization.structured import vlm_structured
 
 
 class WarehouseTool(BaseROS2Tool):

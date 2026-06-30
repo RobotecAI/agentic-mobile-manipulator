@@ -354,9 +354,7 @@ def create_image_regulation_agent(
     if vector_store is None:
         raise ValueError("vector_store is required for retrieval stage")
 
-    vision_model = vlm_structured(
-        vlm, VisionObservation, vlm_backend, include_raw=True
-    )
+    vision_model = vlm_structured(vlm, VisionObservation, vlm_backend, include_raw=True)
 
     final_llm = vlm_structured(
         llm, FinalImageSafetyOutput, llm_backend, include_raw=True
