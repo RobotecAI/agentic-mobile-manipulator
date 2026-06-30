@@ -323,7 +323,7 @@ class SceneManager:
             ROS2Message(payload={}),
             target="/reset_simulation",
             msg_type="simulation_interfaces/srv/ResetSimulation",
-            timeout_sec=10.0
+            timeout_sec=10.0,
         )
 
     def move_entity(
