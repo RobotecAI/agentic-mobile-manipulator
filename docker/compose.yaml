@@ -9,7 +9,9 @@
 # each in its own tmux session — identical to running the demo natively.
 #
 # Build everything:   docker compose -f docker/compose.yaml build
-# Run the demo:        xhost +local:root && docker compose -f docker/compose.yaml run --rm demo
+# Run the demo:        xhost +local:root && docker compose -f docker/compose.yaml up demo
+# Attach to a session: docker exec -it $(docker ps -qf ancestor=robotecai/mobile-manipulator-demo:latest) tmux attach -t agentic-mobile-manipulator-sim
+#                      (sessions: -sim -stack -llm-servers -agents -hmi)
 #
 # Target is single-pc-gpu-and-npu (the default). For a GPU-only image — llama.cpp
 # (Vulkan) only, no FastFlowLM/NPU — build with:

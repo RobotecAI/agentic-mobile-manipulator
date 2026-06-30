@@ -23,7 +23,7 @@ The repository is organized into several key directories:
 
 ### Infrastructure & Simulation
 
-- **`docker/`**: Deployment files. Contains `docker-compose` configurations for AMD GPUs and AMD Ryzen™ AI, and Dockerfiles for different components.
+- **`docker/`**: Deployment files for AMD GPU + AMD Ryzen™ AI. A layered build (`ros2` → `o3de` → `demo`) produces a single container that runs the whole demo via `pixi run demo`. See the [Quickstart Guide](./quickstart.md).
 - **`project_gems/`**: Assets and configurations for the **O3DE (Open 3D Engine)** simulation environment.
 - **`config.toml`**: The central configuration file for defining which LLMs and VLMs are used by the agents.
 

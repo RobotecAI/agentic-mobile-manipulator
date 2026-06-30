@@ -63,6 +63,17 @@ The container's entrypoint is `pixi run demo`, which brings the whole stack up i
 2. **HMI**: a window/terminal showing the Human-Machine Interface.
 3. **Agents**: the autonomous agents run in the background, driving the robot.
 
+## Inspecting a component
+
+Each component runs in its own tmux session inside the container. Attach to one (e.g. the simulation) from the host:
+
+```bash
+docker exec -it $(docker ps -qf ancestor=robotecai/mobile-manipulator-demo:latest) \
+  tmux attach -t agentic-mobile-manipulator-sim
+```
+
+Swap the session for any of `-sim`, `-stack`, `-llm-servers`, `-agents`, `-hmi` (all prefixed `agentic-mobile-manipulator-`). Inside tmux, `Ctrl-b s` lists/switches sessions and `Ctrl-b d` detaches — the demo keeps running.
+
 ## Stopping
 
 ```bash
