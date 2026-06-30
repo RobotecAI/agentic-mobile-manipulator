@@ -394,7 +394,12 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
                 print(f"[skip] {name}: {os.path.basename(dest)} already exists")
                 continue
             os.makedirs(os.path.dirname(dest), exist_ok=True)
-            jobs.append((f"{name}: {os.path.basename(dest)}", ["wget", "-q", "--show-progress", "-c", "-O", dest, url]))
+            jobs.append(
+                (
+                    f"{name}: {os.path.basename(dest)}",
+                    ["wget", "-q", "--show-progress", "-c", "-O", dest, url],
+                )
+            )
 
     if not jobs:
         return 0
@@ -406,10 +411,11 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
 
     rc = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:
-        for label, code in [f.result() for f in
-                            [pool.submit(fetch, j) for j in jobs]]:
-            print(f"[done] {label}" if code == 0
-                  else f"[FAIL] {label} (exit {code})", file=sys.stderr)
+        for label, code in [f.result() for f in [pool.submit(fetch, j) for j in jobs]]:
+            print(
+                f"[done] {label}" if code == 0 else f"[FAIL] {label} (exit {code})",
+                file=sys.stderr,
+            )
             rc |= 1 if code else 0
     return rc
 
