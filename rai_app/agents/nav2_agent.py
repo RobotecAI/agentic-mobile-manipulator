@@ -169,7 +169,9 @@ class Nav2Agent(BaseAgent):
                 )
                 action_result.report = response.content
             except Exception:
-                action_result.report = f"Navigate to pose has failed with error code {enum_name}"
+                action_result.report = (
+                    f"Navigate to pose has failed with error code {enum_name}"
+                )
             return action_result
         else:
             action_result.success = False
@@ -227,7 +229,9 @@ class Nav2Agent(BaseAgent):
                 )
                 action_result.report = response.content
             except Exception:
-                action_result.report = f"Drive on heading has failed with error code {enum_name}"
+                action_result.report = (
+                    f"Drive on heading has failed with error code {enum_name}"
+                )
             return action_result
         else:
             action_result.success = False
@@ -337,7 +341,9 @@ class Nav2Agent(BaseAgent):
                 )
                 action_result.report = response.content
             except Exception:
-                action_result.report = f"Followed waypoints has failed with error code {enum_name}."
+                action_result.report = (
+                    f"Followed waypoints has failed with error code {enum_name}."
+                )
             return action_result
         else:
             action_result.success = False

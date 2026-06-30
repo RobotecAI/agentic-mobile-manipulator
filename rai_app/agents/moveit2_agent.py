@@ -491,7 +491,9 @@ class MoveIt2Agent(BaseAgent):
                 response.success = False
                 try:
                     llm_response = self.llm.invoke(
-                        self.formulate_prompt("The arm failed to open the gripper.", str(e))
+                        self.formulate_prompt(
+                            "The arm failed to open the gripper.", str(e)
+                        )
                     )
                     response.report = llm_response.content
                 except Exception:
