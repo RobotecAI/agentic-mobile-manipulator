@@ -39,10 +39,12 @@ cmake --preset linux-default -DCMAKE_C_COMPILER="$FLM_CC" -DCMAKE_CXX_COMPILER="
 echo "Building (-j$(nproc)) ..."
 cmake --build build -j"$(nproc)"
 
-# flm looks for model_list.json next to its executable (or at FLM_CONFIG_PATH).
-# We run the build-tree binary, so drop the model registry beside it — needed by
-# both `flm serve` and `flm pull` (download-models).
+# flm looks next to its executable for model_list.json (the model registry, used
+# by `flm serve` and `flm pull`) and for xclbins/ (the per-model NPU kernels).
+# We run the build-tree binary, so put both beside it: copy the small registry,
+# symlink the large shipped xclbins dir rather than duplicating it.
 cp model_list.json build/model_list.json
+ln -sfn ../xclbins build/xclbins
 
 # Build-only — deliberately NO `sudo cmake --install`. The dispatcher runs the
 # repo binary directly (inference/FastFlowLM/src/build/flm), so a system-wide
