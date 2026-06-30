@@ -88,20 +88,19 @@ wait_topic "/joint_states" 60 || { stop_all; exit 1; }
 
 section "Starting inference servers..."
 
-# Create inference session with a named window
+# One pane per inference server (config.toml SSOT). Both VLMs run:
+# vlm_safety (npu) and vlm_inspection (gpu).
 tmux new-session -d -s inference -n models -x 220 -y 50
-INF_TOP_LEFT=$(tmux display-message -p -t inference:models "#{pane_id}")
-INF_TOP_RIGHT=$(tmux split-window -h -P -F "#{pane_id}" -t "$INF_TOP_LEFT")
-INF_BOTTOM_LEFT=$(tmux split-window -v -P -F "#{pane_id}" -t "$INF_TOP_LEFT")
-INF_BOTTOM_RIGHT=$(tmux split-window -v -P -F "#{pane_id}" -t "$INF_TOP_RIGHT")
+INF_TASKS=(serve-llm serve-vlm-safety serve-vlm-inspection serve-embedding serve-reranker)
+first_pane=$(tmux display-message -p -t inference:models "#{pane_id}")
+tmux send-keys -t "$first_pane" "cd $DEMO_ROOT && pixi run ${INF_TASKS[0]}" Enter
+for task in "${INF_TASKS[@]:1}"; do
+    pane=$(tmux split-window -P -F "#{pane_id}" -t inference:models)
+    tmux select-layout -t inference:models tiled
+    tmux send-keys -t "$pane" "cd $DEMO_ROOT && pixi run $task" Enter
+done
 tmux select-layout -t inference:models tiled
-
-# Target panes by pane ID so the script works with any pane-base-index setting
-tmux send-keys -t "$INF_TOP_LEFT" "cd $DEMO_ROOT && pixi run serve-llm"       Enter
-tmux send-keys -t "$INF_TOP_RIGHT" "cd $DEMO_ROOT && pixi run serve-embedding"  Enter
-tmux send-keys -t "$INF_BOTTOM_LEFT" "cd $DEMO_ROOT && pixi run serve-vlm"     Enter
-tmux send-keys -t "$INF_BOTTOM_RIGHT" "cd $DEMO_ROOT && pixi run serve-reranker" Enter
-log "Inference session created  (inference — 2×2 grid)"
+log "Inference session created  (inference — ${#INF_TASKS[@]} panes)"
 
 check_inference || { stop_all; exit 1; }
 
@@ -130,16 +129,15 @@ for s in simulation inference agent; do
     fi
 done
 
-for port in 8080 8081 8082 8083; do
-    code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 2 \
-           "http://localhost:$port/health" 2>/dev/null || echo "000")
+while read -r url; do
+    code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 2 "$url" 2>/dev/null || echo "000")
     if [ "$code" = "200" ]; then
-        ok "Inference port $port — OK"
+        ok "Inference $url — OK"
     else
-        err "Inference port $port — not responding (HTTP $code)"
+        err "Inference $url — not responding (HTTP $code)"
         failed=true
     fi
-done
+done < <(python -m rai_app.inference.serve --health 2>/dev/null)
 
 for topic in /clock /joint_states; do
     if ros2 topic list 2>/dev/null | grep -q "^${topic}$"; then
