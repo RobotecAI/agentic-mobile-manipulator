@@ -14,35 +14,30 @@ scripts = ["scripts/setup_env.sh"]
 [dependencies]
 # ─── ROS 2 Jazzy (RoboStack) ─────────────────────────────────────────────────
 # The full ROS 2 runtime comes from the robostack-jazzy conda channel.
-# pixi runs RoboStack's activation scripts automatically, so AMENT_PREFIX_PATH,
-# PYTHONPATH, etc. are set up on `pixi shell` / `pixi run`.
-#
-# NOTE: nav2-bringup is deliberately omitted — it transitively pulls
-# ros-gz-sim → simulation_interfaces 1.2.0, which clashes with the source-built
-# 1.5.1 overlay required by the O3DE SimulationInterfaces gem.
-ros-jazzy-desktop = "*"
-ros-jazzy-navigation2 = "*"
-ros-jazzy-interactive-marker-twist-server = "*"
-ros-jazzy-vision-msgs = "*"
-ros-jazzy-moveit = "2.12.*"
-ros-jazzy-moveit-py = "2.12.*"
-ros-jazzy-tf-transformations = "*"
-ros-jazzy-ros2-control = "*"
-ros-jazzy-ros2-controllers = "*"
 
-# Previously vcs-imported and colcon-built; now binary conda packages.
-# (See ros2_ws.repos for the full migration note.)
-ros-jazzy-ur-description = "*"
-ros-jazzy-control-msgs = "*"
-ros-jazzy-control-toolbox = "*"
-ros-jazzy-kinematics-interface = "*"
-ros-jazzy-moveit-msgs = "*"
-ros-jazzy-realtime-tools = "*"
-ros-jazzy-srdfdom = "*"
+ros-jazzy-desktop = "0.11.0.*"
+ros-jazzy-navigation2 = "1.3.12.*"
+ros-jazzy-interactive-marker-twist-server = "2.1.1.*"
+ros-jazzy-vision-msgs = "4.1.1.*"
+ros-jazzy-moveit = "2.12.4.*"
+ros-jazzy-moveit-py = "2.12.4.*"
+ros-jazzy-tf-transformations = "1.1.1.*"
+ros-jazzy-ros2-control = "4.45.1.*"
+ros-jazzy-ros2-controllers = "4.40.0.*"
+
+ros-jazzy-ur-description = "3.5.1.*"
+ros-jazzy-control-msgs = "5.9.0.*"
+ros-jazzy-control-toolbox = "4.11.0.*"
+ros-jazzy-kinematics-interface = "1.7.0.*"
+ros-jazzy-moveit-msgs = "2.6.0.*"
+ros-jazzy-realtime-tools = "3.11.0.*"
+ros-jazzy-srdfdom = "2.0.7.*"
+
+ros-jazzy-simulation-interfaces = "1.5.1.*"
+ros-jazzy-nav2-bringup = "1.3.12.*"
 
 # ─── Build toolchain (for source packages remaining in ros2_ws/src) ──────────
 # Use conda compilers so source packages stay ABI-compatible with the RoboStack
-# binaries they link against. O3DE is built outside this env (system toolchain).
 colcon-common-extensions = "*"
 vcstool = "*"
 c-compiler = "*"
