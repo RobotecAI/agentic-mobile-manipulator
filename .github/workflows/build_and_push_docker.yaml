@@ -25,12 +25,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push base images (ros2, o3de)
+      - name: Build and push all images
         env:
           AMM_IMG_SUFFIX: ${{ env.SUFFIX }}
         run: |
-          docker compose -f docker/compose.yaml build ros2 o3de
-          docker compose -f docker/compose.yaml push ros2 o3de
+          docker compose -f docker/compose.yaml build
+          docker compose -f docker/compose.yaml push
 
   smoke-test:
     needs: build-and-push
