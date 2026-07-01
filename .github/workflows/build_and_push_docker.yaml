@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - development
+  # TEMP (testing): run on every PR commit. Remove before merge.
+  pull_request:
   workflow_dispatch:
 
 # Development builds get a -development image suffix so they never clobber main's
