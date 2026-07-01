@@ -62,11 +62,11 @@ The main agent class that orchestrates the inspection process.
 
 ### Output Topics
 
-| Topic                | Message Type                         | Description                                              |
-| -------------------- | ------------------------------------ | -------------------------------------------------------- |
-| `/inspection_result` | `robotec_kairos_ur10/msg/Anomaly`    | Anomaly detection results                                |
-| `/marker`            | `visualization_msgs/msg/MarkerArray` | Debug markers for RViz2, published by default            |
-| `/vlm_topic`         | `demo_msgs/msg/VlmDescription`       | Visual descriptions for HMI                              |
+| Topic                | Message Type                         | Description                                   |
+| -------------------- | ------------------------------------ | --------------------------------------------- |
+| `/inspection_result` | `robotec_kairos_ur10/msg/Anomaly`    | Anomaly detection results                     |
+| `/marker`            | `visualization_msgs/msg/MarkerArray` | Debug markers for RViz2, published by default |
+| `/vlm_topic`         | `demo_msgs/msg/VlmDescription`       | Visual descriptions for HMI                   |
 
 ### Message Types
 

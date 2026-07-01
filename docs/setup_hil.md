@@ -44,13 +44,13 @@ pixi run -e hil setup
 
 This runs, in order:
 
-| Step | pixi task         | What it does                                                     |
-| ---- | ----------------- | --------------------------------------------------------------- |
-| 1    | `clone-ros2-ws`   | `vcs import` clones the ROS 2 workspace repositories            |
-| 2    | `init-submodules` | Check out the pinned llama.cpp and FastFlowLM submodules        |
+| Step | pixi task         | What it does                                                       |
+| ---- | ----------------- | ------------------------------------------------------------------ |
+| 1    | `clone-ros2-ws`   | `vcs import` clones the ROS 2 workspace repositories               |
+| 2    | `init-submodules` | Check out the pinned llama.cpp and FastFlowLM submodules           |
 | 3    | `build-ros2`      | `colcon build` (dependencies come from conda/RoboStack, no rosdep) |
-| 4    | `sync`            | `uv sync` installs the Python dependencies                      |
-| 5    | `build-llama`     | Build llama.cpp with the Vulkan backend                         |
+| 4    | `sync`            | `uv sync` installs the Python dependencies                         |
+| 5    | `build-llama`     | Build llama.cpp with the Vulkan backend                            |
 
 ---
 
