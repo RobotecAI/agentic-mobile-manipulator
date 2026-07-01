@@ -45,6 +45,7 @@ cxx-compiler = "*"
 pkg-config = "*"
 qt-main = "*"
 nlohmann_json = "*"
+rust = ">=1.96.0,<1.97"
 
 # ─── Workspace tasks ────────────────────────────────────────────────────────────
 
