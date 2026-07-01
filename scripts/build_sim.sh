@@ -9,7 +9,7 @@
 #   build-sim — even though it runs after build-ros2 — never sees it. cmake then
 #   fails with "Could not find a package configuration file provided by
 #   simulation_interfaces", and only a *second* run works. Sourcing the overlay
-#   here, at build time, makes a clean `pixi run -e default setup` succeed on the
+#   here, at build time, makes a clean `pixi run -e single-pc-gpu setup` succeed on the
 #   first try.
 set -eo pipefail   # no -u: ROS setup scripts reference unbound vars
 

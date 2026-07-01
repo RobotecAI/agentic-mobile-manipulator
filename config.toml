@@ -1,44 +1,105 @@
+# ════════════════════════════════════════════════════════════════════════════
+#  Inference SSOT — single source of truth for every model the demo serves.
+#
+#  [endpoints.*] define each served model EXACTLY ONCE: which backend runs it,
+#  on which host/port, and from which weights. `pixi run inference` reads these,
+#  routes each endpoint to the right backend, and launches it:
+#
+#      backend = "gpu" | "cpu"  → llama.cpp   (built in inference/llama.cpp)
+#      backend = "npu"          → FastFlowLM  (`flm serve`, AMD Ryzen AI NPU)
+#      backend = "openai"       → remote API, NOT served locally (see cloud_config.toml)
+#
+#  Agent sections below reference endpoints by name (e.g. `llm = "main_llm"`).
+#  rai_app/initialization/llms.py resolves those references into model + base_url,
+#  so changing a port, moving a model gpu↔npu, or swapping weights happens HERE,
+#  in one place — not scattered across pixi tasks, smoke_test.sh, etc.
+# ════════════════════════════════════════════════════════════════════════════
+
+# ─── Endpoints ──────────────────────────────────────────────────────────────
+
+[endpoints.main_llm]
+type       = "llm"
+backend    = "gpu"                  # llama.cpp, Vulkan build
+model      = "gpt-oss-20b"          # name advertised to OpenAI-compatible clients
+host       = "localhost"
+port       = 8080
+model_path = "${DEMO_ROOT}/models/gpt-oss-20b-Q4_K_M.gguf"
+model_url  = "https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true"
+extra_args = ["--no-prefill-assistant"]
+
+# safety agent VLM — FastFlowLM (npu)
+[endpoints.vlm_safety]
+type       = "vlm"
+backend    = "npu"
+host       = "localhost"
+port       = 8081
+model      = "gemma3:4b"
+flm_model  = "gemma3:4b"
+
+# inspection/general/megamind/condition VLM — LFM2-VL on llama.cpp (gpu)
+[endpoints.vlm_inspection]
+type        = "vlm"
+backend     = "gpu"
+host        = "localhost"
+port        = 8084
+model       = "LFM2-VL-3B"
+model_path  = "${DEMO_ROOT}/models/LFM2-VL-3B-Q8_0.gguf"
+mmproj_path = "${DEMO_ROOT}/models/mmproj-LFM2-VL-3B-Q8_0.gguf"
+model_url   = "https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true"
+mmproj_url  = "https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true"
+
+[endpoints.embeddings]
+type       = "embedding"
+backend    = "gpu"
+model      = "qwen3-embedding:0.6b"
+host       = "localhost"
+port       = 8082
+model_path = "${DEMO_ROOT}/models/Qwen3-Embedding-0.6B-Q8_0.gguf"
+model_url  = "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true"
+
+[endpoints.reranker]
+type       = "reranker"
+backend    = "gpu"
+model      = "qwen3-reranker:0.6b"
+host       = "localhost"
+port       = 8083
+model_path = "${DEMO_ROOT}/models/qwen3-reranker-0.6b-q8_0.gguf"
+model_url  = "https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true"
+
+# ─── Agents ─────────────────────────────────────────────────────────────────
+# Each agent references endpoints by name. `*_reasoning` / `*_temperature` are
+# client-side decoding settings and stay with the agent, not the endpoint.
+
 [general]
-llm_model = "gpt-oss-20b"
-llm_base_url = "http://localhost:8080/v1"
+llm = "main_llm"
+vlm = "vlm_inspection"
 llm_reasoning = false
-vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8081/v1"
 vlm_reasoning = false
 
 # megamind agent utilizes llm for task delegation
 # to agents using both llm and vlm for task execution
 [megamind_agent]
-llm_model = "gpt-oss-20b"
-llm_base_url = "http://localhost:8080/v1"
-vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8081/v1"
+llm = "main_llm"
+vlm = "vlm_inspection"
 llm_reasoning = false
 vlm_reasoning = false
 
 # inspection agent uses vlm to determine anomalies in the image
 [inspection_agent]
-vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8081/v1"
+vlm = "vlm_inspection"
 vlm_reasoning = false
 vlm_temperature = 0.0
 
 [condition_agent]
-vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8081/v1"
+vlm = "vlm_inspection"
 vlm_reasoning = false
 vlm_temperature = 0.1
 
 # safety agent uses vlm to determine anomalies in the image
-# and embeddings to determine OSHA safety violations
+# and embeddings + reranker to determine OSHA safety violations
 [safety_agent]
-vlm_model = "lfm2-vl"
-vlm_base_url = "http://localhost:8081/v1"
+vlm = "vlm_safety"
 vlm_reasoning = false
 vlm_temperature = 0.0
-
-embeddings_model = "qwen3-embedding:0.6b"
-embeddings_base_url = "http://localhost:8082/v1"
-# NOTE: The reranker and the embedding model are two separate models!
-reranker_base_url = "http://localhost:8083/v1/reranking"
-
+embeddings = "embeddings"
+reranker = "reranker"

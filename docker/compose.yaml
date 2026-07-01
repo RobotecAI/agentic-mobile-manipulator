@@ -1,174 +1,86 @@
-x-ros2-stack: &stack
-  image: robotecai/mobile-manipulator-demo-agents:latest
-  build:
-    context: ..
-    dockerfile: docker/Dockerfile.agents
-    additional_contexts:
-      base_image: service:ros2
-  environment:
-    - DISPLAY=${DISPLAY}
-    - QT_X11_NO_MITSHM=1
-    - OPENAI_API_KEY=${OPENAI_API_KEY}
-  entrypoint: /ros_entrypoint.sh
-  devices:
-    - /dev/kfd:/dev/kfd
-    - /dev/dri:/dev/dri
-  volumes:
-    - /tmp/.X11-unix:/tmp/.X11-unix
-    - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  networks:
-    - ros2_bridge
+# Dockerised single-PC demo. The image is built in three cacheable layers, each a
+# separately-taggable service so the heavy, rarely-changing bases (ROS 2 workspace,
+# O3DE SDK + sim) can be pushed/pulled and reused:
+#
+#   ros2  →  o3de  →  demo
+#
+# Only `demo` is run. It is the whole single-pc stack in one container; its
+# entrypoint, `pixi run demo`, launches sim → stack → inference → agents → hmi
+# each in its own tmux session — identical to running the demo natively.
+#
+# Build everything:   docker compose -f docker/compose.yaml build
+# Run the demo:        xhost +local:root && docker compose -f docker/compose.yaml up demo
+# Attach to a session: docker exec -it $(docker ps -qf ancestor=robotecai/mobile-manipulator-demo:latest) tmux attach -t agentic-mobile-manipulator-sim
+#                      (sessions: -sim -stack -llm-servers -agents -hmi)
+#
+# Target is single-pc-gpu-and-npu (the default). For a GPU-only image — llama.cpp
+# (Vulkan) only, no FastFlowLM/NPU — build with:
+#   WITH_NPU=0 docker compose -f docker/compose.yaml build
+# A GPU-only image additionally needs, at run time: drop the /dev/accel device and
+# the memlock ulimit below, and supply a config.toml whose vlm_safety endpoint is
+# on a gpu backend (not npu) — otherwise `pixi run inference` aborts on the missing
+# NPU engine.
+#
+# Prerequisites on the host (an AMD Ryzen AI box):
+#   - GPU + NPU exposed via the devices below (amdxdna kernel driver loaded on host)
+#   - model weights present in ../models (pixi run download-models), bind-mounted in
 
 services:
-  sim:
-    image: robotecai/mobile-manipulator-demo-o3de:latest
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.o3de
-      additional_contexts:
-        base_image: service:ros2
-    environment:
-      - DISPLAY=${DISPLAY}
-      - QT_X11_NO_MITSHM=1
-    devices:
-      - /dev/kfd:/dev/kfd
-      - /dev/dri:/dev/dri
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-    entrypoint: /ros_entrypoint.sh
-    command: >
-      sh -c 'find /root/MobileManipulatorDemo/sim/Cache -type f -exec sh -c '"'"'cat "$@" > /dev/null'"'"' sh {} + && pixi run sim'
-    networks:
-      - ros2_bridge
-    depends_on:
-      ros2-stack:
-        condition: service_started
-
+  # ── Base: RoboStack ROS 2 + built workspace ────────────────────────────────
   ros2:
     image: robotecai/mobile-manipulator-demo-ros2:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile.ros2
 
-  ros2-stack:
-    <<: *stack
+  # ── Base: + O3DE SDK and built simulation ──────────────────────────────────
+  o3de:
+    image: robotecai/mobile-manipulator-demo-o3de:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.o3de
+      additional_contexts:
+        base_image: service:ros2
+
+  # ── The demo: + agents, local inference engines; runs the whole stack ───────
+  demo:
+    image: robotecai/mobile-manipulator-demo:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.demo
+      additional_contexts:
+        base_image: service:o3de
+      args:
+        # 1 = gpu-and-npu (default); 0 = gpu-only. `WITH_NPU=0 docker compose build`.
+        WITH_NPU: ${WITH_NPU:-1}
+    entrypoint: ["pixi", "run", "demo"]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-42}
+      # Hold demo.sh open as PID 1 so the detached tmux sessions outlive its launch.
+      - AMM_KEEP_ALIVE=1
+      # Keep NPU (FastFlowLM) weights inside the mounted models/ dir instead of
+      # flm's default ~/.config/flm, so they persist via the bind mount.
+      - FLM_MODEL_PATH=/root/MobileManipulatorDemo/models/flm
+    devices:
+      - /dev/kfd:/dev/kfd            # AMD GPU compute (ROCm)
+      - /dev/dri:/dev/dri            # AMD GPU render (Vulkan)
+      - /dev/accel/accel0:/dev/accel/accel0  # Ryzen AI NPU (amdxdna)
+    # The NPU pins memory; without unlimited memlock FastFlowLM fails to allocate.
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ../config.toml:/root/MobileManipulatorDemo/config.toml
-    command: pixi run ros2
-
-  # hmi:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch mobile_manipulator_hmi hmi_launch.py"
-
-  # kairos:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 launch robotec_kairos_ur10 robotec_launch.py"
-
-  # utilization_node:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run manipulator_hmi utilization_node"
-
-  # nav2_agent:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/nav2_agent.py"
-
-  # moveit2_agent:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/moveit2_agent.py"
-
-  # scene_agent:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/environment/scene_agent.py"
-
-  # nav_lifecycle_node:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && ros2 run nav2_lifecycle_manager nav_lifecycle_node"
-
-  # inspection_agent:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && uv run python rai_app/agents/inspection_agent.py"
-
-  # safety_agent:
-  #   <<: *stack
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #     - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-  #     - ../config.toml:/root/MobileManipulatorDemo/config.toml
-  #   command: /bin/bash -c "source /root/MobileManipulatorDemo/ros2_ws/install/setup.bash && cd /root/MobileManipulatorDemo && ./scripts/start_safety_agent.sh"
-
-  agents:
-    image: robotecai/mobile-manipulator-demo-agents:latest
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.agents
-      additional_contexts:
-        base_image: service:ros2
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-    devices:
-      - /dev/kfd:/dev/kfd
-      - /dev/dri:/dev/dri
-    volumes:
-      - ../cloud_config.toml:/root/MobileManipulatorDemo/config.toml
-    entrypoint: /ros_entrypoint.sh
-    command: pixi run orchestrator
-    networks:
-      - ros2_bridge
-    depends_on:
-      ros2-stack:
-        condition: service_started
-
-  # safety-embeddings:
-  #   image: robotecai/mobile-manipulator-demo-llama:latest
-  #   build:
-  #     dockerfile: Dockerfile.llama
-  #   command: -m /custom_ggufs/Qwen3-Embedding-0.6b_BF16.gguf --embedding -c 4096 -b 2048 -ub 2048 --pooling last --port 8082 --host 0.0.0.0
-  #   networks:
-  #     - ros2_bridge
-
-  # safety-reranker:
-  #   image: robotecai/mobile-manipulator-demo-llama:latest
-  #   build:
-  #     dockerfile: Dockerfile.llama
-  #   command: -m /custom_ggufs/Qwen3-Reranker-0.6B_16BF.gguf --embedding --pooling rank -fa on -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0
-  #   networks:
-  #     - ros2_bridge
-
-networks:
-  ros2_bridge:
-    driver: bridge
+      # All weights live under the repo's models/: llama ggufs in models/, NPU
+      # models in models/flm (FLM_MODEL_PATH below). `pixi run download-models`
+      # fetches both. No host-home (~/.config/flm) coupling.
+      - ../models:/root/MobileManipulatorDemo/models
+    # Single host: ROS 2 DDS + every inference endpoint talk over localhost, and
+    # host networking lets RViz/ros2 on the host introspect the running demo.
+    network_mode: host

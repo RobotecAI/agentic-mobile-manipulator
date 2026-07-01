@@ -1,66 +1,93 @@
-# Quickstart Guide
+# Quickstart: Docker Compose
 
-This guide will help you get the **Mobile Manipulator Demo** up and running quickly using Docker Compose.
-
-> [!IMPORTANT]
-> This guide is designed for running the demo with cloud-based models for a smooth and easy setup.
-> If you’d like to use local models instead, please refer to the [Setup Guide](./setup.md). _Note:_ Running local models requires approximately 48GB of VRAM.
+Run the full **Mobile Manipulator Demo** — simulation, ROS 2 stack, local inference, agents, and HMI — in a single container, with all models served locally on an AMD GPU + AMD Ryzen™ AI NPU.
 
 ## Prerequisites
 
-- AMD GPU | AMD Ryzen™ AI
-- [Docker Engine](https://docs.docker.com/engine/install/) installed.
-- **For AMD GPUs**: [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites).
+- **AMD GPU** (ROCm/Vulkan) **and AMD Ryzen™ AI NPU** for the default build.
+- The host's **amdxdna** driver loaded: check with `ls /dev/accel/accel0`.
+- [Docker Engine](https://docs.docker.com/engine/install/) + [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites).
+- A running X server (the O3DE simulation and HMI open windows on your display).
+- ~60 GB free disk for the image, plus room under `models/` for the weights.
 
-## 1. Prepare the environment
-
-### 1.1 Clone the repository
+## 1. Clone the repository
 
 ```bash
 git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
 cd agentic-mobile-manipulator
 ```
 
-### 1.2 Configure the LLM/VLM
+## 2. Build the image
+
+```bash
+docker compose -f docker/compose.yaml build
+```
+
+This builds three cacheable layers — `…-ros2` (RoboStack ROS 2 + workspace) → `…-o3de` (O3DE SDK + simulation) → `…demo` (Python agents + llama.cpp + FastFlowLM). The O3DE layer is large, so the first build takes a while; later rebuilds reuse the cached bases.
+
+## 3. Download the model weights
+
+Weights are **not** baked into the image. They are downloaded into the repo's `models/` directory, bind-mounted at run time. `config.toml` is the single source of truth for which models are fetched. Pull them once into `models/` by running:
+
+```bash
+docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run download-models
+```
+
+This writes the llama.cpp GGUFs to `models/` and the NPU model to `models/flm/` (via `flm pull`). It only fetches what's missing, so it's safe to re-run.
 
 > [!TIP]
-> The repository contains two configuration files:
->
-> - config.toml: Configuration for the LLM/VLM models.
-> - cloud_config.toml: Configuration for the cloud LLM/VLM models.
+> If you have pixi installed natively you can instead run `FLM_MODEL_PATH="$PWD/models/flm" pixi run download-models`.
 
-The cloud_config.toml file is used to configure the LLM/VLM models. By default, the demo uses OpenAI.
-If you want to use other models, modify the config.toml and compose.yaml (vendor api key environment variable) accordingly.
+## 4. Run the demo
 
-## 2. Run the demo
-
-### 2.1 Allow local connections to your X server
-
-Before launching the containers, you need to allow local connections to your X server so the GUI applications (O3DE simulation and HMI) can display on your screen.
-
-Run the following command in your terminal:
+Allow local connections to your X server, then start the `demo` service:
 
 ```bash
-xhost +local:docker
+xhost +local:root
+docker compose -f docker/compose.yaml up demo
 ```
 
-### 2.2 Run the demo
-
-```bash
-docker compose -f docker/compose.yaml up
-```
-
-## What to Expect
+## What to expect
 
 ![Demo Windows](demo_windows.jpg)
 
-1.  **Simulation Window**: The O3DE simulation window will appear, showing the warehouse environment. Use "Control -> Simulation Scenarios" to spawn objects in the warehouse. Use "Control -> On demand predefined tasks" to run predefined tasks. Alternatively, publish your own tasks to the `/user_tasks` topic.
-2.  **HMI**: A separate window or terminal output indicating the HMI is running will appear. Spawn
-3.  **Agents**: The autonomous agents will start in the background.
+1. **Simulation Window**: the O3DE warehouse environment. Use _Control → Simulation Scenarios_ to spawn objects, and _Control → On demand predefined tasks_ to run tasks — or publish your own to the `/user_tasks` topic.
+2. **HMI**: a window/terminal showing the Human-Machine Interface.
+3. **Agents**: the autonomous agents run in the background, driving the robot.
+
+## Inspecting a component
+
+Each component runs in its own tmux session inside the container. Attach to one (e.g. the simulation) from the host:
+
+```bash
+docker exec -it $(docker ps -qf ancestor=robotecai/mobile-manipulator-demo:latest) \
+  tmux attach -t agentic-mobile-manipulator-sim
+```
+
+Swap the session for any of `-sim`, `-stack`, `-llm-servers`, `-agents`, `-hmi` (all prefixed `agentic-mobile-manipulator-`). Inside tmux, `Ctrl-b s` lists/switches sessions and `Ctrl-b d` detaches.
+
+## Stopping
+
+```bash
+docker compose -f docker/compose.yaml down
+```
+
+## GPU-only build
+
+If the host has no NPU, build without FastFlowLM (llama.cpp/Vulkan only):
+
+```bash
+WITH_NPU=0 docker compose -f docker/compose.yaml build
+```
+
+Before running a GPU-only image, edit `docker/compose.yaml` to:
+
+- remove the `/dev/accel/accel0` device and the `memlock` ulimit (NPU-only), and
+- point `config.toml`'s `vlm_safety` endpoint at a `gpu` backend — otherwise `pixi run inference` aborts on the missing NPU engine.
 
 ## Troubleshooting
 
-- **O3DE Doesn't start**: Please make sure your GPU drivers and container toolkit are properly installed. For more information about what might be going wrong, try running `docker compose -f docker/compose.yaml up sim` to check the logs. If the issue persists, perform a _graceful shutdown_ of the container/docker compose and then restart it.
-- **Display Issues**: If windows don't appear, ensure you ran `xhost +local:docker` and that your `DISPLAY` environment variable is set correctly (`echo $DISPLAY`).
-- **GPU Access**: If the simulation runs slowly or crashes, check your GPU drivers and container toolkit installation.
-- **AMD GPU Access**: Ensure you have passed the correct devices. For more details on running ROCm Docker containers, see the [official AMD documentation](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html).
+- **O3DE doesn't start / no windows appear**: ensure you ran `xhost +local:root` and that `DISPLAY` is set (`echo $DISPLAY`). Verify your AMD GPU drivers + ROCm container prerequisites are installed.
+- **NPU errors / FastFlowLM fails to start**: confirm `/dev/accel/accel0` exists on the host and that the `memlock` ulimit and the device mapping are present in `docker/compose.yaml` (both are required for the NPU).
+- **Inference health check fails**: make sure step 3 completed and `models/` (and `models/flm/`) contain the weights `config.toml` references.
+- **GPU access / slow or crashing sim**: check your GPU drivers and the [ROCm Docker docs](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html).

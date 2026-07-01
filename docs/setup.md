@@ -7,7 +7,7 @@
 This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
-- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
+- ROS 2: Jazzy, provided by pixi via RoboStack (no separate ROS 2 install needed)
 - Python: 3.12
 - OpenAI-compatible Endpoint for GenAI inference (llama.cpp)
 
@@ -22,7 +22,7 @@ Run HMI, agents and simulation on one computer
 
 > [!IMPORTANT]
 > Please note that this setup is intended for systems with approximately 48GB of available VRAM.
-> If your system does not meet this requirement, you may opt to use cloud-based models by following the instructions in the [Quickstart Guide](./quickstart.md).
+> If your system does not meet this requirement, you can configure the agents to use cloud-based models instead via `cloud_config.toml`.
 
 [Single-machine setup](./setup_single_machine.md)
 

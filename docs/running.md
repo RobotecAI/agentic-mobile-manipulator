@@ -3,7 +3,7 @@
 ## Run all at once
 
 ```shell
-pixi run -e local demo
+pixi run -e single-pc-gpu demo
 ```
 
 ## Run separately
@@ -17,7 +17,7 @@ pixi run sim
 ### ROS 2
 
 ```shell
-pixi run ros2
+pixi run stack
 ```
 
 ### HMI
@@ -26,35 +26,45 @@ pixi run ros2
 pixi run hmi
 ```
 
-### Local inference (llama.cpp)
+### Local inference
 
-Models default to `$DEMO_ROOT/models/<filename>`. Override with env vars if your models are elsewhere.
+Every inference endpoint is declared once in [`config.toml`](../config.toml) under
+`[endpoints.*]` (model, backend, port, weights). `pixi run inference` reads that
+SSOT and launches each server on its backend — `gpu`/`cpu` via llama.cpp, `npu`
+via FastFlowLM — in a tmux grid:
 
 ```shell
-# GPT-OSS-20B — port 8080
-pixi run -e local serve-llm
-
-# LFM2-VL-3B — port 8081
-pixi run -e local serve-vlm
-
-# Qwen3-Embedding-0.6b — port 8082
-pixi run -e local serve-embedding
-
-# Qwen3-Reranker-0.6B — port 8083
-pixi run -e local serve-reranker
+pixi run -e single-pc-gpu inference        # launch all local endpoints (tmux grid)
+pixi run -e single-pc-gpu smoke-test       # health-check them
 ```
 
-To use a custom path:
+To start a single endpoint (e.g. for debugging), launch it by its endpoint name:
 
 ```shell
-LLM_MODEL=/path/to/gpt-oss-20b-Q4_K_M.gguf pixi run -e local serve-llm
-VLM_MODEL=/path/to/LFM2-VL-3B-Q8_0.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run -e local serve-vlm
-EMBEDDING_MODEL=/path/to/embedding.gguf pixi run -e local serve-embedding
-RERANKER_MODEL=/path/to/reranker.gguf pixi run -e local serve-reranker
+pixi run -e single-pc-gpu serve-llm        # endpoints.main_llm   → port 8080
+pixi run -e single-pc-gpu serve-vlm-safety       # endpoints.vlm_safety     → port 8081 (NPU)
+pixi run -e single-pc-gpu serve-vlm-inspection   # endpoints.vlm_inspection → port 8084 (GPU)
+pixi run -e single-pc-gpu serve-embedding  # endpoints.embeddings → port 8082
+pixi run -e single-pc-gpu serve-reranker   # endpoints.reranker   → port 8083
+```
+
+To change a weight path, backend, or port, edit the endpoint in `config.toml`
+(e.g. set `model_path`, or flip the VLM `backend` between `gpu` and `npu`) — there
+are no per-server env vars anymore. Preview the resolved launch commands without
+starting anything:
+
+```shell
+pixi run -e single-pc-gpu inference --print
+```
+
+### Agents
+
+```shell
+pixi run agents
 ```
 
 ### Agent Orchestrator
 
 ```shell
-pixi run orchestrator
+pixi run orchestrator-agent
 ```

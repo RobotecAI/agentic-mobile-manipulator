@@ -45,16 +45,13 @@ cxx-compiler = "*"
 pkg-config = "*"
 qt-main = "*"
 nlohmann_json = "*"
+rust = ">=1.96.0,<1.97"
 
 # ─── Workspace tasks ────────────────────────────────────────────────────────────
 
 [tasks.check-env]
 cmd = "bash scripts/check_env.sh"
 description = "Fail fast if apt ROS 2 (/opt/ros) is sourced — must not be mixed with conda/RoboStack"
-
-[tasks.smoke-test]
-cmd = "bash scripts/smoke_test.sh"
-description = "Check if all LLM inference servers are up"
 
 # ─── Feature: ros2 ──────────────────────────────────────────────────────────────
 
@@ -70,19 +67,31 @@ outputs = ["ros2_ws/install/"]
 depends-on = ["clone-ros2-ws"]
 description = "Build the ROS 2 workspace with colcon (deps provided by conda/RoboStack — no rosdep)"
 
-[feature.ros2.tasks.ros2]
+[feature.ros2.tasks.stack]
+cmd = "bash scripts/tmux_run.sh agentic-mobile-manipulator-stack pixi run stack-fg"
+description = "Launch the barebones ROS 2 stack in its own tmux session (robot + supporting nodes, no agents)"
+
+[feature.ros2.tasks.stack-fg]
 cmd = "bash scripts/run_ros2_stack.sh"
-description = "Launch full ROS 2 stack (robot, nav2, moveit2, scene, agents)"
+description = "Launch the barebones ROS 2 stack in the foreground (no tmux)"
+
+[feature.ros2.tasks.agents]
+cmd = "bash scripts/run_agents.sh"
+description = "Start the rai agents + orchestrator in a tmux grid (nav2, moveit2, scene, inspection, safety, orchestrator)"
 
 [feature.ros2.tasks.hmi]
-cmd = "ros2 launch mobile_manipulator_hmi hmi_launch.py"
-description = "Launch the Human-Machine Interface"
+cmd = "bash scripts/tmux_run.sh agentic-mobile-manipulator-hmi pixi run hmi-fg"
+description = "Launch the Human-Machine Interface in its own tmux session"
 
-[feature.ros2.tasks.orchestrator]
+[feature.ros2.tasks.hmi-fg]
+cmd = "ros2 launch mobile_manipulator_hmi hmi_launch.py"
+description = "Launch the Human-Machine Interface in the foreground (no tmux)"
+
+[feature.ros2.tasks.orchestrator-agent]
 cmd = "uv run python rai_app/agents/agent_orchestrator.py"
 description = "Launch the agent orchestrator"
 
-# Individual agents — use these instead of ros2 when debugging a specific component.
+# Individual agents — use these instead of 'agents' when debugging a specific one.
 
 [feature.ros2.tasks.nav2-agent]
 cmd = "uv run python rai_app/agents/nav2_agent.py"
@@ -146,8 +155,12 @@ depends-on = ["fetch-gems"]
 description = "Build O3DE GameLauncher and project assets"
 
 [feature.sim.tasks.sim]
+cmd = "bash scripts/tmux_run.sh agentic-mobile-manipulator-sim pixi run sim-fg"
+description = "Launch O3DE simulation in its own tmux session"
+
+[feature.sim.tasks.sim-fg]
 cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
-description = "Launch O3DE simulation"
+description = "Launch O3DE simulation in the foreground (no tmux)"
 
 [feature.sim.tasks.editor]
 cmd = "$O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor --project-path $DEMO_ROOT/sim"
@@ -155,87 +168,158 @@ description = "Launch O3DE Editor from SDK (project must be built first)"
 
 # ─── Feature: local-inference ───────────────────────────────────────────────────
 
-[feature.local-inference.tasks.clone-inference]
-cmd = "vcs import --input inference.repos"
-outputs = ["inference/llama.cpp"]
-description = "Clone llama.cpp (required for local inference)"
+[feature.local-inference.dependencies]
+# Everything needed to BUILD + SERVE local inference, so the lightweight
+# `inference` environment (no ROS, no O3DE) is self-sufficient. In the heavier
+# `single-pc-gpu`/`hil` envs these merge harmlessly with the default-feature
+# toolchain (same conda-forge packages).
+python = "*"           # runs the stdlib dispatcher (rai_app.inference.serve)
+cmake = "*"
+ninja = "*"            # FastFlowLM's `cmake --preset linux-default` uses Ninja
+make = "*"             # llama.cpp default (Makefiles) generator
+c-compiler = "*"
+cxx-compiler = "*"
+pkg-config = "*"
+wget = "*"             # download-models fetches ggufs
+# Vulkan SDK pieces llama.cpp's GGML_VULKAN backend needs to BUILD: headers +
+# loader for find_package(Vulkan), and glslc (from shaderc) to compile shaders.
+# The runtime ICD is the system GPU driver (e.g. RADV for AMD), discovered by
+# the loader at run time — not provided here.
+libvulkan-headers = "*"
+libvulkan-loader = "*"
+shaderc = "*"          # provides glslc (Vulkan COMPONENTS glslc)
+spirv-headers = "*"    # find_package(SPIRV-Headers) in ggml-vulkan
+
+# llama.cpp and FastFlowLM are git submodules pinned under inference/ — see
+# .gitmodules. Their versions are tracked by commit, so bump them with
+# `git submodule update --remote <path>` and commit the new pointer.
+[feature.local-inference.tasks.init-submodules]
+cmd = "git submodule update --init --recursive --depth 1 inference/llama.cpp inference/FastFlowLM"
+outputs = ["inference/llama.cpp/CMakeLists.txt", "inference/FastFlowLM/src/CMakeLists.txt"]
+description = "Check out the pinned llama.cpp + FastFlowLM submodules, shallow (required for local inference)"
 
 [feature.local-inference.tasks.build-llama]
+# GGML_CCACHE=OFF: the conda env's ccache links against a libfmt ABI it doesn't
+# ship (wants libfmt.so.9, env has .so.12), so leaving ccache on breaks every
+# compile with Error 127. The build doesn't need ccache.
+# Server-only minimal build: LLAMA_BUILD_UI=OFF skips the embedded webui's
+# npm/PWA build (server API doesn't need it); tests/examples off too. The
+# --target llama-server then builds only that binary + its deps.
 cmd = """
-cmake -B build -DGGML_VULKAN=1 &&
-cmake --build build --config Release -j $(nproc)
+cmake -B build -DGGML_VULKAN=1 -DGGML_CCACHE=OFF \
+  -DLLAMA_BUILD_UI=OFF -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_EXAMPLES=OFF &&
+cmake --build build --config Release -j $(nproc) --target llama-server
 """
 cwd = "inference/llama.cpp"
+depends-on = ["init-submodules"]
 outputs = ["inference/llama.cpp/build/bin/llama-server"]
-description = "Build llama.cpp with Vulkan backend"
+description = "Build llama.cpp (Vulkan), server only — no webui/tests/examples"
+
+# ─── FastFlowLM (AMD Ryzen AI NPU backend) ───────────────────────────────────
+# The submodule (RobotecAI/FastFlowLM fork) already includes GBNF grammar-
+# constrained sampling, needed for structured agent output on the NPU. Building
+# needs the XRT/amdxdna dev headers (no NPU required to compile); only serving
+# (`flm serve`) needs the NPU + amdxdna driver loaded. The build is install-free
+# — the dispatcher runs the repo binary directly.
+
+[feature.local-inference.tasks.build-fastflowlm]
+cmd = "bash scripts/build_fastflowlm.sh"
+depends-on = ["init-submodules"]
+outputs = ["inference/FastFlowLM/src/build/flm"]
+description = "Build FastFlowLM from source, build-only/no install (needs XRT/amdxdna dev headers)"
+
+# ─── SSOT-driven inference (config.toml drives everything below) ─────────────
+# rai_app/inference/serve.py reads config.toml's [endpoints.*] and routes each to
+# its backend (gpu/cpu→llama.cpp, npu→FastFlowLM). Change a port/model/backend
+# in config.toml — these tasks need no edits.
 
 [feature.local-inference.tasks.download-models]
-cmd = "bash scripts/download_models.sh"
-description = "Download models for local inference"
+cmd = "python -m rai_app.inference.serve --download"
+description = "Download weights for every local endpoint in config.toml (gguf via wget, NPU tags via `flm pull`)"
 
-# Default model paths assume models are placed in $DEMO_ROOT/models/.
-# Override by setting the env var before running, e.g.:
-#   LLM_MODEL=/path/to/gpt-oss-20b-Q4_K_M.gguf pixi run serve-llm
+[feature.local-inference.tasks.inference]
+cmd = "python -m rai_app.inference.serve"
+description = "Launch every local endpoint from config.toml in a tmux grid (one pane per server)"
 
+# Per-endpoint launchers (used by demo.sh and for debugging a single server).
+# Each runs the command config.toml specifies for that endpoint.
 [feature.local-inference.tasks.serve-llm]
-cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $LLM_MODEL --no-prefill-assistant --port 8080"
-env = { LLM_MODEL = "$DEMO_ROOT/models/gpt-oss-20b-Q4_K_M.gguf" }
-description = "Serve GPT-OSS-20B on port 8080 (set LLM_MODEL to override path)"
+cmd = "python -m rai_app.inference.serve --only main_llm"
+description = "Serve the 'main_llm' endpoint from config.toml"
 
-[feature.local-inference.tasks.serve-vlm]
-cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $VLM_MODEL --mmproj $VLM_MMPROJ --port 8081"
-env = { VLM_MODEL = "$DEMO_ROOT/models/LFM2-VL-3B-Q8_0.gguf", VLM_MMPROJ = "$DEMO_ROOT/models/mmproj-LFM2-VL-3B-Q8_0.gguf" }
-description = "Serve LFM2-VL-3B on port 8081 (set VLM_MODEL / VLM_MMPROJ to override paths)"
+[feature.local-inference.tasks.serve-vlm-safety]
+cmd = "python -m rai_app.inference.serve --only vlm_safety"
+description = "Serve the safety agent's VLM from config.toml (npu/FastFlowLM)"
+
+[feature.local-inference.tasks.serve-vlm-inspection]
+cmd = "python -m rai_app.inference.serve --only vlm_inspection"
+description = "Serve the inspection agent's VLM from config.toml (gpu/llama.cpp, LFM2-VL)"
 
 [feature.local-inference.tasks.serve-embedding]
-cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $EMBEDDING_MODEL --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082"
-env = { EMBEDDING_MODEL = "$DEMO_ROOT/models/Qwen3-Embedding-0.6B-Q8_0.gguf" }
-description = "Serve Qwen3-Embedding-0.6b on port 8082"
+cmd = "python -m rai_app.inference.serve --only embeddings"
+description = "Serve the 'embeddings' endpoint from config.toml"
 
 [feature.local-inference.tasks.serve-reranker]
-cmd = "$DEMO_ROOT/inference/llama.cpp/build/bin/llama-server -m $RERANKER_MODEL --embedding --pooling rank -c 4096 -b 2048 -ub 2048 --port 8083"
-env = { RERANKER_MODEL = "$DEMO_ROOT/models/qwen3-reranker-0.6b-q8_0.gguf" }
-description = "Serve Qwen3-Reranker-0.6B on port 8083"
+cmd = "python -m rai_app.inference.serve --only reranker"
+description = "Serve the 'reranker' endpoint from config.toml"
 
-[feature.local-inference.tasks.serve-all]
-cmd = "bash scripts/serve_all.sh"
-description = "Launch all inference servers in a tmux session (2x2 grid)"
+[feature.local-inference.tasks.smoke-test]
+cmd = "bash scripts/smoke_test.sh"
+description = "Smoke-test inference: /health liveness + one real inference request per endpoint (config.toml SSOT)"
 
 # ─── Profile features ───────────────────────────────────────────────────────────
 # One profile feature per environment. Each defines a `setup` entry point so
 # that `pixi run -e <env> setup` builds exactly the components for that machine.
 
-[feature.profile-default.tasks.clone]
+[feature.profile-sim.tasks.clone]
 depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
-[feature.profile-default.tasks.setup]
+[feature.profile-sim.tasks.setup]
 depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync"]
-description = "Full setup (O3DE + ROS 2 + Python)"
+description = "Setup sim machine (O3DE + ROS 2)"
+
+[feature.profile-hmi.tasks.setup]
+depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
+description = "Setup HMI machine (ROS 2)"
 
 [feature.profile-hil.tasks.setup]
-depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
-description = "Setup HIL machine (ROS 2 + Python, no O3DE)"
+depends-on = ["clone-ros2-ws", "init-submodules", "build-ros2", "sync", "build-llama"]
+description = "Setup HIL compute machine (ROS 2 + inference, GPU+NPU)"
 
-[feature.profile-hil-local.tasks.setup]
-depends-on = ["clone-ros2-ws", "clone-inference", "build-ros2", "sync", "build-llama"]
-description = "Setup HIL machine with local llama.cpp inference"
-
-[feature.profile-local.tasks.clone]
+[feature.profile-single-pc.tasks.clone]
 depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
-[feature.profile-local.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama"]
-description = "Full setup including local llama.cpp inference"
-
-[feature.profile-local.tasks.demo]
+[feature.profile-single-pc.tasks.demo]
 cmd = "bash scripts/demo.sh"
-description = "Start full demo: sim → ros2 → inference → orchestrator (3 tmux sessions)"
+description = "Start full demo: sim → stack → inference → agents+orchestrator → hmi (one tmux session each)"
 
-[feature.profile-local.tasks.demo-stop]
-cmd = "bash scripts/demo_stop.sh"
-description = "Stop all demo tmux sessions"
+# ─── Single-PC setup variants: GPU (default) vs GPU+NPU ──────────────────────────
+# Share clone/demo above; differ only in what `setup` builds and what
+# find-runnables waits on. -gpu builds llama.cpp (Vulkan); -npu also builds
+# FastFlowLM. Each env includes exactly one variant, so the duplicate
+# `setup`/`find-runnables` names never collide.
+
+[feature.profile-single-pc-gpu.tasks.setup]
+depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "find-runnables"]
+description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU)"
+
+# Runs last (depends on the builds it inventories) so setup ends by listing them.
+[feature.profile-single-pc-gpu.tasks.find-runnables]
+cmd = "bash scripts/find_runnables.sh"
+depends-on = ["build-sim", "build-llama"]
+description = "List built runnables (GameLauncher, llama.cpp, ...)"
+
+[feature.profile-single-pc-npu.tasks.setup]
+depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "build-fastflowlm", "find-runnables"]
+description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU) + FastFlowLM (NPU)"
+
+# Waits on the NPU build too, so FastFlowLM reports as built.
+[feature.profile-single-pc-npu.tasks.find-runnables]
+cmd = "bash scripts/find_runnables.sh"
+depends-on = ["build-sim", "build-llama", "build-fastflowlm"]
+description = "List built runnables (GameLauncher, llama.cpp, FastFlowLM, ...)"
 
 # ─── Feature: dev ───────────────────────────────────────────────────────────────
 # Lightweight feature for Python tooling (uv, pre-commit, pytest).
@@ -245,6 +329,10 @@ description = "Stop all demo tmux sessions"
 
 [feature.dev.dependencies]
 uv = ">=0.5"
+
+[feature.dev.tasks.kill]
+cmd = "bash scripts/kill_sessions.sh"
+description = "Kill all project tmux sessions (agentic-mobile-manipulator-*)"
 
 [feature.dev.tasks.sync]
 cmd = "uv sync"
@@ -271,8 +359,16 @@ description = "Run test suite"
 # e.g. `build-sim` cannot be run in the `hil` environment.
 
 [environments]
-default   = {features = ["dev", "ros2", "sim", "profile-default"]}
-hil       = {features = ["dev", "ros2", "profile-hil"]}
-hil-local = {features = ["dev", "ros2", "local-inference", "profile-hil-local"]}
-local     = {features = ["dev", "ros2", "sim", "local-inference", "profile-local"]}
-dev       = {features = ["dev"], no-default-feature = true}
+# `default` mirrors `single-pc-gpu` so a bare `pixi run <task>` (no -e) targets
+# the one-PC GPU setup with no environment prompt. pixi always resolves bare tasks
+# against the default env, so shared tasks (build-sim, install-o3de, …) stop being
+# ambiguous. `single-pc-gpu-and-npu` adds the FastFlowLM NPU build on top.
+# TODO: drop the default duplicate if pixi gains a way to alias default to a named env.
+default               = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-gpu"]}
+single-pc-gpu         = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-gpu"]}  # one PC: llama.cpp Vulkan GPU
+single-pc-gpu-and-npu = {features = ["dev", "ros2", "sim", "local-inference", "profile-single-pc", "profile-single-pc-npu"]}  # one PC: GPU + FastFlowLM NPU
+hil       = {features = ["dev", "ros2", "local-inference", "profile-hil"]}            # compute: ROS2 + inference (GPU+NPU)
+sim       = {features = ["dev", "ros2", "sim", "profile-sim"]}                        # O3DE simulation + ROS2
+hmi       = {features = ["dev", "ros2", "profile-hmi"]}                               # operator interface
+dev       = {features = ["dev"], no-default-feature = true}                           # lint/test/format
+inference = {features = ["dev", "local-inference"], no-default-feature = true}        # headless inference host (no ROS2/O3DE)

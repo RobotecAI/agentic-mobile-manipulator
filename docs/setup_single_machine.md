@@ -14,7 +14,7 @@ This repository is compatible with the following system:
 
 ```shell
 cd /home/${USER}
-git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
+git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
 cd agentic-mobile-manipulator
 ```
 
@@ -32,10 +32,6 @@ sudo apt install git git-lfs python3-vcstool ninja-build \
     mesa-common-dev libunwind-dev libzstd-dev tix
 ```
 
-> [!NOTE]
-> ROS 2 Jazzy with dev tools (including `colcon`, `rosdep`) must also be installed.
-> See the [ROS 2 installation guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional).
-
 #### Install pixi
 
 [pixi](https://pixi.sh) orchestrates all build steps and sets environment variables automatically.
@@ -51,29 +47,50 @@ Restart your shell or run `source ~/.bashrc` after installation.
 ### Build Everything
 
 ```shell
-pixi run -e default setup
+pixi run -e single-pc-gpu setup
 ```
 
 This single command runs the full build pipeline in the correct order:
 
-| Step | pixi task      | What it does                                        |
-| ---- | -------------- | --------------------------------------------------- |
-| 1    | `clone`        | `vcs import` + `git lfs pull` for gems and ROS 2 ws |
-| 2    | `install-o3de` | Install the O3DE engine                             |
-| 3    | `fetch-gems`   | Clone o3de-extras locally, validate all gem paths   |
-| 5    | `build-ros2`   | `colcon build` (deps provided by conda/RoboStack)   |
-| 6    | `build-sim`    | CMake configure + Ninja build (GameLauncher)        |
-| 7    | `sync`         | `uv sync` — install Python dependencies             |
+| Step | pixi task        | What it does                                        |
+| ---- | ---------------- | --------------------------------------------------- |
+| 1    | `clone`          | `vcs import` + `git lfs pull` for gems and ROS 2 ws |
+| 2    | `install-o3de`   | Install the O3DE engine                             |
+| 3    | `fetch-gems`     | Clone o3de-extras locally, validate all gem paths   |
+| 4    | `build-ros2`     | `colcon build` (deps provided by conda/RoboStack)   |
+| 5    | `build-sim`      | CMake configure + Ninja build (GameLauncher)        |
+| 6    | `sync`           | `uv sync` installs the Python dependencies          |
+| 7    | `build-llama`    | Build llama.cpp with the Vulkan backend             |
+| 8    | `find-runnables` | List the built runnables (GameLauncher, llama.cpp)  |
 
-#### Local Inference (optional)
+#### Local Inference
 
-If you want to run models locally via llama.cpp instead of cloud APIs:
+Setup already checks out the inference submodules and builds llama.cpp (Vulkan) as
+part of the pipeline above. To serve models locally you still need to download the
+weights:
 
 ```shell
-pixi run -e local clone-inference
-pixi run -e local build-llama # this step is hardware specific. By default, it builds with Vulkan backend. Check for better solutions for your hardware.
-pixi run -e local download-models  # or download the models manually, check the links below
+pixi run -e single-pc-gpu download-models # downloads every weight referenced in config.toml; or grab them manually below
 ```
+
+`config.toml` is the single source of truth for inference: each `[endpoints.*]`
+table fixes a model's backend, port, and weights, and the agents reference those
+endpoints by name. `pixi run inference` launches them all. See
+[Running the demo](running.md#local-inference).
+
+##### NPU backend (AMD Ryzen AI, optional)
+
+To run an endpoint on the NPU instead of the GPU, set its `backend = "npu"` in
+`config.toml` and build FastFlowLM. The [RobotecAI/FastFlowLM](https://github.com/RobotecAI/FastFlowLM)
+fork (pinned as a submodule) includes GBNF grammar-constrained sampling, so the
+NPU path can produce the structured/JSON output the agents rely on:
+
+```shell
+pixi run -e single-pc-gpu build-fastflowlm   # builds FastFlowLM; needs the amdxdna driver + XRT dev stack to serve
+```
+
+The NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see
+`[endpoints.vlm_safety]` in `config.toml`.
 
 ---
 

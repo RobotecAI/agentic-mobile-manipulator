@@ -29,6 +29,8 @@ from pydantic import BaseModel, Field
 from simulation_interfaces.msg import EntityState
 from simulation_interfaces.srv import GetEntitiesStates
 
+from rai_app.initialization.structured import vlm_structured
+
 
 class VisionObservation(BaseModel):
     """Intermediate vision-only description before retrieval."""
@@ -340,6 +342,8 @@ def create_image_regulation_agent(
     vector_store,
     reranker_url,
     k: int = 10,
+    vlm_backend: str | None = None,
+    llm_backend: str | None = None,
 ) -> Runnable[ImageRegAgentState, ImageRegAgentState]:
     """Create a 3-stage agent for image safety compliance assessment.
 
@@ -350,12 +354,10 @@ def create_image_regulation_agent(
     if vector_store is None:
         raise ValueError("vector_store is required for retrieval stage")
 
-    vision_model = vlm.with_structured_output(
-        schema=VisionObservation, include_raw=True
-    )
+    vision_model = vlm_structured(vlm, VisionObservation, vlm_backend, include_raw=True)
 
-    final_llm = llm.with_structured_output(
-        schema=FinalImageSafetyOutput, include_raw=True
+    final_llm = vlm_structured(
+        llm, FinalImageSafetyOutput, llm_backend, include_raw=True
     )
 
     graph = StateGraph(ImageRegAgentState)

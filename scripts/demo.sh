@@ -8,6 +8,17 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
+# Each component runs in its own tmux session (created by its `pixi run` task).
+# AMM_NO_ATTACH tells those launchers to start the session detached and return
+# instead of attaching, so this script can drive them in sequence.
+export AMM_NO_ATTACH=1
+SIM_SESSION="agentic-mobile-manipulator-sim"
+STACK_SESSION="agentic-mobile-manipulator-stack"
+INF_SESSION="agentic-mobile-manipulator-llm-servers"
+AGENTS_SESSION="agentic-mobile-manipulator-agents"
+HMI_SESSION="agentic-mobile-manipulator-hmi"
+ALL_SESSIONS=("$SIM_SESSION" "$STACK_SESSION" "$INF_SESSION" "$AGENTS_SESSION" "$HMI_SESSION")
+
 log()     { echo -e "  ${GREEN}●${RESET} $*"; }
 warn()    { echo -e "  ${YELLOW}!${RESET} $*"; }
 err()     { echo -e "  ${RED}✗${RESET} $*" >&2; }
@@ -37,23 +48,19 @@ check_inference() {
         return 0
     else
         echo ""
-        warn "Inference servers not healthy. Inspect with: pixi run serve-all"
+        warn "Inference servers not healthy. Inspect with: pixi run inference"
         return 1
     fi
 }
 
-stop_all() {
-    for s in simulation inference agent; do
-        tmux kill-session -t "$s" 2>/dev/null || true
-    done
-}
+stop_all() { bash "$DEMO_ROOT/scripts/kill_sessions.sh"; }
 
 # ── Guard ─────────────────────────────────────────────────────────────────────
 
-for s in simulation inference agent; do
+for s in "${ALL_SESSIONS[@]}"; do
     if tmux has-session -t "$s" 2>/dev/null; then
         warn "Session '$s' already exists."
-        warn "Run 'pixi run demo-stop' first, or attach with: tmux attach -t $s"
+        warn "Run 'pixi run kill' first, or attach with: tmux attach -t $s"
         exit 1
     fi
 done
@@ -63,56 +70,37 @@ trap 'echo; warn "Interrupted — cleaning up..."; stop_all; exit 1' INT TERM QU
 # ── 1. Simulation ─────────────────────────────────────────────────────────────
 
 section "Starting simulation..."
-
-# Create the session with a named first window so we don't rely on window index numbers
-tmux new-session -d -s simulation -n "sim+ros2" -x 220 -y 50
-SIM_TOP_PANE=$(tmux display-message -p -t simulation:sim+ros2 "#{pane_id}")
-SIM_BOTTOM_PANE=$(tmux split-window -v -P -F "#{pane_id}" -t "$SIM_TOP_PANE")
-
-# Send commands to the panes using pane IDs so pane-base-index does not matter
-tmux send-keys -t "$SIM_TOP_PANE" "cd $DEMO_ROOT && pixi run sim" Enter
-log "O3DE launched  (simulation — top pane)"
-
+pixi run sim
+log "O3DE launched  ($SIM_SESSION)"
 wait_topic "/clock" 120 || { stop_all; exit 1; }
 
 # ── 2. ROS 2 Stack ────────────────────────────────────────────────────────────
 
 section "Starting ROS 2 stack..."
-
-tmux send-keys -t "$SIM_BOTTOM_PANE" "cd $DEMO_ROOT && pixi run ros2" Enter
-log "ROS 2 stack launched  (simulation — bottom pane)"
-
+pixi run stack
+log "ROS 2 stack launched  ($STACK_SESSION)"
 wait_topic "/joint_states" 60 || { stop_all; exit 1; }
 
 # ── 3. Inference servers ──────────────────────────────────────────────────────
 
 section "Starting inference servers..."
-
-# Create inference session with a named window
-tmux new-session -d -s inference -n models -x 220 -y 50
-INF_TOP_LEFT=$(tmux display-message -p -t inference:models "#{pane_id}")
-INF_TOP_RIGHT=$(tmux split-window -h -P -F "#{pane_id}" -t "$INF_TOP_LEFT")
-INF_BOTTOM_LEFT=$(tmux split-window -v -P -F "#{pane_id}" -t "$INF_TOP_LEFT")
-INF_BOTTOM_RIGHT=$(tmux split-window -v -P -F "#{pane_id}" -t "$INF_TOP_RIGHT")
-tmux select-layout -t inference:models tiled
-
-# Target panes by pane ID so the script works with any pane-base-index setting
-tmux send-keys -t "$INF_TOP_LEFT" "cd $DEMO_ROOT && pixi run serve-llm"       Enter
-tmux send-keys -t "$INF_TOP_RIGHT" "cd $DEMO_ROOT && pixi run serve-embedding"  Enter
-tmux send-keys -t "$INF_BOTTOM_LEFT" "cd $DEMO_ROOT && pixi run serve-vlm"     Enter
-tmux send-keys -t "$INF_BOTTOM_RIGHT" "cd $DEMO_ROOT && pixi run serve-reranker" Enter
-log "Inference session created  (inference — 2×2 grid)"
-
+# One pane per local endpoint (config.toml SSOT). Both VLMs run:
+# vlm_safety (npu) and vlm_inspection (gpu).
+pixi run inference
+log "Inference servers launched  ($INF_SESSION)"
 check_inference || { stop_all; exit 1; }
 
-# ── 4. Orchestrator ───────────────────────────────────────────────────────────
+# ── 4. Agents + Orchestrator ──────────────────────────────────────────────────
 
-section "Starting orchestrator..."
+section "Starting agents + orchestrator..."
+pixi run agents
+log "Agents + orchestrator launched  ($AGENTS_SESSION)"
 
-# Create agent session with a named window so we don't rely on index 0
-tmux new-session -d -s agent -n orchestrator -x 220 -y 50
-tmux send-keys -t agent:orchestrator "cd $DEMO_ROOT && pixi run orchestrator" Enter
-log "Orchestrator launched  (agent)"
+# ── 5. HMI ────────────────────────────────────────────────────────────────────
+
+section "Starting HMI..."
+pixi run hmi
+log "HMI launched  ($HMI_SESSION)"
 
 # ── Final health check ───────────────────────────────────────────────────────
 
@@ -121,7 +109,7 @@ sleep 10
 
 failed=false
 
-for s in simulation inference agent; do
+for s in "${ALL_SESSIONS[@]}"; do
     if tmux has-session -t "$s" 2>/dev/null; then
         ok "Session '$s' is running"
     else
@@ -130,16 +118,15 @@ for s in simulation inference agent; do
     fi
 done
 
-for port in 8080 8081 8082 8083; do
-    code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 2 \
-           "http://localhost:$port/health" 2>/dev/null || echo "000")
+while read -r url; do
+    code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 2 "$url" 2>/dev/null || echo "000")
     if [ "$code" = "200" ]; then
-        ok "Inference port $port — OK"
+        ok "Inference $url — OK"
     else
-        err "Inference port $port — not responding (HTTP $code)"
+        err "Inference $url — not responding (HTTP $code)"
         failed=true
     fi
-done
+done < <(python -m rai_app.inference.serve --health 2>/dev/null)
 
 for topic in /clock /joint_states; do
     if ros2 topic list 2>/dev/null | grep -q "^${topic}$"; then
@@ -163,9 +150,28 @@ fi
 echo ""
 echo -e "${BOLD}${GREEN}=== Demo running ===${RESET}"
 echo ""
-echo -e "  ${CYAN}tmux attach -t simulation${RESET}   — O3DE sim (top) + ROS 2 stack (bottom)"
-echo -e "  ${CYAN}tmux attach -t inference${RESET}    — 4 inference servers (2×2 grid)"
-echo -e "  ${CYAN}tmux attach -t agent${RESET}        — orchestrator"
+echo -e "  ${CYAN}tmux attach -t $SIM_SESSION${RESET}      — O3DE simulation"
+echo -e "  ${CYAN}tmux attach -t $STACK_SESSION${RESET}    — ROS 2 stack"
+echo -e "  ${CYAN}tmux attach -t $INF_SESSION${RESET} — inference servers (one pane each)"
+echo -e "  ${CYAN}tmux attach -t $AGENTS_SESSION${RESET}   — agents + orchestrator (one pane each)"
+echo -e "  ${CYAN}tmux attach -t $HMI_SESSION${RESET}      — HMI"
 echo ""
-echo -e "  Stop everything:  ${YELLOW}pixi run demo-stop${RESET}"
+echo -e "  Stop everything:  ${YELLOW}pixi run kill${RESET}"
 echo ""
+
+# When run as a container's PID 1 (AMM_KEEP_ALIVE=1), don't return: exiting lets
+# the container stop and take the tmux sessions with it. Locally the var is unset
+# and the script returns, leaving the sessions in the background.
+# With a TTY (docker compose run) attach to tmux so PID 1 is a live client you can
+# debug in — prefix+s switches between all sessions, prefix+d detaches and stops
+# the demo. Without a TTY (detached compose up / CI) attach would exit instantly,
+# so just block until the HMI session goes away.
+if [ -n "${AMM_KEEP_ALIVE:-}" ]; then
+    if [ -t 0 ]; then
+        log "Attaching to tmux — prefix+s to switch sessions, prefix+d detaches (stops the demo)."
+        exec tmux attach -t "$HMI_SESSION"
+    fi
+    log "AMM_KEEP_ALIVE set — holding until the HMI session exits (Ctrl-C / 'pixi run kill' to stop)."
+    while tmux has-session -t "$HMI_SESSION" 2>/dev/null; do sleep 5; done
+    warn "HMI session gone — exiting."
+fi

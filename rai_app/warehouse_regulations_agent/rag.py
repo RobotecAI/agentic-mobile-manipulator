@@ -27,6 +27,7 @@ from rai.messages import HumanMultimodalMessage, preprocess_image
 from rai_app.initialization.llms import (
     get_embeddings_model,
     get_reranker_model_url,
+    get_vlm_backend,
     get_vlm_model,
 )
 from rai_app.warehouse_regulations_agent.warehouse_safety_agent import (
@@ -99,6 +100,8 @@ def run_agent(
         vector_store=vector_store,
         reranker_url=reranker_url,
         k=k,
+        vlm_backend=get_vlm_backend("safety_agent"),
+        llm_backend=get_vlm_backend("safety_agent"),
     )
 
     state = dict()

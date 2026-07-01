@@ -1,20 +1,29 @@
-FROM ros:jazzy-ros-core
+# RoboStack ships the entire ROS 2 Jazzy runtime through pixi, so the base is
+# plain Ubuntu — NOT ros:jazzy-ros-core. Mixing apt ROS (/opt/ros) with conda
+# RoboStack is exactly what scripts/check_env.sh forbids; an Ubuntu base keeps the
+# container a pure-pixi environment, identical to a native checkout.
+FROM ubuntu:24.04
 
-RUN apt update && apt install -y --no-install-recommends \
-    curl \
-    python3-vcstool \
-    git \
-    git-lfs \
-    ninja-build \
-    ros-dev-tools \
-    lsb-release \
-    wget \
-    gnupg
+# colcon/ROS want a UTF-8 locale; C.UTF-8 ships with glibc (no `locales` package).
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive
 
-RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
-RUN apt update
-RUN apt install -y libgz-math7-dev
+# Only host-level tooling pixi can't bootstrap itself: the pixi installer plus
+# git/LFS for `vcs import` and submodules. Compilers, colcon, vcstool, cmake and
+# ninja all come from the conda env (see pixi.toml). gz-math is the one system
+# build dep some ros2_ws source packages link against, from the OSRF apt repo.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        wget \
+        git \
+        git-lfs \
+        gnupg \
+        lsb-release \
+ && wget -qO /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg https://packages.osrfoundation.org/gazebo.gpg \
+ && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list \
+ && apt-get update && apt-get install -y --no-install-recommends \
+        libgz-math7-dev \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -fsSL https://pixi.sh/install.sh | PIXI_HOME=/usr/local bash
 

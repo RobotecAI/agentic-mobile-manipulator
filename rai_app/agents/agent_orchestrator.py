@@ -65,7 +65,7 @@ from rai_app.config.prompts import (
 )
 from rai_app.control.kairos_controller import KairosController
 from rai_app.environment import SceneManager
-from rai_app.initialization.llms import get_llm_model, get_vlm_model
+from rai_app.initialization.llms import get_llm_model, get_vlm_backend, get_vlm_model
 from scripts.populate_scene import load_rack_assignment
 
 TOPICS_TO_WAIT_FOR: list[str] = ["/wrist_camera/camera_image_color"]
@@ -503,6 +503,7 @@ def main():
         connector=connector,
         namespace_value="",
         vlm=condition_vlm,
+        vlm_backend=get_vlm_backend(config_name="condition_agent"),
     )
     throw_trash_out_tool = ThrowTrashOutTool(
         connector=connector,

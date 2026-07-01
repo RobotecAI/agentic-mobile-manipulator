@@ -15,29 +15,38 @@ pixi run sim
 ### ROS 2
 
 ```shell
-pixi run ros2
+pixi run stack
 ```
 
 ### Inference
 
+Endpoints (model, backend, port, weights) are declared once in `config.toml`
+under `[endpoints.*]`. Launch them all from that SSOT, or one at a time by name:
+
 ```shell
-pixi run -e hil-local serve-llm        # GPT-OSS-20B       → port 8080
-pixi run -e hil-local serve-vlm        # LFM2-VL-3B        → port 8081
-pixi run -e hil-local serve-embedding  # Qwen3-Embedding   → port 8082
-pixi run -e hil-local serve-reranker   # Qwen3-Reranker    → port 8083
+pixi run -e hil inference        # all local endpoints (tmux grid)
+
+pixi run -e hil serve-llm        # endpoints.main_llm   → port 8080
+pixi run -e hil serve-vlm-safety       # endpoints.vlm_safety     → port 8081 (NPU)
+pixi run -e hil serve-vlm-inspection   # endpoints.vlm_inspection → port 8084 (GPU)
+pixi run -e hil serve-embedding  # endpoints.embeddings → port 8082
+pixi run -e hil serve-reranker   # endpoints.reranker   → port 8083
 ```
 
-Models default to `$DEMO_ROOT/models/<filename>`. Override with env vars if your models are elsewhere:
+To use different weights, backend, or ports, edit the endpoint in `config.toml`
+(`model_path`, `backend`, `port`, …). Preview without launching:
+`pixi run -e hil inference --print`.
+
+### Agents
 
 ```shell
-LLM_MODEL=/path/to/model.gguf pixi run -e hil-local serve-llm
-VLM_MODEL=/path/to/vlm.gguf VLM_MMPROJ=/path/to/mmproj.gguf pixi run -e hil-local serve-vlm
+pixi run agents
 ```
 
 ### Agent Orchestrator
 
 ```shell
-pixi run orchestrator
+pixi run orchestrator-agent
 ```
 
 ## HMI Machine
@@ -48,9 +57,9 @@ pixi run hmi
 
 ---
 
-## Individual ROS 2 Components
+## Individual Agents
 
-Use these when you want to run components separately instead of `pixi run ros2`:
+Use these when you want to run an agent separately instead of `pixi run agents`:
 
 ```shell
 pixi run nav2-agent
@@ -65,6 +74,6 @@ pixi run safety-agent
 These are only required when running the safety agent with RAG. See `docs/safety_agent_with_rag.md`.
 
 ```shell
-pixi run -e hil-local serve-embedding
-pixi run -e hil-local serve-reranker
+pixi run -e hil serve-embedding
+pixi run -e hil serve-reranker
 ```

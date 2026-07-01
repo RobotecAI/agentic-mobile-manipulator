@@ -1,7 +1,6 @@
 gems/
 engine/
 external/
-inference/
 ros2_ws/install
 ros2_ws/build
 ros2_ws/src/packages
@@ -23,3 +22,4 @@ package_condition_images/
 models/
 *.bak0
 sim/user/
+backtrace.log
