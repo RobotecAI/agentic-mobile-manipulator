@@ -14,7 +14,7 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: self-hosted
+    runs-on: [self-hosted, cpu, heavy, gpu]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
   # steps physics, and publishes over ROS 2. See scripts/sim_smoke.sh.
   smoke-test:
     needs: build-and-push
-    runs-on: self-hosted
+    runs-on: [self-hosted, cpu, heavy, gpu]
     steps:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
