@@ -46,6 +46,7 @@ The main agent class that orchestrates the inspection process.
 | `--camera-topic`       | `/rgbd_camera/camera_image_color`  | ROS2 camera topic                       |
 | `--ego-source-frame`   | `egobase_footprint`                | Robot base frame                        |
 | `--ego-target-frame`   | `odom`                             | Target coordinate frame                 |
+| `--no-images-saving`   | off                                | Don't save anomaly images to disk       |
 | `--anomaly-images-dir` | `./anomaly_images`                 | Directory to save anomaly images        |
 | `--anomalies-topic`    | `/inspection_result`               | ROS2 topic for anomaly reports          |
 | `--n-seconds`          | `5`                                | Minimum interval between VLM processing |
@@ -64,7 +65,7 @@ The main agent class that orchestrates the inspection process.
 | Topic                | Message Type                         | Description                                              |
 | -------------------- | ------------------------------------ | -------------------------------------------------------- |
 | `/inspection_result` | `robotec_kairos_ur10/msg/Anomaly`    | Anomaly detection results                                |
-| `/marker`            | `visualization_msgs/msg/MarkerArray` | Optional debug markers for RViz2 enabled using `--debug` |
+| `/marker`            | `visualization_msgs/msg/MarkerArray` | Debug markers for RViz2, published by default            |
 | `/vlm_topic`         | `demo_msgs/msg/VlmDescription`       | Visual descriptions for HMI                              |
 
 ### Message Types
@@ -106,8 +107,10 @@ class AnomalyDescription(BaseModel):
 
 ### Debug Mode
 
-Enable debug mode to see additional logging and visualization:
+Debug logging and RViz2 markers are on by default (`debug=True` in the
+`VlmWarehouseInspector` constructor). There is no CLI flag for this; construct the
+inspector with `debug=False` to turn it off:
 
 ```python
-inspector = VlmWarehouseInspector(debug=True, ...)
+inspector = VlmWarehouseInspector(debug=False, ...)
 ```

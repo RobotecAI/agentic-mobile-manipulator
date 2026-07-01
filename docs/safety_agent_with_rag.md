@@ -83,7 +83,7 @@ The default ranges focus on warehouse safety-relevant regulations:
 ### Step 3: Build Vector Database
 
 ```bash
-uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed_regulations --out regulations_db
+uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed_regulations --output regulations_db
 ```
 
 **Build Script Options:**
@@ -128,7 +128,7 @@ uv run rai_app/warehouse_regulations_agent/scrapper.py --output regulations
 uv run rai_app/warehouse_regulations_agent/process_regulations.py --source regulations --dest processed_regulations --ranges "1-40,66-68,132-140,155-165,176,212,335"
 
 # Step 3: Build the vector database
-uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed_regulations --out regulations_db
+uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed_regulations --output regulations_db
 
 # Step 4: (Optional) Test the performance of the Warehouse Safety Agent
 uv run rai_app/warehouse_regulations_agent/rag.py --vector-db regulations_db --images-dir images
