@@ -28,15 +28,14 @@
 services:
   # ── Base: RoboStack ROS 2 + built workspace ────────────────────────────────
   ros2:
-    # AMM_IMG_SUFFIX lets CI publish per-branch tags (e.g. -development); empty locally.
-    image: robotecai/agentic-mobile-manipulator-ros2${AMM_IMG_SUFFIX:-}:latest
+    image: robotecai/agentic-mobile-manipulator-ros2:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile.ros2
 
   # ── Base: + O3DE SDK and built simulation ──────────────────────────────────
   o3de:
-    image: robotecai/agentic-mobile-manipulator-o3de${AMM_IMG_SUFFIX:-}:latest
+    image: robotecai/agentic-mobile-manipulator-o3de:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile.o3de
@@ -45,7 +44,7 @@ services:
 
   # ── The demo: + agents, local inference engines; runs the whole stack ───────
   demo:
-    image: robotecai/agentic-mobile-manipulator${AMM_IMG_SUFFIX:-}:latest
+    image: robotecai/agentic-mobile-manipulator:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile.demo
@@ -69,7 +68,6 @@ services:
       - /dev/kfd:/dev/kfd            # AMD GPU compute (ROCm)
       - /dev/dri:/dev/dri            # AMD GPU render (Vulkan)
       - /dev/accel/accel0:/dev/accel/accel0  # Ryzen AI NPU (amdxdna)
-    # The NPU pins memory; without unlimited memlock FastFlowLM fails to allocate.
     ulimits:
       memlock:
         soft: -1
@@ -78,10 +76,5 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ../config.toml:/root/MobileManipulatorDemo/config.toml
-      # All weights live under the repo's models/: llama ggufs in models/, NPU
-      # models in models/flm (FLM_MODEL_PATH below). `pixi run download-models`
-      # fetches both. No host-home (~/.config/flm) coupling.
       - ../models:/root/MobileManipulatorDemo/models
-    # Single host: ROS 2 DDS + every inference endpoint talk over localhost, and
-    # host networking lets RViz/ros2 on the host introspect the running demo.
     network_mode: host

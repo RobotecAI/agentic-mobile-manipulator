@@ -5,14 +5,8 @@ on:
     branches:
       - main
       - development
-  # TEMP (testing): run on every PR commit. Remove before merge.
   pull_request:
   workflow_dispatch:
-
-# Development builds get a -development image suffix so they never clobber main's
-# :latest. Empty on every other branch. Consumed by docker/compose.yaml image names.
-env:
-  SUFFIX: ${{ github.ref_name == 'development' && '-development' || '' }}
 
 jobs:
   build-and-push:
@@ -27,9 +21,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Build the ros2 -> o3de chain straight from docker/compose.yaml (the same
-      # graph devs build locally, via additional_contexts). Scoped to these two:
-      # `demo` is the heavy GPU+NPU single-PC image, not published here.
       - name: Build and push base images (ros2, o3de)
         env:
           AMM_IMG_SUFFIX: ${{ env.SUFFIX }}
@@ -37,9 +28,6 @@ jobs:
           docker compose -f docker/compose.yaml build ros2 o3de
           docker compose -f docker/compose.yaml push ros2 o3de
 
-  # Headless sim liveness gate. Boots O3DE with the null renderer (no GPU/display)
-  # and passes iff /clock ticks — proves the image actually boots, loads the level,
-  # steps physics, and publishes over ROS 2. See scripts/sim_smoke.sh.
   smoke-test:
     needs: build-and-push
     runs-on: [self-hosted, cpu, heavy, gpu]
@@ -52,6 +40,6 @@ jobs:
 
       - name: Headless sim smoke test (/clock)
         run: |
-          IMAGE="robotecai/agentic-mobile-manipulator-o3de${SUFFIX}:latest"
+          IMAGE="robotecai/agentic-mobile-manipulator-o3de:latest"
           docker pull "$IMAGE"
           docker run --rm --entrypoint pixi "$IMAGE" run sim-smoke
