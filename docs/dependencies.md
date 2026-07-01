@@ -46,13 +46,23 @@
 
 ## Inference
 
-| Inference Engine | Repository URL                            |
-| ---------------- | ----------------------------------------- |
-| llama.cpp        | https://github.com/ggml-org/llama.cpp.git |
+| Inference Engine | Backend          | Repository URL                              |
+| ---------------- | ---------------- | ------------------------------------------- |
+| llama.cpp        | GPU (Vulkan)/CPU | https://github.com/ggml-org/llama.cpp.git   |
+| FastFlowLM       | AMD Ryzen AI NPU | https://github.com/RobotecAI/FastFlowLM.git |
 
 ## Models
 
-| Model name  | Type | Repository URL                            |
-| ----------- | ---- | ----------------------------------------- |
-| LFM2-VL     | VLM  | https://www.liquid.ai/                    |
-| gpt-oss-20b | LLM  | https://huggingface.co/openai/gpt-oss-20b |
+`config.toml` is the single source of truth for which models are served, on which
+backend, and from which weights. The endpoints it defines today:
+
+| Model name           | Type      | Backend          | Source                                           |
+| -------------------- | --------- | ---------------- | ------------------------------------------------ |
+| gpt-oss-20b          | LLM       | GPU (llama.cpp)  | https://huggingface.co/openai/gpt-oss-20b        |
+| LFM2-VL-3B           | VLM       | GPU (llama.cpp)  | https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF  |
+| gemma3:4b            | VLM       | NPU (FastFlowLM) | https://huggingface.co/google/gemma-3-4b-it      |
+| Qwen3-Embedding-0.6B | Embedding | GPU (llama.cpp)  | https://huggingface.co/Qwen/Qwen3-Embedding-0.6B |
+| Qwen3-Reranker-0.6B  | Reranker  | GPU (llama.cpp)  | https://huggingface.co/Qwen/Qwen3-Reranker-0.6B  |
+
+LFM2-VL-3B serves the inspection, general, megamind, and condition agents; gemma3:4b
+serves the safety agent on the NPU.

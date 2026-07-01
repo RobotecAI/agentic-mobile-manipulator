@@ -2,13 +2,10 @@
 
 Run the full **Mobile Manipulator Demo** — simulation, ROS 2 stack, local inference, agents, and HMI — in a single container, with all models served locally on an AMD GPU + AMD Ryzen™ AI NPU.
 
-> [!IMPORTANT]
-> This is the **`single-pc-gpu-and-npu`** setup: inference runs locally — llama.cpp (Vulkan) on the GPU and FastFlowLM on the NPU. No NPU? See [GPU-only build](#gpu-only-build). For the native (non-Docker) setup, see the [Setup Guide](./setup.md).
-
 ## Prerequisites
 
 - **AMD GPU** (ROCm/Vulkan) **and AMD Ryzen™ AI NPU** for the default build.
-- The host's **amdxdna** driver loaded, so the NPU device exists — check with `ls /dev/accel/accel0`.
+- The host's **amdxdna** driver loaded: check with `ls /dev/accel/accel0`.
 - [Docker Engine](https://docs.docker.com/engine/install/) + [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites).
 - A running X server (the O3DE simulation and HMI open windows on your display).
 - ~60 GB free disk for the image, plus room under `models/` for the weights.
@@ -30,7 +27,7 @@ This builds three cacheable layers — `…-ros2` (RoboStack ROS 2 + workspace) 
 
 ## 3. Download the model weights
 
-Weights are **not** baked into the image — they live in the repo's `models/` directory, bind-mounted at run time. `config.toml` is the single source of truth for which models are fetched. Pull them once into `models/`:
+Weights are **not** baked into the image. They are downloaded into the repo's `models/` directory, bind-mounted at run time. `config.toml` is the single source of truth for which models are fetched. Pull them once into `models/` by running:
 
 ```bash
 docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run download-models
@@ -50,11 +47,6 @@ xhost +local:root
 docker compose -f docker/compose.yaml up demo
 ```
 
-> [!NOTE]
-> Start `demo` explicitly — **not** a bare `docker compose up`. `ros2` and `o3de` are build-only base images, not services meant to run.
-
-The container's entrypoint is `pixi run demo`, which brings the whole stack up inside the container, each component in its own tmux session: **simulation → ROS 2 stack → inference servers → agents → HMI**.
-
 ## What to expect
 
 ![Demo Windows](demo_windows.jpg)
@@ -72,15 +64,13 @@ docker exec -it $(docker ps -qf ancestor=robotecai/mobile-manipulator-demo:lates
   tmux attach -t agentic-mobile-manipulator-sim
 ```
 
-Swap the session for any of `-sim`, `-stack`, `-llm-servers`, `-agents`, `-hmi` (all prefixed `agentic-mobile-manipulator-`). Inside tmux, `Ctrl-b s` lists/switches sessions and `Ctrl-b d` detaches — the demo keeps running.
+Swap the session for any of `-sim`, `-stack`, `-llm-servers`, `-agents`, `-hmi` (all prefixed `agentic-mobile-manipulator-`). Inside tmux, `Ctrl-b s` lists/switches sessions and `Ctrl-b d` detaches.
 
 ## Stopping
 
 ```bash
 docker compose -f docker/compose.yaml down
 ```
-
-(or `Ctrl-C` in the `up` terminal). To stop the inner tmux sessions without removing the container, run `pixi run kill` inside it.
 
 ## GPU-only build
 

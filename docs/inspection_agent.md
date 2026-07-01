@@ -10,8 +10,10 @@ It continuously monitors camera feed to identify objects that are not probable i
 ## Usage
 
 ```bash
-uv run python rai_app/agents/inspection_agent.py
+pixi run inspection-agent
 ```
+
+This wraps `uv run python rai_app/agents/inspection_agent.py`, so you can run that directly if you need to pass extra flags.
 
 ## Architecture
 
@@ -63,7 +65,7 @@ The main agent class that orchestrates the inspection process.
 | -------------------- | ------------------------------------ | -------------------------------------------------------- |
 | `/inspection_result` | `robotec_kairos_ur10/msg/Anomaly`    | Anomaly detection results                                |
 | `/marker`            | `visualization_msgs/msg/MarkerArray` | Optional debug markers for RViz2 enabled using `--debug` |
-| `vlm_description`    | `demo_msgs/msg/VlmDescription`       | Visual descriptions for HMI                              |
+| `/vlm_topic`         | `demo_msgs/msg/VlmDescription`       | Visual descriptions for HMI                              |
 
 ### Message Types
 
@@ -72,18 +74,20 @@ The main agent class that orchestrates the inspection process.
 ```python
 class Anomaly:
     pose: geometry_msgs.msg.Pose          # Object location
-    obstacle_type: str                    # "box" or "trash"
+    obstacle_type: str                    # "box", "trash", or "other"
     anomaly_description: str              # Human-readable description
     filename: str                         # Saved image filename (optional)
 ```
 
 #### AnomalyDescription (VLM Output)
 
+The VLM returns this structured output. There is no separate detected flag: an
+`obstacle_type` of `"nothing"` means the VLM saw no anomaly.
+
 ```python
 class AnomalyDescription(BaseModel):
-    anomaly_detected: bool                # True if obstacle detected
-    obstacle_type: Literal["box", "trash"] # Object classification
-    anomaly_description: str              # Description (max 20 chars)
+    obstacle_type: Literal["box", "trash", "nothing", "other"]  # Object classification
+    anomaly_description: str              # Description, max 20 chars, empty if no obstacle
 ```
 
 ## Troubleshooting

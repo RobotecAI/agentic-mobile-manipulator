@@ -3,7 +3,7 @@
 This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
-- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Real-Time-Kernel-Tuning-Guide.html)
+- ROS 2: Jazzy, provided by pixi via RoboStack (no separate ROS 2 install needed)
 - Python: 3.12
 
 ## Building the Project
@@ -13,7 +13,7 @@ This repository is compatible with the following system:
 #### Clone the Repository
 
 ```shell
-git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
+git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
 cd agentic-mobile-manipulator
 ```
 
@@ -23,10 +23,6 @@ cd agentic-mobile-manipulator
 sudo apt update
 sudo apt install git git-lfs python3-vcstool
 ```
-
-> [!NOTE]
-> ROS 2 Jazzy with dev tools (including `colcon`, `rosdep`) must also be installed.
-> See the [ROS 2 installation guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional).
 
 #### Install pixi
 
@@ -46,44 +42,39 @@ Restart your shell or run `source ~/.bashrc` after installation.
 pixi run -e hil setup
 ```
 
-This runs:
+This runs, in order:
 
-| Step | pixi task       | What it does                            |
-| ---- | --------------- | --------------------------------------- |
-| 1    | `clone-ros2-ws` | `vcs import` for ROS 2 workspace        |
-| 2    | `rosdep-update` | `rosdep update` — refresh package index |
-| 3    | `build-ros2`    | `rosdep install` + `colcon build`       |
-| 4    | `sync`          | `uv sync` — install Python dependencies |
+| Step | pixi task         | What it does                                                     |
+| ---- | ----------------- | --------------------------------------------------------------- |
+| 1    | `clone-ros2-ws`   | `vcs import` clones the ROS 2 workspace repositories            |
+| 2    | `init-submodules` | Check out the pinned llama.cpp and FastFlowLM submodules        |
+| 3    | `build-ros2`      | `colcon build` (dependencies come from conda/RoboStack, no rosdep) |
+| 4    | `sync`            | `uv sync` installs the Python dependencies                      |
+| 5    | `build-llama`     | Build llama.cpp with the Vulkan backend                         |
 
 ---
 
-## Setting Up llama.cpp (optional)
+## Rebuilding llama.cpp
 
-llama.cpp is used as the default local GenAI inference engine. Skip this section if using a cloud API.
+`pixi run -e hil setup` already builds llama.cpp with the Vulkan backend as its last step, so you normally don't run anything here. Use this section only to install the Vulkan SDK by hand or to rebuild llama.cpp on its own.
 
-### Prerequisites
+### Vulkan SDK
 
-Install Vulkan SDK: [link](https://vulkan.lunarg.com/doc/sdk/1.4.321.1/linux/getting_started.html)
+The llama.cpp build uses the Vulkan backend. Install the Vulkan SDK: [link](https://vulkan.lunarg.com/doc/sdk/1.4.321.1/linux/getting_started.html)
 
-Verify Vulkan SDK is installed:
+Verify it:
 
 ```shell
 vulkaninfo
 ```
 
-### Build llama.cpp
+### Build llama.cpp on its own
 
 ```shell
 pixi run -e hil build-llama
 ```
 
-This clones llama.cpp and builds it with Vulkan backend.
-
-Or, to run the full HIL setup including llama.cpp in one command:
-
-```shell
-pixi run -e hil setup
-```
+This checks out the llama.cpp submodule if needed and builds it with the Vulkan backend.
 
 ### Download Models
 

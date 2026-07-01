@@ -3,7 +3,7 @@
 This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
-- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
+- ROS 2: Jazzy, provided by pixi via RoboStack (no separate ROS 2 install needed)
 - Python: 3.12
 
 ## Building the Project
@@ -13,7 +13,7 @@ This repository is compatible with the following system:
 #### Clone the Repository
 
 ```shell
-git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
+git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
 cd agentic-mobile-manipulator
 ```
 
@@ -28,10 +28,6 @@ sudo apt install git git-lfs python3-vcstool ninja-build \
     libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev \
     mesa-common-dev libunwind-dev libzstd-dev tix
 ```
-
-> [!NOTE]
-> ROS 2 Jazzy with dev tools (including `colcon`, `rosdep`) must also be installed.
-> See the [ROS 2 installation guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional).
 
 #### Install pixi
 
