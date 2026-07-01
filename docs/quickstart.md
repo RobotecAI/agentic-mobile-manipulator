@@ -60,7 +60,7 @@ docker compose -f docker/compose.yaml up demo
 Each component runs in its own tmux session inside the container. Attach to one (e.g. the simulation) from the host:
 
 ```bash
-docker exec -it $(docker ps -qf ancestor=robotecai/mobile-manipulator-demo:latest) \
+docker exec -it $(docker ps -qf ancestor=robotecai/agentic-mobile-manipulator:latest) \
   tmux attach -t agentic-mobile-manipulator-sim
 ```
 
