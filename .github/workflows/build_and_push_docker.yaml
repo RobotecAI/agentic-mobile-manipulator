@@ -8,6 +8,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-push:
     runs-on: [self-hosted, cpu, heavy, gpu]
@@ -43,3 +47,4 @@ jobs:
           IMAGE="robotecai/agentic-mobile-manipulator-o3de:latest"
           docker pull "$IMAGE"
           docker run --rm --entrypoint pixi "$IMAGE" run sim-smoke
+     
