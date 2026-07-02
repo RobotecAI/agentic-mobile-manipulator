@@ -17,13 +17,23 @@ git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
 cd agentic-mobile-manipulator
 ```
 
-## 2. Build the image
+## 2. Get the image: build _or_ pull
+
+**Build locally:**
 
 ```bash
 docker compose -f docker/compose.yaml build
 ```
 
 This builds three cacheable layers — `…-ros2` (RoboStack ROS 2 + workspace) → `…-o3de` (O3DE SDK + simulation) → `…demo` (Python agents + llama.cpp + FastFlowLM). The O3DE layer is large, so the first build takes a while; later rebuilds reuse the cached bases.
+
+**Or pull the prebuilt images:**
+
+```bash
+docker compose -f docker/compose.yaml pull
+```
+
+If you pull, remember to pass `--no-build` when starting the demo (see step 4).
 
 ## 3. Download the model weights
 
@@ -44,8 +54,11 @@ Allow local connections to your X server, then start the `demo` service:
 
 ```bash
 xhost +local:root
-docker compose -f docker/compose.yaml up demo
+docker compose -f docker/compose.yaml up demo          # if you built (step 2)
+docker compose -f docker/compose.yaml up --no-build demo   # if you pulled (step 2)
 ```
+
+> [!IMPORTANT] > `docker compose up` rebuilds any service that has a `build:` section — even when the image is already present locally. So after `pull`, a bare `up demo` ignores the pulled image and rebuilds `ros2 → o3de → demo`. Pass `--no-build` to run the pulled image as-is.
 
 ## What to expect
 
