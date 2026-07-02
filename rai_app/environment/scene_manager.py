@@ -33,11 +33,14 @@ from rai.communication.ros2 import (
 )
 from rosidl_runtime_py.convert import message_to_ordereddict
 from simulation_interfaces.msg import EntityState
+from simulation_interfaces.msg import SpawnEntity as SpawnEntityMsg
 from simulation_interfaces.srv import (
     GetEntities,
     GetEntityState,
     SetEntityState,
+    SpawnEntities,
     SpawnEntity,
+    SpawnEntity_Request,
 )
 from tf2_geometry_msgs import do_transform_pose
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
@@ -192,12 +195,8 @@ class SceneManager:
                 "Slots and object names must have the same length and items stored"
             )
 
-        simulation_names: list[str] = []
-        for slot, object_name, item in tqdm(
-            zip(slots, object_names, items_stored),
-            desc="Spawning entities",
-            total=len(slots),
-        ):
+        reqs: list[SpawnEntityMsg] = []
+        for slot, object_name, item in zip(slots, object_names, items_stored):
             if np.isclose(offset_yaw, 0.0):
                 should_rotate = random.random() < percent_of_rotated_objects
                 if should_rotate:
@@ -206,7 +205,7 @@ class SceneManager:
                 else:
                     offset_yaw = 0.0
 
-            simulation_name = self.spawn_on_spot(
+            req = self.make_spawn_entity_msg_for_spot(
                 slot_name=slot,
                 object_name=object_name,
                 item_stored=item,
@@ -214,18 +213,19 @@ class SceneManager:
                 std_yaw=std_yaw,
                 offset_yaw=offset_yaw,
             )
-            self.logger.info(f"Simulation name: {simulation_name}")
-            simulation_names.append(simulation_name)
+            reqs.append(req)
+
+        simulation_names: list[str] = self.spawn_objects(reqs)
         return simulation_names
 
-    def spawn_object(
+    def init_spawn_entity_name_and_pose(
         self,
+        req: SpawnEntityMsg | SpawnEntity_Request,
         pose: Pose,
         object_name: str,
         item_stored: Optional[str] = None,
-        frame: str = "odom",
+        frame: str = "odom"
     ):
-        wait_for_ros2_services(self.connector, ["/spawn_entity"])
         # NOTE (jmatejcz) item stored will be added to name of object
         # and that's how it will be distinguished
         if item_stored:
@@ -233,9 +233,7 @@ class SceneManager:
         else:
             name = object_name + str(uuid.uuid4())[:8]
 
-        req = SpawnEntity.Request()
         req.name = name
-        req.uri = self.spawnable_to_uri[object_name]
         req.initial_pose.header.frame_id = frame
         req.initial_pose.pose.position.x = pose.position.x
         req.initial_pose.pose.position.y = pose.position.y
@@ -245,7 +243,41 @@ class SceneManager:
         req.initial_pose.pose.orientation.z = pose.orientation.z
         req.initial_pose.pose.orientation.w = pose.orientation.w
 
-        self.logger.debug(f"Spawning {name}")
+        return req
+
+
+    def make_spawn_entity_msg(
+        self,
+        pose: Pose,
+        object_name: str,
+        item_stored: Optional[str] = None,
+        frame: str = "odom"
+    ) -> SpawnEntityMsg:
+        req = SpawnEntityMsg()
+        self.init_spawn_entity_name_and_pose(
+            req,
+            pose,
+            object_name,
+            item_stored,
+            frame
+        )
+        req.entity_resource.uri = self.spawnable_to_uri[object_name]
+        return req
+
+    def spawn_object(
+        self,
+        pose: Pose,
+        object_name: str,
+        item_stored: Optional[str] = None,
+        frame: str = "odom",
+    ):
+        wait_for_ros2_services(self.connector, ["/spawn_entity"])
+
+        req = SpawnEntity.Request()
+        self.init_spawn_entity_name_and_pose(req, pose, object_name, item_stored, frame)
+        req.uri = self.spawnable_to_uri[object_name]
+
+        self.logger.debug(f"Spawning {req.name}")
         result = self.connector.call_service(
             ROS2Message(payload=message_to_ordereddict(req)),
             target="/spawn_entity",
@@ -254,9 +286,32 @@ class SceneManager:
             reuse_client=True,
         ).payload
         result = cast(SpawnEntity.Response, result)
-        return name
+        return req.name
 
-    def spawn_on_spot(
+    def spawn_objects(
+        self,
+        requests: list[SpawnEntityMsg]
+    ):
+        wait_for_ros2_services(self.connector, ["/spawn_entities"])
+
+        req = SpawnEntities.Request()
+        req.spawn_requests = requests
+
+        self.logger.debug(f"Spawning {[request.name for request in requests]}")
+        result = self.connector.call_service(
+            ROS2Message(payload=message_to_ordereddict(req)),
+            target="/spawn_entities",
+            msg_type="simulation_interfaces/srv/SpawnEntities",
+            timeout_sec=3.0,
+            reuse_client=True,
+        ).payload
+        result = cast(SpawnEntities.Response, result)
+        for res in result.results:
+            if res.result.result != 1:
+                print(f"ERROR: {res.result.error_message}")
+        return [res.entity_name for res in result.results]
+
+    def make_spawn_entity_msg_for_spot(
         self,
         slot_name: str,
         object_name: str,
@@ -265,8 +320,7 @@ class SceneManager:
         std_yaw: float = 0.0,
         offset_yaw: float = 0.0,
         frame: str = "odom",
-    ):
-        wait_for_ros2_services(self.connector, ["/spawn_entity"])
+    ) -> SpawnEntityMsg:
         pose: Pose = copy.deepcopy(self.slots[slot_name].origin_pose)
         # Add Gaussian noise to x, y
         pose.position.x += random.normalvariate(0, std_xy)
@@ -287,9 +341,7 @@ class SceneManager:
         pose.orientation.z = q_new[2]
         pose.orientation.w = q_new[3]
 
-        return self.spawn_object(
-            pose=pose, object_name=object_name, item_stored=item_stored, frame=frame
-        )
+        return self.make_spawn_entity_msg(pose, object_name, item_stored, frame)
 
     def clear_scene(self):
         wait_for_ros2_services(self.connector, ["/get_entities", "/delete_entity"])
