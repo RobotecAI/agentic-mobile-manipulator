@@ -162,6 +162,10 @@ description = "Launch O3DE simulation in its own tmux session"
 cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
 description = "Launch O3DE simulation in the foreground (no tmux)"
 
+[feature.sim.tasks.sim-smoke]
+cmd = "bash scripts/sim_smoke.sh"
+description = "Headless sim smoke test: boot with --rhi=null, pass if /clock ticks (no GPU/display)"
+
 [feature.sim.tasks.editor]
 cmd = "$O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor --project-path $DEMO_ROOT/sim"
 description = "Launch O3DE Editor from SDK (project must be built first)"

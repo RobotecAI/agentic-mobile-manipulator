@@ -10,7 +10,7 @@
 #
 # Build everything:   docker compose -f docker/compose.yaml build
 # Run the demo:        xhost +local:root && docker compose -f docker/compose.yaml up demo
-# Attach to a session: docker exec -it $(docker ps -qf ancestor=robotecai/mobile-manipulator-demo:latest) tmux attach -t agentic-mobile-manipulator-sim
+# Attach to a session: docker exec -it $(docker ps -qf ancestor=robotecai/agentic-mobile-manipulator:latest) tmux attach -t agentic-mobile-manipulator-sim
 #                      (sessions: -sim -stack -llm-servers -agents -hmi)
 #
 # Target is single-pc-gpu-and-npu (the default). For a GPU-only image — llama.cpp
@@ -28,14 +28,14 @@
 services:
   # ── Base: RoboStack ROS 2 + built workspace ────────────────────────────────
   ros2:
-    image: robotecai/mobile-manipulator-demo-ros2:latest
+    image: robotecai/agentic-mobile-manipulator-ros2:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile.ros2
 
   # ── Base: + O3DE SDK and built simulation ──────────────────────────────────
   o3de:
-    image: robotecai/mobile-manipulator-demo-o3de:latest
+    image: robotecai/agentic-mobile-manipulator-o3de:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile.o3de
@@ -44,7 +44,7 @@ services:
 
   # ── The demo: + agents, local inference engines; runs the whole stack ───────
   demo:
-    image: robotecai/mobile-manipulator-demo:latest
+    image: robotecai/agentic-mobile-manipulator:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile.demo
@@ -68,7 +68,6 @@ services:
       - /dev/kfd:/dev/kfd            # AMD GPU compute (ROCm)
       - /dev/dri:/dev/dri            # AMD GPU render (Vulkan)
       - /dev/accel/accel0:/dev/accel/accel0  # Ryzen AI NPU (amdxdna)
-    # The NPU pins memory; without unlimited memlock FastFlowLM fails to allocate.
     ulimits:
       memlock:
         soft: -1
@@ -77,10 +76,5 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ../config.toml:/root/MobileManipulatorDemo/config.toml
-      # All weights live under the repo's models/: llama ggufs in models/, NPU
-      # models in models/flm (FLM_MODEL_PATH below). `pixi run download-models`
-      # fetches both. No host-home (~/.config/flm) coupling.
       - ../models:/root/MobileManipulatorDemo/models
-    # Single host: ROS 2 DDS + every inference endpoint talk over localhost, and
-    # host networking lets RViz/ros2 on the host introspect the running demo.
     network_mode: host
