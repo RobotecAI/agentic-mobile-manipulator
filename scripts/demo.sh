@@ -42,8 +42,8 @@ wait_topic() {
 }
 
 check_inference() {
-    log "Waiting 10s for inference servers to initialize..."
-    sleep 10
+    log "Waiting 15s for inference servers to initialize..."
+    sleep 15
     if bash "$DEMO_ROOT/scripts/smoke_test.sh"; then
         return 0
     else

@@ -13,12 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import functools
 import json
 import logging
+import os
 import time
-from typing import Any, Dict, List
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-from langchain_core.callbacks import AsyncCallbackHandler
+from langchain_core.callbacks import AsyncCallbackHandler, BaseCallbackHandler
 from rai.communication.ros2 import ROS2Connector, ROS2HRIMessage, ROS2Message
 
 
@@ -220,3 +224,196 @@ class OrchestratorTasksNotifier:
             msg_type="std_msgs/msg/Header",
             target=self.heartbeat_topic,
         )
+
+
+def _stringify_content(content: Any) -> str:
+    """Flatten a message's content to text. Multimodal blocks (VLM image parts)
+    are summarized as ``[image]`` so the log stays readable and small."""
+    if content is None:
+        return ""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for block in content:
+            if isinstance(block, dict):
+                btype = block.get("type")
+                if btype == "text":
+                    parts.append(block.get("text", ""))
+                elif btype in ("image_url", "image"):
+                    parts.append("[image]")
+                else:
+                    parts.append(f"[{btype or 'block'}]")
+            else:
+                parts.append(str(block))
+        return "\n".join(p for p in parts if p)
+    return str(content)
+
+
+def _guard(fn):
+    """Never let a tracing error break the agent run."""
+
+    @functools.wraps(fn)
+    def wrapper(self, *args, **kwargs):
+        try:
+            return fn(self, *args, **kwargs)
+        except Exception as exc:  # noqa: BLE001 - tracing must not crash the agent
+            self.logger.warning(f"trace callback {fn.__name__} failed: {exc}")
+
+    return wrapper
+
+
+class ConversationFileCallback(BaseCallbackHandler):
+    """Dump the full LLM conversation (orchestrator + subagents) to a run directory.
+
+    Register it in the orchestrator's ``langchain_callbacks`` list. That list is
+    passed to ``astream(config={"callbacks": ...}, subgraphs=True)``, and LangGraph
+    propagates config callbacks into every subgraph, so both the megamind
+    orchestrator and its executor subagents are captured in one place.
+
+    Writes two files per run:
+      - ``log.txt``   human-readable transcript (messages, tool calls, results)
+      - ``trace.jsonl`` one JSON record per event (machine-readable)
+
+    Enabled by default to ``runs/<timestamp>/``. Override the directory with
+    ``AMM_TRACE_DIR``; disable entirely with ``AMM_TRACE=0``.
+    """
+
+    # Run inline on the event loop so concurrent subgraph events don't interleave
+    # partial lines in the files.
+    run_inline = True
+
+    def __init__(self, out_dir: str | Path):
+        self.out_dir = Path(out_dir)
+        self.out_dir.mkdir(parents=True, exist_ok=True)
+        self.text_path = self.out_dir / "log.txt"
+        self.jsonl_path = self.out_dir / "trace.jsonl"
+        self.logger = logging.getLogger(__name__)
+        self.logger.info(f"Conversation trace -> {self.out_dir}")
+
+    @classmethod
+    def from_env(cls) -> Optional["ConversationFileCallback"]:
+        """Build from env, or return None if disabled (``AMM_TRACE=0``)."""
+        if os.getenv("AMM_TRACE", "1") == "0":
+            return None
+        out_dir = os.getenv("AMM_TRACE_DIR") or os.path.join(
+            "runs", datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        )
+        return cls(out_dir)
+
+    # ── writers ──────────────────────────────────────────────────────────────
+    @staticmethod
+    def _ts() -> str:
+        return datetime.now().strftime("%H:%M:%S")
+
+    def _write_text(self, block: str) -> None:
+        with open(self.text_path, "a", encoding="utf-8") as f:
+            f.write(block.rstrip() + "\n")
+
+    def _write_json(self, record: Dict[str, Any]) -> None:
+        record = {"ts": datetime.now().isoformat(timespec="seconds"), **record}
+        with open(self.jsonl_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(record, default=str) + "\n")
+
+    @staticmethod
+    def _node(metadata: Any, tags: Any) -> str:
+        """Which graph node / subagent produced this event."""
+        if isinstance(metadata, dict):
+            node = metadata.get("langgraph_node")
+            if node:
+                return str(node)
+        for tag in tags or []:
+            if isinstance(tag, str) and ":" in tag:
+                return tag
+        return "?"
+
+    # ── callbacks ────────────────────────────────────────────────────────────
+    @_guard
+    def on_chat_model_start(
+        self, serialized, messages, *, tags=None, metadata=None, **kwargs
+    ):
+        node = self._node(metadata, tags)
+        rendered = []
+        for msg_list in messages:
+            for m in msg_list:
+                rendered.append(
+                    {
+                        "role": getattr(m, "type", m.__class__.__name__),
+                        "content": _stringify_content(getattr(m, "content", "")),
+                    }
+                )
+        lines = [f"[{self._ts()}] [{node}] >> LLM input ({len(rendered)} msgs)"]
+        for r in rendered:
+            lines.append(f"    {r['role']}: {r['content']}")
+        self._write_text("\n".join(lines))
+        self._write_json({"event": "llm_start", "node": node, "messages": rendered})
+
+    @_guard
+    def on_llm_end(self, response, *, tags=None, metadata=None, **kwargs):
+        node = self._node(metadata, tags)
+        try:
+            gen = response.generations[0][0]
+        except (AttributeError, IndexError):
+            return
+        message = getattr(gen, "message", None)
+        content = _stringify_content(
+            getattr(message, "content", getattr(gen, "text", ""))
+        )
+        tool_calls = getattr(message, "tool_calls", None) or []
+        lines = [f"[{self._ts()}] [{node}] << LLM output"]
+        if content:
+            lines.append(f"    {content}")
+        for tc in tool_calls:
+            args = json.dumps(tc.get("args", {}), default=str)
+            lines.append(f"    tool_call: {tc.get('name')}({args})")
+        self._write_text("\n".join(lines))
+        self._write_json(
+            {
+                "event": "llm_end",
+                "node": node,
+                "content": content,
+                "tool_calls": tool_calls,
+            }
+        )
+
+    @_guard
+    def on_tool_start(
+        self, serialized, input_str, *, tags=None, metadata=None, **kwargs
+    ):
+        name = (serialized or {}).get("name", "tool")
+        node = self._node(metadata, tags)
+        self._write_text(f"[{self._ts()}] [{node}] -> TOOL {name}({input_str})")
+        self._write_json(
+            {"event": "tool_start", "node": node, "tool": name, "input": input_str}
+        )
+
+    @_guard
+    def on_tool_end(self, output, *, tags=None, metadata=None, **kwargs):
+        node = self._node(metadata, tags)
+        text = _stringify_content(getattr(output, "content", output))
+        self._write_text(f"[{self._ts()}] [{node}] <- TOOL result: {text}")
+        self._write_json({"event": "tool_end", "node": node, "output": text})
+
+    @_guard
+    def on_chain_start(self, serialized, inputs, *, parent_run_id=None, **kwargs):
+        # Only the root run (no parent) marks a task boundary; inner nodes/subgraphs
+        # start constantly and would be noise.
+        if parent_run_id is None:
+            self._write_text(f"[{self._ts()}] ===== TASK START =====")
+            self._write_json({"event": "task_start"})
+
+    @_guard
+    def on_chain_end(self, outputs, *, parent_run_id=None, **kwargs):
+        if parent_run_id is None:
+            self._write_text(f"[{self._ts()}] ===== TASK COMPLETE =====")
+            self._write_json({"event": "task_end"})
+
+    @_guard
+    def on_llm_error(self, error, **kwargs):
+        self._write_text(f"[{self._ts()}] !! LLM ERROR: {error}")
+        self._write_json({"event": "llm_error", "error": str(error)})
+
+    @_guard
+    def on_tool_error(self, error, **kwargs):
+        self._write_text(f"[{self._ts()}] !! TOOL ERROR: {error}")
+        self._write_json({"event": "tool_error", "error": str(error)})
