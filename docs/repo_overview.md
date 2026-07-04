@@ -47,7 +47,7 @@ The system is built on a multi-agent architecture orchestrated by a "MegaMind" a
 
 This file is the control center for your model backend. You can define:
 
-- **LLM/VLM Endpoints**: Switch between local models or cloud providers (e.g., OpenAI).
+- **LLM/VLM Endpoints**: Define the model, backend, and port each agent uses.
 - **Model Parameters**: Adjust reasoning capabilities or temperature for specific agents.
 - **RAG Settings**: Configure the embedding models used by the Safety Agent.
 

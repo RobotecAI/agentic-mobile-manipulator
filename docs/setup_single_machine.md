@@ -64,7 +64,8 @@ This single command runs the full build pipeline in the correct order:
 | 9    | `find-runnables`   | List the built runnables (GameLauncher, llama.cpp, FastFlowLM) |
 
 > Prefer a GPU-only machine (no AMD Ryzen AI NPU)? Use `pixi run -e single-pc-gpu setup`
-> instead — it skips step 8 and serves every endpoint on the GPU.
+> instead — it skips step 8. You must also set `[endpoints.vlm_safety] backend = "gpu"`
+> in `config.toml`; otherwise inference routes that endpoint to the NPU.
 
 #### Local Inference
 
@@ -83,8 +84,8 @@ endpoints by name. `pixi run inference` launches them all. See
 
 ##### NPU backend (AMD Ryzen™ AI)
 
-The `single-pc-gpu-and-npu` setup above builds FastFlowLM (step 8) so NPU
-endpoints work out of the box. The [RobotecAI/FastFlowLM](https://github.com/RobotecAI/FastFlowLM)
+The `single-pc-gpu-and-npu` setup above builds FastFlowLM (step 8), so NPU
+endpoints are served without extra configuration. The [RobotecAI/FastFlowLM](https://github.com/RobotecAI/FastFlowLM)
 fork (pinned as a submodule) includes GBNF grammar-constrained sampling, so the
 NPU path can produce the structured/JSON output the agents rely on. Which
 endpoints run on the NPU is driven by `backend = "npu"` entries in `config.toml`
@@ -92,20 +93,23 @@ endpoints run on the NPU is driven by `backend = "npu"` entries in `config.toml`
 `[endpoints.vlm_safety]`.
 
 Building FastFlowLM only needs the XRT/amdxdna dev headers, but **serving** on
-the NPU requires an AMD Ryzen AI processor with the `amdxdna` driver loaded. On a
-AMD machine without the NPU, use the GPU-only `single-pc-gpu` setup, which routes
-every endpoint to llama.cpp.
+the NPU requires an AMD Ryzen AI processor with the `amdxdna` driver loaded. On an
+AMD machine without the NPU, use the GPU-only `single-pc-gpu` setup and switch
+`[endpoints.vlm_safety]` to `backend = "gpu"` in `config.toml`, so every endpoint
+runs on llama.cpp.
 
 ---
 
 ### Download Models
 
-For every model configured in `config.toml`, download the GGUF file and place it in `$DEMO_ROOT/models/`:
+For every GGUF-backed model in `config.toml`, download the file and place it in `$DEMO_ROOT/models/`:
 
 - [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
 - [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) + [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
 - [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true)
 - [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true)
+
+The NPU `vlm_safety` model (`gemma3:4b`) has no GGUF; `flm pull` downloads it for you.
 
 ---
 

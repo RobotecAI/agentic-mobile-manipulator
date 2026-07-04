@@ -70,15 +70,9 @@ uv run rai_app/warehouse_regulations_agent/process_regulations.py --source regul
 - `--overwrite-summaries`: Regenerate existing summaries
 - `--verbose, -v`: Verbose logging
 
-The default ranges focus on warehouse safety-relevant regulations:
-
-- **1-40**: General safety standards, walking surfaces, exits
-- **66-68**: Personal protective equipment basics
-- **132-140**: Personal protective equipment details
-- **155-165**: Respiratory protection, hearing protection
-- **176**: Materials handling and storage
-- **212**: General machinery safety
-- **335**: Electrical safety
+The default ranges (`1-40,66-68,132-140,155-165`) focus on warehouse
+safety-relevant regulations: general safety standards, walking surfaces, exits,
+and personal protective equipment.
 
 ### Step 3: Build Vector Database
 

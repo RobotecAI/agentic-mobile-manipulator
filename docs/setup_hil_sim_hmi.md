@@ -5,7 +5,7 @@
 ## Network Configuration
 
 Ensure that all three machines (HIL, Simulation, and HMI) are on the same network and can communicate with each other. You may need to configure firewall settings to allow necessary ports for ROS 2 communication.
-We propose the following IP configuration:
+The following IP configuration is used:
 | Machine | IP Address | Hostname |
 |------------|----------------|------------|
 | Simulation | 192.168.1.1 | sim |
