@@ -55,7 +55,8 @@ docker compose -f docker/compose.yaml up demo          # if you built (step 2)
 docker compose -f docker/compose.yaml up --no-build demo   # if you pulled (step 2)
 ```
 
-> [!IMPORTANT] > `docker compose up` rebuilds any service that has a `build:` section — even when the image is already present locally. So after `pull`, a bare `up demo` ignores the pulled image and rebuilds `ros2 → o3de → demo`. Pass `--no-build` to run the pulled image as-is.
+> [!IMPORTANT]
+> The `docker compose up` command rebuilds any service that has a `build:` section, even when the image is already present locally. So after `pull`, a bare `up demo` ignores the pulled image and rebuilds `ros2 → o3de → demo`. Pass `--no-build` to run the pulled image as-is.
 
 ## What to expect
 

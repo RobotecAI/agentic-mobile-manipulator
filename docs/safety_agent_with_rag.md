@@ -97,7 +97,8 @@ uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed
 - `--chunk-overlap`: Chunk overlap for text splitting (default: 256)
 - `--test-query`: Optional test query to run after building the database
 
-> [!NOTE] > `Recurisive` was chosen as the default split strategy to limit the size of a single document (some regulations are thousands of tokens in length), to prevent the injection of irrelevant excerpts into the context of the model, and to simplify the process of determining relevancy of passages.
+> [!NOTE]
+> The `Recursive` strategy was chosen as the default split strategy to limit the size of a single document (some regulations are thousands of tokens in length), to prevent the injection of irrelevant excerpts into the context of the model, and to simplify the process of determining relevancy of passages.
 
 ### Step 4: (Optional) Test the performance of the Warehouse Safety Agent
 
