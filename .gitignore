@@ -20,6 +20,7 @@ imgui.ini
 anomaly_images/
 package_condition_images/
 models/
+runs/
 *.bak0
 sim/user/
 backtrace.log
