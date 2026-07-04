@@ -19,6 +19,30 @@ pixi run -e single-pc-gpu-and-npu demo
 > [!TIP]
 > If you have a system-installed ROS 2, pass the `--clean-env` flag to `pixi run`, or use Docker for clean isolation. Otherwise the demo may fail to start due to an API/ABI mismatch.
 
+## tmux sessions
+
+Each component runs in its own detached tmux session named
+`agentic-mobile-manipulator-<component>` (`-sim`, `-stack`, `-llm-servers`,
+`-agents`, `-hmi`). `pixi run demo` starts all of them in the background and prints
+the attach commands. Running a single task such as `pixi run sim` attaches you to
+its session directly.
+
+Attach to a session from another terminal (swap the suffix for any component):
+
+```shell
+tmux attach -t agentic-mobile-manipulator-sim
+```
+
+Inside tmux, `Ctrl-b s` lists and switches sessions and `Ctrl-b d` detaches. Stop
+every session with:
+
+```shell
+pixi run kill
+```
+
+To run a component in the foreground instead (no tmux), use its `-fg` variant:
+`pixi run sim-fg`, `pixi run stack-fg`, or `pixi run hmi-fg`.
+
 ## Run separately
 
 ### O3DE
