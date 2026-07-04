@@ -113,6 +113,65 @@ The NPU `vlm_safety` model (`gemma3:4b`) has no GGUF; `flm pull` downloads it fo
 
 ---
 
+## Verify your installation
+
+Once the build is done and the weights are downloaded, run one command to exercise
+the whole stack end to end:
+
+```shell
+pixi run -e single-pc-gpu-and-npu demo-trace
+```
+
+This brings up the full demo (sim, stack, inference, agents, HMI), populates the
+scene, sends one task to the orchestrator (ship one CPU), waits for it to finish,
+saves the agent trace, and shuts everything down. A successful run ends with:
+
+```
+  ● Task complete (marker).
+
+=== Trace saved ===
+  runs/<timestamp>
+    log.txt         human-readable conversation (orchestrator + subagents)
+    trace.jsonl     one JSON record per event
+    agents_pane.log raw agents tmux output
+    manifest.txt    task + timestamps
+```
+
+Open `runs/<timestamp>/log.txt` to read the orchestrator and subagent conversation
+for the task.
+
+Environment knobs:
+
+- `TASK`: the task string sent to the orchestrator (default: ship one CPU)
+- `MAX_WAIT`: hard cap in seconds on task execution (default: 900)
+- `IDLE`: treat this many seconds of trace inactivity as done (default: 180)
+- `SKIP_SCENE=1`: skip scene population
+- `TRACE_DIR`: output directory (default: `runs/<timestamp>`)
+
+On a GPU-only box, use `-e single-pc-gpu` and set
+`[endpoints.vlm_safety] backend = "gpu"` in `config.toml` first (see above).
+
+The conversation trace is written on any agent run (default-on, to `runs/<timestamp>/`);
+`demo-trace` just automates a single task plus teardown. Set `AMM_TRACE=0` to
+disable it.
+
+### Richer traces with Langfuse (optional)
+
+The orchestrator is already instrumented with a Langfuse callback. Point it at a
+Langfuse instance (self-hosted or cloud) to get a full browsable trace, including
+nested subagent spans and token usage, alongside the local `runs/` files:
+
+```shell
+export LANGFUSE_PUBLIC_KEY=pk-...
+export LANGFUSE_SECRET_KEY=sk-...
+export LANGFUSE_HOST=http://localhost:3000   # your Langfuse server
+```
+
+Without these keys the callback stays inactive and only the local `runs/` trace is
+written.
+
+---
+
 ## Developer Setup
 
 ### Conventional Commits
