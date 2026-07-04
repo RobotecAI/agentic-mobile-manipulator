@@ -1,5 +1,15 @@
 # Running the Demo
 
+## What to expect
+
+![Demo Windows](demo_windows.jpg)
+
+1. **Simulation Window**: the O3DE warehouse environment. Use _Control → Simulation Scenarios_ to spawn objects, and _Control → On demand predefined tasks_ to run tasks — or publish your own to the `/user_tasks` topic.
+2. **HMI**: a window showing the Human-Machine Interface.
+3. **Agents**: the autonomous agents run in the background, driving the robot.
+
+See how to operate the demo [Operating](operating.md)
+
 ## Run all at once
 
 ```shell

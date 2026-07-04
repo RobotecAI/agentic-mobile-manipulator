@@ -45,9 +45,6 @@ docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run dow
 
 This writes the llama.cpp GGUFs to `models/` and the NPU model to `models/flm/` (via `flm pull`). It only fetches what's missing, so it's safe to re-run.
 
-> [!TIP]
-> If you have pixi installed natively you can instead run `FLM_MODEL_PATH="$PWD/models/flm" pixi run download-models`.
-
 ## 4. Run the demo
 
 Allow local connections to your X server, then start the `demo` service:
@@ -65,8 +62,10 @@ docker compose -f docker/compose.yaml up --no-build demo   # if you pulled (step
 ![Demo Windows](demo_windows.jpg)
 
 1. **Simulation Window**: the O3DE warehouse environment. Use _Control → Simulation Scenarios_ to spawn objects, and _Control → On demand predefined tasks_ to run tasks — or publish your own to the `/user_tasks` topic.
-2. **HMI**: a window/terminal showing the Human-Machine Interface.
+2. **HMI**: a window showing the Human-Machine Interface.
 3. **Agents**: the autonomous agents run in the background, driving the robot.
+
+See how to operate the demo [Operating](operating.md)
 
 ## Inspecting a component
 
