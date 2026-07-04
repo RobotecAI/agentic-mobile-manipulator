@@ -31,6 +31,9 @@ GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; BOLD='\033[1m'; RESET
 log()  { echo -e "  ${GREEN}●${RESET} $*"; }
 warn() { echo -e "  ${YELLOW}!${RESET} $*"; }
 err()  { echo -e "  ${RED}✗${RESET} $*" >&2; }
+# Byte size of a file, or 0 if it doesn't exist yet (log.txt is created lazily on
+# the orchestrator's first LLM event, i.e. only after the task starts).
+filesize() { [ -f "$1" ] && wc -c <"$1" || echo 0; }
 
 # The orchestrator (a tmux pane that re-enters pixi) inherits its environment from
 # the tmux server, which the demo's first `tmux new-session` starts with THIS
@@ -92,7 +95,7 @@ fi
 # ── 4. Send the task ────────────────────────────────────────────────────────
 resolve_trace_dir
 log "Sending task: $TASK"
-before_size=$(wc -c <"$LOG" 2>/dev/null || echo 0)
+before_size=$(filesize "$LOG")
 ros2 topic pub --once /user_tasks std_msgs/msg/String "{data: '${TASK//\'/\'\\\'\'}'}" >/dev/null
 
 # ── 5. Wait for completion ──────────────────────────────────────────────────
@@ -108,7 +111,7 @@ while [ "$waited" -lt "$MAX_WAIT" ]; do
     if tmux capture-pane -pJ -S - -t "$AGENTS_SESSION" 2>/dev/null | grep -q "Finished task:"; then
         log "Task complete (orchestrator log)."; break
     fi
-    cur_size=$(wc -c <"$LOG" 2>/dev/null || echo 0)
+    cur_size=$(filesize "$LOG")
     [ "$cur_size" -gt "$before_size" ] && started=true
     if $started; then
         last_mtime=$(stat -c %Y "$LOG" 2>/dev/null || echo 0)
