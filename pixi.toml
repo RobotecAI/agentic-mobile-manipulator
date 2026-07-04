@@ -299,6 +299,10 @@ description = "Clone all repositories (gems and ROS 2 workspace)"
 cmd = "bash scripts/demo.sh"
 description = "Start full demo: sim → stack → inference → agents+orchestrator → hmi (one tmux session each)"
 
+[feature.profile-single-pc.tasks.demo-trace]
+cmd = "bash scripts/demo_trace.sh"
+description = "Unattended trace run: start demo, send one task, dump the agent conversation to runs/<timestamp>/, then kill everything"
+
 # ─── Single-PC setup variants: GPU (default) vs GPU+NPU ──────────────────────────
 # Share clone/demo above; differ only in what `setup` builds and what
 # find-runnables waits on. -gpu builds llama.cpp (Vulkan); -npu also builds
