@@ -7,7 +7,7 @@ Learn more at the [O3DE website](https://www.o3de.org/).
 
 The simulation environment utilizes several O3DE Gems to enhance its capabilities:
 
-- **ROS2**: Integrates ROS 2 with O3DE, allowing for seamless communication between the simulation and ROS 2 nodes.
+- **ROS2**: Integrates ROS 2 with O3DE, allowing communication between the simulation and ROS 2 nodes.
   More on this gem can be found [here](https://www.docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/)
 
 Opensource gems that are maintained by the O3DE community:

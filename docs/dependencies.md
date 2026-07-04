@@ -19,23 +19,20 @@
 
 ## ROS 2
 
-| Package Name                      | Repository URL                                                           |
-| --------------------------------- | ------------------------------------------------------------------------ |
-| rai_interfaces                    | https://github.com/RobotecAI/rai_interfaces.git                          |
-| Universal_Robots_ROS2_Description | https://github.com/UniversalRobots/Universal_Robots_ROS2_Description.git |
-| control_msgs                      | https://github.com/ros-controls/control_msgs.git                         |
-| control_toolbox                   | https://github.com/ros-controls/control_toolbox.git                      |
-| kinematics_interface              | https://github.com/ros-controls/kinematics_interface.git                 |
-| moveit2                           | https://github.com/moveit/moveit2.git                                    |
-| moveit_msgs                       | https://github.com/moveit/moveit_msgs.git                                |
-| realtime_tools                    | https://github.com/ros-controls/realtime_tools.git                       |
-| robotnik_common                   | https://github.com/RobotnikAutomation/robotnik_common.git                |
-| robotnik_description              | https://github.com/RobotnikAutomation/robotnik_description.git           |
-| robotnik_sensors                  | https://github.com/RobotnikAutomation/robotnik_sensors.git               |
-| ros2_control                      | https://github.com/ros-controls/ros2_control.git                         |
-| ros2_controllers                  | https://github.com/ros-controls/ros2_controllers                         |
-| srdfdom                           | https://github.com/moveit/srdfdom.git                                    |
-| simulation_interfaces             | https://github.com/ros-simulation/simulation_interfaces.git              |
+Most ROS 2 dependencies (MoveIt 2, Nav2, `ros2_control`, `control_msgs`,
+`simulation_interfaces`, and the rest) come from the
+[RoboStack](https://robostack.github.io) `robostack-jazzy` conda channel and are
+installed automatically by pixi — see `[dependencies]` in `pixi.toml`. They are no
+longer vcs-imported or built from source.
+
+These packages are built from source (see `ros2_ws.repos`):
+
+| Package Name         | Repository URL                                                 |
+| -------------------- | -------------------------------------------------------------- |
+| robotnik_common      | https://github.com/RobotnikAutomation/robotnik_common.git      |
+| robotnik_description | https://github.com/RobotnikAutomation/robotnik_description.git |
+| robotnik_sensors     | https://github.com/RobotnikAutomation/robotnik_sensors.git     |
+| rai_interfaces       | https://github.com/RobotecAI/rai_interfaces.git                |
 
 ## Python
 

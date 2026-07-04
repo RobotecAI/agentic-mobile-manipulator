@@ -25,7 +25,7 @@ cd agentic-mobile-manipulator
 docker compose -f docker/compose.yaml build
 ```
 
-This builds three cacheable layers — `…-ros2` (RoboStack ROS 2 + workspace) → `…-o3de` (O3DE SDK + simulation) → `…demo` (Python agents + llama.cpp + FastFlowLM). The O3DE layer is large, so the first build takes a while; later rebuilds reuse the cached bases.
+This builds three cacheable layers — `…-ros2` (RoboStack ROS 2 + workspace) → `…-o3de` (O3DE SDK + simulation) → `…demo` (Python agents + llama.cpp + FastFlowLM). The O3DE layer is large; later rebuilds reuse the cached bases.
 
 **Or pull the prebuilt images:**
 
@@ -33,7 +33,7 @@ This builds three cacheable layers — `…-ros2` (RoboStack ROS 2 + workspace) 
 docker compose -f docker/compose.yaml pull
 ```
 
-If you pull, remember to pass `--no-build` when starting the demo (see step 4).
+If you pull, pass `--no-build` when starting the demo (see step 4).
 
 ## 3. Download the model weights
 
@@ -45,9 +45,6 @@ docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run dow
 
 This writes the llama.cpp GGUFs to `models/` and the NPU model to `models/flm/` (via `flm pull`). It only fetches what's missing, so it's safe to re-run.
 
-> [!TIP]
-> If you have pixi installed natively you can instead run `FLM_MODEL_PATH="$PWD/models/flm" pixi run download-models`.
-
 ## 4. Run the demo
 
 Allow local connections to your X server, then start the `demo` service:
@@ -58,15 +55,18 @@ docker compose -f docker/compose.yaml up demo          # if you built (step 2)
 docker compose -f docker/compose.yaml up --no-build demo   # if you pulled (step 2)
 ```
 
-> [!IMPORTANT] > `docker compose up` rebuilds any service that has a `build:` section — even when the image is already present locally. So after `pull`, a bare `up demo` ignores the pulled image and rebuilds `ros2 → o3de → demo`. Pass `--no-build` to run the pulled image as-is.
+> [!IMPORTANT]
+> The `docker compose up` command rebuilds any service that has a `build:` section, even when the image is already present locally. So after `pull`, a bare `up demo` ignores the pulled image and rebuilds `ros2 → o3de → demo`. Pass `--no-build` to run the pulled image as-is.
 
 ## What to expect
 
 ![Demo Windows](demo_windows.jpg)
 
-1. **Simulation Window**: the O3DE warehouse environment. Use _Control → Simulation Scenarios_ to spawn objects, and _Control → On demand predefined tasks_ to run tasks — or publish your own to the `/user_tasks` topic.
-2. **HMI**: a window/terminal showing the Human-Machine Interface.
+1. **Simulation Window**: the O3DE warehouse environment. Use _Control → Simulation Scenarios_ to spawn objects, and _Control → On Demand predefined tasks_ to run tasks — or publish your own to the `/user_tasks` topic.
+2. **HMI**: a window showing the Human-Machine Interface.
 3. **Agents**: the autonomous agents run in the background, driving the robot.
+
+See how to operate the demo [Operating](operating.md)
 
 ## Inspecting a component
 

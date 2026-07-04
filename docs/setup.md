@@ -2,7 +2,7 @@
 
 > [!NOTE]
 > This setup guide describes the configuration used for the original demo presented at ROSCon 2025.
-> The demo was run on an AMD Ryzen™ AI mini PC with 128GB of total RAM, 96GB of which was allocated to the GPU.
+> The demo was run on an AMD Ryzen™ AI Max+ 395 with 128GB of total RAM, 96GB of which was allocated to the GPU.
 
 This repository is compatible with the following system:
 
@@ -16,17 +16,17 @@ This repository is compatible with the following system:
 You can run the demo on either a single computer or across three separate machines.
 Choose the guide that matches your setup.
 
-### Single Machine Setup
+### Single Machine Setup (Recommended)
 
 Run HMI, agents and simulation on one computer
 
 > [!IMPORTANT]
-> Please note that this setup is intended for systems with approximately 48GB of available VRAM.
+> This setup targets systems with approximately 48GB of available VRAM.
 > If your system does not meet this requirement, you can configure the agents to use cloud-based models instead via `cloud_config.toml`.
 
 [Single-machine setup](./setup_single_machine.md)
 
-### Three Machines
+### Three Machines (Advanced)
 
 Setup from ROSCon2025, resembling a real-world scenario:
 
