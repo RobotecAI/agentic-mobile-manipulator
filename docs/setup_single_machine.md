@@ -3,7 +3,7 @@
 This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
-- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
+- ROS 2: Jazzy, provided by pixi via RoboStack (no separate ROS 2 install needed)
 - Python: 3.12
 
 ## Building the Project
@@ -13,7 +13,6 @@ This repository is compatible with the following system:
 #### Clone the Repository
 
 ```shell
-cd /home/${USER}
 git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
 cd agentic-mobile-manipulator
 ```
@@ -47,30 +46,34 @@ Restart your shell or run `source ~/.bashrc` after installation.
 ### Build Everything
 
 ```shell
-pixi run -e single-pc-gpu setup
+pixi run -e single-pc-gpu-and-npu setup
 ```
 
 This single command runs the full build pipeline in the correct order:
 
-| Step | pixi task        | What it does                                        |
-| ---- | ---------------- | --------------------------------------------------- |
-| 1    | `clone`          | `vcs import` + `git lfs pull` for gems and ROS 2 ws |
-| 2    | `install-o3de`   | Install the O3DE engine                             |
-| 3    | `fetch-gems`     | Clone o3de-extras locally, validate all gem paths   |
-| 4    | `build-ros2`     | `colcon build` (deps provided by conda/RoboStack)   |
-| 5    | `build-sim`      | CMake configure + Ninja build (GameLauncher)        |
-| 6    | `sync`           | `uv sync` installs the Python dependencies          |
-| 7    | `build-llama`    | Build llama.cpp with the Vulkan backend             |
-| 8    | `find-runnables` | List the built runnables (GameLauncher, llama.cpp)  |
+| Step | pixi task          | What it does                                                   |
+| ---- | ------------------ | -------------------------------------------------------------- |
+| 1    | `clone`            | `vcs import` + `git lfs pull` for gems and ROS 2 ws            |
+| 2    | `install-o3de`     | Install the O3DE engine                                        |
+| 3    | `fetch-gems`       | Clone o3de-extras locally, validate all gem paths              |
+| 4    | `build-ros2`       | `colcon build` (deps provided by RoboStack)                    |
+| 5    | `build-sim`        | CMake configure + Ninja build (GameLauncher)                   |
+| 6    | `sync`             | `uv sync` installs the Python dependencies                     |
+| 7    | `build-llama`      | Build llama.cpp with the Vulkan backend (GPU)                  |
+| 8    | `build-fastflowlm` | Build FastFlowLM for the AMD Ryzen AI NPU backend              |
+| 9    | `find-runnables`   | List the built runnables (GameLauncher, llama.cpp, FastFlowLM) |
+
+> Prefer a GPU-only machine (no AMD Ryzen AI NPU)? Use `pixi run -e single-pc-gpu setup`
+> instead — it skips step 8 and serves every endpoint on the GPU.
 
 #### Local Inference
 
-Setup already checks out the inference submodules and builds llama.cpp (Vulkan) as
-part of the pipeline above. To serve models locally you still need to download the
-weights:
+Setup already checks out the inference submodules and builds both backends —
+llama.cpp (Vulkan, GPU) and FastFlowLM (NPU) — as part of the pipeline above. To
+serve models locally you still need to download the weights:
 
 ```shell
-pixi run -e single-pc-gpu download-models # downloads every weight referenced in config.toml; or grab them manually below
+pixi run -e single-pc-gpu-and-npu download-models # downloads every weight referenced in config.toml (gguf via wget, NPU tags via `flm pull`); or grab them manually below
 ```
 
 `config.toml` is the single source of truth for inference: each `[endpoints.*]`
@@ -78,19 +81,20 @@ table fixes a model's backend, port, and weights, and the agents reference those
 endpoints by name. `pixi run inference` launches them all. See
 [Running the demo](running.md#local-inference).
 
-##### NPU backend (AMD Ryzen AI, optional)
+##### NPU backend (AMD Ryzen™ AI)
 
-To run an endpoint on the NPU instead of the GPU, set its `backend = "npu"` in
-`config.toml` and build FastFlowLM. The [RobotecAI/FastFlowLM](https://github.com/RobotecAI/FastFlowLM)
+The `single-pc-gpu-and-npu` setup above builds FastFlowLM (step 8) so NPU
+endpoints work out of the box. The [RobotecAI/FastFlowLM](https://github.com/RobotecAI/FastFlowLM)
 fork (pinned as a submodule) includes GBNF grammar-constrained sampling, so the
-NPU path can produce the structured/JSON output the agents rely on:
+NPU path can produce the structured/JSON output the agents rely on. Which
+endpoints run on the NPU is driven by `backend = "npu"` entries in `config.toml`
+— the NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see
+`[endpoints.vlm_safety]`.
 
-```shell
-pixi run -e single-pc-gpu build-fastflowlm   # builds FastFlowLM; needs the amdxdna driver + XRT dev stack to serve
-```
-
-The NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see
-`[endpoints.vlm_safety]` in `config.toml`.
+Building FastFlowLM only needs the XRT/amdxdna dev headers, but **serving** on
+the NPU requires an AMD Ryzen AI processor with the `amdxdna` driver loaded. On a
+AMD machine without the NPU, use the GPU-only `single-pc-gpu` setup, which routes
+every endpoint to llama.cpp.
 
 ---
 
