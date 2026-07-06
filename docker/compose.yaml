@@ -25,6 +25,20 @@
 #   - GPU + NPU exposed via the devices below (amdxdna kernel driver loaded on host)
 #   - model weights present in ../models (pixi run download-models), bind-mounted in
 
+# Shared runtime for the demo image (image tag, GPU/NPU devices, memlock, host
+# networking). Both `demo` (interactive) and `demo-trace` (one-shot) merge it in.
+x-demo-runtime: &demo-runtime
+  image: robotecai/agentic-mobile-manipulator:latest
+  devices:
+    - /dev/kfd:/dev/kfd            # AMD GPU compute (ROCm)
+    - /dev/dri:/dev/dri            # AMD GPU render (Vulkan)
+    - /dev/accel/accel0:/dev/accel/accel0  # Ryzen AI NPU (amdxdna)
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+  network_mode: host
+
 services:
   # ── Base: RoboStack ROS 2 + built workspace ────────────────────────────────
   ros2:
@@ -44,7 +58,7 @@ services:
 
   # ── The demo: + agents, local inference engines; runs the whole stack ───────
   demo:
-    image: robotecai/agentic-mobile-manipulator:latest
+    <<: *demo-runtime
     build:
       context: ..
       dockerfile: docker/Dockerfile.demo
@@ -64,17 +78,31 @@ services:
       # Keep NPU (FastFlowLM) weights inside the mounted models/ dir instead of
       # flm's default ~/.config/flm, so they persist via the bind mount.
       - FLM_MODEL_PATH=/root/MobileManipulatorDemo/models/flm
-    devices:
-      - /dev/kfd:/dev/kfd            # AMD GPU compute (ROCm)
-      - /dev/dri:/dev/dri            # AMD GPU render (Vulkan)
-      - /dev/accel/accel0:/dev/accel/accel0  # Ryzen AI NPU (amdxdna)
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ../config.toml:/root/MobileManipulatorDemo/config.toml
       - ../models:/root/MobileManipulatorDemo/models
-    network_mode: host
+
+  # ── One-shot trace run: start the stack, send one task, dump the agent ───────
+  # conversation to ../runs/, then exit. Reuses the image built by `demo`.
+  # No AMM_KEEP_ALIVE, so demo.sh returns and demo_trace.sh drives the lifecycle.
+  #   xhost +local:root
+  #   docker compose -f docker/compose.yaml run --rm demo-trace
+  # Override the task with:  -e TASK="Do Housekeeping of rack J01"
+  demo-trace:
+    <<: *demo-runtime
+    entrypoint: ["pixi", "run", "demo-trace"]
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-42}
+      - FLM_MODEL_PATH=/root/MobileManipulatorDemo/models/flm
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+      - ../config.toml:/root/MobileManipulatorDemo/config.toml
+      - ../models:/root/MobileManipulatorDemo/models
+      # Trace output lands here on the host (root-owned; chown if needed).
+      - ../runs:/root/MobileManipulatorDemo/runs

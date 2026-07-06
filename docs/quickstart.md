@@ -68,6 +68,22 @@ docker compose -f docker/compose.yaml up --no-build demo   # if you pulled (step
 
 See how to operate the demo [Operating](operating.md)
 
+## Verify the install (one-shot trace run)
+
+Instead of the interactive `demo`, the `demo-trace` service runs the whole stack,
+sends one task to the orchestrator, saves the agent conversation trace, and exits:
+
+```bash
+xhost +local:root
+docker compose -f docker/compose.yaml run --rm demo-trace
+```
+
+The trace is written to `runs/<timestamp>/` on the host (bind-mounted from the
+container; files are root-owned, `chown` if needed). Override the task with
+`-e TASK="Do Housekeeping of rack J01"`. See
+[Verify your installation](setup_single_machine.md#verify-your-installation) for
+the full list of knobs and the Langfuse option.
+
 ## Inspecting a component
 
 Each component runs in its own tmux session inside the container. Attach to one (e.g. the simulation) from the host:
