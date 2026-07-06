@@ -8,7 +8,7 @@ Run the full **Mobile Manipulator Demo** — simulation, ROS 2 stack, local infe
 - The host's **amdxdna** driver loaded: check with `ls /dev/accel/accel0`.
 - [Docker Engine](https://docs.docker.com/engine/install/) + [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites).
 - A running X server (the O3DE simulation and HMI open windows on your display).
-- ~60 GB free disk for the image, plus room under `models/` for the weights.
+- **Disk & network**: ~60 GB free for the image (the prebuilt image is a ~18 GB compressed pull), plus ~20 GB under `models/` for the weights. On a slow connection the first pull + model download takes a while.
 
 ## 1. Clone the repository
 
@@ -113,6 +113,22 @@ Before running a GPU-only image, edit `docker/compose.yaml` to:
 
 - remove the `/dev/accel/accel0` device and the `memlock` ulimit (NPU-only), and
 - point `config.toml`'s `vlm_safety` endpoint at a `gpu` backend — otherwise `pixi run inference` aborts on the missing NPU engine.
+
+## Cloud models
+
+To run the agents on OpenAI-hosted models instead of local inference, swap in the
+cloud config before starting (the compose bind-mounts `config.toml` and passes
+`OPENAI_API_KEY` into the container):
+
+```bash
+cp cloud_config.toml config.toml
+export OPENAI_API_KEY=sk-...
+```
+
+Only the RAG embedding + reranker are still served locally, so step 3 downloads
+just those two GGUFs. See
+[Using cloud models](setup_single_machine.md#using-cloud-models-instead-low-vram-machines)
+for details, including the required OpenAI model access.
 
 ## Troubleshooting
 

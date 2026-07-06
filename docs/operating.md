@@ -56,6 +56,15 @@ The mission is handed to the orchestrator, which breaks it into steps and drives
 the robot. You do not need to wait for one mission to fully finish before queueing
 another; the orchestrator keeps a task queue.
 
+### Custom tasks
+
+The predefined buttons publish to the `/user_tasks` topic, which you can also use
+directly for free-form tasks:
+
+```bash
+ros2 topic pub --once /user_tasks std_msgs/msg/String "data: 'Do Housekeeping of rack J01'"
+```
+
 ## Monitoring progress
 
 While a mission runs, the **Mission** tab shows:

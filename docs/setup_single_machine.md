@@ -113,6 +113,28 @@ The NPU `vlm_safety` model (`gemma3:4b`) has no GGUF; `flm pull` downloads it fo
 
 ---
 
+### Using cloud models instead (low-VRAM machines)
+
+If the machine cannot serve the chat/vision models locally, switch the agents to
+OpenAI-hosted models via `cloud_config.toml`:
+
+```shell
+cp cloud_config.toml config.toml
+export OPENAI_API_KEY=sk-...
+```
+
+Your OpenAI account must have access to the models it names (`gpt-5-mini`,
+`gpt-5-nano`) — edit the `[endpoints.*]` `model` fields to use different ones.
+
+Everything reads `config.toml`, so the usual commands work unchanged:
+`download-models` now fetches only the two RAG GGUFs (embedding + reranker, the
+only endpoints still served locally) and `pixi run inference` launches just
+those two llama.cpp servers, skipping the remote `backend = "openai"` endpoints.
+The NPU is not used in this configuration, so the GPU-only `single-pc-gpu`
+environment suffices.
+
+---
+
 ## Verify your installation
 
 Once the build is done and the weights are downloaded, run one command to exercise
