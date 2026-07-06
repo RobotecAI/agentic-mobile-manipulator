@@ -96,7 +96,10 @@ fi
 resolve_trace_dir
 log "Sending task: $TASK"
 before_size=$(filesize "$LOG")
-ros2 topic pub --once /user_tasks std_msgs/msg/String "{data: '${TASK//\'/\'\\\'\'}'}" >/dev/null
+# ros2 parses the message arg with yaml.safe_load; JSON is valid YAML, so let
+# json.dumps handle escaping (quotes, backslashes, newlines, unicode) for us.
+ros2 topic pub --once /user_tasks std_msgs/msg/String \
+    "$(python3 -c 'import json, sys; print(json.dumps({"data": sys.argv[1]}))' "$TASK")" >/dev/null
 
 # ── 5. Wait for completion ──────────────────────────────────────────────────
 # Prefer the precise marker the callback writes on the root chain end; fall back
