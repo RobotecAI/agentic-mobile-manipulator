@@ -14,6 +14,8 @@
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/string/string.h>
 #include <AzCore/std/string/string_view.h>
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/std/containers/vector.h>
 
 namespace MobileManipulatorDemo::SpawnServiceUtils
 {
@@ -27,4 +29,8 @@ namespace MobileManipulatorDemo::SpawnServiceUtils
     //! @return Success when valid, Failure with a descriptive error message when not.
     AZ::Outcome<void, AZStd::string> ValidateTransformNormalized(
         const AZ::Transform& transform, float quaternionTolerance = 1e-3f, float maxTranslation = 1e7f);
+
+    AZStd::vector<AZ::EntityId> GetAllDescendants(AZ::EntityId parent);
+    AZStd::string GetEntityName(AZ::EntityId entityId);
+    void RegisterChildGrippingPoints(const AZStd::string& rootName);
 } // namespace MobileManipulatorDemo::SpawnServiceUtils

@@ -7,6 +7,7 @@
 
 #include <ROS2/ROS2Bus.h>
 #include "SpawnEntityServiceHandler.h"
+#include "SpawnEntitiesServiceHandler.h"
 
 namespace MobileManipulatorDemo
 {
@@ -82,6 +83,7 @@ namespace MobileManipulatorDemo
         }
 
         RegisterInterface<SpawnEntityServiceHandler>(ros2Node);
+        RegisterInterface<SpawnEntitiesServiceHandler>(ros2Node);
     }
 
     void MobileManipulatorDemoSystemComponent::DestroyHandlers()

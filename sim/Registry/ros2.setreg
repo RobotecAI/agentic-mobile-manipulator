@@ -24,7 +24,8 @@
             },
             "HandlersNames":
             {
-                "SpawnEntity": ""
+                "SpawnEntity": "",
+                "SpawnEntities": ""
             }
         }
     }
