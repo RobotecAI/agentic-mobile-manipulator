@@ -52,8 +52,8 @@ namespace HardcodedConfig {
     const static char UserPromptTopic[] = "/user_tasks";
     const static char OrchestratorHeartbeat[] = "/orchestrator/heartbeat"; // TODO: Get actual topic names
                                                                            //
-    const static QString SelectedLLMModel = "gpt-5-mini";
-    const static QString SelectedVLMModel = "gpt-5-mini";
+    const static QString SelectedLLMModel = "gpt-oss-20B";
+    const static QString SelectedVLMModel = "LFM2-VL-3B | Gemma4-4B";
     const static char VLMTopic[] = "/vlm_topic";
     const static char EmergencyStopTopic[] = "/emergency_stop";
 
