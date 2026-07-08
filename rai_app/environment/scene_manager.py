@@ -224,7 +224,7 @@ class SceneManager:
         pose: Pose,
         object_name: str,
         item_stored: Optional[str] = None,
-        frame: str = "odom"
+        frame: str = "odom",
     ):
         # NOTE (jmatejcz) item stored will be added to name of object
         # and that's how it will be distinguished
@@ -245,22 +245,15 @@ class SceneManager:
 
         return req
 
-
     def make_spawn_entity_msg(
         self,
         pose: Pose,
         object_name: str,
         item_stored: Optional[str] = None,
-        frame: str = "odom"
+        frame: str = "odom",
     ) -> SpawnEntityMsg:
         req = SpawnEntityMsg()
-        self.init_spawn_entity_name_and_pose(
-            req,
-            pose,
-            object_name,
-            item_stored,
-            frame
-        )
+        self.init_spawn_entity_name_and_pose(req, pose, object_name, item_stored, frame)
         req.entity_resource.uri = self.spawnable_to_uri[object_name]
         return req
 
@@ -288,10 +281,7 @@ class SceneManager:
         result = cast(SpawnEntity.Response, result)
         return req.name
 
-    def spawn_objects(
-        self,
-        requests: list[SpawnEntityMsg]
-    ):
+    def spawn_objects(self, requests: list[SpawnEntityMsg]):
         wait_for_ros2_services(self.connector, ["/spawn_entities"])
 
         req = SpawnEntities.Request()
