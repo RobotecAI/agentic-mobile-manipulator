@@ -3,8 +3,12 @@
 #
 #  Here the chat/vision endpoints are remote (backend = "openai") and therefore
 #  NOT served locally — `pixi run inference` skips backend = "openai". Only the
-#  RAG embedding/reranker run in-cluster (separate llama.cpp containers), so they
-#  carry an explicit base_url pointing at those services.
+#  RAG embedding/reranker still run locally on llama.cpp, exactly as in
+#  config.toml.
+#
+#  To use it: everything (agents, `pixi run inference`, download-models) reads
+#  config.toml, so swap this file in and provide the API key:
+#      cp cloud_config.toml config.toml && export OPENAI_API_KEY=sk-...
 #
 #  Because cloud agents use several distinct remote models, endpoints are split
 #  per model (chat_mini / vlm_mini / vlm_nano) and agents reference the right one.
@@ -30,25 +34,27 @@ backend  = "openai"
 model    = "gpt-5-nano"
 base_url = "https://api.openai.com/v1"
 
-# RAG models served by dedicated llama.cpp containers (see docker/compose.yaml).
-# Start the EMBEDDING model with:
-#   llama-server -m Qwen3-Embedding-0.6b_Q8_0.gguf --embedding --pooling last \
-#       -c 4096 -b 2048 -ub 2048 --port 8082 --host 0.0.0.0
-# Start the RERANKER model with:
-#   llama-server -m Qwen3-Reranker-0.6B_BF16.gguf --embedding --pooling rank \
-#       -c 4096 -b 2048 -ub 2048 --port 8083 --host 0.0.0.0
+# RAG models are the only endpoints still served locally (backend = "gpu"):
+# `pixi run inference` launches these two llama.cpp servers and skips the
+# remote backend = "openai" endpoints above. Same specs as config.toml.
 [endpoints.embeddings]
-type     = "embedding"
-backend  = "gpu"
-model    = "qwen3-embedding:0.6b"
-base_url = "http://safety-embeddings:8082/v1"
+type       = "embedding"
+backend    = "gpu"
+model      = "qwen3-embedding:0.6b"
+host       = "localhost"
+port       = 8082
+model_path = "${DEMO_ROOT}/models/Qwen3-Embedding-0.6B-Q8_0.gguf"
+model_url  = "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true"
 
 # NOTE: The reranker and the embedding model are two separate models!
 [endpoints.reranker]
-type     = "reranker"
-backend  = "gpu"
-model    = "qwen3-reranker:0.6b"
-base_url = "http://safety-reranker:8083/v1/reranking"
+type       = "reranker"
+backend    = "gpu"
+model      = "qwen3-reranker:0.6b"
+host       = "localhost"
+port       = 8083
+model_path = "${DEMO_ROOT}/models/qwen3-reranker-0.6b-q8_0.gguf"
+model_url  = "https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true"
 
 # ─── Agents ─────────────────────────────────────────────────────────────────
 
