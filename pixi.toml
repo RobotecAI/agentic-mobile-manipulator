@@ -146,7 +146,7 @@ description = "Clone o3de-extras gems locally and validate all gem paths from pr
 # No cwd override: the script path is project-root-relative and the script cd's
 # into $DEMO_ROOT/sim itself.
 cmd = "bash scripts/build_sim.sh"
-inputs = ["sim/Gem/Source/*", "sim/Gem/Include/*", "sim/Gem/CMakeLists.txt", "sim/Gem/gem.json", "sim/Gem/*.cmake"]
+inputs = ["scripts/build_sim.sh", "sim/Gem/Source/*", "sim/Gem/Include/*", "sim/Gem/CMakeLists.txt", "sim/Gem/gem.json", "sim/Gem/*.cmake"]
 outputs = ["sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"]
 # All gems are registered project-locally via external_subdirectories in
 # sim/project.json, so the gem source trees must exist before cmake configure.

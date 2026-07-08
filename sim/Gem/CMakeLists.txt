@@ -33,7 +33,6 @@ ly_add_target(
     BUILD_DEPENDENCIES
         PRIVATE
             AZ::AzGameFramework
-            AZ::AzFramework
             Gem::Atom_AtomBridge.Static
             Gem::SimulationInterfaces.API
             Gem::ROS2.API
@@ -52,7 +51,6 @@ ly_add_target(
         PRIVATE
             Gem::${gem_name}.Private.Object
             AZ::AzCore
-            AZ::AzFramework
             Gem::SimulationInterfaces.API
             Gem::ROS2.API
 )
