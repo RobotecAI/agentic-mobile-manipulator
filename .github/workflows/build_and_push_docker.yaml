@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - development
   workflow_dispatch:
 
 concurrency:
@@ -27,8 +26,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push all images
-        env:
-          AMM_IMG_SUFFIX: ${{ env.SUFFIX }}
         run: |
           docker compose -f docker/compose.yaml build
           docker compose -f docker/compose.yaml push
