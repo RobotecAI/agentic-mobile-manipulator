@@ -197,14 +197,6 @@ class SceneManager:
 
         reqs: list[SpawnEntityMsg] = []
         for slot, object_name, item in zip(slots, object_names, items_stored):
-            if np.isclose(offset_yaw, 0.0):
-                should_rotate = random.random() < percent_of_rotated_objects
-                if should_rotate:
-                    # rotate additional 90 degrees
-                    offset_yaw = random.choice([1.57, -1.57, 3.14])
-                else:
-                    offset_yaw = 0.0
-
             req = self.make_spawn_entity_msg_for_spot(
                 slot_name=slot,
                 object_name=object_name,
@@ -212,6 +204,8 @@ class SceneManager:
                 std_xy=std_xy,
                 std_yaw=std_yaw,
                 offset_yaw=offset_yaw,
+                rotate_90_degrees=not bool(np.isclose(0.0, percent_of_rotated_objects)),
+                rotate_90_degrees_percentage=percent_of_rotated_objects,
             )
             reqs.append(req)
 
@@ -308,6 +302,8 @@ class SceneManager:
         item_stored: Optional[str] = None,
         std_xy: float = 0.0,
         std_yaw: float = 0.0,
+        rotate_90_degrees: bool = False,
+        rotate_90_degrees_percentage: float = 0.1,
         offset_yaw: float = 0.0,
         frame: str = "odom",
     ) -> SpawnEntityMsg:
@@ -322,6 +318,9 @@ class SceneManager:
 
         # Add Gaussian noise to yaw
         yaw += random.normalvariate(0, std_yaw)
+        if rotate_90_degrees:
+            if random.random() < rotate_90_degrees_percentage:
+                yaw += random.choice([-np.pi / 2, np.pi / 2])
         yaw += offset_yaw
 
         # Convert back to quaternion
