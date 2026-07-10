@@ -62,6 +62,9 @@ class Collection(Enum):
     FREE = "t3"
 
 
+SPAWN_ENTITY_REQUEST_TIMEOUT = 3.0
+
+
 class SceneManager:
     def __init__(
         self,
@@ -269,7 +272,7 @@ class SceneManager:
             ROS2Message(payload=message_to_ordereddict(req)),
             target="/spawn_entity",
             msg_type="simulation_interfaces/srv/SpawnEntity",
-            timeout_sec=3.0,
+            timeout_sec=SPAWN_ENTITY_REQUEST_TIMEOUT,
             reuse_client=True,
         ).payload
         result = cast(SpawnEntity.Response, result)
@@ -286,7 +289,7 @@ class SceneManager:
             ROS2Message(payload=message_to_ordereddict(req)),
             target="/spawn_entities",
             msg_type="simulation_interfaces/srv/SpawnEntities",
-            timeout_sec=3.0,
+            timeout_sec=SPAWN_ENTITY_REQUEST_TIMEOUT,
             reuse_client=True,
         ).payload
         result = cast(SpawnEntities.Response, result)
