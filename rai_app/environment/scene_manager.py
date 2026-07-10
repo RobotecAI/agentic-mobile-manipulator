@@ -361,6 +361,15 @@ class SceneManager:
                 timeout_sec=3.0,
             )
 
+    def reset_simulation(self):
+        wait_for_ros2_services(self.connector, ["/reset_simulation"])
+        self.connector.call_service(
+            ROS2Message(payload={}),
+            target="/reset_simulation",
+            msg_type="simulation_interfaces/srv/ResetSimulation",
+            timeout_sec=10.0,
+        )
+
     def move_entity(
         self,
         entity_name,

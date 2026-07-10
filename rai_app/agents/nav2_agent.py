@@ -158,15 +158,20 @@ class Nav2Agent(BaseAgent):
         elif result == TaskResult.FAILED:
             reason = self.navigator.result_future.result().result.error_code
             enum_name = decode_error_code(reason, Nav2NavigateToPose)
-            response = self.llm.invoke(
-                self.formulate_prompt(
-                    f"Navigate to pose has failed with error code {enum_name}. Check the logs and provide a short summary.",
-                    str(feedback),
-                    request.pose,
-                )
-            )
             action_result.success = False
-            action_result.report = response.content
+            try:
+                response = self.llm.invoke(
+                    self.formulate_prompt(
+                        f"Navigate to pose has failed with error code {enum_name}. Check the logs and provide a short summary.",
+                        str(feedback),
+                        request.pose,
+                    )
+                )
+                action_result.report = response.content
+            except Exception:
+                action_result.report = (
+                    f"Navigate to pose has failed with error code {enum_name}"
+                )
             return action_result
         else:
             action_result.success = False
@@ -213,15 +218,20 @@ class Nav2Agent(BaseAgent):
             goal_handle.abort()
             reason = self.navigator.result_future.result().result.error_code
             enum_name = decode_error_code(reason, Nav2DriveOnHeading)
-            response = self.llm.invoke(
-                self.formulate_prompt(
-                    f"Drive on heading has failed with error code {enum_name}. Check the logs and provide a short summary.",
-                    str(feedback),
-                    params,
-                )
-            )
             action_result.success = False
-            action_result.report = response.content
+            try:
+                response = self.llm.invoke(
+                    self.formulate_prompt(
+                        f"Drive on heading has failed with error code {enum_name}. Check the logs and provide a short summary.",
+                        str(feedback),
+                        params,
+                    )
+                )
+                action_result.report = response.content
+            except Exception:
+                action_result.report = (
+                    f"Drive on heading has failed with error code {enum_name}"
+                )
             return action_result
         else:
             action_result.success = False
@@ -273,15 +283,18 @@ class Nav2Agent(BaseAgent):
             enum_name = decode_error_code(reason, Nav2Spin)
 
             goal_handle.abort()
-            response = self.llm.invoke(
-                self.formulate_prompt(
-                    f"Turn (requested angle: {request.target_yaw} radians) has failed with error code {enum_name}. Check the logs and provide a short summary.",
-                    str(feedback),
-                    params,
-                )
-            )
             action_result.success = False
-            action_result.report = response.content
+            try:
+                response = self.llm.invoke(
+                    self.formulate_prompt(
+                        f"Turn (requested angle: {request.target_yaw} radians) has failed with error code {enum_name}. Check the logs and provide a short summary.",
+                        str(feedback),
+                        params,
+                    )
+                )
+                action_result.report = response.content
+            except Exception:
+                action_result.report = f"Turn (requested angle: {request.target_yaw} radians) has failed with error code {enum_name}."
             return action_result
         else:
             action_result.success = False
@@ -317,15 +330,20 @@ class Nav2Agent(BaseAgent):
             enum_name = decode_error_code(reason, Nav2Spin)
 
             goal_handle.abort()
-            response = self.llm.invoke(
-                self.formulate_prompt(
-                    f"Followed waypoints has failed with error code {enum_name}. Check the logs and provide a short summary.",
-                    str(feedback),
-                    request.poses,
-                )
-            )
             action_result.success = False
-            action_result.report = response.content
+            try:
+                response = self.llm.invoke(
+                    self.formulate_prompt(
+                        f"Followed waypoints has failed with error code {enum_name}. Check the logs and provide a short summary.",
+                        str(feedback),
+                        request.poses,
+                    )
+                )
+                action_result.report = response.content
+            except Exception:
+                action_result.report = (
+                    f"Followed waypoints has failed with error code {enum_name}."
+                )
             return action_result
         else:
             action_result.success = False
