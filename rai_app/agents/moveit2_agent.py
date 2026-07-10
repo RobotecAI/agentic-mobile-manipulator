@@ -468,11 +468,14 @@ class MoveIt2Agent(BaseAgent):
                 )
             except Exception as e:
                 response.success = False
-                llm_response = self.llm.invoke(
-                    "The arm failed to move to the position. Check the logs and provide a short summary."
-                    + str(e)
-                )
-                response.report = llm_response.content
+                try:
+                    llm_response = self.llm.invoke(
+                        "The arm failed to move to the position. Check the logs and provide a short summary."
+                        + str(e)
+                    )
+                    response.report = llm_response.content
+                except Exception:
+                    response.report = f"The arm failed to move to the position: {e}"
                 return response
 
         if request.gripper_state == 0:
@@ -486,10 +489,15 @@ class MoveIt2Agent(BaseAgent):
             except Exception as e:
                 self.logger.error(f"Failed to open gripper: {e}")
                 response.success = False
-                llm_response = self.llm.invoke(
-                    self.formulate_prompt("The arm failed to open the gripper.", str(e))
-                )
-                response.report = llm_response.content
+                try:
+                    llm_response = self.llm.invoke(
+                        self.formulate_prompt(
+                            "The arm failed to open the gripper.", str(e)
+                        )
+                    )
+                    response.report = llm_response.content
+                except Exception:
+                    response.report = f"The arm failed to open the gripper: {e}"
                 return response
         elif request.gripper_state == 2:
             try:
@@ -499,12 +507,15 @@ class MoveIt2Agent(BaseAgent):
             except Exception as e:
                 self.logger.error(f"Failed to close gripper: {e}")
                 response.success = False
-                llm_response = self.llm.invoke(
-                    self.formulate_prompt(
-                        "The arm failed to close the gripper.", str(e)
+                try:
+                    llm_response = self.llm.invoke(
+                        self.formulate_prompt(
+                            "The arm failed to close the gripper.", str(e)
+                        )
                     )
-                )
-                response.report = llm_response.content
+                    response.report = llm_response.content
+                except Exception:
+                    response.report = f"The arm failed to open the gripper: {e}"
                 return response
         else:
             response.success = False
