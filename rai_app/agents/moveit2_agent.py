@@ -470,8 +470,10 @@ class MoveIt2Agent(BaseAgent):
                 response.success = False
                 try:
                     llm_response = self.llm.invoke(
-                        "The arm failed to move to the position. Check the logs and provide a short summary."
-                        + str(e)
+                        self.formulate_prompt(
+                            "The arm failed to move to the position. Check the logs and provide a short summary.",
+                            str(e),
+                        )
                     )
                     response.report = llm_response.content
                 except Exception:
