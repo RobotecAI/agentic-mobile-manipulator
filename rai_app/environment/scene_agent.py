@@ -330,20 +330,15 @@ class SceneManagerState(SceneManager):
             self.get_standard_objects_to_spawn(rack_fill=self.rack_fill)
         )
 
-        for slot, entity_type, item in tqdm(
-            zip(spawn_slot_names, spawn_entity_types, items_stored),
-            desc="Spawning entities",
-            total=len(spawn_slot_names),
-        ):
-            self.spawn_on_spot(
-                slot_name=slot,
-                object_name=entity_type,
-                item_stored=item,
-                std_xy=0.01,
-                std_yaw=0.05,
-                rotate_90_degrees=True,
-                rotate_90_degrees_percentage=0.15,
-            )
+        self.populate_scene(
+            spawn_slot_names,
+            spawn_entity_types,
+            items_stored,
+            std_xy=0.01,
+            std_yaw=0.05,
+            percent_of_rotated_objects=0.15,
+        )
+
         spawn_slot_names, spawn_entity_types, items_stored = (
             self.get_returns_table_objects_to_spawn()
         )
