@@ -357,7 +357,7 @@ depends-on = ["sync"]
 description = "Run all linters and formatters"
 
 [feature.dev.tasks.test]
-cmd = "uv run pytest"
+cmd = "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run python -m pytest"
 depends-on = ["sync"]
 description = "Run test suite"
 
