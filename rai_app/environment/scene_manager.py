@@ -32,7 +32,7 @@ from rai.communication.ros2 import (
     wait_for_ros2_services,
 )
 from rosidl_runtime_py.convert import message_to_ordereddict
-from simulation_interfaces.msg import EntityState
+from simulation_interfaces.msg import EntityState, Result
 from simulation_interfaces.msg import SpawnEntity as SpawnEntityMsg
 from simulation_interfaces.srv import (
     GetEntities,
@@ -291,8 +291,8 @@ class SceneManager:
         ).payload
         result = cast(SpawnEntities.Response, result)
         for res in result.results:
-            if res.result.result != 1:
-                print(f"ERROR: {res.result.error_message}")
+            if res.result.result != Result.RESULT_OK:
+                self.logger.debug(f"ERROR: {res.result.error_message}")
         return [res.entity_name for res in result.results]
 
     def make_spawn_entity_msg_for_spot(
