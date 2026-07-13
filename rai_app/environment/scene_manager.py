@@ -298,6 +298,27 @@ class SceneManager:
                 self.logger.debug(f"ERROR: {res.result.error_message}")
         return [res.entity_name for res in result.results]
 
+    def spawn_on_spot(
+        self,
+        slot_name: str,
+        object_name: str,
+        item_stored: Optional[str] = None,
+        std_xy: float = 0.0,
+        std_yaw: float = 0.0,
+        offset_yaw: float = 0.0,
+        frame: str = "odom",
+    ):
+        msg = self.make_spawn_entity_msg_for_spot(
+            slot_name,
+            object_name,
+            item_stored,
+            std_xy,
+            std_yaw,
+            offset_yaw=offset_yaw,
+            frame=frame,
+        )
+        return self.spawn_objects([msg])[0]
+
     def make_spawn_entity_msg_for_spot(
         self,
         slot_name: str,
