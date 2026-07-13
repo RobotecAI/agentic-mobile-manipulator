@@ -31,6 +31,7 @@ from rai.communication.ros2 import (
     ROS2Message,
     wait_for_ros2_services,
 )
+from rclpy.qos import qos_profile_best_available
 from rosidl_runtime_py.convert import message_to_ordereddict
 from simulation_interfaces.msg import EntityState, Result
 from simulation_interfaces.msg import SpawnEntity as SpawnEntityMsg
@@ -389,6 +390,14 @@ class SceneManager:
             target="/reset_simulation",
             msg_type="simulation_interfaces/srv/ResetSimulation",
             timeout_sec=10.0,
+        )
+
+    def remove_humanworker(self):
+        self.connector.send_message(
+            ROS2Message(payload={"data": 0}),
+            target="/remove_humanworker",
+            msg_type="std_msgs/msg/Int32",
+            qos_profile=qos_profile_best_available,
         )
 
     def move_entity(
