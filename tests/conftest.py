@@ -37,11 +37,13 @@ def connector():
 
 @pytest.fixture(scope="session")
 def scene_manager(connector: ROS2Connector):
-    return SceneManager(
+    manager = SceneManager(
         slots_file="scripts/resources/slots.csv",
         spawnables_file="scripts/resources/spawnables.csv",
         connector=connector,
     )
+    manager.remove_humanworker()
+    return manager
 
 
 @pytest.fixture(scope="session")

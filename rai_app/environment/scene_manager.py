@@ -17,6 +17,7 @@ import argparse
 import copy
 import math
 import random
+import time
 import uuid
 from enum import Enum
 from operator import attrgetter
@@ -389,6 +390,20 @@ class SceneManager:
             target="/reset_simulation",
             msg_type="simulation_interfaces/srv/ResetSimulation",
             timeout_sec=10.0,
+        )
+        time.sleep(3.0)
+
+    def remove_humanworker(self):
+        while True:  # wait for the topic to appear so the message will be recieved.
+            time.sleep(1.0)
+            topics = [tup[0] for tup in self.connector.get_topics_names_and_types()]
+            if "/remove_humanworker" in topics:
+                break
+
+        self.connector.send_message(
+            ROS2Message(payload={"data": 0}),
+            target="/remove_humanworker",
+            msg_type="std_msgs/msg/Int32",
         )
 
     def move_entity(
