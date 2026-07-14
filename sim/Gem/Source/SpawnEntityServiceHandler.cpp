@@ -9,12 +9,8 @@
  */
 
 #include "SpawnEntityServiceHandler.h"
-#include <AzCore/Component/ComponentApplicationBus.h>
-#include <AzCore/Component/EntityId.h>
-#include <AzCore/Component/TransformBus.h>
 #include <SimulationInterfaces/Result.h>
 #include "SpawnServiceUtils.h"
-#include <AzFramework/Physics/ShapeConfiguration.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/TF/TransformInterface.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
@@ -25,58 +21,6 @@
 
 namespace MobileManipulatorDemo
 {
-    AZStd::vector<AZ::EntityId> GetAllDescendants(AZ::EntityId parent)
-    {
-        AZStd::vector<AZ::EntityId> descendants;
-        AZ::TransformBus::EventResult(
-            descendants,
-            parent,
-            &AZ::TransformInterface::GetAllDescendants);
-
-        return descendants;
-    }
-
-    AZStd::string GetEntityName(AZ::EntityId entityId)
-    {
-        AZStd::string name;
-        AZ::ComponentApplicationBus::BroadcastResult(
-            name,
-            &AZ::ComponentApplicationRequests::GetEntityName,
-            entityId
-        );
-
-        return name;
-    }
-
-    void RegisterChildGrippingPoints(const AZStd::string& rootName)
-    {
-        AZ::Outcome<AZ::EntityId, SimulationInterfaces::FailedResult> rootId;
-        SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-            rootId,
-            &SimulationInterfaces::SimulationEntityManagerRequests::GetEntityRoot,
-            rootName
-        );
-
-        if (rootId.IsSuccess())
-        {
-            for (auto& descendantId : GetAllDescendants(rootId.GetValue()))
-            {
-                auto descendantName = GetEntityName(descendantId);
-
-                if (descendantName.contains("GrippingPoint"))
-                {
-                    auto proposedName = rootName + "_" + descendantName;
-                    AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult> result;
-                    SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-                        result,
-                        &SimulationInterfaces::SimulationEntityManagerRequests::RegisterNewSimulatedBody,
-                        proposedName,
-                        descendantId
-                    );
-                }
-            }
-        }
-    }
 
     SpawnEntityServiceHandler::SpawnEntityServiceHandler()
     {
@@ -189,7 +133,7 @@ namespace MobileManipulatorDemo
                 Response response;
                 if (outcome.IsSuccess())
                 {
-                    RegisterChildGrippingPoints(outcome.GetValue());
+                    SpawnServiceUtils::RegisterChildGrippingPoints(outcome.GetValue());
                     response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
                     response.entity_name = outcome.GetValue().c_str();
                 }

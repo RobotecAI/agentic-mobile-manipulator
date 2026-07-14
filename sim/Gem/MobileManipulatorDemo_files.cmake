@@ -8,6 +8,8 @@ set(FILES
 
     Source/SpawnEntityServiceHandler.cpp
     Source/SpawnEntityServiceHandler.h
+    Source/SpawnEntitiesServiceHandler.cpp
+    Source/SpawnEntitiesServiceHandler.h
     Source/SpawnServiceUtils.cpp
     Source/SpawnServiceUtils.h
 )

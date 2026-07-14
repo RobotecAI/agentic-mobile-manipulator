@@ -11,6 +11,9 @@
 #include "SpawnServiceUtils.h"
 #include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
+#include <AzCore/Component/TransformBus.h>
+#include <AzCore/Component/ComponentApplicationBus.h>
+#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace MobileManipulatorDemo::SpawnServiceUtils
 {
@@ -53,5 +56,58 @@ namespace MobileManipulatorDemo::SpawnServiceUtils
         }
 
         return AZ::Success();
+    }
+
+    AZStd::vector<AZ::EntityId> GetAllDescendants(AZ::EntityId parent)
+    {
+        AZStd::vector<AZ::EntityId> descendants;
+        AZ::TransformBus::EventResult(
+            descendants,
+            parent,
+            &AZ::TransformInterface::GetAllDescendants);
+
+        return descendants;
+    }
+
+    AZStd::string GetEntityName(AZ::EntityId entityId)
+    {
+        AZStd::string name;
+        AZ::ComponentApplicationBus::BroadcastResult(
+            name,
+            &AZ::ComponentApplicationRequests::GetEntityName,
+            entityId
+        );
+
+        return name;
+    }
+
+    void RegisterChildGrippingPoints(const AZStd::string& rootName)
+    {
+        AZ::Outcome<AZ::EntityId, SimulationInterfaces::FailedResult> rootId;
+        SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+            rootId,
+            &SimulationInterfaces::SimulationEntityManagerRequests::GetEntityRoot,
+            rootName
+        );
+
+        if (rootId.IsSuccess())
+        {
+            for (auto& descendantId : GetAllDescendants(rootId.GetValue()))
+            {
+                auto descendantName = GetEntityName(descendantId);
+
+                if (descendantName.contains("GrippingPoint"))
+                {
+                    auto proposedName = rootName + "_" + descendantName;
+                    AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult> result;
+                    SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
+                        result,
+                        &SimulationInterfaces::SimulationEntityManagerRequests::RegisterNewSimulatedBody,
+                        proposedName,
+                        descendantId
+                    );
+                }
+            }
+        }
     }
 } // namespace MobileManipulatorDemo::SpawnServiceUtils
