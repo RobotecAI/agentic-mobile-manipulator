@@ -17,6 +17,7 @@ import argparse
 import copy
 import math
 import random
+import time
 import uuid
 from enum import Enum
 from operator import attrgetter
@@ -31,7 +32,6 @@ from rai.communication.ros2 import (
     ROS2Message,
     wait_for_ros2_services,
 )
-from rclpy.qos import qos_profile_best_available
 from rosidl_runtime_py.convert import message_to_ordereddict
 from simulation_interfaces.msg import EntityState, Result
 from simulation_interfaces.msg import SpawnEntity as SpawnEntityMsg
@@ -391,13 +391,19 @@ class SceneManager:
             msg_type="simulation_interfaces/srv/ResetSimulation",
             timeout_sec=10.0,
         )
+        time.sleep(3.0)
 
     def remove_humanworker(self):
+        while True:  # wait for the topic to appear so the message will be recieved.
+            time.sleep(1.0)
+            topics = [tup[0] for tup in self.connector.get_topics_names_and_types()]
+            if "/remove_humanworker" in topics:
+                break
+
         self.connector.send_message(
             ROS2Message(payload={"data": 0}),
             target="/remove_humanworker",
             msg_type="std_msgs/msg/Int32",
-            qos_profile=qos_profile_best_available,
         )
 
     def move_entity(
