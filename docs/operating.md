@@ -33,10 +33,6 @@ find the **Simulation Scenarios** group and click one of the scene recipes:
 - **Cleanup**: resets the simulation and clears the spawned objects. Use this to
   start over.
 
-Spawning is not instant. It can take up to about 30 seconds, and you can watch the
-objects appear one by one in the O3DE simulation window (or on the top view camera
-on the **Mission** tab). Wait until spawning has finished before moving on.
-
 If you click a scene button and get a "Service not available" warning, the scene
 agent is not running yet. Make sure the agents are up (see
 [Running the demo](./running.md)) and try again.
