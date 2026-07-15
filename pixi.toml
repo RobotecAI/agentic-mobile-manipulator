@@ -44,7 +44,8 @@ c-compiler = "*"
 cxx-compiler = "*"
 pkg-config = "*"
 qt-main = "*"
-nlohmann_json = "*"
+nlohmann_json = "3.11.3.*"
+tomlplusplus = "3.3.0.*"
 rust = ">=1.96.0,<1.97"
 
 # ─── Workspace tasks ────────────────────────────────────────────────────────────
