@@ -41,6 +41,7 @@ from rai_app.agents.vlm_transport import publish_vlm_description
 from rai_app.initialization.llms import (
     get_embeddings_model,
     get_reranker_model_url,
+    get_vlm_backend,
     get_vlm_model,
 )
 
@@ -113,6 +114,7 @@ class SafetyAgent:
 
         # Use same model as LLM for final assessment
         self.llm: BaseChatModel = self.vlm
+        self.vlm_backend = get_vlm_backend("safety_agent")
 
         # Build the regulation agent once
         self.agent = create_image_regulation_agent(
@@ -121,6 +123,8 @@ class SafetyAgent:
             vector_store=self.vector_store,
             reranker_url=self.reranker_url,
             k=self.k,
+            vlm_backend=self.vlm_backend,
+            llm_backend=self.vlm_backend,
         )
 
         # Ensure the camera topic is available before running

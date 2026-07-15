@@ -21,6 +21,11 @@
             "Camera":
             {
                 "AllowPipelineModification": true
+            },
+            "HandlersNames":
+            {
+                "SpawnEntity": "",
+                "SpawnEntities": ""
             }
         }
     }

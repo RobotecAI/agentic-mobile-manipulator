@@ -1,51 +1,88 @@
+# ════════════════════════════════════════════════════════════════════════════
+#  Cloud variant of the inference SSOT (see config.toml for the full schema).
+#
+#  Here the chat/vision endpoints are remote (backend = "openai") and therefore
+#  NOT served locally — `pixi run inference` skips backend = "openai". Only the
+#  RAG embedding/reranker still run locally on llama.cpp, exactly as in
+#  config.toml.
+#
+#  To use it: everything (agents, `pixi run inference`, download-models) reads
+#  config.toml, so swap this file in and provide the API key:
+#      cp cloud_config.toml config.toml && export OPENAI_API_KEY=sk-...
+#
+#  Because cloud agents use several distinct remote models, endpoints are split
+#  per model (chat_mini / vlm_mini / vlm_nano) and agents reference the right one.
+# ════════════════════════════════════════════════════════════════════════════
+
+# ─── Endpoints ──────────────────────────────────────────────────────────────
+
+[endpoints.chat_mini]
+type     = "llm"
+backend  = "openai"
+model    = "gpt-5-mini"
+base_url = "https://api.openai.com/v1"
+
+[endpoints.vlm_mini]
+type     = "vlm"
+backend  = "openai"
+model    = "gpt-5-mini"
+base_url = "https://api.openai.com/v1"
+
+[endpoints.vlm_nano]
+type     = "vlm"
+backend  = "openai"
+model    = "gpt-5-nano"
+base_url = "https://api.openai.com/v1"
+
+# RAG models are the only endpoints still served locally (backend = "gpu"):
+# `pixi run inference` launches these two llama.cpp servers and skips the
+# remote backend = "openai" endpoints above. Same specs as config.toml.
+[endpoints.embeddings]
+type       = "embedding"
+backend    = "gpu"
+model      = "qwen3-embedding:0.6b"
+host       = "localhost"
+port       = 8082
+model_path = "${DEMO_ROOT}/models/Qwen3-Embedding-0.6B-Q8_0.gguf"
+model_url  = "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true"
+
+# NOTE: The reranker and the embedding model are two separate models!
+[endpoints.reranker]
+type       = "reranker"
+backend    = "gpu"
+model      = "qwen3-reranker:0.6b"
+host       = "localhost"
+port       = 8083
+model_path = "${DEMO_ROOT}/models/qwen3-reranker-0.6b-q8_0.gguf"
+model_url  = "https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true"
+
+# ─── Agents ─────────────────────────────────────────────────────────────────
+
 [general]
-llm_model = "gpt-5-mini"
-llm_base_url = "https://api.openai.com/v1"
+llm = "chat_mini"
+vlm = "vlm_mini"
 llm_reasoning = false
-vlm_model = "gpt-5-mini"
-vlm_base_url = "https://api.openai.com/v1"
 vlm_reasoning = false
 
-# megamind agent utilizes llm for task delegation
-# to agents using both llm and vlm for task execution
 [megamind_agent]
-llm_model = "gpt-5-mini"
-llm_base_url = "https://api.openai.com/v1"
-vlm_model = "gpt-5-mini"
-vlm_base_url = "https://api.openai.com/v1"
+llm = "chat_mini"
+vlm = "vlm_mini"
 llm_reasoning = false
 vlm_reasoning = false
 
-# inspection agent uses vlm to determine anomalies in the image
 [inspection_agent]
-vlm_model = "gpt-5-nano"
-vlm_base_url = "https://api.openai.com/v1"
+vlm = "vlm_nano"
 vlm_reasoning = false
 vlm_temperature = 0.0
 
 [condition_agent]
-vlm_model = "gpt-5-mini"
-vlm_base_url = "https://api.openai.com/v1"
+vlm = "vlm_mini"
 vlm_reasoning = false
 vlm_temperature = 0.1
 
-# safety agent uses vlm to determine anomalies in the image
-# and embeddings to determine OSHA safety violations
 [safety_agent]
-vlm_model = "gpt-5-nano"
-vlm_base_url = "https://api.openai.com/v1"
+vlm = "vlm_nano"
 vlm_reasoning = false
 vlm_temperature = 0.0
-
-embeddings_model = "qwen3-embedding:0.6b"
-embeddings_base_url = "http://safety-embeddings:8082/v1"
-# NOTE: The reranker and the embedding model are two separate models!
-reranker_base_url = "http://safety-reranker:8083/v1/reranking"
-
-# INFO:
-# Start the EMBEDDING model in llama.cpp using the following command:
-# ./llama-server -m /home/user/llamas/gguf/custom_ggufs/Qwen3-Embedding-0.6b_Q8_0.gguf --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082
-
-# INFO:
-# Start the RERANKER model in llama.cpp using the following command:
-# ./llama-server -m /home/user/llamas/gguf/custom_ggufs/Qwen3-Reranker-0.6B_BF16.gguf --embedding --pooling rank -c 4096  -b 2048 -ub 2048 --port 8083
+embeddings = "embeddings"
+reranker = "reranker"

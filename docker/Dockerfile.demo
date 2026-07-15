@@ -1,0 +1,71 @@
+# Single-PC demo image: the O3DE+ROS 2 base (sim already built) plus the Python
+# agent app and the local inference engines. `pixi run demo` brings the whole
+# stack up in tmux, exactly as on a developer's single-pc machine.
+#
+# base_image = the `o3de` compose service (FROM ros2 -> sim + ROS 2 workspace
+# built, full pixi env already solved). See docker/compose.yaml.
+FROM base_image
+
+WORKDIR /root/MobileManipulatorDemo
+ENV DEMO_ROOT=/root/MobileManipulatorDemo
+
+# Build target. WITH_NPU=1 (default) is the single-pc-gpu-and-npu setup: it builds
+# the FastFlowLM fork for the NPU endpoints. WITH_NPU=0 is GPU-only — llama.cpp
+# (Vulkan) alone — skipping the NPU apt deps and the FastFlowLM compile.
+ARG WITH_NPU=1
+
+# tmux is always required: demo.sh runs each component in its own tmux session.
+RUN apt-get update && apt-get install -y --no-install-recommends tmux \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# NPU build deps (WITH_NPU=1 only). FastFlowLM links the host XRT/NPU libs with
+# the system gcc, not pixi's conda toolchain (see build_fastflowlm.sh): XRT dev
+# headers + the NPU userspace runtime come from the lemonade PPA. The amdxdna
+# *kernel* driver stays on the host; the NPU enters via /dev/accel/accel0.
+RUN if [ "$WITH_NPU" = "1" ]; then \
+        apt-get update && apt-get install -y --no-install-recommends \
+            software-properties-common gnupg \
+     && add-apt-repository -y ppa:lemonade-team/stable \
+     && apt-get update && apt-get install -y --no-install-recommends \
+            build-essential \
+            libxrt-dev libxrt-npu2 \
+            libavformat-dev libavutil-dev libavcodec-dev \
+            libswresample-dev libswscale-dev \
+            libfftw3-dev \
+            uuid-dev libdrm-dev \
+     && apt-get clean && rm -rf /var/lib/apt/lists/* ; \
+    fi
+
+# Python agent app + inference SSOT + RAG corpus + monitoring. Refresh pixi
+# manifests and scripts/ too so this layer's `pixi run` tasks (e.g. the renamed
+# init-submodules) and runtime helpers (demo.sh, ...) match this checkout rather
+# than the snapshot baked into the o3de base.
+COPY pixi.toml pixi.lock ./
+COPY pyproject.toml uv.lock ./
+COPY config.toml ./
+COPY .gitmodules ./
+COPY rai_app/ rai_app/
+COPY regulations_db/ regulations_db/
+COPY monitoring/ monitoring/
+COPY scripts/ scripts/
+RUN pixi run sync
+
+# Local inference engines built from the pinned submodules. llama.cpp (Vulkan,
+# gpu/cpu endpoints) is always built; init-submodules needs .git (inherited from
+# the o3de base) + .gitmodules (copied above).
+RUN pixi run init-submodules && pixi run build-llama
+
+# FastFlowLM (npu endpoints), WITH_NPU=1 only. Its tokenizers-cpp vendors a Rust
+# static lib (libtokenizers_c.a), so the build needs cargo. Install via rustup
+# (latest stable — Ubuntu's apt cargo can be too old for the pinned crate) and
+# source it so cmake's find_program(cargo) succeeds at configure time.
+RUN if [ "$WITH_NPU" = "1" ]; then \
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal \
+     && . "$HOME/.cargo/env" \
+     && pixi run build-fastflowlm ; \
+    fi
+
+# Brings up sim -> stack -> inference -> agents -> hmi, one tmux session each.
+# AMM_KEEP_ALIVE (set in compose) holds this process open so the container — and
+# the detached tmux sessions it owns — stay alive after demo.sh finishes launching.
+ENTRYPOINT ["pixi", "run", "demo"]

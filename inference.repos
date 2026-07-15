@@ -1,5 +1,0 @@
-repositories:
-  ./inference/llama.cpp:
-    type: git
-    url: https://github.com/ggml-org/llama.cpp.git
-    version: master

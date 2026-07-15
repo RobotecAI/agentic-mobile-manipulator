@@ -3,7 +3,7 @@
 This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
-- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
+- ROS 2: Jazzy, provided by pixi via RoboStack (no separate ROS 2 install needed)
 - Python: 3.12
 
 ## Building the Project
@@ -13,84 +13,70 @@ This repository is compatible with the following system:
 #### Clone the Repository
 
 ```shell
-cd /home/${USER}
-git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
+git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
+cd agentic-mobile-manipulator
 ```
 
-#### Set the Root Directory of the Project
+#### Install System Dependencies
 
-Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following line to your `.bashrc` or `.zshrc` file:
+```bash
+sudo apt update
+sudo apt install git git-lfs python3-vcstool
+```
+
+#### Install pixi
+
+[pixi](https://pixi.sh) orchestrates all build steps and sets environment variables automatically.
 
 ```shell
-export DEMO_ROOT=/home/${USER}/agentic-mobile-manipulator/
+curl -fsSL https://pixi.sh/install.sh | sh
 ```
 
-### Setup ROS 2
+Restart your shell or run `source ~/.bashrc` after installation.
 
-#### Build the ROS 2 Workspace
+---
+
+### Build
 
 ```shell
-cd ${DEMO_ROOT}/ros2_ws
-rosdep update
-rosdep install --ignore-src --from-paths src -y
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+pixi run -e hil setup
 ```
 
-Source the installation in your `.bashrc` or `.zshrc` file:
+This runs, in order:
 
-```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-```
+| Step | pixi task         | What it does                                                       |
+| ---- | ----------------- | ------------------------------------------------------------------ |
+| 1    | `clone-ros2-ws`   | `vcs import` clones the ROS 2 workspace repositories               |
+| 2    | `init-submodules` | Check out the pinned llama.cpp and FastFlowLM submodules           |
+| 3    | `build-ros2`      | `colcon build` (dependencies come from conda/RoboStack, no rosdep) |
+| 4    | `sync`            | `uv sync` installs the Python dependencies                         |
+| 5    | `build-llama`     | Build llama.cpp with the Vulkan backend                            |
 
-### Setup Python Environment
+---
 
-1. Install uv
+## Rebuilding llama.cpp
 
-```shell
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+`pixi run -e hil setup` already builds llama.cpp with the Vulkan backend as its last step, so you normally don't run anything here. Use this section only to install the Vulkan SDK by hand or to rebuild llama.cpp on its own.
 
-2. Install dependencies
+### Vulkan SDK
 
-```shell
-uv sync
-```
+The llama.cpp build uses the Vulkan backend. Install the Vulkan SDK: [link](https://vulkan.lunarg.com/doc/sdk/1.4.321.1/linux/getting_started.html)
 
-## Setting Up llama.cpp
-
-llama.cpp is used as the default GenAI inference engine. Other inference engines can be used if they maintain compatibility with the OpenAI API.
-
-### Prerequisites
-
-Install Vulkan SDK: [link](https://vulkan.lunarg.com/doc/sdk/1.4.321.1/linux/getting_started.html)
-
-Verify Vulkan SDK is installed:
+Verify it:
 
 ```shell
 vulkaninfo
 ```
 
-### Build llama.cpp
-
-> [!TIP]
-> In this example, Vulkan is used as the backend. Choose the appropriate backend based on your setup. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
+### Build llama.cpp on its own
 
 ```shell
-cd ${DEMO_ROOT}
-vcs import --input ${DEMO_ROOT}/inference.repos
+pixi run -e hil build-llama
 ```
 
-```shell
-cd ${DEMO_ROOT}/inference/llama.cpp
+This checks out the llama.cpp submodule if needed and builds it with the Vulkan backend.
 
-cmake -B build -DGGML_VULKAN=1
-cmake --build build --config Release
-```
+### Download Models
 
-### Download Model
-
-For every configured model in `config.toml`, download and run the model using the following command:
-
-```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-cli -hf <model/s selected in `config.toml`>
-```
+For every model configured in `config.toml`, download the GGUF file and place it in `$DEMO_ROOT/models/`.
+See [Download Models](setup_single_machine.md#download-models) for links.

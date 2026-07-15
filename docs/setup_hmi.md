@@ -7,21 +7,28 @@
 This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
-- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
+- ROS 2: Jazzy, provided by pixi via RoboStack (no separate ROS 2 install needed)
 - Python: 3.12
 
 ## Building the GUI
 
 ```shell
-cd ${DEMO_ROOT}/ros2_ws/
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+pixi run -e hmi setup
 ```
+
+This clones the ROS 2 workspace, builds it with colcon, and syncs the Python
+dependencies. pixi activates the ROS 2 environment for you, so there's no separate
+ROS 2 install or manual sourcing to do.
 
 ## Running the GUI
 
 ```shell
-ros2 launch mobile_manipulator_hmi hmi_launch.py
+pixi run -e hmi hmi
 ```
+
+This launches the HMI in its own tmux session. To run it in the foreground
+instead, use `pixi run -e hmi hmi-fg`, which calls
+`ros2 launch mobile_manipulator_hmi hmi_launch.py` directly.
 
 ## ROS2 interfaces provided by the GUI
 

@@ -2,6 +2,11 @@
 if(NOT PROJECT_NAME)
     cmake_minimum_required(VERSION 3.22)
 
+    # Use only external_subdirectories from project.json; skip ~/.o3de manifest
+    # gem resolution entirely. Without this, cmake.py queries the manifest and
+    # may pick incompatible or stale gem copies registered globally.
+    set(O3DE_DISABLE_GEM_DEPENDENCY_RESOLUTION TRUE CACHE BOOL "" FORCE)
+
     # Utility function to look for an optional 'engine_finder_cmake_path'setting 
     function(get_engine_finder_cmake_path project_json_file_path path_value)
         if(NOT ${path_value} AND EXISTS "${project_json_file_path}")

@@ -1,110 +1,106 @@
 # Running the Demo
 
-## O3DE
+## What to expect
 
-To run the O3DE, run the following command:
+![Demo Windows](demo_windows.jpg)
+
+1. **Simulation Window**: the O3DE warehouse environment. Use _Control → Simulation Scenarios_ to spawn objects, and _Control → On Demand predefined tasks_ to run tasks — or publish your own to the `/user_tasks` topic.
+2. **HMI**: a window showing the Human-Machine Interface.
+3. **Agents**: the autonomous agents run in the background, driving the robot.
+
+See how to operate the demo [Operating](operating.md)
+
+## Run all at once
 
 ```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-${DEMO_ROOT}/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher
+pixi run -e single-pc-gpu-and-npu demo
 ```
 
-## ROS 2
+> [!TIP]
+> If you have a system-installed ROS 2, pass the `--clean-env` flag to `pixi run`, or use Docker for clean isolation. Otherwise the demo may fail to start due to an API/ABI mismatch.
 
-To run the ROS 2 stack and control agents, execute:
+## tmux sessions
+
+Each component runs in its own detached tmux session named
+`agentic-mobile-manipulator-<component>` (`-sim`, `-stack`, `-llm-servers`,
+`-agents`, `-hmi`). `pixi run demo` starts all of them in the background and prints
+the attach commands. Running a single task such as `pixi run sim` attaches you to
+its session directly.
+
+Attach to a session from another terminal (swap the suffix for any component):
 
 ```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-./scripts/run_ros2_stack.sh
+tmux attach -t agentic-mobile-manipulator-sim
 ```
 
-## HMI
-
-To run the HMI, execute:
+Inside tmux, `Ctrl-b s` lists and switches sessions and `Ctrl-b d` detaches. Stop
+every session with:
 
 ```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-ros2 launch mobile_manipulator_hmi hmi_launch.py
+pixi run kill
 ```
 
-# Inference
+To run a component in the foreground instead (no tmux), use its `-fg` variant:
+`pixi run sim-fg`, `pixi run stack-fg`, or `pixi run hmi-fg`.
 
-To run the inference, execute:
+## Run separately
+
+### O3DE
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -hf <model/s selected in `config.toml`> <args>
+pixi run sim
 ```
 
-For example, use the following commands to start each of the models. Note that the extra arguments
-are required for a stable operation of the Demo:
-
-- GPT-OSS-20B
+### ROS 2
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-Q4_K_M.gguf --no-prefill-assistant --port 8080
+pixi run stack
 ```
 
-- LFM2-VL-3B-GGUF
+### HMI
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/LFM2-VL-3B_public/LFM2-VL-3B-Q8_0.gguf --mmproj /path/to/downloaded/model/mmproj-LFM2-VL-3B-Q8_0.gguf --port 8081
+pixi run hmi
 ```
 
-- Qwen3-Embedding-0.6b
+### Local inference
+
+Every inference endpoint is declared once in [`config.toml`](../config.toml) under
+`[endpoints.*]` (model, backend, port, weights). `pixi run inference` reads that
+SSOT and launches each server on its backend — `gpu`/`cpu` via llama.cpp, `npu`
+via FastFlowLM — in a tmux grid:
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/Qwen3-Embedding-0.6b_Q8_0.gguf --embedding --pooling last -c 4096 -b 2048 -ub 2048 --port 8082
+pixi run -e single-pc-gpu-and-npu inference        # launch all local endpoints (tmux grid)
+pixi run -e single-pc-gpu-and-npu smoke-test       # health-check them
 ```
 
-- Qwen3-Reranker-0.6B
+To start a single endpoint (e.g. for debugging), launch it by its endpoint name:
 
 ```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m /path/to/downloaded/model/Qwen3-Reranker-0.6B.gguf --embedding --pooling rank -c 4096  -b 2048 -ub 2048 --port 8083
+pixi run -e single-pc-gpu-and-npu serve-llm        # endpoints.main_llm   → port 8080
+pixi run -e single-pc-gpu-and-npu serve-vlm-safety       # endpoints.vlm_safety     → port 8081 (NPU)
+pixi run -e single-pc-gpu-and-npu serve-vlm-inspection   # endpoints.vlm_inspection → port 8084 (GPU)
+pixi run -e single-pc-gpu-and-npu serve-embedding  # endpoints.embeddings → port 8082
+pixi run -e single-pc-gpu-and-npu serve-reranker   # endpoints.reranker   → port 8083
 ```
 
-## Agent
-
-For instructions, see: [Agent setup and inference](../rai_app/README.md)
-
-## Local Runtime Components
-
-These commands run the same components locally that are defined in `docker/compose.yaml`.
-Each command assumes you have sourced your ROS 2 environment:
+To change a weight path, backend, or port, edit the endpoint in `config.toml`
+(e.g. set `model_path`, or flip the VLM `backend` between `gpu` and `npu`).
+Preview the resolved launch commands without starting anything:
 
 ```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
+pixi run -e single-pc-gpu-and-npu inference --print
 ```
 
-### Configuration Files
-
-- Local inference (default): `${DEMO_ROOT}/config.toml`
-
-### Individual ROS 2 Components
-
-Use these commands when you want to run components separately instead of `./scripts/run_ros2_stack.sh`:
+### Agents
 
 ```shell
-ros2 launch robotec_kairos_ur10 robotec_launch.py
-ros2 run mobile_manipulator_hmi utilization_node
-uv run python rai_app/agents/nav2_agent.py
-uv run python rai_app/agents/moveit2_agent.py
-uv run python rai_app/environment/scene_agent.py
-ros2 run nav2_lifecycle_manager nav_lifecycle_node
-uv run python rai_app/agents/inspection_agent.py
-${DEMO_ROOT}/scripts/start_safety_agent.sh
+pixi run agents
 ```
 
 ### Agent Orchestrator
 
 ```shell
-uv run python rai_app/agents/agent_orchestrator.py
-```
-
-### Safety Embeddings and Reranker (optional)
-
-These services are only required if you run the safety agent with RAG. See `docs/safety_agent_with_rag.md`.
-
-```shell
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m <embeddings_model.gguf> --embedding --pooling last --port 8082 --host 0.0.0.0
-${DEMO_ROOT}/inference/llama.cpp/build/bin/llama-server -m <reranker_model.gguf> --embedding --pooling rank -fa on --port 8083 --host 0.0.0.0
+pixi run orchestrator-agent
 ```

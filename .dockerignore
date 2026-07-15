@@ -1,0 +1,23 @@
+# Build artefacts — contain hardcoded host paths (CMakeCache.txt etc.)
+sim/build/
+sim/user/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# Cloned at image-build time by pixi tasks — exclude to keep context small
+gems/
+external/
+inference/
+
+# Pixi environment cache
+.pixi/
+
+# Large model files
+models/
+
+# Developer files
+.vscode/
+.env
+*.egg-info/
+__pycache__/

@@ -79,4 +79,6 @@ def test_single_box_housekeeping(
         result = housekeep_tool._run(rack)
         assert "successfully" in result, f"HouseKeepTool failed: {result}"
     except Exception as e:
+        scene_manager.reset_simulation()
+        scene_manager.remove_humanworker()
         pytest.fail(f"HouseKeepTool failed: {e}")

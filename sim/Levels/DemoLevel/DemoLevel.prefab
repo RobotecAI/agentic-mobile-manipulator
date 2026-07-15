@@ -220,6 +220,88 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
                     "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[211640413054656]/Components/EditorScriptCanvasComponent",
+                    "value": {
+                        "$type": "EditorScriptCanvasComponent",
+                        "Id": 10872500690270102334,
+                        "configuration": {
+                            "sourceHandle": {
+                                "id": "{C75ADE47-8B42-5008-9E83-7B097578841C}",
+                                "path": "Assets/Scripts/SelfDestructService.scriptcanvas"
+                            },
+                            "sourceName": "SelfDestructService.scriptcanvas",
+                            "propertyOverrides": {
+                                "source": {
+                                    "id": "{C75ADE47-8B42-5008-9E83-7B097578841C}",
+                                    "path": "Assets/Scripts/SelfDestructService.scriptcanvas"
+                                },
+                                "variables": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 5,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "AZStd::string",
+                                            "value": "/self_destruct",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 2755429085
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{66D06E5B-02F6-4828-91D0-3AE55145C1C2}"
+                                        },
+                                        "VariableName": "Topic name",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "entityId": [],
+                                "overrides": [
+                                    {
+                                        "Datum": {
+                                            "isOverloadedStorage": false,
+                                            "scriptCanvasType": {
+                                                "m_type": 5,
+                                                "m_azType": "{00000000-0000-0000-0000-000000000000}"
+                                            },
+                                            "isNullPointer": false,
+                                            "$type": "AZStd::string",
+                                            "value": "/remove_humanworker",
+                                            "label": ""
+                                        },
+                                        "InputControlVisibility": {
+                                            "Value": 850104567
+                                        },
+                                        "ExposureCategory": "",
+                                        "SortPriority": -1,
+                                        "ReplicaNetProps": {
+                                            "m_isSynchronized": false
+                                        },
+                                        "VariableId": {
+                                            "m_id": "{66D06E5B-02F6-4828-91D0-3AE55145C1C2}"
+                                        },
+                                        "VariableName": "Topic name",
+                                        "Scope": 0,
+                                        "InitialValueSource": 1
+                                    }
+                                ],
+                                "overridesUnused": [],
+                                "dependencies": []
+                            }
+                        }
+                    }
                 }
             ]
         },
@@ -432,7 +514,7 @@
                                 "Transform Data": {
                                     "Translate": [
                                         -0.6043558120727539,
-                                        -0.09543037414550781,
+                                        -0.0954303741455078,
                                         0.5401168465614319
                                     ],
                                     "Rotate": [

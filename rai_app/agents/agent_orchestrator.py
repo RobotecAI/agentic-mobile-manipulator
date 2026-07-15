@@ -44,6 +44,7 @@ from robotec_kairos_ur10.msg import Anomaly
 from rai_app.agents.callbacks import (
     AgentActionsCallback,
     AgentProgressCallback,
+    ConversationFileCallback,
     OrchestratorTasksNotifier,
 )
 from rai_app.agents.context_providers import WarehouseContext
@@ -65,7 +66,7 @@ from rai_app.config.prompts import (
 )
 from rai_app.control.kairos_controller import KairosController
 from rai_app.environment import SceneManager
-from rai_app.initialization.llms import get_llm_model, get_vlm_model
+from rai_app.initialization.llms import get_llm_model, get_vlm_backend, get_vlm_model
 from scripts.populate_scene import load_rack_assignment
 
 TOPICS_TO_WAIT_FOR: list[str] = ["/wrist_camera/camera_image_color"]
@@ -503,6 +504,7 @@ def main():
         connector=connector,
         namespace_value="",
         vlm=condition_vlm,
+        vlm_backend=get_vlm_backend(config_name="condition_agent"),
     )
     throw_trash_out_tool = ThrowTrashOutTool(
         connector=connector,
@@ -595,6 +597,13 @@ def main():
     langfuse_handler = CallbackHandler()
 
     ros2_callback = AgentProgressCallback(connector)
+    callbacks: List[BaseCallbackHandler] = [langfuse_handler, ros2_callback]
+    # Full conversation trace (orchestrator + subagents) to runs/<timestamp>/.
+    # Default-on; set AMM_TRACE=0 to disable or AMM_TRACE_DIR to relocate.
+    trace_callback = ConversationFileCallback.from_env()
+    if trace_callback is not None:
+        callbacks.append(trace_callback)
+
     orchestrator = AgentOrchestrator(
         connector=connector,
         agent=agent,
@@ -603,7 +612,7 @@ def main():
         action_topic="/agent/current_action",
         initial_state_creator=get_initial_megamind_state,
         recursion_limit=100,
-        langchain_callbacks=[langfuse_handler, ros2_callback],
+        langchain_callbacks=callbacks,
     )
     asyncio.run(orchestrator.orchestrator_loop())
 

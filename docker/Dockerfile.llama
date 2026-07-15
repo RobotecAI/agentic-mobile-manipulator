@@ -1,5 +1,0 @@
-FROM ghcr.io/ggml-org/llama.cpp:server
-
-ADD custom_ggufs /custom_ggufs
-
-

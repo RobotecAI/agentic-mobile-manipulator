@@ -17,6 +17,7 @@ import argparse
 import copy
 import math
 import random
+import time
 import uuid
 from enum import Enum
 from operator import attrgetter
@@ -32,12 +33,15 @@ from rai.communication.ros2 import (
     wait_for_ros2_services,
 )
 from rosidl_runtime_py.convert import message_to_ordereddict
-from simulation_interfaces.msg import EntityState
+from simulation_interfaces.msg import EntityState, Result
+from simulation_interfaces.msg import SpawnEntity as SpawnEntityMsg
 from simulation_interfaces.srv import (
     GetEntities,
     GetEntityState,
     SetEntityState,
+    SpawnEntities,
     SpawnEntity,
+    SpawnEntity_Request,
 )
 from tf2_geometry_msgs import do_transform_pose
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
@@ -57,6 +61,9 @@ class Collection(Enum):
     OUTBOUND_SHIPMENT_TABLE = "t2"
     INSPECTION_TABLE = "t4"
     FREE = "t3"
+
+
+SPAWN_ENTITY_REQUEST_TIMEOUT = 3.0
 
 
 class SceneManager:
@@ -192,40 +199,31 @@ class SceneManager:
                 "Slots and object names must have the same length and items stored"
             )
 
-        simulation_names: list[str] = []
-        for slot, object_name, item in tqdm(
-            zip(slots, object_names, items_stored),
-            desc="Spawning entities",
-            total=len(slots),
-        ):
-            if np.isclose(offset_yaw, 0.0):
-                should_rotate = random.random() < percent_of_rotated_objects
-                if should_rotate:
-                    # rotate additional 90 degrees
-                    offset_yaw = random.choice([1.57, -1.57, 3.14])
-                else:
-                    offset_yaw = 0.0
-
-            simulation_name = self.spawn_on_spot(
+        reqs: list[SpawnEntityMsg] = []
+        for slot, object_name, item in zip(slots, object_names, items_stored):
+            req = self.make_spawn_entity_msg_for_spot(
                 slot_name=slot,
                 object_name=object_name,
                 item_stored=item,
                 std_xy=std_xy,
                 std_yaw=std_yaw,
                 offset_yaw=offset_yaw,
+                rotate_90_degrees=not bool(np.isclose(0.0, percent_of_rotated_objects)),
+                rotate_90_degrees_percentage=percent_of_rotated_objects,
             )
-            self.logger.info(f"Simulation name: {simulation_name}")
-            simulation_names.append(simulation_name)
+            reqs.append(req)
+
+        simulation_names: list[str] = self.spawn_objects(reqs)
         return simulation_names
 
-    def spawn_object(
+    def init_spawn_entity_name_and_pose(
         self,
+        req: SpawnEntityMsg | SpawnEntity_Request,
         pose: Pose,
         object_name: str,
         item_stored: Optional[str] = None,
         frame: str = "odom",
     ):
-        wait_for_ros2_services(self.connector, ["/spawn_entity"])
         # NOTE (jmatejcz) item stored will be added to name of object
         # and that's how it will be distinguished
         if item_stored:
@@ -233,9 +231,7 @@ class SceneManager:
         else:
             name = object_name + str(uuid.uuid4())[:8]
 
-        req = SpawnEntity.Request()
         req.name = name
-        req.uri = self.spawnable_to_uri[object_name]
         req.initial_pose.header.frame_id = frame
         req.initial_pose.pose.position.x = pose.position.x
         req.initial_pose.pose.position.y = pose.position.y
@@ -245,16 +241,63 @@ class SceneManager:
         req.initial_pose.pose.orientation.z = pose.orientation.z
         req.initial_pose.pose.orientation.w = pose.orientation.w
 
-        self.logger.debug(f"Spawning {name}")
+        return req
+
+    def make_spawn_entity_msg(
+        self,
+        pose: Pose,
+        object_name: str,
+        item_stored: Optional[str] = None,
+        frame: str = "odom",
+    ) -> SpawnEntityMsg:
+        req = SpawnEntityMsg()
+        self.init_spawn_entity_name_and_pose(req, pose, object_name, item_stored, frame)
+        req.entity_resource.uri = self.spawnable_to_uri[object_name]
+        return req
+
+    def spawn_object(
+        self,
+        pose: Pose,
+        object_name: str,
+        item_stored: Optional[str] = None,
+        frame: str = "odom",
+    ):
+        wait_for_ros2_services(self.connector, ["/spawn_entity"])
+
+        req = SpawnEntity.Request()
+        self.init_spawn_entity_name_and_pose(req, pose, object_name, item_stored, frame)
+        req.uri = self.spawnable_to_uri[object_name]
+
+        self.logger.debug(f"Spawning {req.name}")
         result = self.connector.call_service(
             ROS2Message(payload=message_to_ordereddict(req)),
             target="/spawn_entity",
             msg_type="simulation_interfaces/srv/SpawnEntity",
-            timeout_sec=3.0,
+            timeout_sec=SPAWN_ENTITY_REQUEST_TIMEOUT,
             reuse_client=True,
         ).payload
         result = cast(SpawnEntity.Response, result)
-        return name
+        return req.name
+
+    def spawn_objects(self, requests: list[SpawnEntityMsg]):
+        wait_for_ros2_services(self.connector, ["/spawn_entities"])
+
+        req = SpawnEntities.Request()
+        req.spawn_requests = requests
+
+        self.logger.debug(f"Spawning {[request.name for request in requests]}")
+        result = self.connector.call_service(
+            ROS2Message(payload=message_to_ordereddict(req)),
+            target="/spawn_entities",
+            msg_type="simulation_interfaces/srv/SpawnEntities",
+            timeout_sec=SPAWN_ENTITY_REQUEST_TIMEOUT,
+            reuse_client=True,
+        ).payload
+        result = cast(SpawnEntities.Response, result)
+        for res in result.results:
+            if res.result.result != Result.RESULT_OK:
+                self.logger.debug(f"ERROR: {res.result.error_message}")
+        return [res.entity_name for res in result.results]
 
     def spawn_on_spot(
         self,
@@ -266,7 +309,29 @@ class SceneManager:
         offset_yaw: float = 0.0,
         frame: str = "odom",
     ):
-        wait_for_ros2_services(self.connector, ["/spawn_entity"])
+        msg = self.make_spawn_entity_msg_for_spot(
+            slot_name,
+            object_name,
+            item_stored,
+            std_xy,
+            std_yaw,
+            offset_yaw=offset_yaw,
+            frame=frame,
+        )
+        return self.spawn_objects([msg])[0]
+
+    def make_spawn_entity_msg_for_spot(
+        self,
+        slot_name: str,
+        object_name: str,
+        item_stored: Optional[str] = None,
+        std_xy: float = 0.0,
+        std_yaw: float = 0.0,
+        rotate_90_degrees: bool = False,
+        rotate_90_degrees_percentage: float = 0.1,
+        offset_yaw: float = 0.0,
+        frame: str = "odom",
+    ) -> SpawnEntityMsg:
         pose: Pose = copy.deepcopy(self.slots[slot_name].origin_pose)
         # Add Gaussian noise to x, y
         pose.position.x += random.normalvariate(0, std_xy)
@@ -278,6 +343,9 @@ class SceneManager:
 
         # Add Gaussian noise to yaw
         yaw += random.normalvariate(0, std_yaw)
+        if rotate_90_degrees:
+            if random.random() < rotate_90_degrees_percentage:
+                yaw += random.choice([-np.pi / 2, np.pi / 2])
         yaw += offset_yaw
 
         # Convert back to quaternion
@@ -287,9 +355,7 @@ class SceneManager:
         pose.orientation.z = q_new[2]
         pose.orientation.w = q_new[3]
 
-        return self.spawn_object(
-            pose=pose, object_name=object_name, item_stored=item_stored, frame=frame
-        )
+        return self.make_spawn_entity_msg(pose, object_name, item_stored, frame)
 
     def clear_scene(self):
         wait_for_ros2_services(self.connector, ["/get_entities", "/delete_entity"])
@@ -316,6 +382,29 @@ class SceneManager:
                 msg_type="simulation_interfaces/srv/DeleteEntity",
                 timeout_sec=3.0,
             )
+
+    def reset_simulation(self):
+        wait_for_ros2_services(self.connector, ["/reset_simulation"])
+        self.connector.call_service(
+            ROS2Message(payload={}),
+            target="/reset_simulation",
+            msg_type="simulation_interfaces/srv/ResetSimulation",
+            timeout_sec=10.0,
+        )
+        time.sleep(3.0)
+
+    def remove_humanworker(self):
+        while True:  # wait for the topic to appear so the message will be recieved.
+            time.sleep(1.0)
+            topics = [tup[0] for tup in self.connector.get_topics_names_and_types()]
+            if "/remove_humanworker" in topics:
+                break
+
+        self.connector.send_message(
+            ROS2Message(payload={"data": 0}),
+            target="/remove_humanworker",
+            msg_type="std_msgs/msg/Int32",
+        )
 
     def move_entity(
         self,

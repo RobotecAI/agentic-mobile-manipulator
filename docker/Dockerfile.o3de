@@ -1,58 +1,49 @@
-ARG ROS2_IMAGE=mobile-manipulator-demo-ros2:latest
-FROM ${ROS2_IMAGE}
+FROM base_image
+
+# Install O3DE build dependencies and the 26.05 SDK.
+# Note: git, git-lfs, pixi are inherited from the base image; ROS/colcon/cmake/
+# ninja come from the conda env. clang is O3DE's compiler, hence apt here.
+RUN apt update && apt install -y \
+    cmake \
+    libstdc++-12-dev \
+    clang \
+    libglu1-mesa-dev \
+    libxcb-randr0-dev \
+    libxcb-xinerama0 \
+    libxcb-xinput0 \
+    libxcb-xinput-dev \
+    libxcb-xfixes0-dev \
+    libxcb-xkb-dev \
+    libxkbcommon-dev \
+    libxkbcommon-x11-dev \
+    libfontconfig1-dev \
+    libpcre2-16-0 \
+    zlib1g-dev \
+    mesa-common-dev \
+    libunwind-dev \
+    libzstd-dev \
+    tix \
+    wget \
+    libxcb-keysyms1-dev \
+ && apt clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root/MobileManipulatorDemo
-ENV DEMO_ROOT=/root/MobileManipulatorDemo
-ENV O3DE_ROOT=${DEMO_ROOT}/engine/o3de
 
-# Install O3DE dependencies
-# Note: git, git-lfs, ninja-build, ros-dev-tools are inherited from base image
-RUN apt update && apt install -y cmake libstdc++-12-dev clang libglu1-mesa-dev libxcb-randr0-dev libxcb-xinerama0 libxcb-xinput0 libxcb-xinput-dev libxcb-xfixes0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev mesa-common-dev libunwind-dev libzstd-dev tix
+# Refresh pixi task definitions so cmake flags, SDK path, etc. are current
+COPY pixi.toml pixi.lock gems.repos ros2_ws.repos ./
+COPY scripts/ scripts/
 
-# Copying .git to enable git lfs pull in gems directory
-COPY .git ${DEMO_ROOT}/.git
-COPY sim ${DEMO_ROOT}/sim
-COPY engine.repos ${DEMO_ROOT}/
-COPY gems.repos ${DEMO_ROOT}/
-COPY project_gems ${DEMO_ROOT}/project_gems
+# .git is required for gems LFS pull inside register-project
+COPY .git .git/
+COPY project_gems/ project_gems/
+COPY sim/ sim/
 
-# ---- O3DE ---- # 
-RUN vcs import --input ${DEMO_ROOT}/engine.repos
-RUN vcs import --input ${DEMO_ROOT}/gems.repos
-
-WORKDIR ${O3DE_ROOT}
-RUN git lfs install
-RUN git lfs pull
-RUN python/get_python.sh
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --this-engine
-
-WORKDIR ${DEMO_ROOT}/gems
+# install_o3de.sh apt-installs the SDK's system deps (ninja-build, pkg-config,
+# ...) without running `apt-get update` itself, so refresh the lists here — the
+# ros2 base strips them to stay small.
+RUN apt-get update && pixi run install-o3de && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN git lfs install --force
-RUN git lfs pull
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path  ${DEMO_ROOT}/gems/o3de-extras/Gems
+RUN pixi run build-sim
 
-WORKDIR ${DEMO_ROOT}/gems
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --gem-path ${DEMO_ROOT}/gems/o3de-humanworker-gem
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --gem-path ${DEMO_ROOT}/gems/o3de-ur-robots-gem
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-warehouse-assets
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-generic-assets
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-o3de-tools
-RUN ${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/project_gems/
-RUN ${O3DE_ROOT}/scripts/o3de.sh register  --project-path ${DEMO_ROOT}/sim
-
-# ---- Build O3DE ---- # 
-
-WORKDIR ${DEMO_ROOT}/sim
-RUN . ${DEMO_ROOT}/ros2_ws/install/setup.sh && cmake -B build/linux -G "Ninja Multi-Config" \
-    -DLY_DISABLE_TEST_MODULES=ON \
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-    -DLY_STRIP_DEBUG_SYMBOLS=ON \
-    -DCMAKE_LINKER_TYPE=MOLD
-RUN . ${DEMO_ROOT}/ros2_ws/install/setup.sh && cmake --build build/linux --config profile --target MobileManipulatorDemo Editor MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher
-
-# clear up apt cache
-RUN apt clean
-RUN rm -rf /var/lib/apt/lists/*
-
-WORKDIR ${DEMO_ROOT}
+WORKDIR /root/MobileManipulatorDemo
 CMD ["bash"]

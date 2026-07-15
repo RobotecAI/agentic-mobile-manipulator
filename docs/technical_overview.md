@@ -1,6 +1,6 @@
 # Technical Overview
 
-This demo is built on top of RobotecAI's RAI framework, combining the open-source agent stack with our warehouse simulation assets to orchestrate LangChain-driven task planning, ROS 2 control, and perception workflows.[^rai-gh][^rai-docs]
+This demo is built on top of RobotecAI's RAI framework, combining the open-source agent stack with the warehouse simulation assets to orchestrate LangChain-driven task planning, ROS 2 control, and perception workflows.[^rai-gh][^rai-docs]
 
 ## Platform Stack
 

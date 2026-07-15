@@ -23,9 +23,9 @@ The repository is organized into several key directories:
 
 ### Infrastructure & Simulation
 
-- **`docker/`**: Deployment files. Contains `docker-compose` configurations for AMD GPUs and AMD Ryzen™ AI, and Dockerfiles for different components.
+- **`docker/`**: Deployment files for AMD GPU + AMD Ryzen™ AI. A layered build (`ros2` → `o3de` → `demo`) produces a single container that runs the whole demo via `pixi run demo`. See the [Quickstart Guide](./quickstart.md).
 - **`project_gems/`**: Assets and configurations for the **O3DE (Open 3D Engine)** simulation environment.
-- **`config.toml`**: The central configuration file for defining which LLMs and VLMs are used by the agents.
+- **`config.toml`**: The central configuration file for the agents' LLMs and VLMs. Each endpoint declares a local backend — CPU/GPU via llama.cpp (Vulkan) or the **AMD Ryzen™ AI NPU** via FastFlowLM — so models can be moved across CPU, GPU and NPU in one place.
 
 ## 2. Key Components
 
@@ -47,7 +47,7 @@ The system is built on a multi-agent architecture orchestrated by a "MegaMind" a
 
 This file is the control center for your model backend. You can define:
 
-- **LLM/VLM Endpoints**: Switch between local models or cloud providers (e.g., OpenAI).
+- **LLM/VLM Endpoints**: Define the model, backend, and port each agent uses.
 - **Model Parameters**: Adjust reasoning capabilities or temperature for specific agents.
 - **RAG Settings**: Configure the embedding models used by the Safety Agent.
 

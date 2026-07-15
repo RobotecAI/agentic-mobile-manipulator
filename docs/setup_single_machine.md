@@ -3,7 +3,7 @@
 This repository is compatible with the following system:
 
 - System: Ubuntu 24.04
-- ROS 2: Jazzy with development tools installed [link](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html#install-development-tools-optional)
+- ROS 2: Jazzy, provided by pixi via RoboStack (no separate ROS 2 install needed)
 - Python: 3.12
 
 ## Building the Project
@@ -13,152 +13,186 @@ This repository is compatible with the following system:
 #### Clone the Repository
 
 ```shell
-cd /home/${USER}
-git clone git@github.com:RobotecAI/agentic-mobile-manipulator.git
+git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
+cd agentic-mobile-manipulator
 ```
 
-#### Set the Root Directory of the Project
+#### Install System Dependencies
 
-Set the root directory of the project to `$DEMO_ROOT` and `$O3DE_ROOT`, e.g., by adding the following lines to your `.bashrc` or `.zshrc` file:
-
-```shell
-export DEMO_ROOT=/home/${USER}/agentic-mobile-manipulator
-export O3DE_ROOT=${DEMO_ROOT}/engine/o3de
-```
-
-#### Install Base Dependencies
+These packages must be installed via `apt` before using pixi:
 
 ```bash
 sudo apt update
-sudo apt install git git-lfs ninja-build
+sudo apt install git git-lfs python3-vcstool ninja-build \
+    cmake libstdc++-12-dev clang \
+    libglu1-mesa-dev libxcb-randr0-dev libxcb-xinerama0 libxcb-xinput0 \
+    libxcb-xinput-dev libxcb-xfixes0-dev libxcb-xkb-dev libxkbcommon-dev \
+    libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev \
+    mesa-common-dev libunwind-dev libzstd-dev tix tmux
 ```
 
-#### Clone Repositories
+#### Install pixi
+
+[pixi](https://pixi.sh) orchestrates all build steps and sets environment variables automatically.
 
 ```shell
-cd ${DEMO_ROOT}
-vcs import --input ${DEMO_ROOT}/engine.repos
-vcs import --input ${DEMO_ROOT}/gems.repos
-vcs import --input ${DEMO_ROOT}/ros2_ws.repos
+curl -fsSL https://pixi.sh/install.sh | sh
 ```
 
-### Setup O3DE
+Restart your shell or run `source ~/.bashrc` after installation.
 
-Install [packages required to build O3DE:](https://www.docs.o3de.org/docs/welcome-guide/requirements/#linux)
+---
+
+### Build Everything
 
 ```shell
-sudo apt install cmake libstdc++-12-dev clang libglu1-mesa-dev libxcb-randr0-dev libxcb-xinerama0 libxcb-xinput0 libxcb-xinput-dev libxcb-xfixes0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev mesa-common-dev libunwind-dev libzstd-dev tix
+pixi run -e single-pc-gpu-and-npu setup
 ```
 
-Register the O3DE engine:
+This single command runs the full build pipeline in the correct order:
+
+| Step | pixi task          | What it does                                                   |
+| ---- | ------------------ | -------------------------------------------------------------- |
+| 1    | `clone`            | `vcs import` + `git lfs pull` for gems and ROS 2 ws            |
+| 2    | `install-o3de`     | Install the O3DE engine                                        |
+| 3    | `fetch-gems`       | Clone o3de-extras locally, validate all gem paths              |
+| 4    | `build-ros2`       | `colcon build` (deps provided by RoboStack)                    |
+| 5    | `build-sim`        | CMake configure + Ninja build (GameLauncher)                   |
+| 6    | `sync`             | `uv sync` installs the Python dependencies                     |
+| 7    | `build-llama`      | Build llama.cpp with the Vulkan backend (GPU)                  |
+| 8    | `build-fastflowlm` | Build FastFlowLM for the AMD Ryzen AI NPU backend              |
+| 9    | `find-runnables`   | List the built runnables (GameLauncher, llama.cpp, FastFlowLM) |
+
+> Prefer a GPU-only machine (no AMD Ryzen AI NPU)? Use `pixi run -e single-pc-gpu setup`
+> instead — it skips step 8. You must also set `[endpoints.vlm_safety] backend = "gpu"`
+> in `config.toml`; otherwise inference routes that endpoint to the NPU.
+
+#### Local Inference
+
+Setup already checks out the inference submodules and builds both backends —
+llama.cpp (Vulkan, GPU) and FastFlowLM (NPU) — as part of the pipeline above. To
+serve models locally you still need to download the weights:
 
 ```shell
-cd ${O3DE_ROOT}
-git lfs install
-git lfs pull
-python/get_python.sh
-${O3DE_ROOT}/scripts/o3de.sh register --this-engine
+pixi run -e single-pc-gpu-and-npu download-models # downloads every weight referenced in config.toml (gguf via wget, NPU tags via `flm pull`); or grab them manually below
 ```
 
-#### Setup o3de-extras
+`config.toml` is the single source of truth for inference: each `[endpoints.*]`
+table fixes a model's backend, port, and weights, and the agents reference those
+endpoints by name. `pixi run inference` launches them all. See
+[Running the demo](running.md#local-inference).
 
-```shell
-cd ${DEMO_ROOT}/gems
-git lfs install
-git lfs pull
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path  ${DEMO_ROOT}/gems/o3de-extras/Gems
-```
+##### NPU backend (AMD Ryzen™ AI)
 
-#### Non-canonical Gems
+The `single-pc-gpu-and-npu` setup above builds FastFlowLM (step 8), so NPU
+endpoints are served without extra configuration. The [RobotecAI/FastFlowLM](https://github.com/RobotecAI/FastFlowLM)
+fork (pinned as a submodule) includes GBNF grammar-constrained sampling, so the
+NPU path can produce the structured/JSON output the agents rely on. Which
+endpoints run on the NPU is driven by `backend = "npu"` entries in `config.toml`
+— the NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see
+`[endpoints.vlm_safety]`.
 
-These are gems that are open source but not maintained by O3DE.
+Building FastFlowLM only needs the XRT/amdxdna dev headers, but **serving** on
+the NPU requires an AMD Ryzen AI processor with the `amdxdna` driver loaded. On an
+AMD machine without the NPU, use the GPU-only `single-pc-gpu` setup and switch
+`[endpoints.vlm_safety]` to `backend = "gpu"` in `config.toml`, so every endpoint
+runs on llama.cpp.
 
-```shell
-cd  ${DEMO_ROOT}/gems
-${O3DE_ROOT}/scripts/o3de.sh register --gem-path ${DEMO_ROOT}/gems/o3de-humanworker-gem
-${O3DE_ROOT}/scripts/o3de.sh register --gem-path ${DEMO_ROOT}/gems/o3de-ur-robots-gem
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-warehouse-assets
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-generic-assets
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/gems/robotec-o3de-tools
-${O3DE_ROOT}/scripts/o3de.sh register --all-gems-path ${DEMO_ROOT}/project_gems/
-```
-
-#### Register Project
-
-```shell
-${O3DE_ROOT}/scripts/o3de.sh register  --project-path ${DEMO_ROOT}/sim
-```
-
-### Setup ROS 2
-
-#### Build the ROS 2 Workspace
-
-```shell
-cd ${DEMO_ROOT}/ros2_ws
-rosdep update
-rosdep install --ignore-src --from-paths src -y
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
-```
-
-Source the installation in your `.bashrc` or `.zshrc` file:
-
-```shell
-source ${DEMO_ROOT}/ros2_ws/install/setup.bash
-```
-
-### Build O3DE Editor and GameLauncher
-
-```shell
-cd ${DEMO_ROOT}/sim
-cmake -B build/linux -G "Ninja Multi-Config" \
-    -DLY_DISABLE_TEST_MODULES=ON \
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-    -DLY_STRIP_DEBUG_SYMBOLS=ON \
-    -DCMAKE_LINKER_TYPE=MOLD
-cmake --build build/linux --config profile --target MobileManipulatorDemo Editor MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher
-```
-
-### Setup Python Environment
-
-1. Install uv
-
-```shell
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-2. Install dependencies
-
-```shell
-uv sync
-```
-
-### Setting Up llama.cpp (local inference)
-
-> [!TIP]
-> For the demo presented at ROSCon 2025, the Vulkan backend was used. For more information, see the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
-
-```shell
-cd ${DEMO_ROOT}
-vcs import --input ${DEMO_ROOT}/inference.repos
-```
-
-```shell
-cd ${DEMO_ROOT}/inference/llama.cpp
-
-cmake -B build -DGGML_VULKAN=1
-cmake --build build --config Release
-```
+---
 
 ### Download Models
 
-For every configured model in `config.toml`, download the appropriate GGUF file and run it via `llama-server`.
-
-For the default setup, download the following models:
+For every GGUF-backed model in `config.toml`, download the file and place it in `$DEMO_ROOT/models/`:
 
 - [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
-- [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) along with [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
-- [Qwen3-Embedding-0.6b](https://robotecai-my.sharepoint.com/:u:/g/personal/bartlomiej_boczek_robotec_ai/IQB7tkMkmi34Q6xtTB89N1LxAfod0sMpGT4uTffjo6iW7qc?e=6kLoTi)
-- [Qwen3-Reranker-0.6B](https://robotecai-my.sharepoint.com/:u:/g/personal/bartlomiej_boczek_robotec_ai/IQAgWOVPiyS8RZ1QUVVx6N9gAaOGGrvDnk7Qa0IpSbhlp_8?e=P0b1Ak)
+- [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) + [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
+- [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true)
+- [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true)
+
+The NPU `vlm_safety` model (`gemma3:4b`) has no GGUF; `flm pull` downloads it for you.
+
+---
+
+### Using cloud models instead (low-VRAM machines)
+
+If the machine cannot serve the chat/vision models locally, switch the agents to
+OpenAI-hosted models via `cloud_config.toml`:
+
+```shell
+cp cloud_config.toml config.toml
+export OPENAI_API_KEY=sk-...
+```
+
+Your OpenAI account must have access to the models it names (`gpt-5-mini`,
+`gpt-5-nano`) — edit the `[endpoints.*]` `model` fields to use different ones.
+
+Everything reads `config.toml`, so the usual commands work unchanged:
+`download-models` now fetches only the two RAG GGUFs (embedding + reranker, the
+only endpoints still served locally) and `pixi run inference` launches just
+those two llama.cpp servers, skipping the remote `backend = "openai"` endpoints.
+The NPU is not used in this configuration, so the GPU-only `single-pc-gpu`
+environment suffices.
+
+---
+
+## Verify your installation
+
+Once the build is done and the weights are downloaded, run one command to exercise
+the whole stack end to end:
+
+```shell
+pixi run -e single-pc-gpu-and-npu demo-trace
+```
+
+This brings up the full demo (sim, stack, inference, agents, HMI), populates the
+scene, sends one task to the orchestrator (ship one CPU), waits for it to finish,
+saves the agent trace, and shuts everything down. A successful run ends with:
+
+```
+  ● Task complete (marker).
+
+=== Trace saved ===
+  runs/<timestamp>
+    log.txt         human-readable conversation (orchestrator + subagents)
+    trace.jsonl     one JSON record per event
+    agents_pane.log raw agents tmux output
+    manifest.txt    task + timestamps
+```
+
+Open `runs/<timestamp>/log.txt` to read the orchestrator and subagent conversation
+for the task.
+
+Environment knobs:
+
+- `TASK`: the task string sent to the orchestrator (default: ship one CPU)
+- `MAX_WAIT`: hard cap in seconds on task execution (default: 900)
+- `IDLE`: treat this many seconds of trace inactivity as done (default: 180)
+- `SKIP_SCENE=1`: skip scene population
+- `TRACE_DIR`: output directory (default: `runs/<timestamp>`)
+
+On a GPU-only box, use `-e single-pc-gpu` and set
+`[endpoints.vlm_safety] backend = "gpu"` in `config.toml` first (see above).
+
+The conversation trace is written on any agent run (default-on, to `runs/<timestamp>/`);
+`demo-trace` just automates a single task plus teardown. Set `AMM_TRACE=0` to
+disable it.
+
+### Richer traces with Langfuse (optional)
+
+The orchestrator is already instrumented with a Langfuse callback. Point it at a
+Langfuse instance (self-hosted or cloud) to get a full browsable trace, including
+nested subagent spans and token usage, alongside the local `runs/` files:
+
+```shell
+export LANGFUSE_PUBLIC_KEY=pk-...
+export LANGFUSE_SECRET_KEY=sk-...
+export LANGFUSE_HOST=http://localhost:3000   # your Langfuse server
+```
+
+Without these keys the callback stays inactive and only the local `runs/` trace is
+written.
+
+---
 
 ## Developer Setup
 
@@ -168,11 +202,14 @@ We use conventional commits to ensure that the commit messages are consistent an
 
 ### Pre-commit
 
-We use pre-commit to ensure that the code is formatted and linted before it is committed.
+```bash
+pixi run -e dev pre-commit-install
+```
+
+To run hooks manually:
 
 ```bash
-sudo apt install pre-commit
-pre-commit install
+pixi run -e dev lint
 ```
 
 # Next Steps

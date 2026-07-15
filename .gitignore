@@ -1,6 +1,6 @@
 gems/
 engine/
-inference/
+external/
 ros2_ws/install
 ros2_ws/build
 ros2_ws/src/packages
@@ -19,3 +19,8 @@ safety_violations.json
 imgui.ini
 anomaly_images/
 package_condition_images/
+models/
+runs/
+*.bak0
+sim/user/
+backtrace.log

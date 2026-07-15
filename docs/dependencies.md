@@ -19,23 +19,20 @@
 
 ## ROS 2
 
-| Package Name                      | Repository URL                                                           |
-| --------------------------------- | ------------------------------------------------------------------------ |
-| rai_interfaces                    | https://github.com/RobotecAI/rai_interfaces.git                          |
-| Universal_Robots_ROS2_Description | https://github.com/UniversalRobots/Universal_Robots_ROS2_Description.git |
-| control_msgs                      | https://github.com/ros-controls/control_msgs.git                         |
-| control_toolbox                   | https://github.com/ros-controls/control_toolbox.git                      |
-| kinematics_interface              | https://github.com/ros-controls/kinematics_interface.git                 |
-| moveit2                           | https://github.com/moveit/moveit2.git                                    |
-| moveit_msgs                       | https://github.com/moveit/moveit_msgs.git                                |
-| realtime_tools                    | https://github.com/ros-controls/realtime_tools.git                       |
-| robotnik_common                   | https://github.com/RobotnikAutomation/robotnik_common.git                |
-| robotnik_description              | https://github.com/RobotnikAutomation/robotnik_description.git           |
-| robotnik_sensors                  | https://github.com/RobotnikAutomation/robotnik_sensors.git               |
-| ros2_control                      | https://github.com/ros-controls/ros2_control.git                         |
-| ros2_controllers                  | https://github.com/ros-controls/ros2_controllers                         |
-| srdfdom                           | https://github.com/moveit/srdfdom.git                                    |
-| simulation_interfaces             | https://github.com/ros-simulation/simulation_interfaces.git              |
+Most ROS 2 dependencies (MoveIt 2, Nav2, `ros2_control`, `control_msgs`,
+`simulation_interfaces`, and the rest) come from the
+[RoboStack](https://robostack.github.io) `robostack-jazzy` conda channel and are
+installed automatically by pixi — see `[dependencies]` in `pixi.toml`. They are no
+longer vcs-imported or built from source.
+
+These packages are built from source (see `ros2_ws.repos`):
+
+| Package Name         | Repository URL                                                 |
+| -------------------- | -------------------------------------------------------------- |
+| robotnik_common      | https://github.com/RobotnikAutomation/robotnik_common.git      |
+| robotnik_description | https://github.com/RobotnikAutomation/robotnik_description.git |
+| robotnik_sensors     | https://github.com/RobotnikAutomation/robotnik_sensors.git     |
+| rai_interfaces       | https://github.com/RobotecAI/rai_interfaces.git                |
 
 ## Python
 
@@ -46,13 +43,23 @@
 
 ## Inference
 
-| Inference Engine | Repository URL                            |
-| ---------------- | ----------------------------------------- |
-| llama.cpp        | https://github.com/ggml-org/llama.cpp.git |
+| Inference Engine | Backend          | Repository URL                              |
+| ---------------- | ---------------- | ------------------------------------------- |
+| llama.cpp        | GPU (Vulkan)/CPU | https://github.com/ggml-org/llama.cpp.git   |
+| FastFlowLM       | AMD Ryzen AI NPU | https://github.com/RobotecAI/FastFlowLM.git |
 
 ## Models
 
-| Model name  | Type | Repository URL                            |
-| ----------- | ---- | ----------------------------------------- |
-| LFM2-VL     | VLM  | https://www.liquid.ai/                    |
-| gpt-oss-20b | LLM  | https://huggingface.co/openai/gpt-oss-20b |
+`config.toml` is the single source of truth for which models are served, on which
+backend, and from which weights. The endpoints it defines today:
+
+| Model name           | Type      | Backend          | Source                                           |
+| -------------------- | --------- | ---------------- | ------------------------------------------------ |
+| gpt-oss-20b          | LLM       | GPU (llama.cpp)  | https://huggingface.co/openai/gpt-oss-20b        |
+| LFM2-VL-3B           | VLM       | GPU (llama.cpp)  | https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF  |
+| gemma3:4b            | VLM       | NPU (FastFlowLM) | https://huggingface.co/google/gemma-3-4b-it      |
+| Qwen3-Embedding-0.6B | Embedding | GPU (llama.cpp)  | https://huggingface.co/Qwen/Qwen3-Embedding-0.6B |
+| Qwen3-Reranker-0.6B  | Reranker  | GPU (llama.cpp)  | https://huggingface.co/Qwen/Qwen3-Reranker-0.6B  |
+
+LFM2-VL-3B serves the inspection, general, megamind, and condition agents; gemma3:4b
+serves the safety agent on the NPU.

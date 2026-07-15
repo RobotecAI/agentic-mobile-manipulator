@@ -5,7 +5,7 @@
 ## Network Configuration
 
 Ensure that all three machines (HIL, Simulation, and HMI) are on the same network and can communicate with each other. You may need to configure firewall settings to allow necessary ports for ROS 2 communication.
-We propose the following IP configuration:
+The following IP configuration is used:
 | Machine | IP Address | Hostname |
 |------------|----------------|------------|
 | Simulation | 192.168.1.1 | sim |
@@ -16,18 +16,21 @@ Make sure that all machines are reachable by their ip addresses and hostnames. Y
 
 Verify bandwidth and latency between machines to ensure they meet the requirements for real-time communication.
 This demo requires at least 60 Mbps bandwidth.
-Perform a simple bandwidth test using `iperf3`:
+Perform a simple bandwidth test using `iperf3`.
 
-1. On the Simulation machine (server):
-2. ```bash
-   iperf3 -s
-   ```
-3. On the HIL machine (client):
-4. ````bash
-       iperf3 -c 192.168.1.1
-       ```
-   You should see a bandwidth of at least 900 Mbps for 1 GBps transfer. If not, check your network configuration (cables, switches, etc.).
-   ````
+On the Simulation machine (server):
+
+```bash
+iperf3 -s
+```
+
+On the HIL machine (client):
+
+```bash
+iperf3 -c 192.168.1.1
+```
+
+On a 1 Gbps wired link you should see close to 900 Mbps. If it comes in far below that, check your cabling, switches, and NIC settings.
 
 ## DDS Configuration
 
@@ -63,10 +66,10 @@ Create a `cyclonedds.xml` file in the specified location with the following cont
     <Discovery>
       <!-- No multicast SPDP, specify peers explicitly -->
       <Peers>
-        <Peer address="192.168.1.2"/>  <!-- peer A -->
-        <Peer address="192.168.1.3"/>  <!-- peer B -->
-	<Peer address="192.168.1.4"/>  <!-- peer C -->
-</Peers>
+        <Peer address="192.168.1.1"/>  <!-- sim -->
+        <Peer address="192.168.1.2"/>  <!-- hil -->
+        <Peer address="192.168.1.4"/>  <!-- hmi -->
+      </Peers>
 
       <!-- Optionally fix participant index for port calculation -->
       <ParticipantIndex>auto</ParticipantIndex>

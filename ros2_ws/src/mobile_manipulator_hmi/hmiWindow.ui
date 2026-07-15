@@ -276,7 +276,7 @@ QGroupBox::title {
             </font>
            </property>
            <property name="title">
-            <string>On Demand prefined tasks</string>
+            <string>On Demand predefined tasks</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignCenter</set>

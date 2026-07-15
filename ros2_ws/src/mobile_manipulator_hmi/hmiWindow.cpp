@@ -26,6 +26,7 @@
 #include <QTransform>
 #include <QTime>
 #include "LogView.h"
+#include "ModelConfig.h"
 #include "ParseRaiData.h"
 
 QString HRIMessageToString(const ParseRaiData::HRIMessage& msg)
@@ -273,8 +274,9 @@ HMIWindow::HMIWindow(QWidget *parent)
     ui->graphicsViewMap->setDragMode(QGraphicsView::RubberBandDrag);
     ui->graphicsViewMap->setRenderHint(QPainter::Antialiasing);
     ui->graphicsViewMap->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-    ui->llm_text_field->setText(HardcodedConfig::SelectedLLMModel);
-    ui->vlm_text_field->setText(HardcodedConfig::SelectedVLMModel);
+    const ModelNames models = loadModelNames(defaultModelConfigPath());
+    ui->llm_text_field->setText(models.llm);
+    ui->vlm_text_field->setText(models.vlm);
 
     logView_  = new LogView(this);
     queueView_  = new LogView(this);

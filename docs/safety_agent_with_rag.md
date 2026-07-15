@@ -70,20 +70,14 @@ uv run rai_app/warehouse_regulations_agent/process_regulations.py --source regul
 - `--overwrite-summaries`: Regenerate existing summaries
 - `--verbose, -v`: Verbose logging
 
-The default ranges focus on warehouse safety-relevant regulations:
-
-- **1-40**: General safety standards, walking surfaces, exits
-- **66-68**: Personal protective equipment basics
-- **132-140**: Personal protective equipment details
-- **155-165**: Respiratory protection, hearing protection
-- **176**: Materials handling and storage
-- **212**: General machinery safety
-- **335**: Electrical safety
+The default ranges (`1-40,66-68,132-140,155-165`) focus on warehouse
+safety-relevant regulations: general safety standards, walking surfaces, exits,
+and personal protective equipment.
 
 ### Step 3: Build Vector Database
 
 ```bash
-uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed_regulations --out regulations_db
+uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed_regulations --output regulations_db
 ```
 
 **Build Script Options:**
@@ -97,7 +91,8 @@ uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed
 - `--chunk-overlap`: Chunk overlap for text splitting (default: 256)
 - `--test-query`: Optional test query to run after building the database
 
-> [!NOTE] > `Recurisive` was chosen as the default split strategy to limit the size of a single document (some regulations are thousands of tokens in length), to prevent the injection of irrelevant excerpts into the context of the model, and to simplify the process of determining relevancy of passages.
+> [!NOTE]
+> The `Recursive` strategy was chosen as the default split strategy to limit the size of a single document (some regulations are thousands of tokens in length), to prevent the injection of irrelevant excerpts into the context of the model, and to simplify the process of determining relevancy of passages.
 
 ### Step 4: (Optional) Test the performance of the Warehouse Safety Agent
 
@@ -128,7 +123,7 @@ uv run rai_app/warehouse_regulations_agent/scrapper.py --output regulations
 uv run rai_app/warehouse_regulations_agent/process_regulations.py --source regulations --dest processed_regulations --ranges "1-40,66-68,132-140,155-165,176,212,335"
 
 # Step 3: Build the vector database
-uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed_regulations --out regulations_db
+uv run rai_app/warehouse_regulations_agent/build_vector_db.py --source processed_regulations --output regulations_db
 
 # Step 4: (Optional) Test the performance of the Warehouse Safety Agent
 uv run rai_app/warehouse_regulations_agent/rag.py --vector-db regulations_db --images-dir images
