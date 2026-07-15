@@ -69,20 +69,19 @@ find_package(rai_interfaces REQUIRED)               # custom Utilization message
 # add source directory to include path
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-# --- nlohmann/json dependency ---
-include(FetchContent)
-FetchContent_Declare(
-        json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG v3.11.3 # or latest
-)
-FetchContent_MakeAvailable(json)
+# --- nlohmann/json dependency (from conda-forge) ---
+find_package(nlohmann_json REQUIRED)
+
+# --- toml++ dependency (config.toml parsing, from conda-forge) ---
+find_package(tomlplusplus REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
         ZoomableGraphicsView.h
         ZoomableGraphicsView.cpp
         Config.h
+        ModelConfig.h
+        ModelConfig.cpp
         LogItemWidget.h
         LogItemWidget.cpp
         LogView.h
@@ -127,6 +126,7 @@ target_link_libraries(MobileManipulatorHMI PRIVATE
         cv_bridge::cv_bridge
         ${OpenCV_LIBS}           # OpenCV provides targets like OpenCV::Core, but ${OpenCV_LIBS} is usually set
         nlohmann_json::nlohmann_json
+        tomlplusplus::tomlplusplus
 )
 
 # Install targets
