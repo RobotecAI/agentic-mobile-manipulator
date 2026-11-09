@@ -35,7 +35,6 @@ RELEASED_GEMS=(
     "ROS2Sensors==1.0.1"
     "ROS2Controllers==1.1.0"
     "LevelGeoreferencing==1.0.0"
-    "ROS2SampleRobots==1.2.0"
     "SimulationInterfaces==2.2.0"
     "WarehouseAssets==2.0.4"
 )

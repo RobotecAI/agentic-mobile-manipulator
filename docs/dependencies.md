@@ -12,7 +12,6 @@
 | ------------------------ | --------------------------------------------------------- |
 | o3de-extras              | https://github.com/robotecai/o3de-extras.git              |
 | o3de-humanworker-gem     | https://github.com/RobotecAI/o3de-humanworker-gem.git     |
-| o3de-ur-robots-gem       | https://github.com/RobotecAI/o3de-ur-robots-gem.git       |
 | robotec-o3de-tools       | https://github.com/RobotecAI/robotec-o3de-tools.git       |
 | robotec-warehouse-assets | https://github.com/RobotecAI/robotec-warehouse-assets.git |
 | robotec-generic-assets   | https://github.com/RobotecAI/robotec-generic-assets.git   |
