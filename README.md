@@ -63,9 +63,15 @@ The original demo presented at ROSCon 2025 utilized a specific set of models, in
 
 This project was made possible thanks to AMD, who supported the development and joint presentation of the demo. It was showcased by Robotec.ai, AMD, and Liquid AI at ROSCon 2025 in Singapore.
 
-## License
+## Assets and licenses
 
-This project is licensed under the [Apache 2.0 License](https://opensource.org/licenses/Apache-2.0).
+- Code and assets in this repository: [Apache License 2.0](LICENSE). Copyright 2025-2026 Advanced Micro Devices, Inc. Developed by Robotec.ai.
+- Robotec.ai asset gems (`gems.repos`, cloned by `pixi run clone-gems`): assets made by Robotec.ai are licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Third-party items in these gems keep their own licenses.
+- Robot model (`project_gems/KairosPlus`): meshes from the Robotnik RB-KAIROS+ description and the Universal Robots UR10 description, BSD-3-Clause.
+- Inference engines (`inference/`): llama.cpp (MIT) and AMD's FastFlowLM (MIT code; the NPU binaries have their own license).
+- Models are downloaded at run time and are used under their own licenses.
+
+[NOTICE](NOTICE) gives the source and license of each third-party item.
 
 ## Contributing
 
