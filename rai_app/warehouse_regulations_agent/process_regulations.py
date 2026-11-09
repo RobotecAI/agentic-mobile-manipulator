@@ -246,7 +246,7 @@ def make_documents(
         return docs
     except ImportError:
         print(
-            "Error: langchain and langchain_text_splitters are required for summarization."
+            "Error: langchain-classic and langchain-text-splitters are required for summarization."
         )
         return []
 
@@ -263,7 +263,7 @@ def summarize_text(
         return ""
 
     try:
-        from langchain.chains.summarize import load_summarize_chain
+        from langchain_classic.chains.summarize import load_summarize_chain
 
         chain = load_summarize_chain(llm, chain_type=chain_type)
         last_err = None

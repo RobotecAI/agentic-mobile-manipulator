@@ -177,9 +177,8 @@ def load_config(config_path: str = "config.toml") -> Config:
 
 def get_llm_model(config_name: Literal["megamind_agent", "general"]) -> ChatOpenAI:
     config = load_config()
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if openai_api_key is None:
-        openai_api_key = "xxx"  # ChatOpenAPI does not initialize without an API key
+    # ChatOpenAI does not initialize without an API key, and openai>=3 refuses an empty one.
+    openai_api_key = os.getenv("OPENAI_API_KEY") or "xxx"
     if config_name == "megamind_agent":
         return ChatOpenAI(
             model=config.megamind_agent.llm.model,
@@ -206,9 +205,8 @@ def get_vlm_model(
     ],
 ) -> ChatOpenAI:
     config = load_config()
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if openai_api_key is None:
-        openai_api_key = "xxx"  # ChatOpenAPI does not initialize without an API key
+    # ChatOpenAI does not initialize without an API key, and openai>=3 refuses an empty one.
+    openai_api_key = os.getenv("OPENAI_API_KEY") or "xxx"
     if config_name == "megamind_agent":
         return ChatOpenAI(
             model=config.megamind_agent.vlm.model,
@@ -265,15 +263,15 @@ def get_vlm_backend(
 
 def get_embeddings_model(config_name: Literal["safety_agent"]) -> OpenAIEmbeddings:
     config = load_config()
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if openai_api_key is None:
-        openai_api_key = "xxx"  # ChatOpenAPI does not initialize without an API key
+    # ChatOpenAI does not initialize without an API key, and openai>=3 refuses an empty one.
+    openai_api_key = os.getenv("OPENAI_API_KEY") or "xxx"
     if config_name == "safety_agent":
         # WARN: DO NOT set the `check_embedding_ctx_length` flag to True, as this will enable
         # document tokenization before they are sent to llama.cpp, resulting in broken embeddings!
         return OpenAIEmbeddings(
             model=config.safety_agent.embeddings.model,
             base_url=config.safety_agent.embeddings.base_url,
+            api_key=openai_api_key,
             check_embedding_ctx_length=False,
         )
     else:
