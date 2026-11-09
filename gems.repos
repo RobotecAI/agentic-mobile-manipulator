@@ -10,12 +10,12 @@ repositories:
   ./gems/robotec-o3de-tools:
     type: git
     url: https://github.com/RobotecAI/robotec-o3de-tools.git
-    version: b814f8d73403a431ebb967e98706be58145c2187
+    version: e2baeea61e07c80bbf659cd85f8e85c87ed90460
   ./gems/robotec-warehouse-assets:
     type: git
     url: https://github.com/RobotecAI/robotec-warehouse-assets.git
-    version: 9d342d20be893457762c0718c797332c1459825c
+    version: 1e3f5777f086e927947c9db432fa891addd4b3f8
   ./gems/robotec-generic-assets:
     type: git
     url: https://github.com/RobotecAI/robotec-generic-assets.git
-    version: 7dc32e2a18a8210087ce2760d1d806ee5f907635
+    version: 7d9d5ebbe2ec45cbca6b6ec7969c03734008bb0e
