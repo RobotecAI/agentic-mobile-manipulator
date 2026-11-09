@@ -8,8 +8,7 @@
 # System prerequisites (Ubuntu, one-time, requires sudo + reboot):
 #   sudo add-apt-repository ppa:lemonade-team/stable
 #   sudo apt update
-#   sudo apt install ninja-build libavformat-dev libavutil-dev libavcodec-dev \
-#       libswresample-dev libswscale-dev libxrt-dev uuid-dev libdrm-dev \
+#   sudo apt install ninja-build libedit-dev libxrt-dev uuid-dev libdrm-dev \
 #       libxrt-npu2 amdxdna-dkms
 #   sudo reboot
 set -euo pipefail
@@ -40,10 +39,11 @@ echo "Building (-j$(nproc)) ..."
 cmake --build build -j"$(nproc)"
 
 # flm looks next to its executable for model_list.json (the model registry, used
-# by `flm serve` and `flm pull`) and for xclbins/ (the per-model NPU kernels).
-# We run the build-tree binary, so put both beside it: copy the small registry,
+# by `flm serve` and `flm pull`), model_info.json (the model file sizes, used by
+# `flm pull` and `flm check`) and xclbins/ (the per-model NPU kernels). We run
+# the build-tree binary, so put them beside it: copy the small JSON files,
 # symlink the large shipped xclbins dir rather than duplicating it.
-cp model_list.json build/model_list.json
+cp model_list.json model_info.json build/
 ln -sfn ../xclbins build/xclbins
 
 # Build-only — deliberately NO `sudo cmake --install`. The dispatcher runs the

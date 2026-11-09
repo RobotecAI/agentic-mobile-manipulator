@@ -43,10 +43,10 @@ These packages are built from source (see `ros2_ws.repos`):
 
 ## Inference
 
-| Inference Engine | Backend          | Repository URL                              |
-| ---------------- | ---------------- | ------------------------------------------- |
-| llama.cpp        | GPU (Vulkan)/CPU | https://github.com/ggml-org/llama.cpp.git   |
-| FastFlowLM       | AMD Ryzen AI NPU | https://github.com/RobotecAI/FastFlowLM.git |
+| Inference Engine | Backend          | Repository URL                            |
+| ---------------- | ---------------- | ----------------------------------------- |
+| llama.cpp        | GPU (Vulkan)/CPU | https://github.com/ggml-org/llama.cpp.git |
+| FastFlowLM       | AMD Ryzen AI NPU | https://github.com/ROCm/FastFlowLM.git    |
 
 ## Models
 

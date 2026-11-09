@@ -133,10 +133,10 @@ def llama_server_bin(root: str) -> str:
 
 
 def flm_bin(root: str) -> str | None:
-    """The repo-built fork binary, or None if it hasn't been built. We deliberately
-    do NOT fall back to a `flm` on PATH: the global /usr/local/bin flm is the upstream
-    release with no GBNF grammar support, and BOTH report the same `flm version`, so a
-    PATH fallback would silently serve the wrong binary. Local or nothing."""
+    """The repo-built binary, or None if it hasn't been built. We deliberately do
+    NOT fall back to a `flm` on PATH: a global /usr/local/bin flm can be an older
+    release without json_schema response_format support, so a PATH fallback could
+    silently serve the wrong binary. Local or nothing."""
     repo_flm = os.path.join(root, "inference", "FastFlowLM", "src", "build", "flm")
     return repo_flm if os.path.exists(repo_flm) else None
 
@@ -282,21 +282,31 @@ def check_endpoint(name: str, ep: dict) -> tuple[bool, str]:
             text = (msg.get("content") or msg.get("reasoning_content") or "").strip()
             if not text:
                 return (False, "empty completion")
-            # NPU endpoints additionally exercise the fork's GBNF grammar support.
+            # NPU endpoints additionally exercise json_schema response_format.
             if ep.get("backend") == "npu":
                 g = _post_json(
                     f"{root}/v1/chat/completions",
                     {
                         "model": model,
                         "messages": [{"role": "user", "content": "yes or no?"}],
-                        "max_tokens": 8,
-                        "grammar": 'root ::= "yes" | "no"',
+                        "max_tokens": 32,
+                        "response_format": {
+                            "type": "json_schema",
+                            "json_schema": {
+                                "name": "answer",
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {"answer": {"enum": ["yes", "no"]}},
+                                    "required": ["answer"],
+                                },
+                            },
+                        },
                     },
                     120,
                 )
-                gtext = (g["choices"][0]["message"]["content"] or "").strip()
-                ok = gtext in ("yes", "no")
-                return (ok, f"chat ok; grammar={'ok' if ok else f'BAD({gtext!r})'}")
+                gtext = g["choices"][0]["message"]["content"] or ""
+                ok = json.loads(gtext).get("answer") in ("yes", "no")
+                return (ok, f"chat ok; json_schema={'ok' if ok else f'BAD({gtext!r})'}")
             return (True, f"reply={text[:24]!r}")
 
         return (False, f"unknown type {etype!r}")

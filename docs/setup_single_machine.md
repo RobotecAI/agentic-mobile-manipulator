@@ -28,7 +28,7 @@ sudo apt install git git-lfs python3-vcstool ninja-build \
     libglu1-mesa-dev libxcb-randr0-dev libxcb-xinerama0 libxcb-xinput0 \
     libxcb-xinput-dev libxcb-xfixes0-dev libxcb-xkb-dev libxkbcommon-dev \
     libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev \
-    mesa-common-dev libunwind-dev libzstd-dev tix tmux
+    mesa-common-dev libunwind-dev libzstd-dev tix tmux libedit-dev
 ```
 
 #### Install pixi
@@ -85,14 +85,14 @@ endpoints by name. `pixi run inference` launches them all. See
 ##### NPU backend (AMD Ryzen™ AI)
 
 The `single-pc-gpu-and-npu` setup above builds FastFlowLM (step 8), so NPU
-endpoints are served without extra configuration. The [RobotecAI/FastFlowLM](https://github.com/RobotecAI/FastFlowLM)
-fork (pinned as a submodule) includes GBNF grammar-constrained sampling, so the
+endpoints are served without extra configuration. [FastFlowLM](https://github.com/ROCm/FastFlowLM)
+(pinned as a submodule) supports `json_schema` `response_format`, so the
 NPU path can produce the structured/JSON output the agents rely on. Which
 endpoints run on the NPU is driven by `backend = "npu"` entries in `config.toml`
 — the NPU VLM endpoint serves a FastFlowLM vision tag (default `gemma3:4b`); see
 `[endpoints.vlm_safety]`.
 
-Building FastFlowLM only needs the XRT/amdxdna dev headers, but **serving** on
+Building FastFlowLM only needs the XRT/amdxdna dev headers and `libedit-dev`, but **serving** on
 the NPU requires an AMD Ryzen AI processor with the `amdxdna` driver loaded. On an
 AMD machine without the NPU, use the GPU-only `single-pc-gpu` setup and switch
 `[endpoints.vlm_safety]` to `backend = "gpu"` in `config.toml`, so every endpoint
