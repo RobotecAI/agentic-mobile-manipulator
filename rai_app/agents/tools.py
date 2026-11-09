@@ -50,7 +50,6 @@ from rai_app.geometry_helpers import (
     get_global_pose_from_origin,
     get_yaw_difference,
 )
-from rai_app.initialization.structured import vlm_structured
 
 
 class WarehouseTool(BaseROS2Tool):
@@ -429,7 +428,6 @@ class IsPackageDamagedTool(BaseROS2Tool):
 
     namespace_value: str
     vlm: BaseChatModel
-    vlm_backend: str | None = None
 
     def _build_ros2_image(self, b64_img: str) -> Image:
         """Decode a base64-encoded RGB image and convert it to a ROS 2 ``Image``."""
@@ -476,7 +474,7 @@ class IsPackageDamagedTool(BaseROS2Tool):
         for msg in structured_task:
             structured_prompt += msg.pretty_repr() + "\n"
 
-        vlm = vlm_structured(self.vlm, BoxConditionOutput, self.vlm_backend)
+        vlm = self.vlm.with_structured_output(BoxConditionOutput)
         response = cast(BoxConditionOutput, vlm.invoke(structured_task))
         logging.info(f"Package damaged = {response.box_condition}")
         ros2_image = self._build_ros2_image(b64_img)

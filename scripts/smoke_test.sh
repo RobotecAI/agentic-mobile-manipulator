@@ -49,7 +49,7 @@ fi
 echo ""
 
 # Functional check: send a real, type-appropriate inference request to each
-# endpoint (llm/vlm chat, embeddings vector, reranker scores, + GBNF grammar on
+# endpoint (llm/vlm chat, embeddings vector, reranker scores, + json_schema on
 # NPU). Liveness alone doesn't prove the checkpoint actually serves.
 python -m rai_app.inference.serve --check --config "$CONFIG"
 CHECK_RC=$?

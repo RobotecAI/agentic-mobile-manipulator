@@ -4,5 +4,5 @@
 	shallow = true
 [submodule "inference/FastFlowLM"]
 	path = inference/FastFlowLM
-	url = https://github.com/RobotecAI/FastFlowLM.git
+	url = https://github.com/ROCm/FastFlowLM.git
 	shallow = true

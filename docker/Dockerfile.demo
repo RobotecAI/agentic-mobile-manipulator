@@ -10,7 +10,7 @@ WORKDIR /root/MobileManipulatorDemo
 ENV DEMO_ROOT=/root/MobileManipulatorDemo
 
 # Build target. WITH_NPU=1 (default) is the single-pc-gpu-and-npu setup: it builds
-# the FastFlowLM fork for the NPU endpoints. WITH_NPU=0 is GPU-only — llama.cpp
+# FastFlowLM for the NPU endpoints. WITH_NPU=0 is GPU-only — llama.cpp
 # (Vulkan) alone — skipping the NPU apt deps and the FastFlowLM compile.
 ARG WITH_NPU=1
 
@@ -29,9 +29,7 @@ RUN if [ "$WITH_NPU" = "1" ]; then \
      && apt-get update && apt-get install -y --no-install-recommends \
             build-essential \
             libxrt-dev libxrt-npu2 \
-            libavformat-dev libavutil-dev libavcodec-dev \
-            libswresample-dev libswscale-dev \
-            libfftw3-dev \
+            libedit-dev \
             uuid-dev libdrm-dev \
      && apt-get clean && rm -rf /var/lib/apt/lists/* ; \
     fi

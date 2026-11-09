@@ -222,8 +222,8 @@ outputs = ["inference/llama.cpp/build/bin/llama-server"]
 description = "Build llama.cpp (Vulkan), server only — no webui/tests/examples"
 
 # ─── FastFlowLM (AMD Ryzen AI NPU backend) ───────────────────────────────────
-# The submodule (RobotecAI/FastFlowLM fork) already includes GBNF grammar-
-# constrained sampling, needed for structured agent output on the NPU. Building
+# The submodule (AMD's ROCm/FastFlowLM) supports json_schema response_format,
+# needed for structured agent output on the NPU. Building
 # needs the XRT/amdxdna dev headers (no NPU required to compile); only serving
 # (`flm serve`) needs the NPU + amdxdna driver loaded. The build is install-free
 # — the dispatcher runs the repo binary directly.

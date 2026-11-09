@@ -21,7 +21,7 @@ cd agentic-mobile-manipulator
 
 ```bash
 sudo apt update
-sudo apt install git git-lfs python3-vcstool
+sudo apt install git git-lfs python3-vcstool libedit-dev
 ```
 
 #### Install pixi

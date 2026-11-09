@@ -66,8 +66,7 @@ from rai_app.config.vlm_inspection_prompts import (
 )
 from rai_app.environment import SceneManager
 from rai_app.geometry_helpers import get_yaw_difference
-from rai_app.initialization.llms import get_vlm_backend, get_vlm_model
-from rai_app.initialization.structured import vlm_structured
+from rai_app.initialization.llms import get_vlm_model
 
 
 class AnomalyDescription(BaseModel):
@@ -149,7 +148,6 @@ class VlmWarehouseInspector(BaseAgent):
         match_anomaly_max_yaw_degrees: float = 50.0,
         n_seconds: int = 1,
         debug: bool = True,
-        vlm_backend: str | None = None,
     ):
         self.camera_topic = camera_topic
         self.ego_target_frame = ego_target_frame
@@ -172,7 +170,6 @@ class VlmWarehouseInspector(BaseAgent):
         )
 
         self.vlm = vlm
-        self.vlm_backend = vlm_backend
         self.n_seconds = n_seconds
 
         self.reported_anomalies: list[tuple[Anomaly, float]] = list()
@@ -393,7 +390,7 @@ class VlmWarehouseInspector(BaseAgent):
             ),
         ]
 
-        llm_structured = vlm_structured(self.vlm, InspectionOutput, self.vlm_backend)
+        llm_structured = self.vlm.with_structured_output(InspectionOutput)
         response: InspectionOutput = llm_structured.invoke(structured_task)
         self.get_logger().info(f"Inspection output: {response}")
         inspection_results = response.inspection_results
@@ -409,9 +406,7 @@ class VlmWarehouseInspector(BaseAgent):
             ]
             response = cast(
                 AnomalyDescription,
-                vlm_structured(self.vlm, AnomalyDescription, self.vlm_backend).invoke(
-                    final_task
-                ),
+                self.vlm.with_structured_output(AnomalyDescription).invoke(final_task),
             )
         else:
             response = AnomalyDescription(
@@ -468,7 +463,6 @@ def main():
 
     inspector = VlmWarehouseInspector(
         vlm=vlm,
-        vlm_backend=get_vlm_backend(config_name="inspection_agent"),
         slots_file=args.slots_file,
         spawnables_file=args.spawnables_file,
         camera_topic=args.camera_topic,
