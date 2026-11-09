@@ -2,15 +2,17 @@
 
 ## O3DE
 
-| Repository URL                        |
-| ------------------------------------- |
-| https://github.com/RobotecAI/o3de.git |
+| Version | Source                                                     |
+| ------- | ---------------------------------------------------------- |
+| 26.05   | https://o3debinaries.org/main/Latest/Linux/o3de_2605_0.deb |
+
+`scripts/install_o3de.sh` installs it.
 
 ## O3DE gems
 
 | Gem Name                 | Repository URL                                            |
 | ------------------------ | --------------------------------------------------------- |
-| o3de-extras              | https://github.com/robotecai/o3de-extras.git              |
+| o3de-extras (2605.0)     | https://github.com/o3de/o3de-extras.git                   |
 | o3de-humanworker-gem     | https://github.com/RobotecAI/o3de-humanworker-gem.git     |
 | robotec-o3de-tools       | https://github.com/RobotecAI/robotec-o3de-tools.git       |
 | robotec-warehouse-assets | https://github.com/RobotecAI/robotec-warehouse-assets.git |
