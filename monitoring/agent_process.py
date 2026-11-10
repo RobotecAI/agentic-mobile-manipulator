@@ -1,9 +1,10 @@
 import sys
-from langchain_core.messages import HumanMessage
-from rai.agents.langchain.core import create_conversational_agent
-from langchain_ollama import ChatOllama
-from langchain_core.tools import tool
 import time
+
+from langchain_core.messages import HumanMessage
+from langchain_core.tools import tool
+from langchain_ollama import ChatOllama
+from rai.agents.langchain.core import create_conversational_agent
 
 
 @tool
@@ -25,8 +26,8 @@ def create_agent(model):
 
 def main():
     model = sys.argv[1]
-    agent = create_agent(model)
-    messages = [
+    agent = create_agent(model)  # noqa: F841 (used by the commented-out invoke below)
+    messages = [  # noqa: F841
         HumanMessage("Explain the concept of artificial intelligence in simple terms.")
     ]
 
@@ -41,7 +42,7 @@ def main():
             # to test max load as both models will be queried at the same time
             # agent.invoke({"messages": messages})
             time.sleep(1)
-        except Exception:
+        except Exception:  # noqa: BLE001
             break
 
 
