@@ -1,12 +1,11 @@
+import os
+
+import yaml
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import OpaqueFunction
 from launch_ros.actions import Node
-from ament_index_python.packages import get_package_share_directory
 from moveit_configs_utils import MoveItConfigsBuilder
-
-
-import os
-import yaml
 
 
 def generate_launch_description():
@@ -25,9 +24,7 @@ def load_yaml(package_name, file_path):
     try:
         with open(absolute_file_path, "r") as file:
             return yaml.safe_load(file)
-    except (
-        EnvironmentError
-    ):  # parent of IOError, OSError *and* WindowsError where available
+    except OSError:  # parent of IOError, OSError *and* WindowsError where available
         return None
 
 
@@ -49,9 +46,9 @@ def launch_setup(context, *args, **kwargs):
     moveit_config.planning_pipelines["ompl"]["panda_arm"][
         "enforce_constrained_state_space"
     ] = True
-    moveit_config.planning_pipelines["ompl"]["panda_arm"][
-        "projection_evaluator"
-    ] = "joints(panda_joint1,panda_joint2)"
+    moveit_config.planning_pipelines["ompl"]["panda_arm"]["projection_evaluator"] = (
+        "joints(panda_joint1,panda_joint2)"
+    )
     moveit_config.planning_pipelines["ompl"]["panda_arm_hand"][
         "enforce_constrained_state_space"
     ] = True

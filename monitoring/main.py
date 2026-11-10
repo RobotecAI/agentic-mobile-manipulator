@@ -1,28 +1,27 @@
-import subprocess
-import psutil
-import time
-import threading
-import signal
-import sys
-import os
+import argparse
 import csv
 import json
-import numpy as np
-from datetime import datetime
-from typing import Dict, Any, Optional, List, Literal
-from collections import defaultdict
+import os
+import signal
 import statistics
-from ollama import Client
-import argparse
-import rclpy
-from geometry_msgs.msg import PoseStamped
-from nav2_simple_commander.robot_navigator import BasicNavigator
-from rclpy.node import Node
-from rclpy.action import ActionClient
-from moveit_msgs.action import MoveGroup
-from geometry_msgs.msg import Point, Pose, Quaternion
+import subprocess
+import sys
+import threading
+import time
+from collections import defaultdict
+from datetime import datetime
+from typing import Any, Literal
 
+import numpy as np
+import psutil
+import rclpy
+from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion
+from moveit_msgs.action import MoveGroup
+from nav2_simple_commander.robot_navigator import BasicNavigator
+from ollama import Client
 from rai_interfaces.srv import ManipulatorMoveTo
+from rclpy.action import ActionClient
+from rclpy.node import Node
 
 
 class MoveItClient(Node):
@@ -93,10 +92,10 @@ class ProcessManager:
         self.output_dir = f"monitoring_results_{self.timestamp}"
         os.makedirs(self.output_dir, exist_ok=True)
 
-        self.processes: Dict[str, Dict[str, Any]] = {}
+        self.processes: dict[str, dict[str, Any]] = {}
         self.monitoring: bool = True
-        self.monitor_thread: Optional[threading.Thread] = None
-        self.error_monitor_thread: Optional[threading.Thread] = None
+        self.monitor_thread: threading.Thread | None = None
+        self.error_monitor_thread: threading.Thread | None = None
 
         self.log_file: str = os.path.join(
             self.output_dir,
@@ -121,11 +120,11 @@ class ProcessManager:
 
         self.init_csv_files()
 
-        self.resource_stats: Dict[str, Dict[str, List[float]]] = defaultdict(
+        self.resource_stats: dict[str, dict[str, list[float]]] = defaultdict(
             lambda: defaultdict(list)
         )
-        self.system_stats: Dict[str, List[float]] = defaultdict(list)
-        self.infer_metrics: Dict[str, Dict[str, List[float]]] = defaultdict(
+        self.system_stats: dict[str, list[float]] = defaultdict(list)
+        self.infer_metrics: dict[str, dict[str, list[float]]] = defaultdict(
             lambda: defaultdict(list)
         )
 
@@ -163,7 +162,7 @@ class ProcessManager:
     def launch_ollama_server(self, port: int = 11434, gpu: bool = False) -> bool:
         print("Launching Ollama server")
 
-        env: Dict[str, str] = os.environ.copy()
+        env: dict[str, str] = os.environ.copy()
         if gpu:
             env.update({"CUDA_VISIBLE_DEVICES": "0"})
         else:
@@ -231,7 +230,7 @@ class ProcessManager:
         print("ROS2 MoveIt launched")
         return True
 
-    def launch_ros2_nav2(self, map_file: Optional[str] = "map.yaml") -> bool:
+    def launch_ros2_nav2(self, map_file: str | None = "map.yaml") -> bool:
         print("Launching ROS2 Nav2")
         nav2_process: subprocess.Popen = subprocess.Popen(
             ["./run-nav.sh"],
@@ -260,9 +259,9 @@ class ProcessManager:
 
     def get_process_tree_resources(
         self, process: subprocess.Popen
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         parent: psutil.Process = psutil.Process(process.pid)
-        processes: List[psutil.Process] = [parent] + parent.children(recursive=True)
+        processes: list[psutil.Process] = [parent] + parent.children(recursive=True)
 
         total_cpu: float = 0
         total_memory: int = 0
@@ -284,8 +283,8 @@ class ProcessManager:
         self,
         timestamp: str,
         process_name: str,
-        resources: Dict[str, Any],
-        system_stats: Dict[str, float],
+        resources: dict[str, Any],
+        system_stats: dict[str, float],
     ) -> None:
         with open(self.csv_file, "a", newline="") as f:
             writer = csv.writer(f)
@@ -331,8 +330,8 @@ class ProcessManager:
     def update_statistics(
         self,
         process_name: str,
-        resources: Dict[str, Any],
-        system_stats: Dict[str, float],
+        resources: dict[str, Any],
+        system_stats: dict[str, float],
     ) -> None:
         self.resource_stats[process_name]["cpu_percent"].append(
             resources["cpu_percent"]
@@ -364,8 +363,8 @@ class ProcessManager:
         self.total_stats["memory_mb"].append(total_memory)
         self.total_stats["process_count"].append(total_processes)
 
-    def calculate_statistics(self) -> Dict[str, Any]:
-        stats: Dict[str, Any] = {
+    def calculate_statistics(self) -> dict[str, Any]:
+        stats: dict[str, Any] = {
             "process_stats": {},
             "system_stats": {},
             "token_stats": defaultdict(dict),
@@ -413,7 +412,7 @@ class ProcessManager:
         return stats
 
     def print_statistics(self) -> None:
-        stats: Dict[str, Any] = self.calculate_statistics()
+        stats: dict[str, Any] = self.calculate_statistics()
 
         print("\n" + "=" * 60)
 
@@ -458,7 +457,7 @@ class ProcessManager:
                     )
 
     def save_statistics(self) -> None:
-        stats: Dict[str, Any] = self.calculate_statistics()
+        stats: dict[str, Any] = self.calculate_statistics()
 
         stats["metadata"] = {
             "processes_monitored": list(self.resource_stats.keys()),
@@ -472,14 +471,14 @@ class ProcessManager:
     def monitor_resources(self) -> None:
         while self.monitoring:
             timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            total_stats: Dict[str, float] = defaultdict(float)
+            total_stats: dict[str, float] = defaultdict(float)
 
             print(f"\nResource Monitor - {timestamp}")
             print("-" * 60)
 
             system_cpu: float = psutil.cpu_percent()
-            system_memory: psutil._psutil_common.svmem = psutil.virtual_memory()
-            system_stats: Dict[str, float] = {
+            system_memory = psutil.virtual_memory()
+            system_stats: dict[str, float] = {
                 "system_cpu_percent": system_cpu,
                 "system_memory_percent": system_memory.percent,
                 "memory_available_gb": system_memory.available / 1024 / 1024 / 1024,
@@ -493,8 +492,8 @@ class ProcessManager:
 
             for name, proc_info in self.processes.items():
                 if proc_info["process"].poll() is None:
-                    resources: Optional[Dict[str, Any]] = (
-                        self.get_process_tree_resources(proc_info["process"])
+                    resources: dict[str, Any] | None = self.get_process_tree_resources(
+                        proc_info["process"]
                     )
 
                     if resources:
@@ -532,7 +531,7 @@ class ProcessManager:
             print(
                 f"{'SYSTEM':20} | CPU: {system_cpu:6.1f}% | "
                 f"Memory: {system_memory.percent:6.1f}% | "
-                f"Available: {system_memory.available/1024/1024/1024:.1f} GB"
+                f"Available: {system_memory.available / 1024 / 1024 / 1024:.1f} GB"
             )
 
             time.sleep(0.1)
@@ -542,7 +541,7 @@ class ProcessManager:
             process: subprocess.Popen = proc_info["process"]
             if process.poll() is not None:
                 timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                return_code: Optional[int] = process.returncode
+                return_code: int | None = process.returncode
 
                 if return_code != 0:
                     print(f"PROCESS DIED [{name}] {timestamp}: Exit code {return_code}")
@@ -595,13 +594,13 @@ class ProcessManager:
             print(f"Process {process_name} not found")
             return
 
-        proc_info: Dict[str, Any] = self.processes[process_name]
+        proc_info: dict[str, Any] = self.processes[process_name]
 
         print(f"Logs for {process_name}:")
         print("=" * 50)
 
-        stdout: Optional[Any] = proc_info.get("stdout")
-        stderr: Optional[Any] = proc_info.get("stderr")
+        stdout: Any | None = proc_info.get("stdout")
+        stderr: Any | None = proc_info.get("stderr")
 
         if stdout:
             print("STDOUT:")
@@ -654,11 +653,11 @@ class ProcessManager:
                 keep_alive=500,
             )
             output_tokens_per_sec: float = (
-                response["eval_count"] / response["eval_duration"] * 1_000_000_000
+                response.eval_count / response.eval_duration * 1_000_000_000
             )
             input_tokens_per_sec: float = (
-                response["prompt_eval_count"]
-                / response["prompt_eval_duration"]
+                response.prompt_eval_count
+                / response.prompt_eval_duration
                 * 1_000_000_000
             )
 
@@ -670,16 +669,16 @@ class ProcessManager:
                 model,
                 input_tokens_per_sec,
                 output_tokens_per_sec,
-                response["eval_count"],
-                response["eval_duration"],
-                response["prompt_eval_count"],
-                response["prompt_eval_duration"],
+                response.eval_count,
+                response.eval_duration,
+                response.prompt_eval_count,
+                response.prompt_eval_duration,
             )
 
             self.update_token_statistics(
                 model, input_tokens_per_sec, output_tokens_per_sec
             )
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 (log any query failure and keep monitoring)
             print(f"Failed to query {model}: {e}")
 
     def launch_agent_process(self, model: str = "qwen2.5:7b") -> bool:
@@ -720,7 +719,13 @@ def signal_handler(signum: int, frame: Any) -> None:
     sys.exit(0)
 
 
-def main(model_vl: str, model_llm: str, sim: Literal['navigation','manipulation'], use_gpu=False, run_time: int = 180) -> None:
+def main(
+    model_vl: str,
+    model_llm: str,
+    sim: Literal["navigation", "manipulation"],
+    use_gpu=False,
+    run_time: int = 180,
+) -> None:
 
     global manager
     manager = ProcessManager(model_vl=model_vl, model_llm=model_llm, use_gpu=use_gpu)
@@ -785,17 +790,17 @@ def main(model_vl: str, model_llm: str, sim: Literal['navigation','manipulation'
         manager.make_call_to_model(model=model_vl)
         manager.make_call_to_model(model=model_llm)
         if even:
-            if sim == 'navigation':
+            if sim == "navigation":
                 if navigator.isTaskComplete():
                     navigator.goToPose(goal_1_pose)
-            elif sim == 'manipulation':
+            elif sim == "manipulation":
                 move_client.move_to_pose(0.3, 0.0, 0.5, "grab")
             even = False
         else:
-            if sim == 'navigation':
+            if sim == "navigation":
                 if navigator.isTaskComplete():
                     navigator.goToPose(goal_2_pose)
-            elif sim == 'manipulation':
+            elif sim == "manipulation":
                 move_client.move_to_pose(0.0, 0.3, 0.1, "drop")
             even = True
 
@@ -837,7 +842,13 @@ def parse_args():
         default="qwen2.5:7b",
         help="LLM model name (default: qwen2.5:7b)",
     )
-    parser.add_argument("--sim", type=str, required=True, choices=["navigation", "manipulation"], help="Simulation type")
+    parser.add_argument(
+        "--sim",
+        type=str,
+        required=True,
+        choices=["navigation", "manipulation"],
+        help="Simulation type",
+    )
     parser.add_argument("--use-gpu", action=argparse.BooleanOptionalAction)
     parser.set_defaults(use_gpu=False)
     return parser.parse_args()
