@@ -18,13 +18,13 @@ The setup consists of:
 
 On **tested hardware** you will need:
 
-- ros2 (jazzy or humble)
+- ros2 jazzy (Python 3.12)
 - ollama (https://ollama.com/)
 - poetry (https://python-poetry.org/docs/#installing-with-pipx)
 
 On **simulation machine** you will need:
 
-- ros2 (jazzy or humble)
+- ros2 jazzy
 
 On **tested hardware**:
 
@@ -54,13 +54,12 @@ On **both machines**:
 1. Install ros dependencies.
 
    ```bash
-   export ROS_DISTRO=jazzy # or humble
+   export ROS_DISTRO=jazzy
    source /opt/ros/${ROS_DISTRO}/setup.bash
    sudo apt update
    sudo apt install ros-${ROS_DISTRO}-moveit ros-${ROS_DISTRO}-moveit-resources-panda-moveit-config \
                            ros-${ROS_DISTRO}-ros2-control ros-${ROS_DISTRO}-ros2-controllers \
                            ros-${ROS_DISTRO}-controller-manager \
-                           ros-${ROS_DISTRO}-moveit-commander \
                            ros-$ROS_DISTRO-navigation2 ros-$ROS_DISTRO-nav2-bringup
    ```
 

@@ -131,7 +131,7 @@ controller_server:
       gamma: 0.015
       motion_model: DiffDrive
       visualize: false
-      reset_period: 1.0 # (only in Humble)
+      reset_period: 1.0
       regenerate_noises: false
       TrajectoryVisualizer:
         trajectory_step: 5
@@ -177,8 +177,8 @@ controller_server:
         collision_cost: 10000.0
         collision_margin_distance: 0.10
         near_goal_distance: 0.5
-        inflation_radius: 1.0 # (only in Humble)
-        cost_scaling_factor: 3.0 # (only in Humble)
+        inflation_radius: 1.0
+        cost_scaling_factor: 3.0
       PathAlignCritic:
         enabled: true
         cost_power: 1
@@ -554,7 +554,7 @@ collision_monitor:
       type: "circle"
       radius: 0.3
       action_type: "stop"
-      min_points: 4 # max_points: 3 for Humble
+      min_points: 4
       visualize: True
       polygon_pub_topic: "polygon_stop"
       enabled: False
@@ -562,7 +562,7 @@ collision_monitor:
       type: "polygon"
       points: "[[1.0, 1.0], [1.0, -1.0], [-0.5, -1.0], [-0.5, 1.0]]"
       action_type: "slowdown"
-      min_points: 4 # max_points: 3 for Humble
+      min_points: 4
       slowdown_ratio: 0.3
       visualize: True
       polygon_pub_topic: "polygon_slowdown"
@@ -571,7 +571,7 @@ collision_monitor:
       type: "polygon"
       points: "[[0.5, 0.5], [0.5, -0.5], [-0.5, -0.5], [-0.5, 0.5]]"
       action_type: "limit"
-      min_points: 4 # max_points: 3 for Humble
+      min_points: 4
       linear_limit: 0.4
       angular_limit: 0.5
       visualize: True
@@ -583,7 +583,7 @@ collision_monitor:
       footprint_topic: "/local_costmap/published_footprint"
       time_before_collision: 2.0
       simulation_time_step: 0.02
-      min_points: 6 # max_points: 5 for Humble
+      min_points: 6
       visualize: False
       enabled: False
     VelocityPolygonStop:
