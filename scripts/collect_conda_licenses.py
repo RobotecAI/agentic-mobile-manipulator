@@ -32,14 +32,17 @@ import shutil
 import sys
 from pathlib import Path
 
-
 # Licence-looking files a package installs into the environment itself.
-_LICENCE_PATH = re.compile(r"(^|/)(licen[cs]e|copying|notice|copyright)[^/]*$|(^|/)share/licenses/", re.I)
+_LICENCE_PATH = re.compile(
+    r"(^|/)(licen[cs]e|copying|notice|copyright)[^/]*$|(^|/)share/licenses/", re.I
+)
 
 
 def rattler_cache_pkgs() -> Path:
     cache = os.environ.get("RATTLER_CACHE_DIR") or os.path.join(
-        os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache"), "rattler", "cache"
+        os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache"),
+        "rattler",
+        "cache",
     )
     return Path(cache) / "pkgs"
 
@@ -53,7 +56,10 @@ def recipe_of(extracted: Path, package_url: str) -> tuple[str, str]:
     recipes are generated in the channel's repository (e.g. RoboStack/ros-jazzy).
     """
     try:
-        extra = json.loads((extracted / "info" / "about.json").read_text()).get("extra") or {}
+        extra = (
+            json.loads((extracted / "info" / "about.json").read_text()).get("extra")
+            or {}
+        )
     except (OSError, ValueError):
         extra = {}
     if extra.get("remote_url"):
@@ -68,10 +74,16 @@ def main() -> int:
     root = Path(__file__).resolve().parent.parent
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--envs", type=Path, default=root / ".pixi" / "envs")
-    parser.add_argument("--out", type=Path, default=root / "third_party_licenses" / "conda")
+    parser.add_argument(
+        "--out", type=Path, default=root / "third_party_licenses" / "conda"
+    )
     args = parser.parse_args()
 
-    envs = sorted(p for p in args.envs.iterdir() if (p / "conda-meta").is_dir()) if args.envs.is_dir() else []
+    envs = (
+        sorted(p for p in args.envs.iterdir() if (p / "conda-meta").is_dir())
+        if args.envs.is_dir()
+        else []
+    )
     if not envs:
         print(f"error: no pixi environments under {args.envs}", file=sys.stderr)
         return 1
@@ -90,7 +102,10 @@ def main() -> int:
                 continue
             package = f"{record['name']}-{record['version']}-{record['build']}"
             if package not in licence_dirs:
-                extracted = Path(record.get("extracted_package_dir") or rattler_cache_pkgs() / package)
+                extracted = Path(
+                    record.get("extracted_package_dir")
+                    or rattler_cache_pkgs() / package
+                )
                 recipes[package] = recipe_of(extracted, record.get("url") or "")
                 if not extracted.is_dir():
                     lost.append(f"{env.name}: {package} ({extracted})")
@@ -99,7 +114,9 @@ def main() -> int:
                     shutil.copytree(extracted / "info" / "licenses", args.out / package)
                     licence_dirs[package] = package
                 else:
-                    in_env = [f for f in record.get("files", []) if _LICENCE_PATH.search(f)]
+                    in_env = [
+                        f for f in record.get("files", []) if _LICENCE_PATH.search(f)
+                    ]
                     if in_env:
                         more = f" (+{len(in_env) - 1} more)" if len(in_env) > 1 else ""
                         licence_dirs[package] = f"in environment: {in_env[0]}{more}"
@@ -107,25 +124,43 @@ def main() -> int:
                         without_files.append(package)
                         licence_dirs[package] = "none (licence declared by name only)"
             rows.append(
-                (env.name, record["name"], record["version"], record["build"],
-                 record.get("license") or "", record.get("url") or "", licence_dirs[package],
-                 *recipes[package])
+                (
+                    env.name,
+                    record["name"],
+                    record["version"],
+                    record["build"],
+                    record.get("license") or "",
+                    record.get("url") or "",
+                    licence_dirs[package],
+                    *recipes[package],
+                )
             )
 
     with open(args.out / "PACKAGES.tsv", "w") as index:
-        index.write("environment\tpackage\tversion\tbuild\tlicense\tpackage_url\tlicense_files"
-                    "\trecipe\trecipe_commit\n")
+        index.write(
+            "environment\tpackage\tversion\tbuild\tlicense\tpackage_url\tlicense_files"
+            "\trecipe\trecipe_commit\n"
+        )
         for row in rows:
             index.write("\t".join(row) + "\n")
 
-    copied = sum(1 for d in licence_dirs.values() if d and not d.startswith(("in environment", "none")))
+    copied = sum(
+        1
+        for d in licence_dirs.values()
+        if d and not d.startswith(("in environment", "none"))
+    )
     in_env = sum(1 for d in licence_dirs.values() if d.startswith("in environment"))
-    print(f"{len(rows)} installed packages in {len(envs)} environment(s), {len(licence_dirs)} distinct: "
-          f"licence files copied for {copied} into {args.out}; {in_env} install them into the environment; "
-          f"{len(without_files)} declare their licence by name only (see PACKAGES.tsv)")
+    print(
+        f"{len(rows)} installed packages in {len(envs)} environment(s), {len(licence_dirs)} distinct: "
+        f"licence files copied for {copied} into {args.out}; {in_env} install them into the environment; "
+        f"{len(without_files)} declare their licence by name only (see PACKAGES.tsv)"
+    )
     if lost:
-        print("error: package cache entries are missing, so their licence files cannot be copied:\n  "
-              + "\n  ".join(lost), file=sys.stderr)
+        print(
+            "error: package cache entries are missing, so their licence files cannot be copied:\n  "
+            + "\n  ".join(lost),
+            file=sys.stderr,
+        )
         return 1
     return 0
 
