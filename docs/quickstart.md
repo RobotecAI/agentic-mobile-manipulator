@@ -1,10 +1,12 @@
 # Quickstart: Docker Compose
 
-Run the full **Mobile Manipulator Demo** — simulation, ROS 2 stack, local inference, agents, and HMI — in a single container, with all models served locally on an AMD GPU. The NPU (FastFlowLM) is available in a locally built image, see [NPU build](#npu-build).
+Run the full **Mobile Manipulator Demo** — simulation, ROS 2 stack, local inference, agents, and HMI — in a single container, with all models served locally on an AMD GPU + AMD Ryzen™ AI NPU.
+
+The Docker image does not ship the NPU backend (FastFlowLM): every model runs on the GPU. It still runs on Strix Halo, using the GPU only. To use the NPU, see [NPU](#npu).
 
 ## Prerequisites
 
-- **AMD GPU** (ROCm/Vulkan) **and AMD Ryzen™ AI NPU** (the compose file maps the NPU device; on a host without one, remove the `/dev/accel/accel0` device and the `memlock` ulimit from `docker/compose.yaml`).
+- **AMD GPU** (ROCm/Vulkan) **and AMD Ryzen™ AI NPU** for the default build.
 - The host's **amdxdna** driver loaded: check with `ls /dev/accel/accel0`.
 - [Docker Engine](https://docs.docker.com/engine/install/) + [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites).
 - A running X server (the O3DE simulation and HMI open windows on your display).
@@ -43,7 +45,7 @@ Weights are **not** baked into the image. They are downloaded into the repo's `m
 docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run download-models
 ```
 
-This writes the llama.cpp GGUFs to `models/` (and, in an [NPU build](#npu-build), the NPU model to `models/flm/` via `flm pull`). It only fetches what's missing, so it's safe to re-run.
+This writes the llama.cpp GGUFs to `models/` (and, with the [NPU](#npu), the NPU model to `models/flm/` via `flm pull`). It only fetches what's missing, so it's safe to re-run.
 
 ## 4. Run the demo
 
@@ -101,9 +103,9 @@ Swap the session for any of `-sim`, `-stack`, `-llm-servers`, `-agents`, `-hmi` 
 docker compose -f docker/compose.yaml down
 ```
 
-## NPU build
+## NPU
 
-The default image is GPU-only: `vlm_safety` runs on llama.cpp (`gpu_config.toml`, which the compose file mounts by default) and the image contains no FastFlowLM. To run `vlm_safety` on the NPU, build the image locally with FastFlowLM:
+The Docker image runs `vlm_safety` on the GPU through llama.cpp (`gpu_config.toml`, which the compose file mounts by default). To run it on the NPU, set the demo up natively ([single-machine setup](setup_single_machine.md)), or build the image locally with FastFlowLM:
 
 ```bash
 WITH_NPU=1 docker compose -f docker/compose.yaml build
