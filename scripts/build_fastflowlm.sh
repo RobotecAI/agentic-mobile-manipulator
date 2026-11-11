@@ -32,10 +32,16 @@ FLM_CC="${FLM_CC:-/usr/bin/gcc}"
 FLM_CXX="${FLM_CXX:-/usr/bin/g++}"
 [ -f /usr/include/xrt/xrt_bo.h ] || { echo "error: XRT dev headers missing — install libxrt-dev." >&2; exit 1; }
 
+# System gcc finds `ld` through PATH, and the pixi env's binutils puts conda's ld
+# first; it then resolves the system libav* dependencies against conda libraries
+# and fails to link. -B/usr/bin/ makes gcc use the system linker.
+FLM_LDFLAGS="${FLM_LDFLAGS:--B/usr/bin/}"
+
 # Switching toolchains invalidates the CMake cache, so configure fresh.
 rm -rf build
 echo "Configuring (cmake --preset linux-default, system $FLM_CXX) ..."
-cmake --preset linux-default -DCMAKE_C_COMPILER="$FLM_CC" -DCMAKE_CXX_COMPILER="$FLM_CXX"
+cmake --preset linux-default -DCMAKE_C_COMPILER="$FLM_CC" -DCMAKE_CXX_COMPILER="$FLM_CXX" \
+    -DCMAKE_EXE_LINKER_FLAGS="$FLM_LDFLAGS" -DCMAKE_SHARED_LINKER_FLAGS="$FLM_LDFLAGS"
 echo "Building (-j$(nproc)) ..."
 cmake --build build -j"$(nproc)"
 
