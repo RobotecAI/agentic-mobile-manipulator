@@ -68,7 +68,7 @@ This project was made possible thanks to AMD, who supported the development and 
 - Code and assets in this repository: [Apache License 2.0](LICENSE). Copyright 2025-2026 Advanced Micro Devices, Inc. Developed by Robotec.ai.
 - Robotec.ai asset gems (`gems.repos`, cloned by `pixi run clone-gems`): assets made by Robotec.ai are licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Third-party items in these gems keep their own licenses.
 - Robot model (`project_gems/KairosPlus`): meshes from the Robotnik RB-KAIROS+ description and the Universal Robots UR10 description, BSD-3-Clause.
-- Inference engines (`inference/`): llama.cpp (MIT) and AMD's FastFlowLM (MIT code; the NPU binaries have their own license).
+- Inference engines (`inference/`): llama.cpp (MIT) and the RobotecAI fork of FastFlowLM (see [NOTICE](./NOTICE); the published Docker images are GPU-only and do not include it).
 - Models are downloaded at run time and are used under their own licenses.
 
 [NOTICE](NOTICE) gives the source and license of each third-party item.

@@ -80,10 +80,11 @@ Third-party items in these gems keep their own licenses. The NOTICE file of each
 
 - llama.cpp (https://github.com/ggml-org/llama.cpp). Copyright (c) 2023-2026 The ggml authors.
   License: MIT. Bundled third-party code is listed in inference/llama.cpp/licenses.
-- FastFlowLM by Advanced Micro Devices, Inc. (https://github.com/ROCm/FastFlowLM).
-  The code is licensed under the MIT License (LICENSE_RUNTIME.txt). The NPU kernel binaries and the prebuilt
-  NPU engine libraries are licensed under the FastFlowLM NPU Binary License (LICENSE_BINARY.txt).
-  Third-party components are listed in its THIRD_PARTY_NOTICES.txt.
+- FastFlowLM (https://github.com/FastFlowLM/FastFlowLM), used through the RobotecAI fork
+  (https://github.com/RobotecAI/FastFlowLM), which adds GBNF grammar-constrained sampling.
+  The code is licensed under the MIT License (LICENSE_RUNTIME.txt). The NPU kernel binaries are under their own
+  terms (TERMS.md in the fork). They are fetched only when FastFlowLM is built locally
+  (pixi run build-fastflowlm) and are not part of the published Docker images, which are GPU-only.
 
 
 5. Other dependencies that the build fetches
@@ -91,6 +92,8 @@ Third-party items in these gems keep their own licenses. The NOTICE file of each
 - ROS 2 packages from ros2_ws.repos: robotnik_description and robotnik_sensors (BSD-3-Clause),
   robotnik_common (BSD-2-Clause), rai_interfaces (Apache-2.0).
 - Python, conda and RoboStack packages (pyproject.toml, pixi.toml) are installed under their own licenses.
+  THIRD_PARTY.md describes the conda/RoboStack packages in the Docker images, where their licence texts
+  are, and where to get their sources.
 
 
 6. Models and data
