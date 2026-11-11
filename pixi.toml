@@ -47,6 +47,9 @@ ffmpeg = { version = "*", build = "lgpl*" }
 # Use conda compilers so source packages stay ABI-compatible with the RoboStack
 colcon-common-extensions = "*"
 vcstool = "*"
+# colcon-core alone resolves setuptools 79, which vendors wheel 0.45.1 and
+# jaraco.context 5.3.0 (GHSA-8rrh-rw8j-w5fx, GHSA-58pv-8j8x-9vj2, both High).
+setuptools = ">=82"
 c-compiler = "*"
 cxx-compiler = "*"
 # cxx-compiler 2.x no longer brings the unprefixed binutils (ar, ld, ranlib) or sets
