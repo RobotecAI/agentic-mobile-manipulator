@@ -65,6 +65,10 @@ RUN if [ "$WITH_NPU" = "1" ]; then \
      && pixi run build-fastflowlm ; \
     fi
 
+# Ship the conda packages' licence texts with the image (see THIRD_PARTY.md):
+# they live in the pixi package cache, not in the environment.
+RUN pixi run collect-licenses
+
 # Brings up sim -> stack -> inference -> agents -> hmi, one tmux session each.
 # AMM_KEEP_ALIVE (set in compose) holds this process open so the container — and
 # the detached tmux sessions it owns — stay alive after demo.sh finishes launching.

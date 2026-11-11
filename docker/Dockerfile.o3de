@@ -44,6 +44,9 @@ COPY sim/ sim/
 RUN apt-get update && pixi run install-o3de && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN git lfs install --force
 RUN pixi run build-sim
+# Ship the conda packages' licence texts with the image (see THIRD_PARTY.md):
+# they live in the pixi package cache, not in the environment.
+RUN pixi run collect-licenses
 
 WORKDIR /root/MobileManipulatorDemo
 CMD ["bash"]
