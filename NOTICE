@@ -1,0 +1,144 @@
+Agentic Mobile Manipulator Demo
+Copyright 2025-2026 Advanced Micro Devices, Inc.
+Developed by Robotec.ai sp. z o.o.
+
+The code and the assets in this repository are licensed under the Apache License, Version 2.0 (see LICENSE),
+except where this file or a file header states otherwise.
+Third-party components keep their own licenses.
+
+
+1. Third-party code in this repository
+
+- Files with the header "Copyright (c) Contributors to the Open 3D Engine Project" (in sim/ and project_gems/)
+  come from the Open 3D Engine project template. License: Apache-2.0 OR MIT, as the headers state.
+- ros2_ws/src/robotec_kairos_ur10/launch/robotec_navigation.launch.py is a modified copy of
+  nav2_bringup/launch/navigation_launch.py from https://github.com/ros-navigation/navigation2.
+  Copyright (c) 2018 Intel Corporation. License: Apache-2.0.
+- ros2_ws/src/robotec_kairos_ur10 was generated with the MoveIt Setup Assistant. Its package.xml declares BSD-3-Clause.
+- ros2_ws/src/demo_msgs/test/test_copyright.py, test_flake8.py and test_pep257.py come from the ament package template.
+  Copyright 2015, 2017 Open Source Robotics Foundation, Inc. License: Apache-2.0.
+- monitoring/manipulator.launch.py: Copyright (C) 2024 Robotec.AI. License: Apache-2.0.
+
+
+2. Third-party assets in this repository
+
+project_gems/KairosPlus contains a model of the Robotnik RB-KAIROS+ mobile manipulator with a UR10 arm.
+The files below, in project_gems/KairosPlus/Assets/UrdfImporter/, are copied without changes.
+They are licensed under the BSD-3-Clause license (text in section 7).
+
+- From robotnik_description (https://github.com/RobotnikAutomation/robotnik_description),
+  Copyright (c) 2025, Robotnik Automation S.L.:
+  rbkairos_plus_chassis.stl, rbkairos_top_cover.stl, robotnik_logo_chasis.stl,
+  kairos_mecanum_wheel_1.dae, kairos_mecanum_wheel_2.dae
+- From robotnik_sensors (https://github.com/RobotnikAutomation/robotnik_sensors),
+  Copyright (c) 2023, Robotnik Automation S.L.:
+  s300.dae, s300.png, intel_d435_color.dae, intel_d435.png, vectornav_vn100.stl
+- From meshes/ur10 of Universal_Robots_ROS2_Description
+  (https://github.com/UniversalRobots/Universal_Robots_ROS2_Description), maintained by Universal Robots A/S.
+  The upstream license file has no copyright line:
+  base, shoulder, upperarm, forearm, wrist1, wrist2, wrist3 (.dae and .stl)
+
+The files in project_gems/KairosPlus/Assets/Models are based on these meshes.
+
+
+3. Open 3D Engine and gems that the build fetches (not stored in this repository)
+
+- Open 3D Engine 26.05 (https://o3de.org), installed by scripts/install_o3de.sh. License: Apache-2.0 OR MIT.
+- o3de-extras 2605.0 (https://github.com/o3de/o3de-extras), cloned by scripts/fetch_gems.sh.
+  This project uses the gems ROS2, ROS2Sensors, ROS2Controllers, ROS2SampleRobots, SimulationInterfaces,
+  LevelGeoreferencing and WarehouseAssets. License: Apache-2.0 OR MIT.
+
+Robotec.ai gems, cloned from gems.repos. Copyright Robotec.ai sp. z o.o.
+Assets made by Robotec.ai are licensed under the Creative Commons Attribution-NonCommercial 4.0
+International license (CC BY-NC 4.0, https://creativecommons.org/licenses/by-nc/4.0/).
+Third-party items in these gems keep their own licenses. The NOTICE file of each gem lists them.
+
+- o3de-humanworker-gem (https://github.com/RobotecAI/o3de-humanworker-gem).
+  Code: Apache-2.0 OR MIT. Assets: CC BY-NC 4.0.
+- robotec-o3de-tools (https://github.com/RobotecAI/robotec-o3de-tools).
+  This project uses the gems RobotecSpectatorCamera, ROS2ScriptIntegration and WheelAnimTool. License: Apache-2.0.
+- robotec-warehouse-assets (https://github.com/RobotecAI/robotec-warehouse-assets). License: CC BY-NC 4.0.
+  Third-party items, all CC0:
+  - RobotecWarehouseBarriersAndCagesAssets: "Bollard02" from BlenderKit
+    (https://www.blenderkit.com/asset-gallery-detail/7c3004c3-4ad1-4add-a640-79c470c838ec/);
+    "Modular Fences" from Poly Haven (https://polyhaven.com/a/modular_chainlink_fence).
+  - RobotecWarehouseLaddersStairsAssets: "LadderSectioned_01" from Poly Haven (https://polyhaven.com/a/ladder_sectioned_01).
+  - RobotecWarehouseBuildingAssets: "gravel_concrete_03" from Poly Haven (https://polyhaven.com/a/gravel_concrete_03);
+    textures from ambientCG (https://ambientcg.com/view?id=CorrugatedSteel007A, https://ambientcg.com/view?id=Metal011)
+    and ShareTextures (https://www.sharetextures.com/textures/wall/painted-wall-3).
+- robotec-generic-assets (https://github.com/RobotecAI/robotec-generic-assets). License: CC BY-NC 4.0.
+  Third-party items, all CC0:
+  - RobotecSmallContainersAssets: "PlasticBarrel2" (https://polyhaven.com/a/Barrel_02) and
+    "CardboardBox" (https://polyhaven.com/a/cardboard_box_01) from Poly Haven.
+  - RobotecSurveillanceCamerasAssets: "CCTVCamera01"
+    (https://www.blenderkit.com/asset-gallery-detail/fce13ec4-2a51-4498-b7a8-ad67e489c62b/) and "CCTVCamera02"
+    (https://www.blenderkit.com/asset-gallery-detail/b06e1272-8b7d-47fb-a603-3bf770fd815c/) from BlenderKit.
+  - RobotecGenericDecorationsAssets: "Football" and "FootballDeflated" from Poly Haven (https://polyhaven.com/a/football).
+
+
+4. Git submodules (inference/)
+
+- llama.cpp (https://github.com/ggml-org/llama.cpp). Copyright (c) 2023-2026 The ggml authors.
+  License: MIT. Bundled third-party code is listed in inference/llama.cpp/licenses.
+- FastFlowLM (https://github.com/FastFlowLM/FastFlowLM), used through the RobotecAI fork
+  (https://github.com/RobotecAI/FastFlowLM), which adds GBNF grammar-constrained sampling.
+  The code is licensed under the MIT License (LICENSE_RUNTIME.txt). The NPU kernel binaries are under their own
+  terms (TERMS.md in the fork). They are fetched only when FastFlowLM is built locally
+  (pixi run build-fastflowlm) and are not part of the published Docker images, which are GPU-only.
+
+
+5. Other dependencies that the build fetches
+
+- ROS 2 packages from ros2_ws.repos: robotnik_description and robotnik_sensors (BSD-3-Clause),
+  robotnik_common (BSD-2-Clause), rai_interfaces (Apache-2.0).
+- Python, conda and RoboStack packages (pyproject.toml, pixi.toml) are installed under their own licenses.
+  THIRD_PARTY.md describes the conda/RoboStack packages in the Docker images, where their licence texts
+  are, and where to get their sources.
+
+
+6. Models and data
+
+The model weights are not part of this repository. They are downloaded at run time, as config.toml sets,
+and each model is used under its own license:
+- gpt-oss-20b (https://huggingface.co/openai/gpt-oss-20b): Apache-2.0.
+- LFM2-VL-3B (https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF): LFM Open License v1.0.
+- Gemma 3 4B (https://huggingface.co/google/gemma-3-4b-it): Gemma Terms of Use.
+- Qwen3-Embedding-0.6B (https://huggingface.co/Qwen/Qwen3-Embedding-0.6B) and
+  Qwen3-Reranker-0.6B (https://huggingface.co/Qwen/Qwen3-Reranker-0.6B): Apache-2.0.
+- Other models that you set in config.toml or cloud_config.toml are used under their own licenses or service terms.
+
+rai_app/warehouse_regulations_agent/regulations_db is built from OSHA regulations, 29 CFR 1910
+(https://www.osha.gov/laws-regs/regulations/standardnumber/1910), a work of the United States government.
+
+Product names and logos are the property of their owners.
+
+
+7. BSD-3-Clause license text
+
+This text applies to the files in section 2, with the copyright lines given there.
+In the robotnik_sensors license, the third condition names "the Robotnik" in place of "the copyright holder".
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its contributors
+  may be used to endorse or promote products derived from this software without
+  specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

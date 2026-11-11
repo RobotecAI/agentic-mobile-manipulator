@@ -41,5 +41,8 @@ COPY ros2_ws/src/ ros2_ws/src/
 RUN rm -rf ros2_ws/src/packages/
 
 RUN pixi run build-ros2
+# Ship the conda packages' licence texts with the image (see THIRD_PARTY.md):
+# they live in the pixi package cache, not in the environment.
+RUN pixi run collect-licenses
 
 RUN echo "source ${DEMO_ROOT}/ros2_ws/install/setup.bash" >> ~/.bashrc

@@ -13,13 +13,12 @@
 # Attach to a session: docker exec -it $(docker ps -qf ancestor=robotecai/agentic-mobile-manipulator:latest) tmux attach -t agentic-mobile-manipulator-sim
 #                      (sessions: -sim -stack -llm-servers -agents -hmi)
 #
-# Target is single-pc-gpu-and-npu (the default). For a GPU-only image — llama.cpp
-# (Vulkan) only, no FastFlowLM/NPU — build with:
-#   WITH_NPU=0 docker compose -f docker/compose.yaml build
-# A GPU-only image additionally needs, at run time: drop the /dev/accel device and
-# the memlock ulimit below, and supply a config.toml whose vlm_safety endpoint is
-# on a gpu backend (not npu) — otherwise `pixi run inference` aborts on the missing
-# NPU engine.
+# The default image is GPU-only: llama.cpp (Vulkan) serves every endpoint and the
+# image contains no FastFlowLM (see docker/Dockerfile.demo). For a local
+# gpu-and-npu image build with:
+#   WITH_NPU=1 docker compose -f docker/compose.yaml build
+# and run it with the NPU config: AMM_CONFIG=../config.toml docker compose ... up demo
+# On a host without an NPU, also drop the /dev/accel device and the memlock ulimit below.
 #
 # Prerequisites on the host (an AMD Ryzen AI box):
 #   - GPU + NPU exposed via the devices below (amdxdna kernel driver loaded on host)
@@ -65,8 +64,8 @@ services:
       additional_contexts:
         base_image: service:o3de
       args:
-        # 1 = gpu-and-npu (default); 0 = gpu-only. `WITH_NPU=0 docker compose build`.
-        WITH_NPU: ${WITH_NPU:-1}
+        # 0 = gpu-only (default, published); 1 = gpu-and-npu (local images).
+        WITH_NPU: ${WITH_NPU:-0}
     entrypoint: ["pixi", "run", "demo"]
     environment:
       - DISPLAY=${DISPLAY}
@@ -81,7 +80,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-      - ../config.toml:/root/MobileManipulatorDemo/config.toml
+      - ${AMM_CONFIG:-../gpu_config.toml}:/root/MobileManipulatorDemo/config.toml
       - ../models:/root/MobileManipulatorDemo/models
 
   # ── One-shot trace run: start the stack, send one task, dump the agent ───────
@@ -102,7 +101,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
-      - ../config.toml:/root/MobileManipulatorDemo/config.toml
+      - ${AMM_CONFIG:-../gpu_config.toml}:/root/MobileManipulatorDemo/config.toml
       - ../models:/root/MobileManipulatorDemo/models
       # Trace output lands here on the host (root-owned; chown if needed).
       - ../runs:/root/MobileManipulatorDemo/runs

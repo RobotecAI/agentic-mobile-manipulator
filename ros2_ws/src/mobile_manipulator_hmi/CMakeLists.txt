@@ -49,7 +49,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 
 # --- ROS2 / image transport dependencies ---
-# These assume you have sourced your ROS2 installation (e.g. source /opt/ros/humble/setup.bash)
+# These assume you have sourced your ROS2 installation (e.g. source /opt/ros/jazzy/setup.bash)
 # and installed packages like ros-<distro>-image-transport, ros-<distro>-compressed-image-transport, ros-<distro>-cv-bridge.
 # If you get errors like "Could not find package X", install the corresponding ros package and source the ROS 2 environment.
 find_package(rclcpp REQUIRED)                        # core ROS2 C++ client library

@@ -23,7 +23,7 @@ from typing import Callable, List, Literal, Optional
 
 import rclpy
 from langchain_core.callbacks.base import BaseCallbackHandler
-from langfuse.callback import CallbackHandler
+from langfuse.langchain import CallbackHandler
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel

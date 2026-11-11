@@ -32,7 +32,16 @@ cd "$DEMO_ROOT/sim"
 # only sets CMAKE_CXX_STANDARD=20 as a non-FORCE cache default, so a stale build
 # dir that cached 17 silently wins and the build fails with "unknown type name
 # 'requires'". Pin it explicitly so every configure forces 20.
+#
+# The sim links against the pixi env's ROS 2 libraries with the system toolchain.
+# cxx-compiler 1.x exported these flags in LDFLAGS on activation; 2.x does not,
+# and without them a fresh configure cannot find env libraries such as
+# liblttng-ust at link time, nor the ROS 2 libraries at run time.
+env_ldflags="-L$CONDA_PREFIX/lib -Wl,-rpath,$CONDA_PREFIX/lib -Wl,-rpath-link,$CONDA_PREFIX/lib -Wl,--disable-new-dtags"
 cmake -B build/linux -G "Ninja Multi-Config" \
+    -DCMAKE_EXE_LINKER_FLAGS="$env_ldflags" \
+    -DCMAKE_SHARED_LINKER_FLAGS="$env_ldflags" \
+    -DCMAKE_MODULE_LINKER_FLAGS="$env_ldflags" \
     -DCMAKE_MODULE_PATH="$O3DE_ENGINE_PATH/cmake" \
     -DCMAKE_CXX_STANDARD=20 \
     -DLY_DISABLE_TEST_MODULES=ON \

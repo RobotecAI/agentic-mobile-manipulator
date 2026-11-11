@@ -437,38 +437,6 @@
         },
         {
             "assetId": {
-                "guid": "{53361435-D126-5BCF-A9D1-9E8CEA8328E5}",
-                "subId": 213700765
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/carrot.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{412B42EF-AB3F-52B7-B181-5CEC20319A91}",
-                "subId": 4099978870
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/corn.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{6D155EB3-C006-5C0A-BF8E-439A4332F9D0}",
-                "subId": 3484548826
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/tomato.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{EB72ABA6-D730-53A7-BF3A-30B8B39C5928}",
-                "subId": 4034758697
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/yellow_cube.spawnable"
-        },
-        {
-            "assetId": {
                 "guid": "{79DB0FE5-1DEB-547C-A6D9-E713ADBB37E7}",
                 "subId": 3879108171
             },
@@ -1237,83 +1205,11 @@
         },
         {
             "assetId": {
-                "guid": "{352C8343-36FE-533E-A7D8-A3C3EC9A7C93}",
-                "subId": 2298205409
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode05.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{EA28F99C-44E7-547D-84BB-8C86B92607C0}",
-                "subId": 2664831421
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode07.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{E3EB97C7-49DF-5C89-BB14-23F85F19EE96}",
-                "subId": 2298998346
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode04.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{9C818D06-08BA-5CE5-9407-F9BDB8B593AA}",
-                "subId": 2237886379
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode01.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{06B2B926-0DE3-5EEA-8735-C31F53F71859}",
-                "subId": 3139148793
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode02.spawnable"
-        },
-        {
-            "assetId": {
                 "guid": "{342C97D1-D271-5205-B3D3-ACD8C9E0A9DB}",
                 "subId": 665376794
             },
             "platformFlags": 2,
             "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode_url01.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{E71A598C-7C37-51DE-B172-FEB20DD0743A}",
-                "subId": 3205867668
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode09.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{3E508341-C6D5-5B59-BBDF-6CBC6EC6C258}",
-                "subId": 73023759
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode03.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{DD5D2CE6-F6BE-5525-ADCE-6B90E5AA0C15}",
-                "subId": 955282323
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode06.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{DC5458EA-C03B-5155-9D8A-9D701505809D}",
-                "subId": 3628188454
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/payload/stickers/qrcode08.spawnable"
         },
         {
             "assetId": {
@@ -1338,46 +1234,6 @@
             },
             "platformFlags": 2,
             "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/cameras.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{EA20BE97-041A-5E0B-B127-167CF364EAE3}",
-                "subId": 1726443591
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/red_cube.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{664F188C-2689-5C3E-9594-87B9C66C5429}",
-                "subId": 3368959852
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/manipulation_test_level.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{D7A858C2-BA90-5A8E-A854-AC7C1F6560F3}",
-                "subId": 2673158184
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/blue_cube.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{C1DB821C-BCC9-599A-BB59-5F79A8548590}",
-                "subId": 1196145064
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/apple.spawnable"
-        },
-        {
-            "assetId": {
-                "guid": "{56A688BC-13F9-5BC1-815F-C1E3AF9B1CCE}",
-                "subId": 406036830
-            },
-            "platformFlags": 2,
-            "pathHint": "/home/michal/AMD-RosCon2025-Demo/sim/Cache/linux/assets/prefabs/green_cube.spawnable"
         },
         {
             "assetId": {

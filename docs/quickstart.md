@@ -2,6 +2,8 @@
 
 Run the full **Mobile Manipulator Demo** — simulation, ROS 2 stack, local inference, agents, and HMI — in a single container, with all models served locally on an AMD GPU + AMD Ryzen™ AI NPU.
 
+The Docker image does not ship the NPU backend (FastFlowLM): every model runs on the GPU. It still runs on Strix Halo, using the GPU only. To use the NPU, see [NPU](#npu).
+
 ## Prerequisites
 
 - **AMD GPU** (ROCm/Vulkan) **and AMD Ryzen™ AI NPU** for the default build.
@@ -37,13 +39,13 @@ If you pull, pass `--no-build` when starting the demo (see step 4).
 
 ## 3. Download the model weights
 
-Weights are **not** baked into the image. They are downloaded into the repo's `models/` directory, bind-mounted at run time. `config.toml` is the single source of truth for which models are fetched. Pull them once into `models/` by running:
+Weights are **not** baked into the image. They are downloaded into the repo's `models/` directory, bind-mounted at run time. The mounted config (`gpu_config.toml` by default) is the single source of truth for which models are fetched. Pull them once into `models/` by running:
 
 ```bash
 docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run download-models
 ```
 
-This writes the llama.cpp GGUFs to `models/` and the NPU model to `models/flm/` (via `flm pull`). It only fetches what's missing, so it's safe to re-run.
+This writes the llama.cpp GGUFs to `models/` (and, with the [NPU](#npu), the NPU model to `models/flm/` via `flm pull`). It only fetches what's missing, so it's safe to re-run.
 
 ## 4. Run the demo
 
@@ -101,18 +103,16 @@ Swap the session for any of `-sim`, `-stack`, `-llm-servers`, `-agents`, `-hmi` 
 docker compose -f docker/compose.yaml down
 ```
 
-## GPU-only build
+## NPU
 
-If the host has no NPU, build without FastFlowLM (llama.cpp/Vulkan only):
+The Docker image runs `vlm_safety` on the GPU through llama.cpp (`gpu_config.toml`, which the compose file mounts by default). To run it on the NPU, set the demo up natively ([single-machine setup](setup_single_machine.md)), or build the image locally with FastFlowLM:
 
 ```bash
-WITH_NPU=0 docker compose -f docker/compose.yaml build
+WITH_NPU=1 docker compose -f docker/compose.yaml build
+AMM_CONFIG=../config.toml docker compose -f docker/compose.yaml up demo
 ```
 
-Before running a GPU-only image, edit `docker/compose.yaml` to:
-
-- remove the `/dev/accel/accel0` device and the `memlock` ulimit (NPU-only), and
-- point `config.toml`'s `vlm_safety` endpoint at a `gpu` backend — otherwise `pixi run inference` aborts on the missing NPU engine.
+`config.toml` runs `vlm_safety` on the NPU; it needs the host's amdxdna driver (`ls /dev/accel/accel0`).
 
 ## Cloud models
 
@@ -134,5 +134,5 @@ for details, including the required OpenAI model access.
 
 - **O3DE doesn't start / no windows appear**: ensure you ran `xhost +local:root` and that `DISPLAY` is set (`echo $DISPLAY`). Verify your AMD GPU drivers + ROCm container prerequisites are installed.
 - **NPU errors / FastFlowLM fails to start**: confirm `/dev/accel/accel0` exists on the host and that the `memlock` ulimit and the device mapping are present in `docker/compose.yaml` (both are required for the NPU).
-- **Inference health check fails**: make sure step 3 completed and `models/` (and `models/flm/`) contain the weights `config.toml` references.
+- **Inference health check fails**: make sure step 3 completed and `models/` (and `models/flm/`) contain the weights the mounted config references.
 - **GPU access / slow or crashing sim**: check your GPU drivers and the [ROCm Docker docs](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html).
