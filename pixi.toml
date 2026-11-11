@@ -42,6 +42,9 @@ colcon-common-extensions = "*"
 vcstool = "*"
 c-compiler = "*"
 cxx-compiler = "*"
+# cxx-compiler 2.x no longer brings the unprefixed binutils (ar, ld, ranlib) or sets
+# AR; CMake then needs a system `ar`, which the Ubuntu base image does not have.
+binutils = "*"
 pkg-config = "*"
 qt-main = "*"
 nlohmann_json = "3.11.3.*"
