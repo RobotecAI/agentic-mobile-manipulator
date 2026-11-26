@@ -227,12 +227,14 @@ description = "Check out the pinned llama.cpp + FastFlowLM submodules, shallow (
 # GGML_CCACHE=OFF: the conda env's ccache links against a libfmt ABI it doesn't
 # ship (wants libfmt.so.9, env has .so.12), so leaving ccache on breaks every
 # compile with Error 127. The build doesn't need ccache.
-# Server-only minimal build: LLAMA_BUILD_UI=OFF skips the embedded webui's
-# npm/PWA build (server API doesn't need it); tests/examples off too. The
-# --target llama-server then builds only that binary + its deps.
+# Server-only minimal build without the embedded webui (the server API doesn't
+# need it): LLAMA_BUILD_UI=OFF skips its npm/PWA build and LLAMA_USE_PREBUILT_UI=OFF
+# skips downloading it from Hugging Face, which fails for the shallow submodule
+# (it fetches the "latest" UI, which this llama.cpp rejects). Tests/examples off
+# too. The --target llama-server then builds only that binary + its deps.
 cmd = """
 cmake -B build -DGGML_VULKAN=1 -DGGML_CCACHE=OFF \
-  -DLLAMA_BUILD_UI=OFF -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_EXAMPLES=OFF &&
+  -DLLAMA_BUILD_UI=OFF -DLLAMA_USE_PREBUILT_UI=OFF -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_EXAMPLES=OFF &&
 cmake --build build --config Release -j $(nproc) --target llama-server
 """
 cwd = "inference/llama.cpp"

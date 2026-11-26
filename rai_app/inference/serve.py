@@ -371,6 +371,8 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
     # Output streams live (bars from parallel jobs interleave — that's the cost
     # of seeing progress while saturating the link).
     jobs: list[tuple[str, list[str]]] = []  # (label, argv)
+    # Endpoints can share a file; parallel `wget -c` would append it twice.
+    queued: set[str] = set()
     for name, ep in local_endpoints(endpoints):
         if ep.get("backend") == "npu":
             tag = ep.get("flm_model")
@@ -390,6 +392,9 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
             if not url or not dest:
                 continue
             dest = _expand(dest, root)
+            if dest in queued:
+                continue
+            queued.add(dest)
             if os.path.exists(dest):
                 print(f"[skip] {name}: {os.path.basename(dest)} already exists")
                 continue
