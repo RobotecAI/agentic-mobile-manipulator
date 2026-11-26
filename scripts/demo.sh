@@ -42,8 +42,10 @@ wait_topic() {
 }
 
 check_inference() {
-    log "Waiting 15s for inference servers to initialize..."
-    sleep 15
+    # Large models (gpt-oss-20b, the NPU VLM) can take longer than 15 s to load.
+    local wait="${INFERENCE_WAIT:-30}"
+    log "Waiting ${wait}s for inference servers to initialize..."
+    sleep "$wait"
     if bash "$DEMO_ROOT/scripts/smoke_test.sh"; then
         return 0
     else
