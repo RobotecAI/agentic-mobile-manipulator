@@ -137,11 +137,25 @@ description = "Launch safety agent (with RAG)"
 
 [feature.sim.dependencies]
 git-lfs = "*"
+# O3DE 26.05 builds with clang only (its GCC config is broken); the pixi env also
+# provides the system libraries the SDK .deb declares, so no apt packages are needed.
+cmake = ">=3.30"
+ninja = "*"
+clang = "18.*"
+clangxx = "18.*"
+ccache = "*"            # build_sim.sh compiles through it; repeat builds reuse objects
+libunwind = "*"
+zstd = "*"
+xorg-libx11 = "*"
+xorg-libxcb = "*"
 
 [feature.sim.tasks.install-o3de]
-cmd = "scripts/install_o3de.sh"
-outputs = ["/opt/O3DE/26.05/scripts/o3de.sh"]
-description = "Install the O3DE engine SDK"
+cmd = "bash scripts/install_o3de.sh"
+description = "Download and unpack the O3DE SDK to ~/.local/share/o3de (no sudo)"
+
+[feature.sim.tasks.uninstall-o3de]
+cmd = "bash scripts/uninstall_o3de.sh"
+description = "Remove the O3DE SDK unpacked by install-o3de"
 
 [feature.sim.tasks.clone-gems]
 cmd = "vcs import --input gems.repos && git lfs install && bash -c 'for repo in gems/*/; do git -C \"$repo\" lfs pull; done'"
@@ -172,7 +186,8 @@ outputs = ["sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"]
 # sim/project.json, so the gem source trees must exist before cmake configure.
 # fetch-gems (transitively clone-gems) clones them; depend on it so a clean
 # checkout — and the Docker o3de build — fetch gems before building.
-depends-on = ["fetch-gems"]
+# build_sim.sh sources the ros2_ws overlay, so build-ros2 must run first.
+depends-on = ["build-ros2", "fetch-gems", "install-o3de"]
 description = "Build O3DE GameLauncher and project assets"
 
 [feature.sim.tasks.sim]
@@ -180,7 +195,7 @@ cmd = "bash scripts/tmux_run.sh agentic-mobile-manipulator-sim pixi run sim-fg"
 description = "Launch O3DE simulation in its own tmux session"
 
 [feature.sim.tasks.sim-fg]
-cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
+cmd = "bash scripts/o3de_exec.sh $DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
 description = "Launch O3DE simulation in the foreground (no tmux)"
 
 [feature.sim.tasks.sim-smoke]
@@ -188,7 +203,7 @@ cmd = "bash scripts/sim_smoke.sh"
 description = "Headless sim smoke test: boot with --rhi=null, pass if /clock ticks (no GPU/display)"
 
 [feature.sim.tasks.editor]
-cmd = "$O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor --project-path $DEMO_ROOT/sim"
+cmd = "bash scripts/o3de_exec.sh $O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor --project-path $DEMO_ROOT/sim"
 description = "Launch O3DE Editor from SDK (project must be built first)"
 
 # ─── Feature: local-inference ───────────────────────────────────────────────────
@@ -205,7 +220,7 @@ make = "*"             # llama.cpp default (Makefiles) generator
 c-compiler = "*"
 cxx-compiler = "*"
 pkg-config = "*"
-wget = "*"             # download-models fetches ggufs
+rich = "*"             # download-models: one progress bar per gguf
 # Vulkan SDK pieces llama.cpp's GGML_VULKAN backend needs to BUILD: headers +
 # loader for find_package(Vulkan), and glslc (from shaderc) to compile shaders.
 # The runtime ICD is the system GPU driver (e.g. RADV for AMD), discovered by
@@ -262,7 +277,7 @@ description = "Build FastFlowLM from source, build-only/no install (needs XRT/am
 
 [feature.local-inference.tasks.download-models]
 cmd = "python -m rai_app.inference.serve --download"
-description = "Download weights for every local endpoint in config.toml (gguf via wget, NPU tags via `flm pull`)"
+description = "Download weights for every local endpoint in config.toml (ggufs in parallel, NPU tags via `flm pull`)"
 
 [feature.local-inference.tasks.inference]
 cmd = "python -m rai_app.inference.serve"
@@ -303,15 +318,15 @@ depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
 [feature.profile-sim.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync"]
+depends-on = ["build-sim", "sync"]
 description = "Setup sim machine (O3DE + ROS 2)"
 
 [feature.profile-hmi.tasks.setup]
-depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
+depends-on = ["build-ros2", "sync"]
 description = "Setup HMI machine (ROS 2)"
 
 [feature.profile-hil.tasks.setup]
-depends-on = ["clone-ros2-ws", "init-submodules", "build-ros2", "sync", "build-llama"]
+depends-on = ["build-ros2", "build-llama", "sync"]
 description = "Setup HIL compute machine (ROS 2 + inference, GPU+NPU)"
 
 [feature.profile-single-pc.tasks.clone]
@@ -327,30 +342,20 @@ cmd = "bash scripts/demo_trace.sh"
 description = "Unattended trace run: start demo, send one task, dump the agent conversation to runs/<timestamp>/, then kill everything"
 
 # ─── Single-PC setup variants: GPU (default) vs GPU+NPU ──────────────────────────
-# Share clone/demo above; differ only in what `setup` builds and what
-# find-runnables waits on. -gpu builds llama.cpp (Vulkan); -npu also builds
-# FastFlowLM. Each env includes exactly one variant, so the duplicate
-# `setup`/`find-runnables` names never collide.
+# Share clone/demo above; differ only in what `setup` builds: -gpu builds llama.cpp
+# (Vulkan), -npu also builds FastFlowLM. Each env includes exactly one variant, so
+# the duplicate `setup` names never collide. Dependencies run transitively, so each
+# lists only the last builds; setup then lists what got built.
 
 [feature.profile-single-pc-gpu.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "find-runnables"]
+cmd = "bash scripts/find_runnables.sh"
+depends-on = ["build-sim", "build-llama", "sync"]
 description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU)"
 
-# Runs last (depends on the builds it inventories) so setup ends by listing them.
-[feature.profile-single-pc-gpu.tasks.find-runnables]
-cmd = "bash scripts/find_runnables.sh"
-depends-on = ["build-sim", "build-llama"]
-description = "List built runnables (GameLauncher, llama.cpp, ...)"
-
 [feature.profile-single-pc-npu.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "build-fastflowlm", "find-runnables"]
-description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU) + FastFlowLM (NPU)"
-
-# Waits on the NPU build too, so FastFlowLM reports as built.
-[feature.profile-single-pc-npu.tasks.find-runnables]
 cmd = "bash scripts/find_runnables.sh"
-depends-on = ["build-sim", "build-llama", "build-fastflowlm"]
-description = "List built runnables (GameLauncher, llama.cpp, FastFlowLM, ...)"
+depends-on = ["build-sim", "build-llama", "build-fastflowlm", "sync"]
+description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU) + FastFlowLM (NPU)"
 
 # ─── Feature: dev ───────────────────────────────────────────────────────────────
 # Lightweight feature for Python tooling (uv, pre-commit, pytest).

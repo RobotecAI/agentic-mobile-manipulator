@@ -2,9 +2,9 @@
 
 ## What to expect
 
-![Demo Windows](demo_windows.jpg)
+![Demo windows: HMI, simulation and RViz](demo_windows.jpg)
 
-1. **Simulation Window**: the O3DE warehouse environment. Use _Control → Simulation Scenarios_ to spawn objects, and _Control → On Demand predefined tasks_ to run tasks — or publish your own to the `/user_tasks` topic.
+1. **Simulation Window**: the O3DE warehouse environment. Populate it and assign tasks from the HMI (see [Operating the demo](operating.md)), or publish your own to the `/user_tasks` topic.
 2. **HMI**: a window showing the Human-Machine Interface.
 3. **Agents**: the autonomous agents run in the background, driving the robot.
 
@@ -92,6 +92,9 @@ Preview the resolved launch commands without starting anything:
 ```shell
 pixi run -e single-pc-gpu-and-npu inference --print
 ```
+
+If `vlm_safety` (port 8081, NPU) never comes up (`HTTP 000`, or `Open /dev/accel/... failed (err=-13)`
+in its pane), your shell is not in the `render` group yet: log in again or run `newgrp render`.
 
 ### Agents
 

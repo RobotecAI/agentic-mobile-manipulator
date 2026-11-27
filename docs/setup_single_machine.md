@@ -19,17 +19,41 @@ cd agentic-mobile-manipulator
 
 #### Install System Dependencies
 
-These packages must be installed via `apt` before using pixi:
+Only these come from `apt`; pixi provides the compilers, CMake and the libraries O3DE needs:
 
 ```bash
 sudo apt update
-sudo apt install git git-lfs python3-vcstool ninja-build \
-    cmake libstdc++-12-dev clang \
-    libglu1-mesa-dev libxcb-randr0-dev libxcb-xinerama0 libxcb-xinput0 \
-    libxcb-xinput-dev libxcb-xfixes0-dev libxcb-xkb-dev libxkbcommon-dev \
-    libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev \
-    mesa-common-dev libunwind-dev libzstd-dev tix tmux
+sudo apt install git git-lfs mesa-vulkan-drivers tmux
 ```
+
+#### NPU prerequisites (`single-pc-gpu-and-npu` only)
+
+FastFlowLM builds against XRT from the lemonade PPA and needs NPU firmware 1.1 or newer:
+
+```bash
+sudo add-apt-repository ppa:lemonade-team/stable
+sudo apt update
+sudo apt install libxrt-dev libxrt-npu2 libavformat-dev libavutil-dev libavcodec-dev \
+    libswresample-dev libswscale-dev libfftw3-dev uuid-dev libdrm-dev
+# The NPU device belongs to the render group, and FastFlowLM pins memory.
+sudo usermod -aG render $USER
+echo "$USER - memlock unlimited" | sudo tee /etc/security/limits.d/99-npu-memlock.conf
+```
+
+Both take effect in new login sessions only: log out and back in (or open a new SSH session).
+
+Ubuntu 24.04 ships NPU firmware 1.0.0.166, on which every NPU request fails with
+`runlist failed execution (ERT_CMD_STATE_ABORT)`. Strix Halo (PCI `17f0` rev `11`) needs
+`npu_7.sbin` 1.1.2.65 from upstream linux-firmware:
+
+```bash
+d=/lib/firmware/updates/amdnpu/17f0_11
+sudo mkdir -p $d
+sudo curl -fLo $d/npu_7.sbin https://gitlab.com/kernel-firmware/linux-firmware/-/raw/main/amdnpu/17f0_11/npu.sbin.1.1.2.65
+sudo reboot   # or, with nothing using the NPU: sudo modprobe -r amdxdna && sudo modprobe amdxdna
+```
+
+After `setup`, `inference/FastFlowLM/src/build/flm validate` must report no errors.
 
 #### Install pixi
 
@@ -54,14 +78,14 @@ This single command runs the full build pipeline in the correct order:
 | Step | pixi task          | What it does                                                   |
 | ---- | ------------------ | -------------------------------------------------------------- |
 | 1    | `clone`            | `vcs import` + `git lfs pull` for gems and ROS 2 ws            |
-| 2    | `install-o3de`     | Install the O3DE engine                                        |
+| 2    | `install-o3de`     | Unpack the O3DE SDK to `~/.local/share/o3de` (no sudo)         |
 | 3    | `fetch-gems`       | Clone o3de-extras locally, validate all gem paths              |
 | 4    | `build-ros2`       | `colcon build` (deps provided by RoboStack)                    |
 | 5    | `build-sim`        | CMake configure + Ninja build (GameLauncher)                   |
 | 6    | `sync`             | `uv sync` installs the Python dependencies                     |
 | 7    | `build-llama`      | Build llama.cpp with the Vulkan backend (GPU)                  |
 | 8    | `build-fastflowlm` | Build FastFlowLM for the AMD Ryzen AI NPU backend              |
-| 9    | `find-runnables`   | List the built runnables (GameLauncher, llama.cpp, FastFlowLM) |
+| 9    | `setup`            | List the built runnables (GameLauncher, llama.cpp, FastFlowLM) |
 
 > Prefer a GPU-only machine (no AMD Ryzen AI NPU)? Use `pixi run -e single-pc-gpu setup`
 > instead — it skips step 8. You must also set `[endpoints.vlm_safety] backend = "gpu"`
@@ -74,7 +98,7 @@ llama.cpp (Vulkan, GPU) and FastFlowLM (NPU) — as part of the pipeline above. 
 serve models locally you still need to download the weights:
 
 ```shell
-pixi run -e single-pc-gpu-and-npu download-models # downloads every weight referenced in config.toml (gguf via wget, NPU tags via `flm pull`); or grab them manually below
+pixi run -e single-pc-gpu-and-npu download-models # downloads every weight referenced in config.toml (ggufs in parallel, NPU tags via `flm pull`); or grab them manually below
 ```
 
 `config.toml` is the single source of truth for inference: each `[endpoints.*]`
@@ -104,7 +128,7 @@ runs on llama.cpp.
 
 For every GGUF-backed model in `config.toml`, download the file and place it in `$DEMO_ROOT/models/`:
 
-- [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
+- [Qwen3.6-35B-A3B](https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf?download=true)
 - [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) + [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
 - [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true)
 - [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true)

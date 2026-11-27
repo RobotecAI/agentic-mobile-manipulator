@@ -37,6 +37,7 @@ from rai.messages import HumanMultimodalMessage, preprocess_image
 from sensor_msgs.msg import Image
 from skimage.metrics import structural_similarity as ssim
 
+from rai_app.agents.heartbeat import start_heartbeat
 from rai_app.agents.vlm_transport import publish_vlm_description
 from rai_app.initialization.llms import (
     get_embeddings_model,
@@ -93,6 +94,7 @@ class SafetyAgent:
         violations_file: str = "safety_violations.json",
     ):
         self.connector = ROS2Connector(executor_type="multi_threaded")
+        start_heartbeat(self.connector, "safety")
         self.get_logger = self.connector.node.get_logger
         self.camera_topic = camera_topic
         self.safety_topic = safety_topic

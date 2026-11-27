@@ -1,16 +1,37 @@
 # Quickstart: Docker Compose
 
-Run the full **Mobile Manipulator Demo** — simulation, ROS 2 stack, local inference, agents, and HMI — in a single container, with all models served locally on an AMD GPU + AMD Ryzen™ AI NPU.
+Run the full **Mobile Manipulator Demo** (simulation, ROS 2 stack, local inference, agents, and HMI) in a single container, with every model served locally.
 
-The Docker image does not ship the NPU backend (FastFlowLM): every model runs on the GPU. It still runs on Strix Halo, using the GPU only. To use the NPU, see [NPU](#npu).
+## Pick a variant
+
+|                | GPU + NPU (default)                                         | GPU only                           |
+| -------------- | ----------------------------------------------------------- | ---------------------------------- |
+| Hardware       | AMD GPU + AMD Ryzen™ AI NPU (e.g. Ryzen AI Max, Strix Halo) | Any supported AMD GPU              |
+| Safety VLM     | `gemma3:4b` on the NPU (FastFlowLM)                         | LFM2-VL on the GPU (llama.cpp)     |
+| Image          | Built locally with `WITH_NPU=1`                             | Prebuilt (`pull`) or built locally |
+| Mounted config | `config.toml`                                               | `gpu_config.toml`                  |
+
+The published image is GPU only: it does not ship FastFlowLM. A Ryzen AI machine can still run it, using only the GPU.
+
+Set the variant once in your shell; every command below uses it:
+
+```bash
+# GPU + NPU (default)
+export COMPOSE_FILE=docker/compose.yaml:docker/compose.npu.yaml WITH_NPU=1 AMM_CONFIG=../config.toml
+
+# GPU only
+export COMPOSE_FILE=docker/compose.yaml WITH_NPU=0 AMM_CONFIG=../gpu_config.toml
+```
+
+`COMPOSE_FILE` adds the NPU device for the GPU + NPU variant (`docker/compose.npu.yaml`), `WITH_NPU` selects what the image is built with, and `AMM_CONFIG` which config the container runs. Run the commands below from the repository root.
 
 ## Prerequisites
 
-- **AMD GPU** (ROCm/Vulkan) **and AMD Ryzen™ AI NPU** for the default build.
-- The host's **amdxdna** driver loaded: check with `ls /dev/accel/accel0`.
+- **AMD GPU** (ROCm/Vulkan).
 - [Docker Engine](https://docs.docker.com/engine/install/) + [ROCm Docker prerequisites](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html#prerequisites).
 - A running X server (the O3DE simulation and HMI open windows on your display).
-- **Disk & network**: ~60 GB free for the image (the prebuilt image is a ~18 GB compressed pull), plus ~20 GB under `models/` for the weights. On a slow connection the first pull + model download takes a while.
+- **Disk & network**: ~60 GB free for the image (the prebuilt image is a ~18 GB compressed pull), plus ~27 GB under `models/` for the weights. On a slow connection the first pull + model download takes a while.
+- **GPU + NPU only**: the host's `amdxdna` driver (`ls /dev/accel/accel0`) and NPU firmware 1.1 or newer. Ubuntu 24.04 ships 1.0.0.166; install the newer one as in [NPU prerequisites](setup_single_machine.md#npu-prerequisites-single-pc-gpu-and-npu-only) (only the firmware part: the XRT build packages are inside the image).
 
 ## 1. Clone the repository
 
@@ -19,33 +40,31 @@ git clone https://github.com/RobotecAI/agentic-mobile-manipulator.git
 cd agentic-mobile-manipulator
 ```
 
-## 2. Get the image: build _or_ pull
+## 2. Get the image
 
-**Build locally:**
-
-```bash
-docker compose -f docker/compose.yaml build
-```
-
-This builds three cacheable layers — `…-ros2` (RoboStack ROS 2 + workspace) → `…-o3de` (O3DE SDK + simulation) → `…demo` (Python agents + llama.cpp + FastFlowLM). The O3DE layer is large; later rebuilds reuse the cached bases.
-
-**Or pull the prebuilt images:**
+**GPU + NPU: build locally.**
 
 ```bash
-docker compose -f docker/compose.yaml pull
+docker compose build
 ```
 
-If you pull, pass `--no-build` when starting the demo (see step 4).
+This builds three cacheable layers: `…-ros2` (RoboStack ROS 2 + workspace), `…-o3de` (O3DE SDK + simulation) and `…demo` (Python agents, llama.cpp and, with `WITH_NPU=1`, FastFlowLM). The O3DE layer is large; later rebuilds reuse the cached bases.
+
+**GPU only: build the same way, or pull the prebuilt images.**
+
+```bash
+docker compose pull
+```
 
 ## 3. Download the model weights
 
-Weights are **not** baked into the image. They are downloaded into the repo's `models/` directory, bind-mounted at run time. The mounted config (`gpu_config.toml` by default) is the single source of truth for which models are fetched. Pull them once into `models/` by running:
+Weights are **not** baked into the image. The mounted config (`$AMM_CONFIG`) says which models are fetched; download them once:
 
 ```bash
-docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run download-models
+docker compose run --rm models
 ```
 
-This writes the llama.cpp GGUFs to `models/` (and, with the [NPU](#npu), the NPU model to `models/flm/` via `flm pull`). It only fetches what's missing, so it's safe to re-run.
+This downloads the llama.cpp GGUFs into `models/` in parallel, one progress bar per file, and with GPU + NPU the NPU model via `flm pull` into the `flm-models` Docker volume (`docker volume rm docker_flm-models` removes it). Partial files resume and complete ones are skipped, so it's safe to re-run.
 
 ## 4. Run the demo
 
@@ -53,19 +72,18 @@ Allow local connections to your X server, then start the `demo` service:
 
 ```bash
 xhost +local:root
-docker compose -f docker/compose.yaml up demo          # if you built (step 2)
-docker compose -f docker/compose.yaml up --no-build demo   # if you pulled (step 2)
+docker compose up --no-build demo
 ```
 
 > [!IMPORTANT]
-> The `docker compose up` command rebuilds any service that has a `build:` section, even when the image is already present locally. So after `pull`, a bare `up demo` ignores the pulled image and rebuilds `ros2 → o3de → demo`. Pass `--no-build` to run the pulled image as-is.
+> Always pass `--no-build`, whether you built or pulled the image. Without it, `up` rebuilds `ros2 → o3de → demo` first, and any repository change since your build (a commit, a `git pull`) turns that into a long rebuild.
 
 ## What to expect
 
-![Demo Windows](demo_windows.jpg)
+![Demo windows: HMI, simulation and RViz](demo_windows.jpg)
 
-1. **Simulation Window**: the O3DE warehouse environment. Use _Control → Simulation Scenarios_ to spawn objects, and _Control → On Demand predefined tasks_ to run tasks — or publish your own to the `/user_tasks` topic.
-2. **HMI**: a window showing the Human-Machine Interface.
+1. **Simulation window**: the O3DE warehouse environment.
+2. **HMI**: populate the scene on its **Simulation** page, then assign tasks there or on the **Mission** page, and follow the agents on the **Mission** and **Agents** pages.
 3. **Agents**: the autonomous agents run in the background, driving the robot.
 
 See how to operate the demo [Operating](operating.md)
@@ -77,7 +95,7 @@ sends one task to the orchestrator, saves the agent conversation trace, and exit
 
 ```bash
 xhost +local:root
-docker compose -f docker/compose.yaml run --rm demo-trace
+docker compose run --rm demo-trace
 ```
 
 The trace is written to `runs/<timestamp>/` on the host (bind-mounted from the
@@ -100,28 +118,17 @@ Swap the session for any of `-sim`, `-stack`, `-llm-servers`, `-agents`, `-hmi` 
 ## Stopping
 
 ```bash
-docker compose -f docker/compose.yaml down
+docker compose down
 ```
-
-## NPU
-
-The Docker image runs `vlm_safety` on the GPU through llama.cpp (`gpu_config.toml`, which the compose file mounts by default). To run it on the NPU, set the demo up natively ([single-machine setup](setup_single_machine.md)), or build the image locally with FastFlowLM:
-
-```bash
-WITH_NPU=1 docker compose -f docker/compose.yaml build
-AMM_CONFIG=../config.toml docker compose -f docker/compose.yaml up demo
-```
-
-`config.toml` runs `vlm_safety` on the NPU; it needs the host's amdxdna driver (`ls /dev/accel/accel0`).
 
 ## Cloud models
 
-To run the agents on OpenAI-hosted models instead of local inference, swap in the
-cloud config before starting (the compose bind-mounts `config.toml` and passes
-`OPENAI_API_KEY` into the container):
+To run the agents on OpenAI-hosted models instead of local inference, mount the
+cloud config (the compose mounts `$AMM_CONFIG` as the container's `config.toml` and
+passes `OPENAI_API_KEY` into the container):
 
 ```bash
-cp cloud_config.toml config.toml
+export AMM_CONFIG=../cloud_config.toml
 export OPENAI_API_KEY=sk-...
 ```
 
@@ -133,6 +140,6 @@ for details, including the required OpenAI model access.
 ## Troubleshooting
 
 - **O3DE doesn't start / no windows appear**: ensure you ran `xhost +local:root` and that `DISPLAY` is set (`echo $DISPLAY`). Verify your AMD GPU drivers + ROCm container prerequisites are installed.
-- **NPU errors / FastFlowLM fails to start**: confirm `/dev/accel/accel0` exists on the host and that the `memlock` ulimit and the device mapping are present in `docker/compose.yaml` (both are required for the NPU).
-- **Inference health check fails**: make sure step 3 completed and `models/` (and `models/flm/`) contain the weights the mounted config references.
+- **NPU errors / FastFlowLM fails to start**: confirm `/dev/accel/accel0` exists on the host, the NPU firmware is 1.1 or newer (on firmware 1.0 every request fails with `ERT_CMD_STATE_ABORT`), the image was built with `WITH_NPU=1`, and you set the GPU + NPU variant (`COMPOSE_FILE` with `docker/compose.npu.yaml`, which passes the NPU device and the memlock ulimit, and `AMM_CONFIG=../config.toml`).
+- **Inference health check fails**: make sure step 3 ran with the same `AMM_CONFIG` you run with, so `models/` (and, for the NPU, the `flm-models` volume) holds the weights the mounted config references.
 - **GPU access / slow or crashing sim**: check your GPU drivers and the [ROCm Docker docs](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html).

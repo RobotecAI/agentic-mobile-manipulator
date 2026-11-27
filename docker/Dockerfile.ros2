@@ -25,13 +25,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libgz-math7-dev \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://pixi.sh/install.sh | PIXI_HOME=/usr/local bash
+# Pinned to the version pixi.lock is written with; PIXI_LOCKED makes every
+# `pixi run` in this and the later images use the lock as is, never re-solve it.
+RUN curl -fsSL https://pixi.sh/install.sh | PIXI_HOME=/usr/local PIXI_VERSION=v0.84.2 bash
+ENV PIXI_LOCKED=true
 
 WORKDIR /root/MobileManipulatorDemo
 ENV DEMO_ROOT=/root/MobileManipulatorDemo
 
 COPY pixi.toml pixi.lock ros2_ws.repos ./
-COPY scripts/ scripts/
+# Only the scripts these steps run (pixi activation, licence collection), so editing
+# other scripts does not rebuild the ROS 2 workspace.
+COPY scripts/setup_env.sh scripts/collect_conda_licenses.py scripts/
 COPY ros2_ws/src/ ros2_ws/src/
 
 # Drop the packages/ directory that was copied from the host; all those packages

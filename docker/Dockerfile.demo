@@ -16,7 +16,8 @@ ENV DEMO_ROOT=/root/MobileManipulatorDemo
 ARG WITH_NPU=0
 
 # tmux is always required: demo.sh runs each component in its own tmux session.
-RUN apt-get update && apt-get install -y --no-install-recommends tmux \
+# rocm-smi (Ubuntu archive) lets the HMI's utilization_node report GPU load.
+RUN apt-get update && apt-get install -y --no-install-recommends tmux rocm-smi \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # NPU build deps (WITH_NPU=1 only). FastFlowLM links the host XRT/NPU libs with
@@ -52,8 +53,9 @@ COPY scripts/ scripts/
 RUN pixi run sync
 
 # Local inference engines built from the pinned submodules. llama.cpp (Vulkan,
-# gpu/cpu endpoints) is always built; init-submodules needs .git (inherited from
-# the o3de base) + .gitmodules (copied above).
+# gpu/cpu endpoints) is always built; init-submodules needs .git + .gitmodules.
+# .git is copied here, not earlier, so a new commit only rebuilds from this point.
+COPY .git .git/
 RUN pixi run init-submodules && pixi run build-llama
 
 # GPU-only: drop the FastFlowLM checkout (it holds the NPU binaries) and default to
@@ -65,14 +67,8 @@ RUN if [ "$WITH_NPU" != "1" ]; then \
     fi
 
 # FastFlowLM (npu endpoints), WITH_NPU=1 only. Its tokenizers-cpp vendors a Rust
-# static lib (libtokenizers_c.a), so the build needs cargo. Install via rustup
-# (latest stable — Ubuntu's apt cargo can be too old for the pinned crate) and
-# source it so cmake's find_program(cargo) succeeds at configure time.
-RUN if [ "$WITH_NPU" = "1" ]; then \
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal \
-     && . "$HOME/.cargo/env" \
-     && pixi run build-fastflowlm ; \
-    fi
+# static lib (libtokenizers_c.a); cargo comes from the pixi env (rust in pixi.toml).
+RUN if [ "$WITH_NPU" = "1" ]; then pixi run build-fastflowlm ; fi
 
 # Ship the conda packages' licence texts with the image (see THIRD_PARTY.md):
 # they live in the pixi package cache, not in the environment.

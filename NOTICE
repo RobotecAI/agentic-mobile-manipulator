@@ -80,6 +80,8 @@ Third-party items in these gems keep their own licenses. The NOTICE file of each
 
 - llama.cpp (https://github.com/ggml-org/llama.cpp). Copyright (c) 2023-2026 The ggml authors.
   License: MIT. Bundled third-party code is listed in inference/llama.cpp/licenses.
+  rai_app/initialization/json_schema_to_grammar.py is copied from llama.cpp
+  (examples/json_schema_to_grammar.py, commit ae9afff8), same license.
 - FastFlowLM (https://github.com/FastFlowLM/FastFlowLM), used through the RobotecAI fork
   (https://github.com/RobotecAI/FastFlowLM), which adds GBNF grammar-constrained sampling.
   The code is licensed under the MIT License (LICENSE_RUNTIME.txt). The NPU kernel binaries are under their own
@@ -100,7 +102,7 @@ Third-party items in these gems keep their own licenses. The NOTICE file of each
 
 The model weights are not part of this repository. They are downloaded at run time, as config.toml sets,
 and each model is used under its own license:
-- gpt-oss-20b (https://huggingface.co/openai/gpt-oss-20b): Apache-2.0.
+- Qwen3.6-35B-A3B (https://huggingface.co/Qwen/Qwen3.6-35B-A3B): Apache-2.0.
 - LFM2-VL-3B (https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF): LFM Open License v1.0.
 - Gemma 3 4B (https://huggingface.co/google/gemma-3-4b-it): Gemma Terms of Use.
 - Qwen3-Embedding-0.6B (https://huggingface.co/Qwen/Qwen3-Embedding-0.6B) and

@@ -5,5 +5,6 @@
   ros2 launch robotec_kairos_ur10 robotec_launch.py &
   ros2 run mobile_manipulator_hmi utilization_node &
   uv run python rai_app/control/nav_lifecycle_node.py &
+  uv run python rai_app/control/wheel_joint_states.py &
   wait
 )

@@ -16,6 +16,7 @@
 #pragma once
 
 #include <QString>
+#include <QVector>
 
 struct ModelNames {
     QString llm;
@@ -29,3 +30,16 @@ QString defaultModelConfigPath();
 // Reads the inference SSOT (config.toml) and returns the model names to
 // display. Never throws: a missing or malformed file yields "unknown".
 ModelNames loadModelNames(const QString &configPath);
+
+// One locally served inference endpoint ([endpoints.*] with backend gpu, cpu or npu).
+struct Endpoint {
+    QString name;
+    QString type;
+    QString backend;
+    QString model;
+    QString host;
+    int port = 0;
+};
+
+// Every locally served endpoint in config.toml; empty on a missing or malformed file.
+QVector<Endpoint> loadEndpoints(const QString &configPath);

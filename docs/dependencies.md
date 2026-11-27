@@ -56,7 +56,7 @@ backend, and from which weights. The endpoints it defines today:
 
 | Model name           | Type      | Backend          | Source                                           |
 | -------------------- | --------- | ---------------- | ------------------------------------------------ |
-| gpt-oss-20b          | LLM       | GPU (llama.cpp)  | https://huggingface.co/openai/gpt-oss-20b        |
+| Qwen3.6-35B-A3B      | LLM       | GPU (llama.cpp)  | https://huggingface.co/Qwen/Qwen3.6-35B-A3B      |
 | LFM2-VL-3B           | VLM       | GPU (llama.cpp)  | https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF  |
 | gemma3:4b            | VLM       | NPU (FastFlowLM) | https://huggingface.co/google/gemma-3-4b-it      |
 | Qwen3-Embedding-0.6B | Embedding | GPU (llama.cpp)  | https://huggingface.co/Qwen/Qwen3-Embedding-0.6B |

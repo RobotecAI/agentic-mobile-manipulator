@@ -3,25 +3,12 @@
 # Sets up O3DE and ROS 2 environment variables automatically.
 
 # ── O3DE engine path ─────────────────────────────────────────────────────────
-# Resolved in order:
-#   1. Caller-set O3DE_ENGINE_PATH (CI override / native dev workflow)
-#   2. engine_path from sim/user/project.json — written by install_o3de.sh,
-#      mirrors what EngineFinder.cmake (Option 2) uses at configure time
-#   3. /opt/O3DE/<version> fallback for a fresh checkout before install runs
-if [[ -z "${O3DE_ENGINE_PATH:-}" ]]; then
-    user_project_json="${PIXI_PROJECT_ROOT:-.}/sim/user/project.json"
-    if [[ -f "$user_project_json" ]]; then
-        O3DE_ENGINE_PATH=$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(d.get('engine_path',''))" "$user_project_json" 2>/dev/null || true)
-    fi
-    export O3DE_ENGINE_PATH="${O3DE_ENGINE_PATH:-/opt/O3DE/26.05}"
-fi
-
-# ── LD_LIBRARY_PATH: O3DE bundled libs take precedence over conda ────────────
-# Pixi/conda activation injects conda's lib dir into LD_LIBRARY_PATH. O3DE
-# ships its own patched Qt5 and other runtime libs; when conda's copies shadow
-# them the linker resolves mismatched ABIs (e.g. Qt_5_PRIVATE_API undefined
-# symbol). Prepending the O3DE lib dir ensures the bundled libs always win.
-export LD_LIBRARY_PATH="$O3DE_ENGINE_PATH/bin/Linux/profile/Default${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+# Only the SDK unpacked by install_o3de.sh is used; a system-wide O3DE install
+# (e.g. /opt/O3DE) is ignored. build_sim.sh passes this path to CMake explicitly.
+# O3DE binaries get their library path from scripts/o3de_exec.sh.
+export O3DE_VERSION="${O3DE_VERSION:-26.05}"
+export O3DE_HOME="${O3DE_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/o3de}"
+export O3DE_ENGINE_PATH="$O3DE_HOME/$O3DE_VERSION"
 
 # ── ROS 2 setup ──────────────────────────────────────────────────────────────
 if [[ -f "/opt/ros/jazzy/local_setup.sh" ]]; then

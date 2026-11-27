@@ -17,7 +17,7 @@ The repository is organized into several key directories:
 ### Robotics & Middleware
 
 - **`ros2_ws/`**: The "nervous system". A standard ROS 2 workspace containing custom packages.
-  - **`mobile_manipulator_hmi/`**: A Qt-based Human-Machine Interface (HMI) for operators to interact with the robot.
+  - **`mobile_manipulator_hmi/`**: A Qt Quick (QML) Human-Machine Interface (HMI): assign tasks, follow the agents, control the simulation.
   - **`robotec_kairos_ur10/`**: Robot configuration, description files, and maps for the Robotnik Kairos platform.
   - **`custom_adjustment_nav2/`**: Custom behavior tree nodes for the Nav2 navigation stack.
 

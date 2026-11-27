@@ -20,12 +20,13 @@
 [endpoints.main_llm]
 type       = "llm"
 backend    = "gpu"                  # llama.cpp, Vulkan build
-model      = "gpt-oss-20b"          # name advertised to OpenAI-compatible clients
+model      = "qwen3.6-35b-a3b"      # name advertised to OpenAI-compatible clients
 host       = "localhost"
 port       = 8080
-model_path = "${DEMO_ROOT}/models/gpt-oss-20b-Q4_K_M.gguf"
-model_url  = "https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true"
-extra_args = ["--no-prefill-assistant"]
+model_path = "${DEMO_ROOT}/models/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+model_url  = "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf?download=true"
+# Thinking off: the agents run with llm_reasoning = false, and the chat template defaults to thinking.
+extra_args = ["--no-prefill-assistant", "--chat-template-kwargs", "{\"enable_thinking\": false}"]
 
 # safety agent VLM — FastFlowLM (npu)
 [endpoints.vlm_safety]

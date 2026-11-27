@@ -42,6 +42,14 @@ class Nav2Lifecycle(Node):
             10,
             callback_group=callback_group,
         )
+        # The HMI's "Release stop" (std_msgs/Empty, same as /emergency_stop).
+        self.release_sub = self.create_subscription(
+            Empty,
+            "/emergency_release",
+            self.resume_navigation,
+            10,
+            callback_group=callback_group,
+        )
 
         self.cmd_vel_pub = self.create_publisher(Twist, "/cmd_vel", 10)
 

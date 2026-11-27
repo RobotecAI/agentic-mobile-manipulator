@@ -11,15 +11,15 @@
   <depend>nav_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>rcl_interfaces</depend>
+  <depend>std_msgs</depend>
+  <depend>rosgraph_msgs</depend>
   <depend>tf2_ros</depend>
   <depend>tf2</depend>
-  <depend>image_transport</depend>
   <depend>std_srvs</depend>
-  <depend>cv_bridge</depend>
   <depend>robotec_kairos_ur10</depend>
   <depend>rai_interfaces</depend>
-  <exec_depend>qt5-qmake</exec_depend>
-  <exec_depend>qtbase5-dev</exec_depend>
+  <depend>qtdeclarative5-dev</depend>
+  <depend>qtquickcontrols2-5-dev</depend>
   <exec_depend>python3-psutil</exec_depend>
   <build_depend>demo_msgs</build_depend>
   <exec_depend>demo_msgs</exec_depend>

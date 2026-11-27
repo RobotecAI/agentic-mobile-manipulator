@@ -54,6 +54,7 @@ from sensor_msgs.msg import Image
 from tf2_ros import PoseStamped
 from visualization_msgs.msg import Marker, MarkerArray
 
+from rai_app.agents.heartbeat import start_heartbeat
 from rai_app.agents.vlm_transport import publish_vlm_description
 from rai_app.config.vlm_inspection_prompts import (
     INSPECTION_JSON_SYSTEM_PROMPT,
@@ -219,13 +220,14 @@ class VlmWarehouseInspector(BaseAgent):
             self.process_queue.put(task)
 
     def check_if_anomaly_is_reported(self, anomaly: Anomaly) -> bool:
-        # Remove anomalies older than 1 minute
+        # Forget "other" anomalies after 1 minute. Box/trash ones start a pick task, so keep them
+        # for 10 minutes: the robot sees the same object again while handling it.
         old_anomalies = len(self.reported_anomalies)
         now = time.time()
         self.reported_anomalies = [
-            (anomaly, timestamp)
-            for anomaly, timestamp in self.reported_anomalies
-            if now - timestamp < 60
+            (reported, timestamp)
+            for reported, timestamp in self.reported_anomalies
+            if now - timestamp < (60 if reported.obstacle_type == "other" else 600)
         ]
         if old_anomalies > 0:
             self.get_logger().info(
@@ -233,6 +235,19 @@ class VlmWarehouseInspector(BaseAgent):
             )
 
         for reported_anomaly, _ in self.reported_anomalies:
+            actable = "other" not in (
+                reported_anomaly.obstacle_type,
+                anomaly.obstacle_type,
+            )
+            # An object pose (unlike a robot pose) has no meaningful yaw, and a picked object
+            # moves a bit, so match actable ones by position only, with more slack.
+            if actable and are_poses_close(
+                reported_anomaly.pose,
+                anomaly.pose,
+                2 * self.match_anomaly_max_distance,
+                360,
+            ):
+                return True
             if are_anomalies_close(
                 reported_anomaly,
                 anomaly,
@@ -287,11 +302,18 @@ class VlmWarehouseInspector(BaseAgent):
         ]:
             if result.obstacle_type != "other" and task.object_pose is None:
                 self.get_logger().error(
-                    "Agent detected anomaly, but no object pose was been discovered"
-                    "by th GT detection module. Skipping {result.obstacle_type}:"
+                    "Agent detected anomaly, but no object pose was discovered "
+                    f"by the GT detection module. Skipping {result.obstacle_type}: "
                     f"{result.anomaly_description}..."
                 )
                 result.obstacle_type = "other"
+
+            if (
+                result.obstacle_type == "other"
+                and "orderly" in result.anomaly_description.lower()
+            ):
+                self.get_logger().info("Area appears orderly, nothing to report")
+                return
 
             message = Anomaly()
             if result.obstacle_type == "other":
@@ -360,8 +382,11 @@ class VlmWarehouseInspector(BaseAgent):
         marker.scale.x = 0.1
         marker.scale.y = 0.1
         marker.scale.z = 0.1
+        # Red: the robot acts on it (box, trash). Yellow: reported only ("other"),
+        # placed at the robot's position since the object itself was not located.
+        actable = message.obstacle_type != "other"
         marker.color.r = 1.0
-        marker.color.g = 0.0
+        marker.color.g = 0.0 if actable else 0.85
         marker.color.b = 0.0
         marker.color.a = 1.0
         self.marker_array.markers.append(marker)
@@ -481,6 +506,7 @@ def main():
         n_seconds=args.n_seconds,
     )
 
+    start_heartbeat(inspector.connector, "inspection")
     inspector.run()
 
 
