@@ -57,14 +57,12 @@ This builds three cacheable layers: `…-ros2` (RoboStack ROS 2 + workspace), `�
 docker compose -f docker/compose.yaml pull
 ```
 
-If you pull, pass `--no-build` when starting the demo (see step 4).
-
 ## 3. Download the model weights
 
 Weights are **not** baked into the image. The mounted config (`$AMM_CONFIG`) says which models are fetched; download them once:
 
 ```bash
-docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run download-models
+docker compose -f docker/compose.yaml run --rm --no-build --entrypoint "" demo pixi run download-models
 ```
 
 This downloads the llama.cpp GGUFs into `models/` in parallel, one progress bar per file, and with GPU + NPU the NPU model via `flm pull` into the `flm-models` Docker volume (`docker volume rm docker_flm-models` removes it). Partial files resume and complete ones are skipped, so it's safe to re-run.
@@ -75,12 +73,11 @@ Allow local connections to your X server, then start the `demo` service:
 
 ```bash
 xhost +local:root
-docker compose -f docker/compose.yaml up demo              # if you built (step 2)
-docker compose -f docker/compose.yaml up --no-build demo   # if you pulled (step 2)
+docker compose -f docker/compose.yaml up --no-build demo
 ```
 
 > [!IMPORTANT]
-> The `docker compose up` command rebuilds any service that has a `build:` section, even when the image is already present locally. So after `pull`, a bare `up demo` ignores the pulled image and rebuilds `ros2 → o3de → demo`. Pass `--no-build` to run the pulled image as-is.
+> Always pass `--no-build`, whether you built or pulled the image. Without it, `up` (and `run`) rebuild `ros2 → o3de → demo` first, and any repository change since your build (a commit, a `git pull`) turns that into a long rebuild.
 
 ## What to expect
 
@@ -99,7 +96,7 @@ sends one task to the orchestrator, saves the agent conversation trace, and exit
 
 ```bash
 xhost +local:root
-docker compose -f docker/compose.yaml run --rm demo-trace
+docker compose -f docker/compose.yaml run --rm --no-build demo-trace
 ```
 
 The trace is written to `runs/<timestamp>/` on the host (bind-mounted from the

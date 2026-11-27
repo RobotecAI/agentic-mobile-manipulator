@@ -9,7 +9,8 @@
 # each in its own tmux session — identical to running the demo natively.
 #
 # Build everything:   docker compose -f docker/compose.yaml build
-# Run the demo:        xhost +local:root && docker compose -f docker/compose.yaml up demo
+# Run the demo:        xhost +local:root && docker compose -f docker/compose.yaml up --no-build demo
+#                      (--no-build: otherwise up/run rebuild first, slow after any repo change)
 # Attach to a session: docker exec -it $(docker ps -qf ancestor=robotecai/agentic-mobile-manipulator:latest) tmux attach -t agentic-mobile-manipulator-sim
 #                      (sessions: -sim -stack -llm-servers -agents -hmi)
 #
@@ -17,7 +18,7 @@
 # image contains no FastFlowLM (see docker/Dockerfile.demo). For a local
 # gpu-and-npu image build with:
 #   WITH_NPU=1 docker compose -f docker/compose.yaml build
-# and run it with the NPU config: AMM_CONFIG=../config.toml docker compose ... up demo
+# and run it with the NPU config: AMM_CONFIG=../config.toml docker compose ... up --no-build demo
 # (without AMM_CONFIG, gpu_config.toml is mounted and the NPU stays unused).
 # On a host without an NPU, also drop the /dev/accel device and the memlock ulimit below.
 #
@@ -90,7 +91,7 @@ services:
   # conversation to ../runs/, then exit. Reuses the image built by `demo`.
   # No AMM_KEEP_ALIVE, so demo.sh returns and demo_trace.sh drives the lifecycle.
   #   xhost +local:root
-  #   docker compose -f docker/compose.yaml run --rm demo-trace
+  #   docker compose -f docker/compose.yaml run --rm --no-build demo-trace
   # Override the task with:  -e TASK="Do Housekeeping of rack J01"
   demo-trace:
     <<: *demo-runtime
