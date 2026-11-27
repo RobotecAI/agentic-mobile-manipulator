@@ -361,8 +361,11 @@ class VlmWarehouseInspector(BaseAgent):
         marker.scale.x = 0.1
         marker.scale.y = 0.1
         marker.scale.z = 0.1
+        # Red: the robot acts on it (box, trash). Yellow: reported only ("other"),
+        # placed at the robot's position since the object itself was not located.
+        actable = message.obstacle_type != "other"
         marker.color.r = 1.0
-        marker.color.g = 0.0
+        marker.color.g = 0.0 if actable else 0.85
         marker.color.b = 0.0
         marker.color.a = 1.0
         self.marker_array.markers.append(marker)
