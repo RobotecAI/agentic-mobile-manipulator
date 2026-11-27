@@ -1,0 +1,14 @@
+# GPU + NPU variant: merged over compose.yaml (docs/quickstart.md, "Pick a variant").
+#   export COMPOSE_FILE=docker/compose.yaml:docker/compose.npu.yaml
+# Passes the Ryzen AI NPU (amdxdna) into the demo; FastFlowLM also needs unlimited memlock.
+x-npu: &npu
+  devices:
+    - /dev/accel/accel0:/dev/accel/accel0
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+
+services:
+  demo: *npu
+  demo-trace: *npu

@@ -17,13 +17,13 @@ Set the variant once in your shell; every command below uses it:
 
 ```bash
 # GPU + NPU (default)
-export WITH_NPU=1 AMM_CONFIG=../config.toml
+export COMPOSE_FILE=docker/compose.yaml:docker/compose.npu.yaml WITH_NPU=1 AMM_CONFIG=../config.toml
 
 # GPU only
-export WITH_NPU=0 AMM_CONFIG=../gpu_config.toml
+export COMPOSE_FILE=docker/compose.yaml WITH_NPU=0 AMM_CONFIG=../gpu_config.toml
 ```
 
-`WITH_NPU` selects what the image is built with, `AMM_CONFIG` which config the container runs. Without `AMM_CONFIG`, compose mounts `gpu_config.toml` and the NPU stays unused even in an NPU image.
+`COMPOSE_FILE` adds the NPU device for the GPU + NPU variant (`docker/compose.npu.yaml`), `WITH_NPU` selects what the image is built with, and `AMM_CONFIG` which config the container runs. Run the commands below from the repository root.
 
 ## Prerequisites
 
@@ -32,7 +32,6 @@ export WITH_NPU=0 AMM_CONFIG=../gpu_config.toml
 - A running X server (the O3DE simulation and HMI open windows on your display).
 - **Disk & network**: ~60 GB free for the image (the prebuilt image is a ~18 GB compressed pull), plus ~27 GB under `models/` for the weights. On a slow connection the first pull + model download takes a while.
 - **GPU + NPU only**: the host's `amdxdna` driver (`ls /dev/accel/accel0`) and NPU firmware 1.1 or newer. Ubuntu 24.04 ships 1.0.0.166; install the newer one as in [NPU prerequisites](setup_single_machine.md#npu-prerequisites-single-pc-gpu-and-npu-only) (only the firmware part: the XRT build packages are inside the image).
-- **GPU only, on a host without an NPU**: remove the `/dev/accel/accel0` device and the `memlock` ulimit from `x-demo-runtime` in `docker/compose.yaml`; compose refuses to start with a missing device.
 
 ## 1. Clone the repository
 
@@ -46,7 +45,7 @@ cd agentic-mobile-manipulator
 **GPU + NPU: build locally.**
 
 ```bash
-docker compose -f docker/compose.yaml build
+docker compose build
 ```
 
 This builds three cacheable layers: `…-ros2` (RoboStack ROS 2 + workspace), `…-o3de` (O3DE SDK + simulation) and `…demo` (Python agents, llama.cpp and, with `WITH_NPU=1`, FastFlowLM). The O3DE layer is large; later rebuilds reuse the cached bases.
@@ -54,7 +53,7 @@ This builds three cacheable layers: `…-ros2` (RoboStack ROS 2 + workspace), `�
 **GPU only: build the same way, or pull the prebuilt images.**
 
 ```bash
-docker compose -f docker/compose.yaml pull
+docker compose pull
 ```
 
 ## 3. Download the model weights
@@ -62,7 +61,7 @@ docker compose -f docker/compose.yaml pull
 Weights are **not** baked into the image. The mounted config (`$AMM_CONFIG`) says which models are fetched; download them once:
 
 ```bash
-docker compose -f docker/compose.yaml run --rm models
+docker compose run --rm models
 ```
 
 This downloads the llama.cpp GGUFs into `models/` in parallel, one progress bar per file, and with GPU + NPU the NPU model via `flm pull` into the `flm-models` Docker volume (`docker volume rm docker_flm-models` removes it). Partial files resume and complete ones are skipped, so it's safe to re-run.
@@ -73,7 +72,7 @@ Allow local connections to your X server, then start the `demo` service:
 
 ```bash
 xhost +local:root
-docker compose -f docker/compose.yaml up --no-build demo
+docker compose up --no-build demo
 ```
 
 > [!IMPORTANT]
@@ -96,7 +95,7 @@ sends one task to the orchestrator, saves the agent conversation trace, and exit
 
 ```bash
 xhost +local:root
-docker compose -f docker/compose.yaml run --rm demo-trace
+docker compose run --rm demo-trace
 ```
 
 The trace is written to `runs/<timestamp>/` on the host (bind-mounted from the
@@ -119,7 +118,7 @@ Swap the session for any of `-sim`, `-stack`, `-llm-servers`, `-agents`, `-hmi` 
 ## Stopping
 
 ```bash
-docker compose -f docker/compose.yaml down
+docker compose down
 ```
 
 ## Cloud models
@@ -141,6 +140,6 @@ for details, including the required OpenAI model access.
 ## Troubleshooting
 
 - **O3DE doesn't start / no windows appear**: ensure you ran `xhost +local:root` and that `DISPLAY` is set (`echo $DISPLAY`). Verify your AMD GPU drivers + ROCm container prerequisites are installed.
-- **NPU errors / FastFlowLM fails to start**: confirm `/dev/accel/accel0` exists on the host, the NPU firmware is 1.1 or newer (on firmware 1.0 every request fails with `ERT_CMD_STATE_ABORT`), the image was built with `WITH_NPU=1`, you started with `AMM_CONFIG=../config.toml`, and the `memlock` ulimit and the device mapping are present in `docker/compose.yaml` (both are required for the NPU).
+- **NPU errors / FastFlowLM fails to start**: confirm `/dev/accel/accel0` exists on the host, the NPU firmware is 1.1 or newer (on firmware 1.0 every request fails with `ERT_CMD_STATE_ABORT`), the image was built with `WITH_NPU=1`, and you set the GPU + NPU variant (`COMPOSE_FILE` with `docker/compose.npu.yaml`, which passes the NPU device and the memlock ulimit, and `AMM_CONFIG=../config.toml`).
 - **Inference health check fails**: make sure step 3 ran with the same `AMM_CONFIG` you run with, so `models/` (and, for the NPU, the `flm-models` volume) holds the weights the mounted config references.
 - **GPU access / slow or crashing sim**: check your GPU drivers and the [ROCm Docker docs](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/how-to/docker.html).

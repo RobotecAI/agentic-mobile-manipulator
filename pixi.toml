@@ -143,6 +143,7 @@ cmake = ">=3.30"
 ninja = "*"
 clang = "18.*"
 clangxx = "18.*"
+ccache = "*"            # build_sim.sh compiles through it; repeat builds reuse objects
 libunwind = "*"
 zstd = "*"
 xorg-libx11 = "*"

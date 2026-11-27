@@ -18,27 +18,22 @@
 # image contains no FastFlowLM (see docker/Dockerfile.demo). For a local
 # gpu-and-npu image build with:
 #   WITH_NPU=1 docker compose -f docker/compose.yaml build
-# and run it with the NPU config: AMM_CONFIG=../config.toml docker compose ... up --no-build demo
+# and run it with the NPU device and config:
+#   COMPOSE_FILE=docker/compose.yaml:docker/compose.npu.yaml AMM_CONFIG=../config.toml docker compose up --no-build demo
 # (without AMM_CONFIG, gpu_config.toml is mounted and the NPU stays unused).
-# On a host without an NPU, also drop the /dev/accel device and the memlock ulimit below.
 #
 # Prerequisites on the host:
 #   - AMD GPU exposed via the devices below; for the NPU also the amdxdna driver,
 #     NPU firmware >= 1.1 (docs/setup_single_machine.md, NPU prerequisites)
 #   - model weights in ../models (download-models, see docs/quickstart.md), bind-mounted in
 
-# Shared runtime for the demo image (image tag, GPU/NPU devices, memlock, host
+# Shared runtime for the demo image (image tag, GPU devices, host
 # networking). Both `demo` (interactive) and `demo-trace` (one-shot) merge it in.
 x-demo-runtime: &demo-runtime
   image: robotecai/agentic-mobile-manipulator:latest
   devices:
     - /dev/kfd:/dev/kfd            # AMD GPU compute (ROCm)
     - /dev/dri:/dev/dri            # AMD GPU render (Vulkan)
-    - /dev/accel/accel0:/dev/accel/accel0  # Ryzen AI NPU (amdxdna)
-  ulimits:
-    memlock:
-      soft: -1
-      hard: -1
   network_mode: host
 
 services:

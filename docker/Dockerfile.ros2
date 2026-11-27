@@ -34,7 +34,9 @@ WORKDIR /root/MobileManipulatorDemo
 ENV DEMO_ROOT=/root/MobileManipulatorDemo
 
 COPY pixi.toml pixi.lock ros2_ws.repos ./
-COPY scripts/ scripts/
+# Only the scripts these steps run (pixi activation, licence collection), so editing
+# other scripts does not rebuild the ROS 2 workspace.
+COPY scripts/setup_env.sh scripts/collect_conda_licenses.py scripts/
 COPY ros2_ws/src/ ros2_ws/src/
 
 # Drop the packages/ directory that was copied from the host; all those packages

@@ -53,8 +53,9 @@ COPY scripts/ scripts/
 RUN pixi run sync
 
 # Local inference engines built from the pinned submodules. llama.cpp (Vulkan,
-# gpu/cpu endpoints) is always built; init-submodules needs .git (inherited from
-# the o3de base) + .gitmodules (copied above).
+# gpu/cpu endpoints) is always built; init-submodules needs .git + .gitmodules.
+# .git is copied here, not earlier, so a new commit only rebuilds from this point.
+COPY .git .git/
 RUN pixi run init-submodules && pixi run build-llama
 
 # GPU-only: drop the FastFlowLM checkout (it holds the NPU binaries) and default to
