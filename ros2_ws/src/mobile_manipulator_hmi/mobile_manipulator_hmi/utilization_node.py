@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import re
+import shutil
 import subprocess
 from typing import Dict, Optional
 
@@ -123,6 +124,11 @@ class UtilizationPublisher(Node):
         self.create_timer(2.0, self._check_nav2_state)
         self.create_timer(2.0, self._check_moveit2_state)
 
+        if include_gpu and not (shutil.which("rocm-smi") or shutil.which("amd-smi")):
+            self.get_logger().warn(
+                "Neither rocm-smi nor amd-smi is installed: GPU usage will not be reported. "
+                "Install amd-smi (AMD ROCm apt repository) to see it in the HMI."
+            )
         self.get_logger().info(
             f"UtilizationPublisher initialized (GPU={include_gpu}, NPU={include_npu}, interval={publish_interval}s)"
         )

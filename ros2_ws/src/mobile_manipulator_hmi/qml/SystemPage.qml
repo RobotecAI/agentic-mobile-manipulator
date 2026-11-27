@@ -56,7 +56,8 @@ Item {
                         }
                         Item { visible: modelData.value < 0; Layout.fillHeight: true }
                         Label2 {
-                            text: modelData.value < 0 ? "not reported by utilization_node" : "last " + modelData.history.length * 5 + " s"
+                            text: modelData.value >= 0 ? "last " + modelData.history.length * 5 + " s"
+                                : modelData.name === "GPU" ? "needs rocm-smi or amd-smi on the host" : "not reported by utilization_node"
                             color: Theme.faint
                             font.pixelSize: 11
                         }
