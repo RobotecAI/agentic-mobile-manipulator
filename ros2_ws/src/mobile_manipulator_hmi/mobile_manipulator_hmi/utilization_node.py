@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import glob
 import re
 import subprocess
 from typing import Dict, Optional
@@ -68,32 +67,24 @@ class UtilizationCollector:
 
     @staticmethod
     def _gpu() -> Optional[float]:
-        # amdgpu exposes the load directly; busiest card wins (iGPU + dGPU hosts).
-        busy = []
-        for path in glob.glob("/sys/class/drm/card*/device/gpu_busy_percent"):
-            try:
-                with open(path) as f:
-                    busy.append(float(f.read().strip()))
-            except (OSError, ValueError):
-                pass
-        if busy:
-            return max(busy)
-        # Try AMD
+        """GPU load in % from rocm-smi, else amd-smi; None if neither is installed."""
         try:
             result = subprocess.check_output(["rocm-smi", "--showuse"], text=True)
             match = re.search(r"GPU use \(%\):\s+(\d+)", result)
-            return int(match.group(1)) if match else None
-        except FileNotFoundError:
+            if match:
+                return float(match.group(1))
+        except (FileNotFoundError, subprocess.CalledProcessError):
             pass
-
-        # Try NVIDIA
         try:
-            result = subprocess.check_output(
-                ["nvidia-smi", "--query-gpu=utilization.gpu", "--format=csv,noheader"],
-                text=True,
-            )
-            return float(result.strip().rstrip("%"))
-        except FileNotFoundError:
+            result = subprocess.check_output(["amd-smi", "metric", "--usage", "--json"], text=True)
+            # "gfx_activity" is a number or {"value": n, "unit": "%"} depending on the version.
+            values = [
+                float(m)
+                for m in re.findall(r'"gfx_activity":\s*(?:\{\s*"value":\s*)?"?(\d+(?:\.\d+)?)', result)
+            ]
+            if values:
+                return max(values)
+        except (FileNotFoundError, subprocess.CalledProcessError):
             pass
         return None
 
