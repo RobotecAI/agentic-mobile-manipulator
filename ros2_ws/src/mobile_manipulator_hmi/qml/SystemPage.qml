@@ -100,11 +100,12 @@ Item {
                                 }
                             }
                             Label2 { text: "INFERENCE · config.toml"; color: Theme.faint; font.pixelSize: 11; font.weight: Font.DemiBold; Layout.margins: 12; Layout.bottomMargin: 2 }
+                            ServiceRow { header: true; name: "ENDPOINT"; columns: ["MODEL", "BACKEND", "PORT"]; metric: "LATENCY" }
                             Repeater {
                                 model: ros.endpoints
                                 delegate: ServiceRow {
                                     name: modelData.name
-                                    detail: modelData.model + " · " + modelData.backend + " · :" + modelData.port
+                                    columns: [modelData.model, modelData.backend, ":" + modelData.port]
                                     metric: !modelData.checked ? "…" : modelData.ok ? modelData.latencyMs + " ms" : "down"
                                     tone: !modelData.checked ? "neutral" : modelData.ok ? "ok" : "danger"
                                 }
