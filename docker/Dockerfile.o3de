@@ -14,7 +14,7 @@ WORKDIR /root/MobileManipulatorDemo
 COPY pixi.toml pixi.lock gems.repos ros2_ws.repos ./
 COPY scripts/ scripts/
 
-# .git is required for gems LFS pull inside register-project
+# .git is required for the gems' LFS pull in clone-gems
 COPY .git .git/
 COPY project_gems/ project_gems/
 COPY sim/ sim/
@@ -22,7 +22,9 @@ COPY sim/ sim/
 # Unpacks the SDK to /root/.local/share/o3de (O3DE_HOME); no apt, no sudo.
 RUN pixi run install-o3de
 RUN git lfs install --force
-RUN pixi run build-sim
+# build-sim depends on build-ros2, which the ros2 base image already ran: fetch
+# the gems, then build the sim alone instead of rebuilding the ROS 2 workspace.
+RUN pixi run fetch-gems && pixi run --skip-deps build-sim
 # Ship the conda packages' licence texts with the image (see THIRD_PARTY.md):
 # they live in the pixi package cache, not in the environment.
 RUN pixi run collect-licenses

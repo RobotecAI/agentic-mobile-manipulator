@@ -18,11 +18,13 @@
 # gpu-and-npu image build with:
 #   WITH_NPU=1 docker compose -f docker/compose.yaml build
 # and run it with the NPU config: AMM_CONFIG=../config.toml docker compose ... up demo
+# (without AMM_CONFIG, gpu_config.toml is mounted and the NPU stays unused).
 # On a host without an NPU, also drop the /dev/accel device and the memlock ulimit below.
 #
-# Prerequisites on the host (an AMD Ryzen AI box):
-#   - GPU + NPU exposed via the devices below (amdxdna kernel driver loaded on host)
-#   - model weights present in ../models (pixi run download-models), bind-mounted in
+# Prerequisites on the host:
+#   - AMD GPU exposed via the devices below; for the NPU also the amdxdna driver,
+#     NPU firmware >= 1.1 (docs/setup_single_machine.md, NPU prerequisites)
+#   - model weights in ../models (download-models, see docs/quickstart.md), bind-mounted in
 
 # Shared runtime for the demo image (image tag, GPU/NPU devices, memlock, host
 # networking). Both `demo` (interactive) and `demo-trace` (one-shot) merge it in.
@@ -74,14 +76,15 @@ services:
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-42}
       # Hold demo.sh open as PID 1 so the detached tmux sessions outlive its launch.
       - AMM_KEEP_ALIVE=1
-      # Keep NPU (FastFlowLM) weights inside the mounted models/ dir instead of
-      # flm's default ~/.config/flm, so they persist via the bind mount.
-      - FLM_MODEL_PATH=/root/MobileManipulatorDemo/models/flm
+      # NPU (FastFlowLM) weights live in the flm-models volume: kept across
+      # containers, and no root-owned files land in the host's models/.
+      - FLM_MODEL_PATH=/root/flm-models
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ${AMM_CONFIG:-../gpu_config.toml}:/root/MobileManipulatorDemo/config.toml
       - ../models:/root/MobileManipulatorDemo/models
+      - flm-models:/root/flm-models
 
   # ── One-shot trace run: start the stack, send one task, dump the agent ───────
   # conversation to ../runs/, then exit. Reuses the image built by `demo`.
@@ -97,11 +100,15 @@ services:
       - QT_X11_NO_MITSHM=1
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-42}
-      - FLM_MODEL_PATH=/root/MobileManipulatorDemo/models/flm
+      - FLM_MODEL_PATH=/root/flm-models
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
       - ${AMM_CONFIG:-../gpu_config.toml}:/root/MobileManipulatorDemo/config.toml
       - ../models:/root/MobileManipulatorDemo/models
+      - flm-models:/root/flm-models
       # Trace output lands here on the host (root-owned; chown if needed).
       - ../runs:/root/MobileManipulatorDemo/runs
+
+volumes:
+  flm-models:

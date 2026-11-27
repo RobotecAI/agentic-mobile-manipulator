@@ -65,14 +65,8 @@ RUN if [ "$WITH_NPU" != "1" ]; then \
     fi
 
 # FastFlowLM (npu endpoints), WITH_NPU=1 only. Its tokenizers-cpp vendors a Rust
-# static lib (libtokenizers_c.a), so the build needs cargo. Install via rustup
-# (latest stable — Ubuntu's apt cargo can be too old for the pinned crate) and
-# source it so cmake's find_program(cargo) succeeds at configure time.
-RUN if [ "$WITH_NPU" = "1" ]; then \
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal \
-     && . "$HOME/.cargo/env" \
-     && pixi run build-fastflowlm ; \
-    fi
+# static lib (libtokenizers_c.a); cargo comes from the pixi env (rust in pixi.toml).
+RUN if [ "$WITH_NPU" = "1" ]; then pixi run build-fastflowlm ; fi
 
 # Ship the conda packages' licence texts with the image (see THIRD_PARTY.md):
 # they live in the pixi package cache, not in the environment.

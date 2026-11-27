@@ -25,7 +25,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libgz-math7-dev \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://pixi.sh/install.sh | PIXI_HOME=/usr/local bash
+# Pinned to the version pixi.lock is written with; PIXI_LOCKED makes every
+# `pixi run` in this and the later images use the lock as is, never re-solve it.
+RUN curl -fsSL https://pixi.sh/install.sh | PIXI_HOME=/usr/local PIXI_VERSION=v0.84.2 bash
+ENV PIXI_LOCKED=true
 
 WORKDIR /root/MobileManipulatorDemo
 ENV DEMO_ROOT=/root/MobileManipulatorDemo
