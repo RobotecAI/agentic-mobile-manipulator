@@ -16,7 +16,8 @@ ENV DEMO_ROOT=/root/MobileManipulatorDemo
 ARG WITH_NPU=0
 
 # tmux is always required: demo.sh runs each component in its own tmux session.
-RUN apt-get update && apt-get install -y --no-install-recommends tmux \
+# rocm-smi (Ubuntu archive) lets the HMI's utilization_node report GPU load.
+RUN apt-get update && apt-get install -y --no-install-recommends tmux rocm-smi \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # NPU build deps (WITH_NPU=1 only). FastFlowLM links the host XRT/NPU libs with
