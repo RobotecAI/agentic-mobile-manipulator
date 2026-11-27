@@ -83,7 +83,7 @@ This single command runs the full build pipeline in the correct order:
 | 6    | `sync`             | `uv sync` installs the Python dependencies                     |
 | 7    | `build-llama`      | Build llama.cpp with the Vulkan backend (GPU)                  |
 | 8    | `build-fastflowlm` | Build FastFlowLM for the AMD Ryzen AI NPU backend              |
-| 9    | `find-runnables`   | List the built runnables (GameLauncher, llama.cpp, FastFlowLM) |
+| 9    | `setup`            | List the built runnables (GameLauncher, llama.cpp, FastFlowLM) |
 
 > Prefer a GPU-only machine (no AMD Ryzen AI NPU)? Use `pixi run -e single-pc-gpu setup`
 > instead — it skips step 8. You must also set `[endpoints.vlm_safety] backend = "gpu"`

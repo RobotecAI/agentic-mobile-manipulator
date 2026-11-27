@@ -185,7 +185,8 @@ outputs = ["sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"]
 # sim/project.json, so the gem source trees must exist before cmake configure.
 # fetch-gems (transitively clone-gems) clones them; depend on it so a clean
 # checkout — and the Docker o3de build — fetch gems before building.
-depends-on = ["fetch-gems", "install-o3de"]
+# build_sim.sh sources the ros2_ws overlay, so build-ros2 must run first.
+depends-on = ["build-ros2", "fetch-gems", "install-o3de"]
 description = "Build O3DE GameLauncher and project assets"
 
 [feature.sim.tasks.sim]
@@ -316,15 +317,15 @@ depends-on = ["clone-gems", "clone-ros2-ws"]
 description = "Clone all repositories (gems and ROS 2 workspace)"
 
 [feature.profile-sim.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync"]
+depends-on = ["build-sim", "sync"]
 description = "Setup sim machine (O3DE + ROS 2)"
 
 [feature.profile-hmi.tasks.setup]
-depends-on = ["clone-ros2-ws", "build-ros2", "sync"]
+depends-on = ["build-ros2", "sync"]
 description = "Setup HMI machine (ROS 2)"
 
 [feature.profile-hil.tasks.setup]
-depends-on = ["clone-ros2-ws", "init-submodules", "build-ros2", "sync", "build-llama"]
+depends-on = ["build-ros2", "build-llama", "sync"]
 description = "Setup HIL compute machine (ROS 2 + inference, GPU+NPU)"
 
 [feature.profile-single-pc.tasks.clone]
@@ -340,30 +341,20 @@ cmd = "bash scripts/demo_trace.sh"
 description = "Unattended trace run: start demo, send one task, dump the agent conversation to runs/<timestamp>/, then kill everything"
 
 # ─── Single-PC setup variants: GPU (default) vs GPU+NPU ──────────────────────────
-# Share clone/demo above; differ only in what `setup` builds and what
-# find-runnables waits on. -gpu builds llama.cpp (Vulkan); -npu also builds
-# FastFlowLM. Each env includes exactly one variant, so the duplicate
-# `setup`/`find-runnables` names never collide.
+# Share clone/demo above; differ only in what `setup` builds: -gpu builds llama.cpp
+# (Vulkan), -npu also builds FastFlowLM. Each env includes exactly one variant, so
+# the duplicate `setup` names never collide. Dependencies run transitively, so each
+# lists only the last builds; setup then lists what got built.
 
 [feature.profile-single-pc-gpu.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "find-runnables"]
+cmd = "bash scripts/find_runnables.sh"
+depends-on = ["build-sim", "build-llama", "sync"]
 description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU)"
 
-# Runs last (depends on the builds it inventories) so setup ends by listing them.
-[feature.profile-single-pc-gpu.tasks.find-runnables]
-cmd = "bash scripts/find_runnables.sh"
-depends-on = ["build-sim", "build-llama"]
-description = "List built runnables (GameLauncher, llama.cpp, ...)"
-
 [feature.profile-single-pc-npu.tasks.setup]
-depends-on = ["clone", "install-o3de", "fetch-gems", "build-ros2", "build-sim", "sync", "build-llama", "build-fastflowlm", "find-runnables"]
-description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU) + FastFlowLM (NPU)"
-
-# Waits on the NPU build too, so FastFlowLM reports as built.
-[feature.profile-single-pc-npu.tasks.find-runnables]
 cmd = "bash scripts/find_runnables.sh"
-depends-on = ["build-sim", "build-llama", "build-fastflowlm"]
-description = "List built runnables (GameLauncher, llama.cpp, FastFlowLM, ...)"
+depends-on = ["build-sim", "build-llama", "build-fastflowlm", "sync"]
+description = "Single-PC setup: O3DE + ROS 2 + llama.cpp (Vulkan GPU) + FastFlowLM (NPU)"
 
 # ─── Feature: dev ───────────────────────────────────────────────────────────────
 # Lightweight feature for Python tooling (uv, pre-commit, pytest).
