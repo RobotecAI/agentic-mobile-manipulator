@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
         QQmlApplicationEngine engine;
         engine.addImageProvider("ros", images);
         engine.rootContext()->setContextProperty("ros", &ros);
-        // HMI_WINDOWED=1 starts in a normal window instead of full screen (F11 toggles).
-        engine.rootContext()->setContextProperty("startFullScreen", !qEnvironmentVariableIsSet("HMI_WINDOWED"));
+        // HMI_FULLSCREEN=1 starts full screen (F11 toggles).
+        engine.rootContext()->setContextProperty("startFullScreen", qEnvironmentVariableIsSet("HMI_FULLSCREEN"));
         engine.rootContext()->setContextProperty("startPage", qEnvironmentVariableIntValue("HMI_PAGE"));
         engine.load(QUrl(QStringLiteral("qrc:/qml/Main.qml")));
         if (engine.rootObjects().isEmpty()) {

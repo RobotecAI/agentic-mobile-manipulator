@@ -105,21 +105,27 @@ class AgentFilterModel : public QSortFilterProxyModel
     Q_OBJECT
     Q_PROPERTY(QString agent READ agent WRITE setAgent NOTIFY agentChanged)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
+    // Rows that started before this (ms since start) are hidden; 0 shows everything.
+    Q_PROPERTY(qreal minStartMs READ minStartMs WRITE setMinStartMs NOTIFY minStartMsChanged)
 
 public:
     explicit AgentFilterModel(QObject *parent = nullptr);
     QString agent() const { return agent_; }
     void setAgent(const QString &agent);
+    qreal minStartMs() const { return minStartMs_; }
+    void setMinStartMs(qreal ms);
     int count() const { return rowCount(); }
     Q_INVOKABLE QVariantMap get(int row) const;
 
 signals:
     void agentChanged();
     void countChanged();
+    void minStartMsChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
     QString agent_;
+    qreal minStartMs_ = 0;
 };

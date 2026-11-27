@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import glob
 import re
 import subprocess
 from typing import Dict, Optional
@@ -67,6 +68,16 @@ class UtilizationCollector:
 
     @staticmethod
     def _gpu() -> Optional[float]:
+        # amdgpu exposes the load directly; busiest card wins (iGPU + dGPU hosts).
+        busy = []
+        for path in glob.glob("/sys/class/drm/card*/device/gpu_busy_percent"):
+            try:
+                with open(path) as f:
+                    busy.append(float(f.read().strip()))
+            except (OSError, ValueError):
+                pass
+        if busy:
+            return max(busy)
         # Try AMD
         try:
             result = subprocess.check_output(["rocm-smi", "--showuse"], text=True)

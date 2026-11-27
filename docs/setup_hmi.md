@@ -30,7 +30,7 @@ This launches the HMI in its own tmux session. To run it in the foreground
 instead, use `pixi run -e hmi hmi-fg`, which calls
 `ros2 launch mobile_manipulator_hmi hmi_launch.py` directly.
 
-Set `HMI_WINDOWED=1` to start in a window instead of full screen; F11 toggles.
+The HMI opens in a window; set `HMI_FULLSCREEN=1` to start full screen. F11 toggles.
 
 ## What the HMI shows
 
@@ -115,6 +115,6 @@ Each message is a JSON object with `type` and `t` (Unix time), published by
 and quits; `HMI_PAGE=0..3` picks the page. For example:
 
 ```shell
-HMI_WINDOWED=1 HMI_PAGE=1 HMI_SCREENSHOT=agents.png QT_QUICK_BACKEND=software \
+HMI_PAGE=1 HMI_SCREENSHOT=agents.png QT_QUICK_BACKEND=software \
   xvfb-run -a -s "-screen 0 1440x900x24" ros2 run mobile_manipulator_hmi MobileManipulatorHMI
 ```

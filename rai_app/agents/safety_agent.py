@@ -94,6 +94,7 @@ class SafetyAgent:
         violations_file: str = "safety_violations.json",
     ):
         self.connector = ROS2Connector(executor_type="multi_threaded")
+        start_heartbeat(self.connector, "safety")
         self.get_logger = self.connector.node.get_logger
         self.camera_topic = camera_topic
         self.safety_topic = safety_topic
@@ -338,7 +339,6 @@ def main():
                 )
         return
 
-    start_heartbeat(agent.connector, "safety")
     agent.run()
 
 

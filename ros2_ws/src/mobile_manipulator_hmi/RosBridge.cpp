@@ -251,6 +251,7 @@ RosBridge::RosBridge(RosImageProvider *images, QObject *parent)
     });
     secondTimer_.start(500);
     connect(&endpointTimer_, &QTimer::timeout, this, &RosBridge::pollEndpoints);
+    connect(&pendingTimer_, &QTimer::timeout, this, &RosBridge::flushPendingTasks);
     endpointTimer_.start(5000);
     QTimer::singleShot(500, this, &RosBridge::pollEndpoints);
 }
@@ -355,7 +356,7 @@ void RosBridge::onEvent(const std::string &json)
     } else if (type == "text" || type == "thinking") {
         const QString chunk = str("chunk");
         events_->appendChunk(node + ":" + runId, agent, node, type, chunk, currentTask_);
-        markActive(agent, type == "text" ? chunk : QString("thinking…"));
+        markActive(agent, type == "text" ? QString("responding…") : QString("thinking…"));
     } else if (type == "tool_start") {
         AgentEvent e;
         e.agent = agent;
@@ -426,14 +427,14 @@ void RosBridge::onAction(const rai_interfaces::msg::HRIMessage &msg)
         return;
     }
     events_->appendChunk(commId, agent, node, "text", text, currentTask_);
-    markActive(agent, text);
+    markActive(agent, "responding…");
 }
 
 void RosBridge::onVlm(const demo_msgs::msg::VlmDescription &msg)
 {
     const QString source = QString::fromStdString(msg.source);
     AgentEvent e;
-    e.agent = source.isEmpty() ? QString("Inspection") : source;
+    e.agent = source == "Safety" ? source : QString("Inspection");  // inspection also sends "Box"
     e.kind = "vlm";
     e.text = QString::fromStdString(msg.description);
     e.task = currentTask_;
@@ -651,10 +652,41 @@ void RosBridge::sendTask(const QString &prompt)
     if (text.isEmpty()) {
         return;
     }
-    std_msgs::msg::String msg;
-    msg.data = text.toStdString();
-    taskPub_->publish(msg);
-    emit notify("Task sent: " + firstLine(text, 70), false);
+    // Right after start-up DDS discovery has not matched the orchestrator yet and a
+    // publish would be dropped, so hold tasks until /user_tasks has a subscriber.
+    if (pendingTasks_.isEmpty()) {
+        pendingSinceMs_ = events_->nowMs();
+    }
+    pendingTasks_.append(text);
+    flushPendingTasks();
+    if (!pendingTasks_.isEmpty()) {
+        emit notify("Waiting for the orchestrator to send: " + firstLine(text, 60), false);
+        pendingTimer_.start(200);
+    }
+}
+
+void RosBridge::flushPendingTasks()
+{
+    if (pendingTasks_.isEmpty()) {
+        pendingTimer_.stop();
+        return;
+    }
+    if (taskPub_->get_subscription_count() == 0) {
+        if (events_->nowMs() - pendingSinceMs_ > 30000) {
+            emit notify(QString("No orchestrator on /user_tasks: %1 task(s) not sent").arg(pendingTasks_.size()), true);
+            pendingTasks_.clear();
+            pendingTimer_.stop();
+        }
+        return;
+    }
+    for (const QString &text : pendingTasks_) {
+        std_msgs::msg::String msg;
+        msg.data = text.toStdString();
+        taskPub_->publish(msg);
+        emit notify("Task sent: " + firstLine(text, 70), false);
+    }
+    pendingTasks_.clear();
+    pendingTimer_.stop();
 }
 
 void RosBridge::loadScene(const QString &name)

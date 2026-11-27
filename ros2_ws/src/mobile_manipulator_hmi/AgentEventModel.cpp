@@ -186,6 +186,17 @@ void AgentFilterModel::setAgent(const QString &agent)
     emit countChanged();
 }
 
+void AgentFilterModel::setMinStartMs(qreal ms)
+{
+    if (qFuzzyCompare(ms + 1, minStartMs_ + 1)) {
+        return;
+    }
+    minStartMs_ = ms;
+    invalidateFilter();
+    emit minStartMsChanged();
+    emit countChanged();
+}
+
 QVariantMap AgentFilterModel::get(int row) const
 {
     auto *model = qobject_cast<AgentEventModel *>(sourceModel());
@@ -197,9 +208,9 @@ QVariantMap AgentFilterModel::get(int row) const
 
 bool AgentFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    if (agent_.isEmpty()) {
-        return true;
-    }
     const QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
-    return idx.data(AgentEventModel::AgentRole).toString() == agent_;
+    if (minStartMs_ > 0 && idx.data(AgentEventModel::StartRole).toLongLong() < minStartMs_) {
+        return false;
+    }
+    return agent_.isEmpty() || idx.data(AgentEventModel::AgentRole).toString() == agent_;
 }

@@ -134,18 +134,24 @@ Item {
                     Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border }
                     ListView {
                         id: timeline
-                        // Bars cover the last task (or the last 3 minutes when idle).
-                        readonly property real t0: ros.currentTask !== "" ? ros.taskStartMs : Math.max(0, ros.nowMs - 180000)
+                        // Rows and bars cover the current task (or the last 3 minutes when idle).
+                        readonly property real t0: ros.currentTask !== "" ? Math.max(0, ros.taskStartMs - 500) : Math.max(0, ros.nowMs - 180000)
                         readonly property real span: Math.max(1000, ros.nowMs - t0)
+                        property bool follow: true
+                        property bool autoScroll: false
+                        function scrollToEnd() { autoScroll = true; positionViewAtEnd(); autoScroll = false }
+                        Binding { target: page.trace; property: "minStartMs"; value: timeline.t0 }
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.margins: 6
                         clip: true
                         model: page.trace
                         ScrollBar.vertical: ScrollBar {}
-                        onCountChanged: Qt.callLater(positionViewAtEnd)
+                        onCountChanged: if (follow) Qt.callLater(scrollToEnd)
+                        onContentYChanged: if (!autoScroll) follow = atYEnd
                         delegate: AbstractButton {
                             id: row
+                            clip: true
                             width: timeline.width
                             height: 30
                             hoverEnabled: true
@@ -168,11 +174,12 @@ Item {
                                     radius: 4
                                     color: Theme.well
                                     Rectangle {
+                                        readonly property real end: model.status === "running" ? ros.nowMs : model.endMs
                                         y: 3
                                         height: 12
                                         radius: 3
-                                        x: Math.max(0, (model.startMs - timeline.t0) / timeline.span) * parent.width
-                                        width: Math.max(4, ((model.status === "running" ? ros.nowMs : model.endMs) - model.startMs) / timeline.span * parent.width)
+                                        x: Math.min(parent.width - 4, Math.max(0, (model.startMs - timeline.t0) / timeline.span * parent.width))
+                                        width: Math.min(parent.width - x, Math.max(4, (end - Math.max(model.startMs, timeline.t0)) / timeline.span * parent.width))
                                         color: ros.agentColor(model.agent)
                                         opacity: model.status === "running" || model.streaming ? 0.55 : 1
                                     }

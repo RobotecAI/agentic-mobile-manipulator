@@ -24,7 +24,7 @@ Card {
                     SequentialAnimation on opacity { loops: Animation.Infinite; NumberAnimation { to: 0.3; duration: 800 } NumberAnimation { to: 1; duration: 800 } }
                 }
                 Item { Layout.fillWidth: true }
-                Chip { text: list.follow ? "Following" : "Follow"; selected: list.follow; onClicked: list.follow = !list.follow }
+                Chip { visible: !list.follow; text: "↓ Latest"; onClicked: { list.follow = true; list.scrollToEnd() } }
                 Btn { kind: "ghost"; text: "Open trace →"; implicitHeight: 30; onClicked: root.openTrace() }
             }
             Flow {
@@ -45,7 +45,10 @@ Card {
 
         ListView {
             id: list
+            // Follows new entries while the view is at the bottom; scrolling up pauses it.
             property bool follow: true
+            property bool autoScroll: false
+            function scrollToEnd() { autoScroll = true; positionViewAtEnd(); autoScroll = false }
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.margins: 6
@@ -54,9 +57,9 @@ Card {
             model: root.filter
             delegate: StreamEntry {}
             ScrollBar.vertical: ScrollBar {}
-            onCountChanged: if (follow) Qt.callLater(positionViewAtEnd)
-            onContentHeightChanged: if (follow) Qt.callLater(positionViewAtEnd)
-            onMovementStarted: follow = false
+            onCountChanged: if (follow) Qt.callLater(scrollToEnd)
+            onContentHeightChanged: if (follow) Qt.callLater(scrollToEnd)
+            onContentYChanged: if (!autoScroll) follow = atYEnd
 
             Label2 {
                 anchors.centerIn: parent

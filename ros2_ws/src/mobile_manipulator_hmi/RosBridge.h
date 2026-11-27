@@ -152,6 +152,7 @@ private:
     void updatePose();
     void pollEndpoints();
     void subscribeCamera();
+    void flushPendingTasks();
     QPointF worldToPixel(double x, double y) const;
     static QString agentForNode(const QString &node);
 
@@ -164,6 +165,9 @@ private:
     QTimer spinTimer_;
     QTimer secondTimer_;
     QTimer endpointTimer_;
+    QTimer pendingTimer_;
+    QStringList pendingTasks_;  // sent once /user_tasks has a subscriber
+    qint64 pendingSinceMs_ = 0;
     QNetworkAccessManager network_;
 
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr taskPub_;
