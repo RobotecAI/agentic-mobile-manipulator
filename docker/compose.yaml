@@ -35,10 +35,6 @@ x-demo-runtime: &demo-runtime
     - /dev/kfd:/dev/kfd            # AMD GPU compute (ROCm)
     - /dev/dri:/dev/dri            # AMD GPU render (Vulkan)
   network_mode: host
-  # ROS 2 (Fast DDS) sends data over shared memory between processes on the same machine:
-  # without the host's IPC namespace, ROS 2 tools on the host (RViz, an HMI) discover the
-  # demo's topics but receive no data.
-  ipc: host
 
 services:
   # ── Base: RoboStack ROS 2 + built workspace ────────────────────────────────
@@ -74,6 +70,10 @@ services:
       - QT_X11_NO_MITSHM=1
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-42}
+      # Fast DDS over UDP only: its shared-memory transport would use root-owned segments
+      # that ROS 2 tools on the host (RViz, an HMI) cannot open, so they would see the
+      # demo's topics but get no data.
+      - FASTDDS_BUILTIN_TRANSPORTS=UDPv4
       # Hold demo.sh open as PID 1 so the detached tmux sessions outlive its launch.
       - AMM_KEEP_ALIVE=1
       # NPU (FastFlowLM) weights live in the flm-models volume: kept across
@@ -100,6 +100,10 @@ services:
       - QT_X11_NO_MITSHM=1
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-42}
+      # Fast DDS over UDP only: its shared-memory transport would use root-owned segments
+      # that ROS 2 tools on the host (RViz, an HMI) cannot open, so they would see the
+      # demo's topics but get no data.
+      - FASTDDS_BUILTIN_TRANSPORTS=UDPv4
       - FLM_MODEL_PATH=/root/flm-models
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
