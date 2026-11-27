@@ -219,7 +219,7 @@ make = "*"             # llama.cpp default (Makefiles) generator
 c-compiler = "*"
 cxx-compiler = "*"
 pkg-config = "*"
-wget = "*"             # download-models fetches ggufs
+rich = "*"             # download-models: one progress bar per gguf
 # Vulkan SDK pieces llama.cpp's GGML_VULKAN backend needs to BUILD: headers +
 # loader for find_package(Vulkan), and glslc (from shaderc) to compile shaders.
 # The runtime ICD is the system GPU driver (e.g. RADV for AMD), discovered by
@@ -276,7 +276,7 @@ description = "Build FastFlowLM from source, build-only/no install (needs XRT/am
 
 [feature.local-inference.tasks.download-models]
 cmd = "python -m rai_app.inference.serve --download"
-description = "Download weights for every local endpoint in config.toml (gguf via wget, NPU tags via `flm pull`)"
+description = "Download weights for every local endpoint in config.toml (ggufs in parallel, NPU tags via `flm pull`)"
 
 [feature.local-inference.tasks.inference]
 cmd = "python -m rai_app.inference.serve"

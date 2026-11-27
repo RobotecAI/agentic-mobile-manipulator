@@ -96,7 +96,7 @@ llama.cpp (Vulkan, GPU) and FastFlowLM (NPU) — as part of the pipeline above. 
 serve models locally you still need to download the weights:
 
 ```shell
-pixi run -e single-pc-gpu-and-npu download-models # downloads every weight referenced in config.toml (gguf via wget, NPU tags via `flm pull`); or grab them manually below
+pixi run -e single-pc-gpu-and-npu download-models # downloads every weight referenced in config.toml (ggufs in parallel, NPU tags via `flm pull`); or grab them manually below
 ```
 
 `config.toml` is the single source of truth for inference: each `[endpoints.*]`

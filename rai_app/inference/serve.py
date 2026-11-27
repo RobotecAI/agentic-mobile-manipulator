@@ -46,6 +46,7 @@ import json
 import os
 import shlex
 import shutil
+import signal
 import subprocess
 import sys
 import urllib.error
@@ -369,13 +370,46 @@ def cmd_health(endpoints: dict[str, dict]) -> int:
     return 0
 
 
+def _fetch(progress, label: str, dest: str, url: str) -> None:
+    """Download url to dest with its own progress bar. Resumes a partial file
+    (HTTP Range, like `wget -c`)."""
+    task = progress.add_task(label, start=False)
+    have = os.path.getsize(dest) if os.path.exists(dest) else 0
+    headers = {"Range": f"bytes={have}-"} if have else {}
+    try:
+        resp = urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60)
+    except urllib.error.HTTPError as exc:
+        if exc.code == 416:  # range starts at the end: the file is complete
+            progress.update(task, total=have, completed=have)
+            return
+        raise
+    with resp:
+        if resp.status != 206:  # server ignored the range: start over
+            have = 0
+        size = int(resp.headers.get("Content-Length", 0))
+        progress.update(task, total=have + size if size else None, completed=have)
+        progress.start_task(task)
+        with open(dest, "ab" if have else "wb") as f:
+            while chunk := resp.read(1 << 20):
+                f.write(chunk)
+                progress.advance(task, len(chunk))
+
+
 def cmd_download(endpoints: dict[str, dict], root: str) -> int:
-    # Collect every fetch up front, then run them concurrently so total
-    # throughput saturates the link instead of trickling one file at a time.
-    # Output streams live (bars from parallel jobs interleave — that's the cost
-    # of seeing progress while saturating the link).
-    jobs: list[tuple[str, list[str]]] = []  # (label, argv)
-    # Endpoints can share a file; parallel `wget -c` would append it twice.
+    # Every gguf downloads at once, one live progress bar each; NPU models are
+    # pulled with `flm pull` afterwards so its output doesn't mix with the bars.
+    from rich.progress import (
+        BarColumn,
+        DownloadColumn,
+        Progress,
+        TextColumn,
+        TimeRemainingColumn,
+        TransferSpeedColumn,
+    )
+
+    downloads: list[tuple[str, str, str]] = []  # (label, dest, url)
+    pulls: list[tuple[str, list[str]]] = []  # (label, argv)
+    # Endpoints can share a file; download it once.
     queued: set[str] = set()
     for name, ep in local_endpoints(endpoints):
         if ep.get("backend") == "npu":
@@ -386,7 +420,7 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
                     f"[skip] {name}: FastFlowLM ('flm') not installed — run 'pixi run build-fastflowlm' on an NPU host"
                 )
                 continue
-            jobs.append((f"{name}: {tag}", [flm, "pull", tag]))
+            pulls.append((f"{name}: {tag}", [flm, "pull", tag]))
             continue
         # llama.cpp backends: fetch the gguf(s) named in the SSOT.
         targets = [(ep.get("model_url"), ep.get("model_path"))]
@@ -399,33 +433,38 @@ def cmd_download(endpoints: dict[str, dict], root: str) -> int:
             if dest in queued:
                 continue
             queued.add(dest)
-            if os.path.exists(dest):
-                print(f"[skip] {name}: {os.path.basename(dest)} already exists")
-                continue
             os.makedirs(os.path.dirname(dest), exist_ok=True)
-            jobs.append(
-                (
-                    f"{name}: {os.path.basename(dest)}",
-                    ["wget", "-q", "--show-progress", "-c", "-O", dest, url],
-                )
-            )
-
-    if not jobs:
-        return 0
-
-    def fetch(job: tuple[str, list[str]]) -> tuple[str, int]:
-        label, argv = job
-        print(f"[download] {label}", flush=True)
-        return label, subprocess.call(argv)  # inherit stdout/stderr -> live progress
+            downloads.append((os.path.basename(dest), dest, url))
 
     rc = 0
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:
-        for label, code in [f.result() for f in [pool.submit(fetch, j) for j in jobs]]:
-            print(
-                f"[done] {label}" if code == 0 else f"[FAIL] {label} (exit {code})",
-                file=sys.stderr,
-            )
-            rc |= 1 if code else 0
+    if downloads:
+        columns = (
+            TextColumn("{task.description}"),
+            BarColumn(),
+            TextColumn("{task.percentage:>5.1f}%"),
+            DownloadColumn(),
+            TransferSpeedColumn(),
+            TimeRemainingColumn(),
+        )
+        # Ctrl+C exits at once: download threads would otherwise keep the process
+        # alive until they finish. Partial files stay; the next run resumes them.
+        old_handler = signal.signal(signal.SIGINT, lambda *_: os._exit(130))
+        with (
+            Progress(*columns) as progress,
+            concurrent.futures.ThreadPoolExecutor(len(downloads)) as pool,
+        ):
+            jobs = {pool.submit(_fetch, progress, *d): d[0] for d in downloads}
+            for job in concurrent.futures.as_completed(jobs):
+                if job.exception():
+                    rc = 1
+                    progress.console.print(f"[FAIL] {jobs[job]}: {job.exception()}")
+        signal.signal(signal.SIGINT, old_handler)
+
+    for label, argv in pulls:
+        print(f"[download] {label}", flush=True)
+        code = subprocess.call(argv)
+        print(f"[done] {label}" if code == 0 else f"[FAIL] {label} (exit {code})")
+        rc |= 1 if code else 0
     return rc
 
 
