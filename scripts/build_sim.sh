@@ -28,12 +28,16 @@ set -e
 
 cd "$DEMO_ROOT/sim"
 
+# O3DE 26.05 builds with clang only (its GCC config is broken), so use the env's
+# clang 18. A cache configured with another compiler cannot switch; start over.
+grep -qs "^CMAKE_CXX_COMPILER:.*=$CONDA_PREFIX/bin/clang++$" build/linux/CMakeCache.txt || rm -f build/linux/CMakeCache.txt
+
 # O3DE 26.05 requires C++20 (AzCore headers use `requires`-clauses). The engine
 # only sets CMAKE_CXX_STANDARD=20 as a non-FORCE cache default, so a stale build
 # dir that cached 17 silently wins and the build fails with "unknown type name
 # 'requires'". Pin it explicitly so every configure forces 20.
 #
-# The sim links against the pixi env's ROS 2 libraries with the system toolchain.
+# The sim links against the pixi env's ROS 2 libraries.
 # cxx-compiler 1.x exported these flags in LDFLAGS on activation; 2.x does not,
 # and without them a fresh configure cannot find env libraries such as
 # liblttng-ust at link time, nor the ROS 2 libraries at run time.
@@ -43,10 +47,12 @@ cmake -B build/linux -G "Ninja Multi-Config" \
     -DCMAKE_SHARED_LINKER_FLAGS="$env_ldflags" \
     -DCMAKE_MODULE_LINKER_FLAGS="$env_ldflags" \
     -DCMAKE_MODULE_PATH="$O3DE_ENGINE_PATH/cmake" \
+    -DCMAKE_C_COMPILER="$CONDA_PREFIX/bin/clang" \
+    -DCMAKE_CXX_COMPILER="$CONDA_PREFIX/bin/clang++" \
     -DCMAKE_CXX_STANDARD=20 \
     -DLY_DISABLE_TEST_MODULES=ON \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
     -DLY_STRIP_DEBUG_SYMBOLS=ON
 
-cmake --build build/linux --config profile \
+bash "$DEMO_ROOT/scripts/o3de_exec.sh" cmake --build build/linux --config profile \
     --target MobileManipulatorDemo.Assets MobileManipulatorDemo.GameLauncher

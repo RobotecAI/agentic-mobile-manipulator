@@ -137,11 +137,24 @@ description = "Launch safety agent (with RAG)"
 
 [feature.sim.dependencies]
 git-lfs = "*"
+# O3DE 26.05 builds with clang only (its GCC config is broken); the pixi env also
+# provides the system libraries the SDK .deb declares, so no apt packages are needed.
+cmake = ">=3.30"
+ninja = "*"
+clang = "18.*"
+clangxx = "18.*"
+libunwind = "*"
+zstd = "*"
+xorg-libx11 = "*"
+xorg-libxcb = "*"
 
 [feature.sim.tasks.install-o3de]
-cmd = "scripts/install_o3de.sh"
-outputs = ["/opt/O3DE/26.05/scripts/o3de.sh"]
-description = "Install the O3DE engine SDK"
+cmd = "bash scripts/install_o3de.sh"
+description = "Download and unpack the O3DE SDK to ~/.local/share/o3de (no sudo)"
+
+[feature.sim.tasks.uninstall-o3de]
+cmd = "bash scripts/uninstall_o3de.sh"
+description = "Remove the O3DE SDK unpacked by install-o3de"
 
 [feature.sim.tasks.clone-gems]
 cmd = "vcs import --input gems.repos && git lfs install && bash -c 'for repo in gems/*/; do git -C \"$repo\" lfs pull; done'"
@@ -172,7 +185,7 @@ outputs = ["sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"]
 # sim/project.json, so the gem source trees must exist before cmake configure.
 # fetch-gems (transitively clone-gems) clones them; depend on it so a clean
 # checkout — and the Docker o3de build — fetch gems before building.
-depends-on = ["fetch-gems"]
+depends-on = ["fetch-gems", "install-o3de"]
 description = "Build O3DE GameLauncher and project assets"
 
 [feature.sim.tasks.sim]
@@ -180,7 +193,7 @@ cmd = "bash scripts/tmux_run.sh agentic-mobile-manipulator-sim pixi run sim-fg"
 description = "Launch O3DE simulation in its own tmux session"
 
 [feature.sim.tasks.sim-fg]
-cmd = "$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
+cmd = "bash scripts/o3de_exec.sh $DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher -bg_ConnectToAssetProcessor=0"
 description = "Launch O3DE simulation in the foreground (no tmux)"
 
 [feature.sim.tasks.sim-smoke]
@@ -188,7 +201,7 @@ cmd = "bash scripts/sim_smoke.sh"
 description = "Headless sim smoke test: boot with --rhi=null, pass if /clock ticks (no GPU/display)"
 
 [feature.sim.tasks.editor]
-cmd = "$O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor --project-path $DEMO_ROOT/sim"
+cmd = "bash scripts/o3de_exec.sh $O3DE_ENGINE_PATH/bin/Linux/profile/Default/Editor --project-path $DEMO_ROOT/sim"
 description = "Launch O3DE Editor from SDK (project must be built first)"
 
 # ─── Feature: local-inference ───────────────────────────────────────────────────

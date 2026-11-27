@@ -1,100 +1,52 @@
 #!/usr/bin/env bash
-# Download and install the O3DE SDK, scoped to this project.
-# Idempotent — skips steps that are already done.
+# Download the O3DE SDK .deb and unpack it into a per-user directory (no root,
+# no apt: the pixi env provides the system libraries the .deb declares).
+# Skips everything when the engine is present.
+#
+# Overrides: O3DE_HOME (install root), O3DE_DEB_FILE (use a local .deb instead
+# of downloading).
 
 set -euo pipefail
 
 O3DE_VERSION="${O3DE_VERSION:-26.05}"
 O3DE_DEB_URL="${O3DE_DEB_URL:-https://o3debinaries.org/main/Latest/Linux/o3de_2605_0.deb}"
-O3DE_ENGINE="/opt/O3DE/$O3DE_VERSION"
+O3DE_HOME="${O3DE_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/o3de}"
+O3DE_ENGINE="$O3DE_HOME/$O3DE_VERSION"
 
-PROJECT_ROOT="${PIXI_PROJECT_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
-
-# Container builds run as root and ship no sudo binary.
-SUDO=""
-if [[ "${EUID:-$(id -u)}" -ne 0 ]]; then
-    SUDO="sudo"
-fi
-
-# ── Step 1: Unpack the .deb into /opt/O3DE/<version> ────────────────────────
-# Use dpkg-deb -x (payload only, no apt database entry, no postinst) so the
-# install does not create a system package record. SDK binaries use
-# $ORIGIN-relative RUNPATHs and run from the install path without further patching.
-
-if [[ -d "$O3DE_ENGINE" ]]; then
+if [[ -f "$O3DE_ENGINE/engine.json" ]]; then
     echo "O3DE SDK already installed at $O3DE_ENGINE."
 else
-    echo "Downloading O3DE SDK from: $O3DE_DEB_URL"
-    TMP_DEB=$(mktemp --suffix=.deb)
-    TMP_EXTRACT=$(mktemp -d)
-    trap 'rm -rf "$TMP_DEB" "$TMP_EXTRACT"' EXIT
+    mkdir -p "$O3DE_HOME"
+    staging=$(mktemp -d "$O3DE_HOME/.install-$O3DE_VERSION.XXXXXX")
+    trap 'rm -rf "$staging"' EXIT
 
-    curl -fsSL -o "$TMP_DEB" "$O3DE_DEB_URL"
-
-    echo "Unpacking O3DE SDK into /opt/O3DE..."
-    dpkg-deb -x "$TMP_DEB" "$TMP_EXTRACT"
-
-    # Locate the engine root by engine.json rather than trusting the version string.
-    src_engine=$(dirname "$(find "$TMP_EXTRACT/opt/O3DE" -maxdepth 2 -name engine.json 2>/dev/null | head -1)")
-    if [[ ! -f "$src_engine/engine.json" ]]; then
-        echo "ERROR: no engine.json found in the .deb payload under opt/O3DE." >&2
-        exit 1
+    deb="${O3DE_DEB_FILE:-}"
+    if [[ -z "$deb" ]]; then
+        deb="$staging/o3de.deb"
+        echo "Downloading O3DE SDK (~3 GB) from: $O3DE_DEB_URL"
+        curl -fSL --progress-bar -o "$deb" "$O3DE_DEB_URL"
     fi
 
-    $SUDO mkdir -p /opt/O3DE
-    $SUDO cp -a "$src_engine" "$O3DE_ENGINE"
-    echo "O3DE SDK installed: $O3DE_ENGINE"
-
-    # Install the SDK's declared system dependencies. dpkg-deb -x skips dependency
-    # resolution, so install them explicitly from the .deb metadata.
-    deps=$(dpkg-deb -f "$TMP_DEB" Depends | tr ',' '\n' | sed 's/([^)]*)//g' | xargs)
-    echo "Installing SDK system dependencies: $deps"
-    $SUDO apt-get install -y --no-install-recommends $deps
+    # Unpack the payload only. The package's maintainer scripts add desktop
+    # integration (/usr/local/bin links, a .desktop file) the project never uses.
+    echo "Unpacking O3DE SDK into $O3DE_ENGINE (~9 GB)..."
+    if command -v dpkg-deb >/dev/null; then
+        dpkg-deb -x "$deb" "$staging/root"
+    else
+        mkdir -p "$staging/root"
+        ar p "$deb" data.tar.gz | tar -xz -C "$staging/root"
+    fi
+    mv "$staging/root/opt/O3DE/$O3DE_VERSION" "$O3DE_ENGINE"
 fi
 
-# ── Fix editable-install egg-info dirs ──────────────────────────────────────
-# CMake configure runs `pip install -e` against three engine-bundled Python
-# packages. setuptools writes a <package>.egg-info/ directory next to the source
-# as a side effect. The .deb installs the engine root-owned, so a non-root pip
-# either fails to create the dir or can't update its mtime. Making the three
-# parent dirs world-writable lets any user create their own egg-info without
-# chowning the engine tree (which would break shared machines).
-# Remove any root-owned egg-info residue first so setuptools doesn't hit a
-# permission error on an existing directory it doesn't own.
-# Upstream issue: o3de/o3de#19752.
-EDITABLE_DIRS=(
-    "$O3DE_ENGINE/Tools/LyTestTools"
-    "$O3DE_ENGINE/Tools/RemoteConsole/ly_remote_console"
-    "$O3DE_ENGINE/scripts/o3de"
-)
-for dir in "${EDITABLE_DIRS[@]}"; do
-    [[ -d "$dir" ]] || continue
-    if [[ -n "$(find "$dir" -maxdepth 1 -type d -name '*.egg-info' -uid 0 2>/dev/null)" ]]; then
-        $SUDO find "$dir" -maxdepth 1 -type d -name '*.egg-info' -uid 0 \
-            -exec rm -rf {} + 2>/dev/null || true
-    fi
-    if [[ ! -w "$dir" ]]; then
-        echo "Making $dir world-writable..."
-        $SUDO chmod o+w "$dir"
-    fi
-done
+[[ -f "$O3DE_ENGINE/engine.json" ]] || { echo "ERROR: no engine.json in $O3DE_ENGINE." >&2; exit 1; }
 
-# ── Step 2: Bootstrap O3DE's bundled Python ─────────────────────────────────
-# Probe via the python.sh wrapper so a stale packages dir from a removed engine
-# doesn't cause us to skip venv creation for this engine.
-if "$O3DE_ENGINE/python/python.sh" -c 'pass' &>/dev/null; then
-    echo "O3DE Python already bootstrapped for $O3DE_ENGINE."
+# CMake configure runs O3DE's bundled Python; bootstrap it once.
+if "$O3DE_ENGINE/python/python.sh" --version &>/dev/null; then
+    echo "O3DE Python already bootstrapped."
 else
     echo "Bootstrapping O3DE Python..."
     "$O3DE_ENGINE/python/get_python.sh"
 fi
-
-# ── Step 3: Record engine path in sim/user/project.json ─────────────────────
-# EngineFinder.cmake Option 2 reads engine_path from this file, so engine
-# selection stays project-local and nothing is written to ~/.o3de.
-USER_PROJECT_JSON="$PROJECT_ROOT/sim/user/project.json"
-mkdir -p "$(dirname "$USER_PROJECT_JSON")"
-printf '{\n    "engine_path": "%s"\n}\n' "$O3DE_ENGINE" > "$USER_PROJECT_JSON"
-echo "Engine path recorded in $USER_PROJECT_JSON"
 
 echo "O3DE SDK ready: $O3DE_ENGINE"

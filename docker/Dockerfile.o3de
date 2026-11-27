@@ -1,31 +1,12 @@
 FROM base_image
 
-# Install O3DE build dependencies and the 26.05 SDK.
-# Note: git, git-lfs, pixi are inherited from the base image; ROS/colcon/cmake/
-# ninja come from the conda env. clang is O3DE's compiler, hence apt here.
-RUN apt update && apt install -y \
-    cmake \
-    libstdc++-12-dev \
-    clang \
-    libglu1-mesa-dev \
-    libxcb-randr0-dev \
-    libxcb-xinerama0 \
-    libxcb-xinput0 \
-    libxcb-xinput-dev \
-    libxcb-xfixes0-dev \
-    libxcb-xkb-dev \
-    libxkbcommon-dev \
-    libxkbcommon-x11-dev \
-    libfontconfig1-dev \
-    libpcre2-16-0 \
-    zlib1g-dev \
-    mesa-common-dev \
-    libunwind-dev \
-    libzstd-dev \
-    tix \
-    wget \
-    libxcb-keysyms1-dev \
- && apt clean && rm -rf /var/lib/apt/lists/*
+# O3DE needs no apt packages to build: the pixi env provides clang, cmake, ninja
+# and the system libraries the SDK .deb declares. Only the Vulkan/GL drivers the
+# sim renders with at run time come from apt.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    mesa-vulkan-drivers \
+    libglx-mesa0 \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root/MobileManipulatorDemo
 
@@ -38,10 +19,8 @@ COPY .git .git/
 COPY project_gems/ project_gems/
 COPY sim/ sim/
 
-# install_o3de.sh apt-installs the SDK's system deps (ninja-build, pkg-config,
-# ...) without running `apt-get update` itself, so refresh the lists here — the
-# ros2 base strips them to stay small.
-RUN apt-get update && pixi run install-o3de && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Unpacks the SDK to /root/.local/share/o3de (O3DE_HOME); no apt, no sudo.
+RUN pixi run install-o3de
 RUN git lfs install --force
 RUN pixi run build-sim
 # Ship the conda packages' licence texts with the image (see THIRD_PARTY.md):

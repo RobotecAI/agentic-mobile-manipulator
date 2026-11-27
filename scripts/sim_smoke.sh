@@ -23,7 +23,8 @@ set -uo pipefail
 # shared CI runner can't cause a false pass.
 export ROS_LOCALHOST_ONLY=1
 
-LAUNCHER="${DEMO_ROOT:-$PWD}/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"
+DEMO_ROOT="${DEMO_ROOT:-$PWD}"
+LAUNCHER="$DEMO_ROOT/sim/build/linux/bin/profile/MobileManipulatorDemo.GameLauncher"
 TIMEOUT="${SIM_SMOKE_TIMEOUT:-90}"      # boot + first message; rhi=null is faster than Vulkan
 TOPIC="${SIM_SMOKE_TOPIC:-/clock}"
 # Type must be explicit: with no publisher up yet, `ros2 topic echo` can't infer
@@ -45,7 +46,7 @@ cleanup() {
 trap cleanup EXIT
 
 echo "[smoke] launching sim headless (--rhi=null)"
-env -u DISPLAY "$LAUNCHER" -bg_ConnectToAssetProcessor=0 --rhi=null >"$LOG" 2>&1 &
+env -u DISPLAY bash "$DEMO_ROOT/scripts/o3de_exec.sh" "$LAUNCHER" -bg_ConnectToAssetProcessor=0 --rhi=null >"$LOG" 2>&1 &
 LAUNCHER_PID=$!
 
 # /clock is published BEST_EFFORT; a default (reliable) subscriber gets nothing.

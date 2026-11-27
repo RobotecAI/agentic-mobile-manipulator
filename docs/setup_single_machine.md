@@ -19,16 +19,11 @@ cd agentic-mobile-manipulator
 
 #### Install System Dependencies
 
-These packages must be installed via `apt` before using pixi:
+Only these come from `apt`; pixi provides the compilers, CMake and the libraries O3DE needs:
 
 ```bash
 sudo apt update
-sudo apt install git git-lfs python3-vcstool ninja-build \
-    cmake libstdc++-12-dev clang \
-    libglu1-mesa-dev libxcb-randr0-dev libxcb-xinerama0 libxcb-xinput0 \
-    libxcb-xinput-dev libxcb-xfixes0-dev libxcb-xkb-dev libxkbcommon-dev \
-    libxkbcommon-x11-dev libfontconfig1-dev libpcre2-16-0 zlib1g-dev \
-    mesa-common-dev libunwind-dev libzstd-dev tix tmux
+sudo apt install git git-lfs mesa-vulkan-drivers tmux
 ```
 
 #### NPU prerequisites (`single-pc-gpu-and-npu` only)
@@ -81,7 +76,7 @@ This single command runs the full build pipeline in the correct order:
 | Step | pixi task          | What it does                                                   |
 | ---- | ------------------ | -------------------------------------------------------------- |
 | 1    | `clone`            | `vcs import` + `git lfs pull` for gems and ROS 2 ws            |
-| 2    | `install-o3de`     | Install the O3DE engine                                        |
+| 2    | `install-o3de`     | Unpack the O3DE SDK to `~/.local/share/o3de` (no sudo)         |
 | 3    | `fetch-gems`       | Clone o3de-extras locally, validate all gem paths              |
 | 4    | `build-ros2`       | `colcon build` (deps provided by RoboStack)                    |
 | 5    | `build-sim`        | CMake configure + Ninja build (GameLauncher)                   |
