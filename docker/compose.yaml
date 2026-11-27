@@ -35,6 +35,10 @@ x-demo-runtime: &demo-runtime
     - /dev/kfd:/dev/kfd            # AMD GPU compute (ROCm)
     - /dev/dri:/dev/dri            # AMD GPU render (Vulkan)
   network_mode: host
+  # ROS 2 (Fast DDS) sends data over shared memory between processes on the same machine:
+  # without the host's IPC namespace, ROS 2 tools on the host (RViz, an HMI) discover the
+  # demo's topics but receive no data.
+  ipc: host
 
 services:
   # ── Base: RoboStack ROS 2 + built workspace ────────────────────────────────
