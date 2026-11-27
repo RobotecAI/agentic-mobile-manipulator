@@ -62,7 +62,7 @@ docker compose -f docker/compose.yaml pull
 Weights are **not** baked into the image. The mounted config (`$AMM_CONFIG`) says which models are fetched; download them once:
 
 ```bash
-docker compose -f docker/compose.yaml run --rm --no-build --entrypoint "" demo pixi run download-models
+docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run download-models
 ```
 
 This downloads the llama.cpp GGUFs into `models/` in parallel, one progress bar per file, and with GPU + NPU the NPU model via `flm pull` into the `flm-models` Docker volume (`docker volume rm docker_flm-models` removes it). Partial files resume and complete ones are skipped, so it's safe to re-run.
@@ -77,7 +77,7 @@ docker compose -f docker/compose.yaml up --no-build demo
 ```
 
 > [!IMPORTANT]
-> Always pass `--no-build`, whether you built or pulled the image. Without it, `up` (and `run`) rebuild `ros2 → o3de → demo` first, and any repository change since your build (a commit, a `git pull`) turns that into a long rebuild.
+> Always pass `--no-build`, whether you built or pulled the image. Without it, `up` rebuilds `ros2 → o3de → demo` first, and any repository change since your build (a commit, a `git pull`) turns that into a long rebuild.
 
 ## What to expect
 
@@ -96,7 +96,7 @@ sends one task to the orchestrator, saves the agent conversation trace, and exit
 
 ```bash
 xhost +local:root
-docker compose -f docker/compose.yaml run --rm --no-build demo-trace
+docker compose -f docker/compose.yaml run --rm demo-trace
 ```
 
 The trace is written to `runs/<timestamp>/` on the host (bind-mounted from the
