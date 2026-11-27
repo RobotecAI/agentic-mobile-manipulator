@@ -41,7 +41,11 @@ grep -qs "^CMAKE_CXX_COMPILER:.*=$CONDA_PREFIX/bin/clang++$" build/linux/CMakeCa
 # cxx-compiler 1.x exported these flags in LDFLAGS on activation; 2.x does not,
 # and without them a fresh configure cannot find env libraries such as
 # liblttng-ust at link time, nor the ROS 2 libraries at run time.
-env_ldflags="-L$CONDA_PREFIX/lib -Wl,-rpath,$CONDA_PREFIX/lib -Wl,-rpath-link,$CONDA_PREFIX/lib -Wl,--disable-new-dtags"
+#
+# --allow-shlib-undefined: the O3DE SDK libraries reference glibc 2.34 symbols,
+# newer than the env's 2.28 sysroot that clang links against. They resolve at run
+# time against the host glibc (Ubuntu 24.04: 2.39).
+env_ldflags="-L$CONDA_PREFIX/lib -Wl,-rpath,$CONDA_PREFIX/lib -Wl,-rpath-link,$CONDA_PREFIX/lib -Wl,--disable-new-dtags -Wl,--allow-shlib-undefined"
 cmake -B build/linux -G "Ninja Multi-Config" \
     -DCMAKE_EXE_LINKER_FLAGS="$env_ldflags" \
     -DCMAKE_SHARED_LINKER_FLAGS="$env_ldflags" \
