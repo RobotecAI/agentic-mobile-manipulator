@@ -455,8 +455,21 @@ void RosBridge::onLog(const rcl_interfaces::msg::Log &msg)
 {
     static const QHash<int, QString> levels = {{10, "DEBUG"}, {20, "INFO"}, {30, "WARN"}, {40, "ERROR"}, {50, "FATAL"}};
     const QString time = QDateTime::fromSecsSinceEpoch(msg.stamp.sec).toString("HH:mm:ss");
-    logs_.prepend(QVariantMap{{"t", time}, {"level", levels.value(msg.level, "INFO")},
-                              {"node", QString::fromStdString(msg.name)}, {"msg", QString::fromStdString(msg.msg)}});
+    const QString level = levels.value(msg.level, "INFO");
+    const QString text = QString::fromStdString(msg.msg);
+    // A message repeated recently (MoveIt warns several times a second, from two nodes)
+    // moves to the top with a count instead of flooding the list.
+    int repeats = 1;
+    for (int i = 0; i < std::min<int>(logs_.size(), 20); ++i) {
+        const QVariantMap old = logs_[i].toMap();
+        if (old["level"] == level && old["msg"] == text) {
+            repeats = old["count"].toInt() + 1;
+            logs_.removeAt(i);
+            break;
+        }
+    }
+    logs_.prepend(QVariantMap{{"t", time}, {"level", level}, {"node", QString::fromStdString(msg.name)},
+                              {"msg", text}, {"count", repeats}});
     while (logs_.size() > kMaxLogs) logs_.removeLast();
     logsDirty_ = true;
 }
@@ -589,6 +602,8 @@ QVariantList RosBridge::agents() const
     const bool utilizationFresh = utilizationMs_ >= 0 && now - utilizationMs_ < 15000;
     const AgentState orchestrator = agentStates_.value("Orchestrator");
     const bool orchestratorAlive = orchestrator.heartbeatMs >= 0 && now - orchestrator.heartbeatMs < kHeartbeatStaleMs;
+    // Tools without a tool_end for 10 minutes (e.g. after an E-STOP) no longer count.
+    const QSet<QString> runningTools = events_->agentsWithRunningTools(600000);
     QVariantList list;
     for (const auto &a : kAgents) {
         const AgentState s = agentStates_.value(a.name);
@@ -606,7 +621,8 @@ QVariantList RosBridge::agents() const
             alive = moveit2Ok_;
             known = true;
         }
-        const bool active = s.activeMs >= 0 && now - s.activeMs < kActiveWindowMs;
+        // Recent output, or a tool call still running (a tool can take minutes).
+        const bool active = (s.activeMs >= 0 && now - s.activeMs < kActiveWindowMs) || runningTools.contains(a.name);
         QString state = active ? "working" : alive ? "idle" : known ? "offline" : "unknown";
         if (active && !alive && known) state = "working";
         list.append(QVariantMap{{"name", a.name}, {"group", a.group}, {"color", a.color}, {"state", state},

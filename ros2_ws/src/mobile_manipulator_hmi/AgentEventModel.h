@@ -16,6 +16,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QSet>
 #include <QElapsedTimer>
 #include <QSortFilterProxyModel>
 #include <QString>
@@ -85,6 +86,8 @@ public:
 
     Q_INVOKABLE QVariantMap get(int row) const;
     Q_INVOKABLE void clear();
+    // Agents with a tool call started in the last maxAgeMs that has not ended.
+    QSet<QString> agentsWithRunningTools(qint64 maxAgeMs) const;
 
     // Called periodically so "streaming" flags expire after a pause in the chunks.
     void refreshStreaming();

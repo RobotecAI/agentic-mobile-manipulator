@@ -138,6 +138,18 @@ void AgentEventModel::updateLastOfNode(const QString &node, const std::function<
     }
 }
 
+QSet<QString> AgentEventModel::agentsWithRunningTools(qint64 maxAgeMs) const
+{
+    QSet<QString> agents;
+    const qint64 now = clock_.elapsed();
+    for (int row = events_.size() - 1; row >= 0 && now - events_[row].startMs < maxAgeMs; --row) {
+        if (events_[row].kind == "tool" && events_[row].status == "running") {
+            agents.insert(events_[row].agent);
+        }
+    }
+    return agents;
+}
+
 QVariantMap AgentEventModel::get(int row) const
 {
     QVariantMap map;

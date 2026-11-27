@@ -167,7 +167,7 @@ Item {
                                 Text { text: modelData.t; color: "#7D8796"; font.family: Theme.mono; font.pixelSize: 12; Layout.preferredWidth: 64; Layout.alignment: Qt.AlignTop }
                                 Text { text: modelData.level; color: page.levelColors[modelData.level]; font.family: Theme.mono; font.pixelSize: 12; font.weight: Font.DemiBold; Layout.preferredWidth: 48; Layout.alignment: Qt.AlignTop }
                                 Text { text: modelData.node; color: Theme.muted; font.family: Theme.mono; font.pixelSize: 12; elide: Text.ElideRight; Layout.preferredWidth: 150; Layout.alignment: Qt.AlignTop }
-                                Text { text: modelData.msg; color: "#D5DCE6"; font.family: Theme.mono; font.pixelSize: 12; wrapMode: Text.WrapAnywhere; Layout.fillWidth: true; maximumLineCount: 4; elide: Text.ElideRight }
+                                Text { text: (modelData.count > 1 ? "×" + modelData.count + "  " : "") + modelData.msg; color: "#D5DCE6"; font.family: Theme.mono; font.pixelSize: 12; wrapMode: Text.WrapAnywhere; Layout.fillWidth: true; maximumLineCount: 4; elide: Text.ElideRight }
                             }
                         }
                         Label2 { anchors.centerIn: parent; visible: parent.count === 0; text: "No log lines match."; color: Theme.faint }

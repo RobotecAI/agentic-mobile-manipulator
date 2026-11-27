@@ -20,6 +20,15 @@ from rclpy.impl.rcutils_logger import RcutilsLogger
 from rclpy.node import Node
 
 
+def find_tool(name: str) -> Optional[str]:
+    """Path of a ROCm tool: on PATH, else under /opt/rocm*/bin (ROCm installs there)."""
+    found = shutil.which(name)
+    if found:
+        return found
+    candidates = sorted(glob.glob(f"/opt/rocm*/bin/{name}") + glob.glob(f"/opt/rocm*/*/bin/{name}"))
+    return candidates[-1] if candidates else None
+
+
 class NpuActivity:
     """Best-effort NPU busy estimate for AMD Ryzen AI NPUs (amdxdna driver).
 
@@ -171,14 +180,16 @@ class UtilizationCollector:
     def _gpu() -> Optional[float]:
         """GPU load in % from rocm-smi, else amd-smi; None if neither is installed."""
         try:
-            result = subprocess.check_output(["rocm-smi", "--showuse"], text=True)
+            result = subprocess.check_output([find_tool("rocm-smi") or "rocm-smi", "--showuse"], text=True)
             match = re.search(r"GPU use \(%\):\s+(\d+)", result)
             if match:
                 return float(match.group(1))
         except (FileNotFoundError, subprocess.CalledProcessError):
             pass
         try:
-            result = subprocess.check_output(["amd-smi", "metric", "--usage", "--json"], text=True)
+            result = subprocess.check_output(
+                [find_tool("amd-smi") or "amd-smi", "metric", "--usage", "--json"], text=True
+            )
             # "gfx_activity" is a number or {"value": n, "unit": "%"} depending on the version.
             values = [
                 float(m)
@@ -223,7 +234,7 @@ class UtilizationPublisher(Node):
         self.create_timer(2.0, self._check_nav2_state)
         self.create_timer(2.0, self._check_moveit2_state)
 
-        if include_gpu and not (shutil.which("rocm-smi") or shutil.which("amd-smi")):
+        if include_gpu and not (find_tool("rocm-smi") or find_tool("amd-smi")):
             self.get_logger().warn(
                 "Neither rocm-smi nor amd-smi is installed: GPU usage will not be reported. "
                 "Install amd-smi (AMD ROCm apt repository) to see it in the HMI."
