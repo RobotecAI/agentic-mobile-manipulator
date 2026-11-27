@@ -18,13 +18,13 @@ COPY scripts/setup_env.sh scripts/install_o3de.sh scripts/
 # Unpacks the SDK to /root/.local/share/o3de (O3DE_HOME); no apt, no sudo.
 RUN pixi run install-o3de
 
+# fetch-gems validates every gem path in sim/project.json, the project's own sim/Gem included.
 COPY gems.repos ./
 COPY scripts/fetch_gems.sh scripts/
 COPY project_gems/ project_gems/
-COPY sim/project.json sim/
+COPY sim/ sim/
 RUN git lfs install --force && pixi run fetch-gems
 
-COPY sim/ sim/
 COPY scripts/build_sim.sh scripts/o3de_exec.sh scripts/
 # build-sim depends on build-ros2, which the ros2 base image already ran. The ccache
 # cache mount survives between builds, so a rebuild recompiles only changed sources.
