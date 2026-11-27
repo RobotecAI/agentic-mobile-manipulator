@@ -93,6 +93,9 @@ Preview the resolved launch commands without starting anything:
 pixi run -e single-pc-gpu-and-npu inference --print
 ```
 
+If `vlm_safety` (port 8081, NPU) never comes up (`HTTP 000`, or `Open /dev/accel/... failed (err=-13)`
+in its pane), your shell is not in the `render` group yet: log in again or run `newgrp render`.
+
 ### Agents
 
 ```shell

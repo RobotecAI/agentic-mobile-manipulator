@@ -40,6 +40,8 @@ sudo usermod -aG render $USER
 echo "$USER - memlock unlimited" | sudo tee /etc/security/limits.d/99-npu-memlock.conf
 ```
 
+Both take effect in new login sessions only: log out and back in (or open a new SSH session).
+
 Ubuntu 24.04 ships NPU firmware 1.0.0.166, on which every NPU request fails with
 `runlist failed execution (ERT_CMD_STATE_ABORT)`. Strix Halo (PCI `17f0` rev `11`) needs
 `npu_7.sbin` 1.1.2.65 from upstream linux-firmware:
