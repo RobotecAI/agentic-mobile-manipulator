@@ -2,7 +2,7 @@
 
 ## What to expect
 
-![Demo Windows](demo_windows.jpg)
+![HMI, Mission page](images/hmi_mission.png)
 
 1. **Simulation Window**: the O3DE warehouse environment. Populate it and assign tasks from the HMI (see [Operating the demo](operating.md)), or publish your own to the `/user_tasks` topic.
 2. **HMI**: a window showing the Human-Machine Interface.

@@ -1,7 +1,7 @@
 # Setup HMI Environment
 
 <p align="center">
-  <img src="images/hmi.png" alt="HMI graphical interface" width="50%"/>
+  <img src="images/hmi_mission.png" alt="HMI, Mission page" width="80%"/>
 </p>
 
 This repository is compatible with the following system:

@@ -25,6 +25,12 @@ The left rail switches between four pages; the top bar is always visible:
 - **System**: CPU, GPU, NPU and RAM, agent heartbeats, inference endpoint health, and
   logs filterable by level and text.
 
+| Mission                                       | Agents                                |
+| --------------------------------------------- | ------------------------------------- |
+| ![Mission page](images/hmi_mission.png)       | ![Agents page](images/hmi_agents.png) |
+| **Simulation**                                | **System**                            |
+| ![Simulation page](images/hmi_simulation.png) | ![System page](images/hmi_system.png) |
+
 ## Step 1: Populate the scene first
 
 Populate the scene with objects before starting a mission. On the **Simulation**

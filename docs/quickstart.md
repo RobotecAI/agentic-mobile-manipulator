@@ -84,7 +84,7 @@ docker compose -f docker/compose.yaml up --no-build demo   # if you pulled (step
 
 ## What to expect
 
-![Demo Windows](demo_windows.jpg)
+![HMI, Mission page](images/hmi_mission.png)
 
 1. **Simulation window**: the O3DE warehouse environment.
 2. **HMI**: populate the scene on its **Simulation** page, then assign tasks there or on the **Mission** page, and follow the agents on the **Mission** and **Agents** pages.
