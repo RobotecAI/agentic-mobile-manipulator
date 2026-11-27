@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.15
 // Set up the warehouse, build tasks, drive the robot by hand.
 Item {
     id: page
-    property var racks: ["J01","J02","A01","A02","A03","A04","A05","A06","B01","B02","B03","B04","C01","C02","C03","C04",
+    property var racks: ["J01","A01","A02","A03","A04","A05","A06","B01","B02","B03","B04","C01","C02","C03","C04",
                          "D01","D02","D03","D04","F01","F02","F03","F04","F05","F06","F07","F08","F09","F10",
                          "G01","G02","G03","G04","G05","G06","H01","H02","I01","I02","K01","K02",
                          "L01","L02","L03","L04","L05","L06","L07","L08","L09","L10"]

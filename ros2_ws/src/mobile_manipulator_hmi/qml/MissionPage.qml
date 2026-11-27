@@ -44,7 +44,7 @@ Item {
                                 TextField {
                                     id: input
                                     Layout.fillWidth: true
-                                    placeholderText: "Tell the robot what to do, e.g. “Do housekeeping of rack J02”"
+                                    placeholderText: "Tell the robot what to do, e.g. “Do housekeeping of rack J01”"
                                     placeholderTextColor: Theme.faint
                                     color: Theme.text
                                     font.family: Theme.sans
@@ -70,8 +70,7 @@ Item {
                         Repeater {
                             model: [
                                 { label: "Sort returns", prompt: "Do Sort Package Returns" },
-                                { label: "Housekeeping J01", prompt: "Do Housekeeping of rack J01" },
-                                { label: "Housekeeping J02", prompt: "Do Housekeeping of rack J02" }
+                                { label: "Housekeeping J01", prompt: "Do Housekeeping of rack J01" }
                             ]
                             delegate: Chip { text: modelData.label; onClicked: ros.sendTask(modelData.prompt) }
                         }

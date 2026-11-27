@@ -169,7 +169,9 @@ class UtilizationCollector:
         return utilization
 
     @staticmethod
-    def _cpu(interval: int = 0) -> float:
+    def _cpu(interval: float = 0.2) -> float:
+        # Blocking sample: psutil 7 keeps the non-blocking baseline per thread, and the
+        # executor calls this from different threads, so non-blocking calls often return 0.0.
         return cpu_percent(interval=interval)
 
     @staticmethod
