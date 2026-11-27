@@ -62,7 +62,7 @@ docker compose -f docker/compose.yaml pull
 Weights are **not** baked into the image. The mounted config (`$AMM_CONFIG`) says which models are fetched; download them once:
 
 ```bash
-docker compose -f docker/compose.yaml run --rm --entrypoint "" demo pixi run download-models
+docker compose -f docker/compose.yaml run --rm models
 ```
 
 This downloads the llama.cpp GGUFs into `models/` in parallel, one progress bar per file, and with GPU + NPU the NPU model via `flm pull` into the `flm-models` Docker volume (`docker volume rm docker_flm-models` removes it). Partial files resume and complete ones are skipped, so it's safe to re-run.

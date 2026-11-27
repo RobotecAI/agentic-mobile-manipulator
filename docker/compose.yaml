@@ -111,5 +111,19 @@ services:
       # Trace output lands here on the host (root-owned; chown if needed).
       - ../runs:/root/MobileManipulatorDemo/runs
 
+  # ── Model download into ../models and the flm-models volume ──────────────────
+  # No build: section (unlike demo), so `run` never triggers a ros2 → o3de → demo build:
+  #   docker compose -f docker/compose.yaml run --rm models
+  models:
+    image: robotecai/agentic-mobile-manipulator:latest
+    network_mode: host
+    entrypoint: ["pixi", "run", "download-models"]
+    environment:
+      - FLM_MODEL_PATH=/root/flm-models
+    volumes:
+      - ${AMM_CONFIG:-../gpu_config.toml}:/root/MobileManipulatorDemo/config.toml
+      - ../models:/root/MobileManipulatorDemo/models
+      - flm-models:/root/flm-models
+
 volumes:
   flm-models:
