@@ -37,6 +37,7 @@ from rai.messages import HumanMultimodalMessage, preprocess_image
 from sensor_msgs.msg import Image
 from skimage.metrics import structural_similarity as ssim
 
+from rai_app.agents.heartbeat import start_heartbeat
 from rai_app.agents.vlm_transport import publish_vlm_description
 from rai_app.initialization.llms import (
     get_embeddings_model,
@@ -337,6 +338,7 @@ def main():
                 )
         return
 
+    start_heartbeat(agent.connector, "safety")
     agent.run()
 
 

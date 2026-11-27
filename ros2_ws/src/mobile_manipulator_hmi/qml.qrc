@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/qmldir</file>
+        <file>qml/Theme.qml</file>
+        <file>qml/Main.qml</file>
+        <file>qml/Icon.qml</file>
+        <file>qml/Card.qml</file>
+        <file>qml/Label2.qml</file>
+        <file>qml/Btn.qml</file>
+        <file>qml/Chip.qml</file>
+        <file>qml/StatusPill.qml</file>
+        <file>qml/Sparkline.qml</file>
+        <file>qml/ServiceRow.qml</file>
+        <file>qml/StreamEntry.qml</file>
+        <file>qml/AgentStream.qml</file>
+        <file>qml/AgentCard.qml</file>
+        <file>qml/CameraPanel.qml</file>
+        <file>qml/MapPanel.qml</file>
+        <file>qml/MissionPage.qml</file>
+        <file>qml/AgentsPage.qml</file>
+        <file>qml/SimulationPage.qml</file>
+        <file>qml/SystemPage.qml</file>
+    </qresource>
+</RCC>

@@ -377,7 +377,9 @@ def _fetch(progress, label: str, dest: str, url: str) -> None:
     have = os.path.getsize(dest) if os.path.exists(dest) else 0
     headers = {"Range": f"bytes={have}-"} if have else {}
     try:
-        resp = urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60)
+        resp = urllib.request.urlopen(
+            urllib.request.Request(url, headers=headers), timeout=60
+        )
     except urllib.error.HTTPError as exc:
         if exc.code == 416:  # range starts at the end: the file is complete
             progress.update(task, total=have, completed=have)

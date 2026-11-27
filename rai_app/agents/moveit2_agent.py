@@ -43,6 +43,7 @@ from rclpy.action.client import ActionClient
 from rclpy.node import Node
 from tf2_geometry_msgs import do_transform_pose
 
+from rai_app.agents.heartbeat import start_heartbeat
 from rai_app.control.moveit_utils import decode_error_code
 from rai_app.initialization.llms import get_llm_model
 
@@ -542,6 +543,7 @@ def main():
         llm = get_llm_model(config_name="general")
     agent = MoveIt2Agent(llm=llm)
     agent.run()
+    start_heartbeat(agent.connector, "moveit2")
 
     wait_for_shutdown([agent])
 

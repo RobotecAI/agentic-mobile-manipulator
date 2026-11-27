@@ -70,3 +70,35 @@ ModelNames loadModelNames(const QString &configPath)
 
     return names;
 }
+
+QVector<Endpoint> loadEndpoints(const QString &configPath)
+{
+    QVector<Endpoint> result;
+    toml::table config;
+    try {
+        config = toml::parse_file(configPath.toStdString());
+    } catch (const std::exception &) {
+        return result;
+    }
+    const toml::table *endpoints = config["endpoints"].as_table();
+    if (!endpoints) {
+        return result;
+    }
+    for (const auto &[name, node] : *endpoints) {
+        const toml::table *ep = node.as_table();
+        if (!ep) {
+            continue;
+        }
+        Endpoint e;
+        e.name = QString::fromStdString(std::string(name.str()));
+        e.type = QString::fromStdString((*ep)["type"].value_or(std::string{}));
+        e.backend = QString::fromStdString((*ep)["backend"].value_or(std::string{}));
+        e.model = QString::fromStdString((*ep)["model"].value_or(std::string{}));
+        e.host = QString::fromStdString((*ep)["host"].value_or(std::string{"localhost"}));
+        e.port = static_cast<int>((*ep)["port"].value_or(int64_t{0}));
+        if ((e.backend == "gpu" || e.backend == "cpu" || e.backend == "npu") && e.port > 0) {
+            result.append(e);
+        }
+    }
+    return result;
+}

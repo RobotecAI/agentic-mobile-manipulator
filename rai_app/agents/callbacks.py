@@ -25,6 +25,8 @@ from typing import Any, Dict, List, Optional
 from langchain_core.callbacks import AsyncCallbackHandler, BaseCallbackHandler
 from rai.communication.ros2 import ROS2Connector, ROS2HRIMessage, ROS2Message
 
+from rai_app.agents.heartbeat import publish_agent_event
+
 
 class AgentProgressCallback(AsyncCallbackHandler):
     def __init__(self, connector: ROS2Connector, logger: logging.Logger | None = None):
@@ -36,9 +38,36 @@ class AgentProgressCallback(AsyncCallbackHandler):
 
         self.start_time = None
         self.end_time = None
+        # run_id -> (node, start time) for LLM and tool runs, for the HMI event stream.
+        self._llm_runs: Dict[Any, str] = {}
+        self._tool_runs: Dict[Any, tuple] = {}
+
+    @staticmethod
+    def _node(metadata: Optional[Dict[str, Any]]) -> str:
+        """LangGraph subgraph a run belongs to ("housekeep", "megamind", ...)."""
+        metadata = metadata or {}
+        ns = (
+            metadata.get("langgraph_checkpoint_ns")
+            or metadata.get("checkpoint_ns")
+            or ""
+        )
+        if ns:
+            return ns.split("|")[0].split(":")[0]
+        return metadata.get("langgraph_node", "")
 
     async def on_llm_end(self, *args, **kwargs):
         self.end_time = time.time()
+        node = self._llm_runs.pop(kwargs.get("run_id"), "")
+        if args:
+            tokens_in, tokens_out = self._token_usage(args[0])
+            if tokens_in or tokens_out:
+                publish_agent_event(
+                    self.connector,
+                    "llm_end",
+                    node=node,
+                    tokens_in=tokens_in,
+                    tokens_out=tokens_out,
+                )
         if self.start_time is None:
             self.logger.error("LLM start time is not set")
             return
@@ -48,6 +77,62 @@ class AgentProgressCallback(AsyncCallbackHandler):
 
     async def on_chat_model_start(self, *args, **kwargs):
         self.start_time = time.time()
+        self._llm_runs[kwargs.get("run_id")] = self._node(kwargs.get("metadata"))
+
+    @staticmethod
+    def _token_usage(response: Any) -> tuple:
+        """(input, output) tokens from an LLMResult, 0 when the server did not report them."""
+        try:
+            usage = (getattr(response, "llm_output", None) or {}).get(
+                "token_usage"
+            ) or {}
+            if usage:
+                return usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0)
+            message = response.generations[0][0].message
+            meta = getattr(message, "usage_metadata", None) or {}
+            return meta.get("input_tokens", 0), meta.get("output_tokens", 0)
+        except (AttributeError, IndexError, TypeError):
+            return 0, 0
+
+    async def on_tool_start(self, serialized, input_str, **kwargs):
+        run_id = kwargs.get("run_id")
+        node = self._node(kwargs.get("metadata"))
+        name = (serialized or {}).get("name") or kwargs.get("name") or "tool"
+        self._tool_runs[run_id] = (name, time.time())
+        args = kwargs.get("inputs")
+        publish_agent_event(
+            self.connector,
+            "tool_start",
+            node=node,
+            run_id=str(run_id),
+            tool=name,
+            args=args if args is not None else input_str,
+        )
+
+    async def on_tool_end(self, output, **kwargs):
+        run_id = kwargs.get("run_id")
+        name, _ = self._tool_runs.pop(run_id, ("tool", None))
+        content = getattr(output, "content", output)
+        publish_agent_event(
+            self.connector,
+            "tool_end",
+            run_id=str(run_id),
+            tool=name,
+            output=content if isinstance(content, str) else str(content),
+            status="ok",
+        )
+
+    async def on_tool_error(self, error, **kwargs):
+        run_id = kwargs.get("run_id")
+        name, _ = self._tool_runs.pop(run_id, ("tool", None))
+        publish_agent_event(
+            self.connector,
+            "tool_end",
+            run_id=str(run_id),
+            tool=name,
+            output=str(error),
+            status="error",
+        )
 
     async def on_chain_end(self, outputs, **kwargs):
         tags = kwargs.get("tags", [])
@@ -67,6 +152,11 @@ class AgentProgressCallback(AsyncCallbackHandler):
 
     async def _send_past_steps_message(self, node_state: Dict[str, Any]):
         if "steps_done" in node_state:
+            steps = node_state["steps_done"]
+            if isinstance(steps, (list, tuple)):
+                publish_agent_event(
+                    self.connector, "steps", steps=[str(x) for x in steps]
+                )
             self.connector.send_message(
                 message=ROS2Message(payload={"data": node_state["steps_done"]}),
                 msg_type="std_msgs/msg/String",
@@ -164,6 +254,13 @@ class AgentActionsCallback:
         if hasattr(message_chunk, "additional_kwargs"):
             reasoning = message_chunk.additional_kwargs.get("reasoning_content")
             if reasoning:
+                publish_agent_event(
+                    self.connector,
+                    "thinking",
+                    node=node_name,
+                    run_id=node_run_id,
+                    chunk=reasoning,
+                )
                 await self._send_text(
                     task_id=node_run_id,
                     text=reasoning,
@@ -172,6 +269,14 @@ class AgentActionsCallback:
                 )
 
         if hasattr(message_chunk, "content") and message_chunk.content:
+            if isinstance(message_chunk.content, str):
+                publish_agent_event(
+                    self.connector,
+                    "text",
+                    node=node_name,
+                    run_id=node_run_id,
+                    chunk=message_chunk.content,
+                )
             await self._send_text(
                 task_id=node_run_id,
                 text=message_chunk.content,

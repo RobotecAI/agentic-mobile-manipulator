@@ -30,45 +30,91 @@ This launches the HMI in its own tmux session. To run it in the foreground
 instead, use `pixi run -e hmi hmi-fg`, which calls
 `ros2 launch mobile_manipulator_hmi hmi_launch.py` directly.
 
-## ROS2 interfaces provided by the GUI
+Set `HMI_WINDOWED=1` to start in a window instead of full screen; F11 toggles.
 
-### 📨 Subscriptions
+## What the HMI shows
 
-| **Interface** | **Message Type**                | **Topic**                          | **Description**                                                              |
-| ------------- | ------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------- |
-| Subscription  | `sensor_msgs/msg/Image`         | `/rgbd_camera/camera_image_color`  | Receives image data from a camera or visual sensor.                          |
-| Subscription  | `sensor_msgs/msg/Image`         | `/wrist_camera/camera_image_color` | Receives image data from a top-mounted camera or secondary visual sensor.    |
-| Subscription  | `nav_msgs/msg/OccupancyGrid`    | `/global_costmap/static_layer`     | Subscribes to the global map used for navigation and planning.               |
-| Subscription  | `nav_msgs/msg/Path`             | `/plan`                            | Receives the computed navigation path from the planner.                      |
-| Subscription  | `std_msgs/msg/Header`           | `/orchestrator/heartbeat`          | Receives heartbeat messages from the orchestrator to monitor its status.     |
-| Subscription  | `rcl_interfaces/msg/Log`        | `/rosout`                          | Receives log messages for runtime diagnostics and filtering.                 |
-| Subscription  | `demo_msgs/msg/Utilization`     | `/utilization`                     | Receives system or resource utilization metrics.                             |
-| Subscription  | `demo_msgs/msg/VlmDescription`  | `/vlm_topic`                       | Receives VLM (Vision-Language Model) description messages.                   |
-| Subscription  | `rai_interfaces/msg/HRIMessage` | `/agent/current_action`            | Receives Agents description of current action.                               |
-| Subscription  | `std_msgs/msg/String`           | `/agent/past_steps`                | Receives Agents list of past actions. string('\["step1", "step2"\]')         |
-| Subscription  | `std_msgs/msg/String`           | `/orchestrator/current_task`       | Receives Agents description of current task.                                 |
-| Subscription  | `std_msgs/msg/String`           | `/orchestrator/tasks_queue`        | Receives Agents list of task queue. string('\["task1", "task2"\]')           |
-| Subscription  | `std_msgs/msg/String`           | `/orchestrator/paused_tasks`       | Receives Agents list of paused tasks. Format: string('\["task1", "task2"\]') |
+The HMI is a Qt Quick (QML) app: `RosBridge` (C++) owns the ROS 2 node and exposes
+state to the QML pages under `qml/`. It has four pages:
 
----
+- **Mission**: task input, cameras, map, current task with its steps, the queue, and
+  the live agent stream.
+- **Agents**: which agent is doing what, and a timeline of the current task with the
+  full content of each message, tool call and finding.
+- **Simulation**: scene recipes, task builders (sort returns, housekeeping by rack,
+  shipments) and manual driving.
+- **System**: CPU/GPU/NPU/RAM, agent heartbeats, inference endpoint health (read from
+  `config.toml`, polled over HTTP) and `/rosout` logs.
 
-### 📤 Publishers
+## ROS 2 interfaces
 
-| **Interface** | **Message Type**                | **Topic**         | **Description**                                                         |
-| ------------- | ------------------------------- | ----------------- | ----------------------------------------------------------------------- |
-| Publisher     | `geometry_msgs/msg/PoseStamped` | `/goal_pose`      | Publishes navigation goals for the robot.                               |
-| Publisher     | `geometry_msgs/msg/Twist`       | `/cmd_vel`        | Publishes velocity commands for robot motion control.                   |
-| Publisher     | `std_msgs/msg/String`           | `/user_tasks`     | Publishes user prompts for interactive task selection or notifications. |
-| Publisher     | `std_msgs/msg/String`           | `/emergency_stop` | Publishes emergency stop commands to halt robot operations.             |
+### Subscriptions
 
----
+| Message type                    | Topic                              | Use                                                                                                 |
+| ------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `std_msgs/msg/String`           | `/agent/events`                    | Agent event stream, one JSON object per message (below).                                            |
+| `rai_interfaces/msg/HRIMessage` | `/agent/current_action`            | Older stream, used only until the first `/agent/events` message.                                    |
+| `std_msgs/msg/String`           | `/agent/past_steps`                | Steps done in the current task.                                                                     |
+| `std_msgs/msg/String`           | `/orchestrator/current_task`       | Current task prompt.                                                                                |
+| `std_msgs/msg/String`           | `/orchestrator/tasks_queue`        | Queued task prompts, `\|`-separated.                                                                |
+| `std_msgs/msg/Bool`             | `/orchestrator/estop`              | Whether the orchestrator is emergency-stopped.                                                      |
+| `std_msgs/msg/Header`           | `/orchestrator/heartbeat`          | Orchestrator liveness.                                                                              |
+| `std_msgs/msg/Header`           | `/agents/heartbeat`                | Every agent process, `frame_id` = `orchestrator`, `nav2`, `moveit2`, `scene`, `inspection`, `safety`. |
+| `demo_msgs/msg/VlmDescription`  | `/vlm_topic`                       | Inspection and safety findings with their image.                                                    |
+| `demo_msgs/msg/Utilization`     | `/utilization`                     | CPU/GPU/NPU/RAM and Nav2/MoveIt2 state (from `utilization_node`).                                   |
+| `sensor_msgs/msg/Image`         | `/rgbd_camera/camera_image_color`  | Base camera.                                                                                        |
+| `sensor_msgs/msg/Image`         | `/wrist_camera/camera_image_color` | Wrist camera.                                                                                       |
+| `sensor_msgs/msg/Image`         | `/camera_image_color`              | Top camera.                                                                                         |
+| `nav_msgs/msg/OccupancyGrid`    | `/global_costmap/static_layer`     | Map.                                                                                                |
+| `nav_msgs/msg/Path`             | `/plan`                            | Planned path.                                                                                       |
+| `rosgraph_msgs/msg/Clock`       | `/clock`                           | Simulation time.                                                                                    |
+| `rcl_interfaces/msg/Log`        | `/rosout`                          | Logs.                                                                                               |
 
-### 🧠 Services
+The robot pose comes from TF (`map` → `egobase_link`).
 
-| **Interface** | **Service Type**       | **Service Name**       | **Description**                                                      |
-| ------------- | ---------------------- | ---------------------- | -------------------------------------------------------------------- |
-| Client        | `std_srvs/srv/Trigger` | `/restart`             | Invokes a restart or reset of the orchestrator or system components. |
-| Client        | `std_srvs/srv/Trigger` | `/rai/scene/housekeep` | Setups the housekeeping task scene.                                  |
-| Client        | `std_srvs/srv/Trigger` | `/rai/scene/anomalies` | Setups the anomalies detection scene.                                |
-| Client        | `std_srvs/srv/Trigger` | `/rai/scene/standard`  | Setups the standard scene.                                           |
-| Client        | `std_srvs/srv/Trigger` | `/rai/scene/cleanup`   | Cleans the scene from all entities.                                  |
+### `/agent/events`
+
+Each message is a JSON object with `type` and `t` (Unix time), published by
+`rai_app/agents/callbacks.py` and the orchestrator:
+
+| `type`                 | Fields                                  |
+| ---------------------- | --------------------------------------- |
+| `task_start`           | `task`                                  |
+| `task_end`             | `task`, `status` (`done`, `failed`, `aborted`) |
+| `text`, `thinking`     | `node`, `run_id`, `chunk` (streamed)    |
+| `tool_start`           | `node`, `run_id`, `tool`, `args`        |
+| `tool_end`             | `run_id`, `tool`, `output`, `status` (`ok`, `error`) |
+| `llm_end`              | `node`, `tokens_in`, `tokens_out`       |
+| `steps`                | `steps` (list of done steps)            |
+
+`node` is the agent graph node: `megamind` (orchestrator), `housekeep`,
+`package_movement`, `image_analysis`.
+
+### Publishers
+
+| Message type                    | Topic                | Use                                                                 |
+| ------------------------------- | -------------------- | ------------------------------------------------------------------- |
+| `std_msgs/msg/String`           | `/user_tasks`        | Tasks for the orchestrator.                                         |
+| `std_msgs/msg/Empty`            | `/emergency_stop`    | E-STOP: the orchestrator aborts the task and clears the queue, Nav2 pauses. |
+| `std_msgs/msg/Empty`            | `/emergency_release` | Release: the orchestrator accepts tasks again, Nav2 resumes.        |
+| `geometry_msgs/msg/Twist`       | `/cmd_vel`           | Manual driving.                                                     |
+| `geometry_msgs/msg/PoseStamped` | `/goal_pose`         | Navigation goal (double-click on the map).                          |
+
+### Service clients
+
+| Service type           | Service                | Use                                  |
+| ---------------------- | ---------------------- | ------------------------------------ |
+| `std_srvs/srv/Trigger` | `/rai/scene/standard`  | Standard scene.                      |
+| `std_srvs/srv/Trigger` | `/rai/scene/housekeep` | Housekeeping scene.                  |
+| `std_srvs/srv/Trigger` | `/rai/scene/anomalies` | Anomalies scene.                     |
+| `std_srvs/srv/Trigger` | `/rai/scene/cleanup`   | Reset the simulation, remove objects. |
+
+## Checking the UI without a display
+
+`HMI_SCREENSHOT=<file.png>` saves the window after `HMI_SCREENSHOT_MS` (default 4000)
+and quits; `HMI_PAGE=0..3` picks the page. For example:
+
+```shell
+HMI_WINDOWED=1 HMI_PAGE=1 HMI_SCREENSHOT=agents.png QT_QUICK_BACKEND=software \
+  xvfb-run -a -s "-screen 0 1440x900x24" ros2 run mobile_manipulator_hmi MobileManipulatorHMI
+```

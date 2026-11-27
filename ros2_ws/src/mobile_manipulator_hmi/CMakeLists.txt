@@ -37,99 +37,64 @@ install(
 
 ament_package()
 
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt5 REQUIRED COMPONENTS Gui Qml Quick QuickControls2 Network)
 
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(rosgraph_msgs REQUIRED)
+find_package(rcl_interfaces REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(demo_msgs REQUIRED)
+find_package(rai_interfaces REQUIRED)
+find_package(nlohmann_json REQUIRED)    # from conda-forge
+find_package(tomlplusplus REQUIRED)     # config.toml parsing, from conda-forge
 
-# --- ROS2 / image transport dependencies ---
-# These assume you have sourced your ROS2 installation (e.g. source /opt/ros/jazzy/setup.bash)
-# and installed packages like ros-<distro>-image-transport, ros-<distro>-compressed-image-transport, ros-<distro>-cv-bridge.
-# If you get errors like "Could not find package X", install the corresponding ros package and source the ROS 2 environment.
-find_package(rclcpp REQUIRED)                        # core ROS2 C++ client library
-find_package(sensor_msgs REQUIRED)                   # sensor message types
-find_package(nav_msgs REQUIRED)                      # navigation message types (OccupancyGrid)
-find_package(geometry_msgs REQUIRED)                 # geometry message types (Twist)
-find_package(rcl_interfaces REQUIRED)                # rcl interface message types (Log)
-find_package(tf2_ros REQUIRED)                       # tf2 transform listener
-find_package(tf2 REQUIRED)                           # tf2 core
-find_package(image_transport REQUIRED)               # image_transport API
-find_package(std_srvs REQUIRED)                        # for using standard ROS services
-find_package(cv_bridge REQUIRED)                     # conversion between ROS images and OpenCV
-find_package(OpenCV REQUIRED)
-find_package(demo_msgs REQUIRED)               # custom Utilization message
-find_package(rai_interfaces REQUIRED)               # custom Utilization message
-
-# add source directory to include path
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-# --- nlohmann/json dependency (from conda-forge) ---
-find_package(nlohmann_json REQUIRED)
-
-# --- toml++ dependency (config.toml parsing, from conda-forge) ---
-find_package(tomlplusplus REQUIRED)
-
-set(PROJECT_SOURCES
-        main.cpp
-        ZoomableGraphicsView.h
-        ZoomableGraphicsView.cpp
-        Config.h
-        ModelConfig.h
-        ModelConfig.cpp
-        LogItemWidget.h
-        LogItemWidget.cpp
-        LogView.h
-        LogView.cpp
-        LogQueue.h
-        LogQueue.cpp
-        hmiWindow.cpp
-        hmiWindow.h
-        hmiWindow.ui
-        TaskDialog.cpp
-        TaskDialog.h
-        resources.qrc
-        ParseRaiData.cpp
-        ParseRaiData.h
+# The UI is QML (qml/, bundled through qml.qrc); RosBridge is its only link to ROS 2.
+add_executable(MobileManipulatorHMI
+  main.cpp
+  RosBridge.h
+  RosBridge.cpp
+  AgentEventModel.h
+  AgentEventModel.cpp
+  RosImageProvider.h
+  ModelConfig.h
+  ModelConfig.cpp
+  ParseRaiData.h
+  ParseRaiData.cpp
+  qml.qrc
 )
-
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(MobileManipulatorHMI
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-else()
-    add_executable(MobileManipulatorHMI
-        ${PROJECT_SOURCES}
-    )
-endif()
-
-target_link_libraries(MobileManipulatorHMI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets) 
 
 target_link_libraries(MobileManipulatorHMI PRIVATE
-        rclcpp::rclcpp
-        sensor_msgs::sensor_msgs__rosidl_typesupport_cpp
-        nav_msgs::nav_msgs__rosidl_typesupport_cpp
-        geometry_msgs::geometry_msgs__rosidl_typesupport_cpp
-        rcl_interfaces::rcl_interfaces__rosidl_typesupport_cpp
-        std_srvs::std_srvs__rosidl_typesupport_cpp
-        demo_msgs::demo_msgs__rosidl_typesupport_cpp
-        rai_interfaces::rai_interfaces__rosidl_typesupport_cpp
-        tf2_ros::tf2_ros
-        tf2::tf2
-        image_transport::image_transport
-        cv_bridge::cv_bridge
-        ${OpenCV_LIBS}           # OpenCV provides targets like OpenCV::Core, but ${OpenCV_LIBS} is usually set
-        nlohmann_json::nlohmann_json
-        tomlplusplus::tomlplusplus
+  Qt5::Gui Qt5::Qml Qt5::Quick Qt5::QuickControls2 Qt5::Network
+  rclcpp::rclcpp
+  ${sensor_msgs_TARGETS}
+  ${nav_msgs_TARGETS}
+  ${geometry_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  ${rosgraph_msgs_TARGETS}
+  ${rcl_interfaces_TARGETS}
+  ${std_srvs_TARGETS}
+  ${demo_msgs_TARGETS}
+  ${rai_interfaces_TARGETS}
+  tf2_ros::tf2_ros
+  tf2::tf2
+  nlohmann_json::nlohmann_json
+  tomlplusplus::tomlplusplus
 )
 
-# Install targets
 install(TARGETS MobileManipulatorHMI
   DESTINATION lib/${PROJECT_NAME})
 
@@ -148,7 +113,7 @@ if(BUILD_TESTING)
   )
 
   target_link_libraries(test_parse_rai_data
-    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt5::Core
     nlohmann_json::nlohmann_json
   )
 endif()

@@ -35,6 +35,7 @@ from std_srvs.srv import Trigger
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from tqdm import tqdm
 
+from rai_app.agents.heartbeat import start_heartbeat
 from rai_app.environment.layout import (
     FireExtinguisherPositions,
     Layout,
@@ -626,6 +627,7 @@ def main():
     scene_agent_connector = ROS2Connector(executor_type="single_threaded")
     scene_agent = SceneAgent(scene_agent_connector, scene_manager_state)
     scene_agent.run()
+    start_heartbeat(scene_agent_connector, "scene")
     wait_for_shutdown([scene_agent])
 
 

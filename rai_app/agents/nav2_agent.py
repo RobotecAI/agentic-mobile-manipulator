@@ -36,6 +36,7 @@ from rai_interfaces.action import DriveOnHeading, FollowWaypoints, NavigateToPos
 from rclpy.action.server import ServerGoalHandle
 from tf_transformations import euler_from_quaternion
 
+from rai_app.agents.heartbeat import start_heartbeat
 from rai_app.initialization.llms import get_llm_model
 
 
@@ -362,6 +363,7 @@ def main():
         llm = get_llm_model(config_name="general")
     agent = Nav2Agent(llm=llm, robot_frame="egobase_link")
     agent.run()
+    start_heartbeat(agent.connector, "nav2")
 
     wait_for_shutdown([agent])
 

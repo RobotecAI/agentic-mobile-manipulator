@@ -54,6 +54,7 @@ from sensor_msgs.msg import Image
 from tf2_ros import PoseStamped
 from visualization_msgs.msg import Marker, MarkerArray
 
+from rai_app.agents.heartbeat import start_heartbeat
 from rai_app.agents.vlm_transport import publish_vlm_description
 from rai_app.config.vlm_inspection_prompts import (
     INSPECTION_JSON_SYSTEM_PROMPT,
@@ -481,6 +482,7 @@ def main():
         n_seconds=args.n_seconds,
     )
 
+    start_heartbeat(inspector.connector, "inspection")
     inspector.run()
 
 

@@ -14,14 +14,12 @@
 # limitations under the License.
 import asyncio
 import logging
-import sys
 import threading
 import time
 import uuid
 from dataclasses import field
 from typing import Callable, List, Literal, Optional
 
-import rclpy
 from langchain_core.callbacks.base import BaseCallbackHandler
 from langfuse.langchain import CallbackHandler
 from langgraph.checkpoint.memory import InMemorySaver
@@ -48,6 +46,7 @@ from rai_app.agents.callbacks import (
     OrchestratorTasksNotifier,
 )
 from rai_app.agents.context_providers import WarehouseContext
+from rai_app.agents.heartbeat import publish_agent_event, start_heartbeat
 from rai_app.agents.tools import (
     DescribeImageTool,
     HouseKeepTool,
@@ -232,12 +231,23 @@ class AgentOrchestrator:
         self.current_task: Optional[TaskExecution] = None
         self.current_task_future = None
 
+        # E-STOP (std_msgs/Empty on /emergency_stop) aborts the current task and clears
+        # the queue; /emergency_release lets new tasks run again. The state is published
+        # on /orchestrator/estop (std_msgs/Bool) every second for the HMI.
         self.connector.register_callback(
             "/emergency_stop",
             self.emergency_stop_callback,
-            msg_type="std_msgs/msg/String",
+            msg_type="std_msgs/msg/Empty",
+        )
+        self.connector.register_callback(
+            "/emergency_release",
+            self.emergency_release_callback,
+            msg_type="std_msgs/msg/Empty",
         )
         self.stop: bool = False
+        # Set from the ROS thread; the asyncio loop does the actual abort.
+        self._abort_pending: bool = False
+        self._task_failed: bool = False
         self._threads: list[threading.Thread] = []
 
         self.task_count = 0
@@ -254,30 +264,25 @@ class AgentOrchestrator:
         )
 
     def emergency_stop_callback(self, msg: ROS2Message):
-        """Triggered when an emergency stop signal is received."""
-        logging.error("Emergency stop signal received!")
+        """E-STOP: abort the current task, drop the queue, start nothing until released."""
+        logging.error("Emergency stop signal received! Aborting the current task.")
         self.stop = True
-        self.running = False
+        self._abort_pending = True
 
-        # Cancel any running async task
+    def emergency_release_callback(self, msg: ROS2Message):
+        if self.stop:
+            logging.warning("Emergency stop released, accepting tasks again.")
+        self.stop = False
+
+    def _abort(self):
+        """Runs on the asyncio loop: cancel the running task and empty both queues."""
+        self._abort_pending = False
         if self.current_task_future and not self.current_task_future.done():
             self.current_task_future.cancel()
-
-        # Gracefully join background threads
-        for t in self._threads:
-            if t.is_alive():
-                logging.info(f"Waiting for thread {t.name} to stop...")
-                t.join(timeout=2)
-
-        logging.info("All background threads stopped. Shutting down orchestrator...")
-
-        try:
-            self.connector.shutdown()
-            rclpy.shutdown()
-        except Exception:
-            pass
-
-        sys.exit(0)
+        with self.lock:
+            for queue in (self.high_prio_task_queue, self.low_prio_task_queue):
+                while not queue.empty():
+                    queue.get_nowait()
 
     def notify_about_tasks(self):
         if self.current_task:
@@ -296,6 +301,11 @@ class AgentOrchestrator:
                 queue_tasks.append(task.prompt)
 
         self.notifier.send_tasks_queue(queue_tasks)
+        self.connector.send_message(
+            message=ROS2Message(payload={"data": self.stop}),
+            msg_type="std_msgs/msg/Bool",
+            target="/orchestrator/estop",
+        )
 
     def add_inspection_task(self, msg: ROS2Message):
         # NOTE: All inspection tasks will be high prio
@@ -393,6 +403,7 @@ class AgentOrchestrator:
                 await self.action_callback.process_stream_chunk(chunk)
         except ValueError:
             logging.error("Response parsing error. Stopping the agent...")
+            self._task_failed = True
             return
 
     def task_notifier(self):
@@ -424,6 +435,10 @@ class AgentOrchestrator:
     async def begin_high_prio_task(self):
         with self.lock:
             self.current_task = self.high_prio_task_queue.get_nowait()
+            self._task_failed = False
+            publish_agent_event(
+                self.connector, "task_start", task=self.current_task.prompt
+            )
             self.current_task_future = asyncio.create_task(
                 self.run_agent(self.current_task)
             )
@@ -431,6 +446,10 @@ class AgentOrchestrator:
     async def begin_low_prio_task(self):
         with self.lock:
             self.current_task = self.low_prio_task_queue.get_nowait()
+            self._task_failed = False
+            publish_agent_event(
+                self.connector, "task_start", task=self.current_task.prompt
+            )
             self.current_task_future = asyncio.create_task(
                 self.run_agent(self.current_task)
             )
@@ -453,7 +472,11 @@ class AgentOrchestrator:
         heartbeat_thread.start()
 
         while self.running:
-            if not self.current_task:
+            if self._abort_pending:
+                self._abort()
+            if self.stop and not self.current_task:
+                pass  # E-STOP: start nothing until released
+            elif not self.current_task:
                 # No task running
                 # First check for high prio tasks
                 if not self.high_prio_task_queue.empty():
@@ -466,6 +489,19 @@ class AgentOrchestrator:
                 if self.current_task_future:
                     if self.current_task_future.done():
                         logging.info(f"Finished task: {self.current_task.prompt}")
+                        status = (
+                            "aborted"
+                            if self.current_task_future.cancelled() or self.stop
+                            else "failed"
+                            if self._task_failed
+                            else "done"
+                        )
+                        publish_agent_event(
+                            self.connector,
+                            "task_end",
+                            task=self.current_task.prompt,
+                            status=status,
+                        )
                         self.current_task_future = None
                         self.current_task = None
 
@@ -477,6 +513,7 @@ def main():
     task_topics = ["/user_tasks"]
     inspection_topics = ["/inspection_result"]
     connector = ROS2Connector()
+    start_heartbeat(connector, "orchestrator")
 
     wait_for_ros2_actions(connector, ACTIONS_TO_WAIT_FOR)
     wait_for_ros2_topics(connector, TOPICS_TO_WAIT_FOR)
