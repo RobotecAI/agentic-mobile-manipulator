@@ -12,7 +12,9 @@ repos:
         args: [--extend-select, "I,RUF022", --fix, --ignore, E731]
         types_or: [python]
         files: ^(rai_app/|scripts/|tests/)
+        exclude: ^rai_app/initialization/json_schema_to_grammar\.py$  # vendored from llama.cpp
 
       - id: ruff-format
         types_or: [python]
         files: ^(rai_app/|scripts/|tests/)
+        exclude: ^rai_app/initialization/json_schema_to_grammar\.py$  # vendored from llama.cpp

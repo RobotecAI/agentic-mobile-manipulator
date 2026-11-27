@@ -80,6 +80,8 @@ Third-party items in these gems keep their own licenses. The NOTICE file of each
 
 - llama.cpp (https://github.com/ggml-org/llama.cpp). Copyright (c) 2023-2026 The ggml authors.
   License: MIT. Bundled third-party code is listed in inference/llama.cpp/licenses.
+  rai_app/initialization/json_schema_to_grammar.py is copied from llama.cpp
+  (examples/json_schema_to_grammar.py, commit ae9afff8), same license.
 - FastFlowLM (https://github.com/FastFlowLM/FastFlowLM), used through the RobotecAI fork
   (https://github.com/RobotecAI/FastFlowLM), which adds GBNF grammar-constrained sampling.
   The code is licensed under the MIT License (LICENSE_RUNTIME.txt). The NPU kernel binaries are under their own

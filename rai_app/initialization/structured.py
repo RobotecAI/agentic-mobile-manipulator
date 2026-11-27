@@ -34,22 +34,16 @@ from pydantic import BaseModel, ValidationError
 
 T = TypeVar("T", bound=BaseModel)
 
-# JSON-schema → GBNF converter from the llama.cpp submodule (stdlib-only).
-_CONVERTER = (
-    Path(__file__).resolve().parents[2]
-    / "inference"
-    / "llama.cpp"
-    / "examples"
-    / "json_schema_to_grammar.py"
-)
+# JSON-schema → GBNF converter, vendored from llama.cpp (stdlib-only): upstream removed
+# examples/json_schema_to_grammar.py, so the submodule no longer has it.
+_CONVERTER = Path(__file__).resolve().parent / "json_schema_to_grammar.py"
 
 
 @lru_cache(maxsize=1)
 def _converter_module():
     if not _CONVERTER.exists():
         raise FileNotFoundError(
-            f"GBNF converter not found at {_CONVERTER}; check out the llama.cpp "
-            "submodule (`pixi run -e inference init-submodules`)."
+            f"GBNF converter not found at {_CONVERTER}; it ships with rai_app."
         )
     spec = importlib.util.spec_from_file_location(
         "_flm_json_schema_to_grammar", _CONVERTER
