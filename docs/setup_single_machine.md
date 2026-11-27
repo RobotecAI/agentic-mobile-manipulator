@@ -31,6 +31,33 @@ sudo apt install git git-lfs python3-vcstool ninja-build \
     mesa-common-dev libunwind-dev libzstd-dev tix tmux
 ```
 
+#### NPU prerequisites (`single-pc-gpu-and-npu` only)
+
+FastFlowLM builds against XRT from the lemonade PPA and needs NPU firmware 1.1 or newer:
+
+```bash
+sudo add-apt-repository ppa:lemonade-team/stable
+sudo apt update
+sudo apt install libxrt-dev libxrt-npu2 libavformat-dev libavutil-dev libavcodec-dev \
+    libswresample-dev libswscale-dev libfftw3-dev uuid-dev libdrm-dev
+# The NPU device belongs to the render group, and FastFlowLM pins memory.
+sudo usermod -aG render $USER
+echo "$USER - memlock unlimited" | sudo tee /etc/security/limits.d/99-npu-memlock.conf
+```
+
+Ubuntu 24.04 ships NPU firmware 1.0.0.166, on which every NPU request fails with
+`runlist failed execution (ERT_CMD_STATE_ABORT)`. Strix Halo (PCI `17f0` rev `11`) needs
+`npu_7.sbin` 1.1.2.65 from upstream linux-firmware:
+
+```bash
+d=/lib/firmware/updates/amdnpu/17f0_11
+sudo mkdir -p $d
+sudo curl -fLo $d/npu_7.sbin https://gitlab.com/kernel-firmware/linux-firmware/-/raw/main/amdnpu/17f0_11/npu.sbin.1.1.2.65
+sudo reboot   # or, with nothing using the NPU: sudo modprobe -r amdxdna && sudo modprobe amdxdna
+```
+
+After `setup`, `inference/FastFlowLM/src/build/flm validate` must report no errors.
+
 #### Install pixi
 
 [pixi](https://pixi.sh) orchestrates all build steps and sets environment variables automatically.
@@ -104,7 +131,7 @@ runs on llama.cpp.
 
 For every GGUF-backed model in `config.toml`, download the file and place it in `$DEMO_ROOT/models/`:
 
-- [GPT-OSS-20B](https://huggingface.co/unsloth/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-Q4_K_M.gguf?download=true)
+- [Qwen3.6-35B-A3B](https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf?download=true)
 - [LFM2-VL-3B-GGUF](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/LFM2-VL-3B-Q8_0.gguf?download=true) + [mmproj](https://huggingface.co/LiquidAI/LFM2-VL-3B-GGUF/resolve/main/mmproj-LFM2-VL-3B-Q8_0.gguf?download=true)
 - [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf?download=true)
 - [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf?download=true)

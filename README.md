@@ -45,7 +45,7 @@ Backup video link: https://vimeo.com/1138627688/dbfa881a27
 - Software stack: ROS 2, O3DE and [RAI](https://github.com/RobotecAI/rai)
 - Hardware platform: **AMD Ryzen™ AI** processor hosting robotics stack and embodied agentic AI multi-agent system
 - Model stack: [**Liquid AI's LFM2-VL**](https://www.liquid.ai/) (Vision-Language Model) optimized for AMD hardware
-- Local LLM (gpt-oss-20b) for planning, instruction parsing, and dialogue
+- Local LLM (Qwen3.6-35B-A3B) for planning, instruction parsing, and dialogue
 - Local inference across **CPU, GPU (llama.cpp / Vulkan) and the AMD Ryzen™ AI NPU (FastFlowLM)** — the safety VLM runs on the NPU, freeing the GPU for the LLM and perception VLM
 - Robot platform: Mobile manipulator (Robotnik Kairos) in ROS 2 simulated warehouse environment
 - Simulation setup: Hardware-in-the-loop mirrors real-world deployment for safe testing

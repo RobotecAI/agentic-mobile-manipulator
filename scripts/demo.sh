@@ -42,7 +42,7 @@ wait_topic() {
 }
 
 check_inference() {
-    # Large models (gpt-oss-20b, the NPU VLM) can take longer than 15 s to load.
+    # Large models (Qwen3.6-35B-A3B, the NPU VLM) can take longer than 15 s to load.
     local wait="${INFERENCE_WAIT:-30}"
     log "Waiting ${wait}s for inference servers to initialize..."
     sleep "$wait"

@@ -229,7 +229,11 @@ def _post_json(url: str, payload: dict, timeout: float) -> dict:
         url, data=data, headers={"Content-Type": "application/json"}, method="POST"
     )
     with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return json.loads(resp.read().decode())
+        body = json.loads(resp.read().decode())
+    # Servers may answer 200 with {"error": ...} (e.g. flm when the NPU aborts): report it as is.
+    if isinstance(body, dict) and "error" in body:
+        raise ValueError(f"server error: {body['error']}")
+    return body
 
 
 def check_endpoint(name: str, ep: dict) -> tuple[bool, str]:
